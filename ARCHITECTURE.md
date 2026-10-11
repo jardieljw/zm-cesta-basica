@@ -2,8 +2,8 @@
 ## ZM Cesta Básica — Sistema de Gestão de Estoque, Produção e Vendas
 
 **Documento Canônico de Engenharia e Princípios de Arquitetura**  
-**Versão:** 1.0 (Consolidado após homologação da Fase 3)  
-**Status do Projeto:** Fases 1, 2 e 3 Concluídas e Homologadas (101 testes automatizados)  
+**Versão:** 2.0 (Revisão Aprofundada Pré-Fase 4: Custódia, Repasses, CMPM, CMV Real e Integridade Financeira)  
+**Status do Projeto:** Fases 1, 2 e 3 Concluídas e Homologadas (101 testes automatizados ativos e aprovados)  
 **Topologia:** Monólito Modular em Rede Local Privada (Wi-Fi/Ethernet) sem dependência de nuvem  
 **Público-alvo:** Desenvolvedores, Engenheiros de Software e Agentes de Inteligência Artificial
 
@@ -18,129 +18,149 @@ Este documento estabelece as regras mandatórias de engenharia, governança arqu
 ### 1.1. Arquitetura Evolutiva (Monólito Modular)
 O sistema é estruturado como um **Monólito Modular** de alta coesão e baixo acoplamento:
 - **Separação Rígida de Responsabilidades:**
-  - `estoque / inventory`: Livro-razão contábil *append-only*, cálculo dinâmico de saldos e ajustes de balanço.
-  - `produtos / products`: Catálogo de insumos, unidades base e embalagens comerciais com fatores de conversão.
+  - `estoque / inventory`: Livro-razão contábil *append-only*, sub-localizações de custódia (armazém vs. rota), cálculo dinâmico de saldos e ajustes de balanço.
+  - `produtos / products`: Catálogo de insumos, unidades base, CMPM (Custo Médio Ponderado Móvel) e embalagens comerciais com conversão.
   - `receitas / recipes`: Tipos de cesta e versionamento imutável de composições padrão.
-  - `compras / purchases`: Entrada de insumos de fornecedores, conversão de embalagens e estornos contábeis.
-  - `montagem / production` (Fase 4): Ordens de montagem, consumo atômico de insumos e rastreabilidade de lotes personalizados.
-  - `vendas / sales` (Fase 5): Vendas de balcão e encomendas, emissão de comprovantes e fluxo atômico de montagem simultânea.
-  - `financeiro / financial` (Fase Futura): Vendas fiadas, contas a receber, contas a pagar, recebimentos, repasses e fluxo de caixa.
-  - `conferencia / dispatch` (Fase Futura): Auditoria de expedição e conferência de saídas físicas de mercadorias.
-  - `relatorios / reports` (Fase 6): Indicadores gerenciais, CMV, margens e exportações em planilhas.
-  - `configuracoes & infraestrutura`: Segurança TLS, autenticação de dispositivos, backups quentes e rotinas de manutenção.
-- **Proibição de Dependências Circulares:** Os módulos comunicam-se através de serviços e contratos bem definidos. Módulos de domínio superior (vendas, montagem) dependem de módulos de domínio base (estoque, produtos), nunca o inverso.
-- **Centralização de Regras de Negócio:** Nenhuma regra de estoque, cálculo financeiro ou conversão de unidades pode residir no cliente Flutter ou em triggers isolados sem espelhamento no serviço de domínio. A API FastAPI é a autoridade única sobre o estado da aplicação.
-- **Isolamento de Impacto:** Modificações internas em um módulo (ex.: adicionar um campo informativo em compras) não devem exigir alterações generalizadas nos demais módulos.
+  - `compras / purchases`: Entrada de insumos de fornecedores, conversão de embalagens, atualização de custo de aquisição e estornos contábeis.
+  - `montagem / production` (Fase 4): Ordens de montagem, consumo de insumos valorizados pelo CMPM, lote padrão vs. personalizado e apuração do custo unitário do lote.
+  - `vendas / sales` (Fase 5): Vendas de balcão e rotas, baixa de produto acabado, CMV congelado no item e fluxo atômico de montagem simultânea.
+  - `expedicao / dispatch` (Fase 6): Cargas de saída, custódia de agentes comerciais sem login, conferência física de retorno e conciliação de repasses item a item.
+  - `financeiro / financial` (Fase 7): Vendas fiadas, contas a receber, contas a pagar (empresariais vs. retiradas pessoais), tesouraria e livro-caixa imutável.
+  - `relatorios / reports` (Fase 8): DRE Gerencial com CMV real do livro-razão, margens brutas, fluxo de caixa e exportações em planilhas.
+  - `infraestrutura`: Segurança TLS, autenticação de dispositivos, backups quentes e rotinas de manutenção.
+- **Proibição de Dependências Circulares:** Os módulos superiores consomem serviços dos módulos base, nunca o inverso.
+- **Centralização de Regras de Negócio:** Nenhuma regra de estoque, cálculo financeiro ou conversão de unidades reside no cliente Flutter. A API FastAPI é a autoridade única sobre o estado da aplicação.
 
 ---
 
 ### 1.2. Evolução Segura e Preservação de Comportamento
-Toda modificação no sistema deve seguir o protocolo de evolução segura:
-1. **Inspeção Prévia Obrigatória:** Antes de editar código, deve-se inspecionar os arquivos afetados, compreender os contratos existentes e identificar todos os pontos de consumo.
-2. **Avaliação de Impacto e Não-Regressão:** Toda proposta de alteração deve preservar as funcionalidades já aprovadas e homologadas. A suíte completa de testes automatizados (`pytest backend/tests -v`) deve ser executada antes e depois de qualquer intervenção, mantendo 100% de aprovação.
-3. **Proibição de Exclusão ou Substituição Silenciosa:** Nenhuma regra comercial, endpoint, tabela ou coluna pode ser removida silenciosamente. Qualquer quebra de compatibilidade ou descontinuação requer justificativa técnica explícita e autorização expressa do responsável pelo projeto.
-4. **Evolução do Banco via Migrações Versionadas:**
-   - O schema do banco de dados SQLite evolui exclusivamente através do **Alembic**.
-   - Scripts de migração devem ser reversíveis (`upgrade()` e `downgrade()`) e compatíveis com a preservação de dados históricos existentes.
-   - Proibido executar `DROP TABLE` ou apagar dados produtivos.
-5. **Rastreabilidade e Não-Destrutividade Contábil:**
-   - O livro-razão de estoque (`inventory_movements`) é estritamente *append-only*.
-   - Cancelamentos de compras, vendas ou montagens são operados via **lançamento de contrapartida contábil reversa** (estorno), preservando o histórico da transação original com status cancelado.
+1. **Inspeção Prévia Obrigatória:** Antes de editar código, inspecionar arquivos afetados e identificar todos os pontos de consumo.
+2. **Avaliação de Impacto e Não-Regressão:** Executar a suíte completa de testes automatizados (`pytest backend/tests -v`), mantendo 100% de aprovação verde (atualmente 101 testes).
+3. **Proibição de Exclusão ou Substituição Silenciosa:** Proibido remover ou quebrar endpoints ou regras homologadas sem autorização explícita.
+4. **Evolução do Banco via Migrações Versionadas:** Schema gerenciado exclusivamente pelo Alembic com suporte a `upgrade()` e `downgrade()`.
+5. **Rastreabilidade Contábil Imutável:** O livro-razão `inventory_movements` e o livro-caixa `cash_flow_entries` são estritamente *append-only*. Correções ocorrem exclusivamente por lançamentos reversos rastreáveis (estornos).
 
 ---
 
 ### 1.3. Front-End Adaptativo e Componentização Centralizada
-O aplicativo cliente desenvolvido em **Flutter** deve atender aos seguintes critérios:
-- **Mobile First com Adaptação Desktop:**
-  - A experiência principal de operação ágil na fábrica ou galpão é focada em smartphones/tablets Android via Wi-Fi.
-  - Em telas maiores (Windows Desktop), a interface deve se adaptar naturalmente utilizando layouts fluidos, *split views*, painéis laterais e atalhos de teclado, sem desperdiçar espaço nem exigir dois códigos distintos.
-- **Design System Centralizado:**
-  - Cores, tipografia, espaçamentos, bordas e sombras padronizados através de `ThemeData` central.
-  - Uso de componentes de UI compartilhados e reutilizáveis localizados em diretório comum (`client/lib/widgets/` ou `client/lib/core/ui/`):
-    - `AppTextField` / `AppMoneyField`: Campos de formulário com formatação e validação visual de erro.
-    - `AppButton`: Botões de ação primária, secundária e perigosa com suporte nativo a estado de carregamento (*spinner* integrado).
-    - `AppCard`: Cartões informativos e recipientes de dados estruturados.
-    - `AppTable` / `AppListTile`: Visualização consistente de dados tabulares e listas.
-    - `FeedbackSnackbar` / `ErrorDialog`: Tratamento amigável e consistente de respostas da API e erros de rede.
-    - `AppLoadingIndicator`: Indicador padrão de requisições assíncronas.
-- **Módulos de Interface Independentes:** As telas de cada módulo operacional (`views/`) consom seus respectivos serviços (`services/`) e modelos (`models/`), desacopladas entre si e compartilhando apenas o núcleo de rede, autenticação e componentes visuais.
+- **Mobile First com Adaptação Desktop:** Experiência prioritária em Android (toque no galpão/rotas) e fluida no Windows Desktop (telas amplas, tabelas densas e atalhos).
+- **Componentes Compartilhados:** Reutilização em `client/lib/widgets/shared/` de campos monetários (`AppMoneyField`), botões com spinner integrado (`AppButton`), cartões padronizados (`AppCard`) e tabelas responsivas (`AppDataTable`).
+- **Gerenciamento de Estado:** `StatefulWidget` com serviços assíncronos desacoplados por tela e `ValueNotifier` para estados globais de aplicação.
 
 ---
 
-### 1.4. Internacionalização (i18n) e Localização Centralizada
-Embora a interface seja atualmente em **português brasileiro (pt-BR)**, a arquitetura deve estar desacoplada de textos *hardcoded*:
-- **Estratégia Centralizada de Strings:**
-  - Textos de telas, rótulos, botões, mensagens de erro e diálogos devem ser obtidos a partir de um repositório centralizado de localização (ex.: classe `AppStrings` ou biblioteca de localização do Flutter), preparando o sistema para múltiplos idiomas sem necessidade de refatorar telas no futuro.
-- **Formatação Numérica e Monetária Centralizada:**
-  - Toda moeda é manipulada internamente na API e no banco como **número inteiro de centavos** (`cents`), eliminando erros de arredondamento de ponto flutuante.
-  - No cliente, a formatação para o usuário final deve utilizar função centralizada (ex.: `CurrencyFormatter.format(cents) -> "R$ 1.250,50"` baseada em `intl`).
-- **Formatação de Datas:**
-  - Todas as datas trafegadas na API e armazenadas no SQLite utilizam **UTC** em formato ISO-8601 (`YYYY-MM-DDTHH:MM:SSZ`).
-  - No cliente, a exibição deve converter para o fuso local do dispositivo usando formatador centralizado (ex.: `DateFormatter.formatDateTime(dt) -> "11/10/2026 14:30"`).
+### 1.4. Internacionalização (i18n) e Formatação Centralizada
+- **Repositório Central de Strings:** Rótulos e mensagens centralizados em `AppStrings` (atualmente em português brasileiro `pt-BR`), desacoplando o código de telas para suportar múltiplos idiomas no futuro.
+- **Valores Monetários em Centavos:** Todo valor trafegado e armazenado é um **número inteiro em centavos** (`cents`), formatado na tela pelo pacote `intl` (`R$ X,XX`).
+- **Datas em UTC:** Timestamps trafegados e armazenados em UTC ISO-8601 e formatados no fuso local no cliente.
 
 ---
 
-### 1.5. Testes Contínuos, Qualidade e Governança
-- **Pirâmide de Testes Automatizados:**
-  - Testes Unitários de Schemas e Validadores: validação estrita de entradas, whitespace trimming, normalização.
-  - Testes de Serviços e Regras de Negócio: cálculo de estoques, conversões de embalagem, versionamento de receitas.
-  - Testes de Concorrência e Transação: validação de `BEGIN IMMEDIATE` sob multithreading, prevenção de saldo negativo e tolerância a lock.
-  - Testes de Idempotência: prevenção de duplicação por chave repetida e bloqueio em payloads divergentes.
-  - Testes de Integração de API (Rotas FastAPI): verificação de status HTTP, serialização de resposta e autenticação de dispositivo.
-- **Critério de Aceitação Contínuo:** Nenhum commit ou avanço de fase é autorizado se qualquer teste automatizado existente falhar. A suíte deve permanecer com **100% de aprovação verde**.
+### 1.5. Testes Contínuos e Qualidade
+A suíte de testes deve permanecer 100% verde a cada commit, combinando testes unitários, de concorrência com `BEGIN IMMEDIATE`, de idempotência e de integração com a API.
 
 ---
 
-### 1.6. Backlog de Negócio Futuro Mapeado (Novos Requisitos)
-Para manter o alinhamento de longo prazo sem iniciar a implementação prematura, os seguintes módulos de negócio estão formalmente mapeados para as fases posteriores:
+## 2. Diretrizes Técnicas Aprofundadas (Revisão Pré-Fase 4)
 
-1. **Vendas Fiadas e Gestão de Clientes a Prazo:**
-   - Cadastro detalhado de clientes comerciais e pessoas físicas (Nome/Razão Social, CPF/CNPJ, Telefone, Endereço de Entrega, Limite de Crédito e Status de Adimplência).
-   - Venda na modalidade a prazo (`SALE_ON_CREDIT` / Fiado): gera a baixa de estoque normalmente, mas registra o valor pendente no financeiro em vez de entrada em caixa imediata.
-   - Histórico de compras por cliente e saldo devedor acumulado.
-2. **Contas a Receber (Títulos e Cobrança):**
-   - Geração de títulos a receber vinculados à venda, com datas de vencimento acordadas.
-   - Baixa de recebimentos parciais ou integrais com registro da data, valor pago, meio de pagamento (dinheiro, PIX, transferência) e saldo remanescente.
-   - Relatório de títulos vencidos, a vencer e clientes inadimplentes.
-3. **Conferência de Saídas e Expedição:**
-   - Fluxo de separação e conferência física de mercadorias (*checklist* de expedição) antes da saída para entrega.
-   - Validação da composição física da cesta contra a receita do lote ou pedido do cliente.
-   - Registro de responsável pela conferência e horário de saída do veículo.
-4. **Recebimentos e Repasses:**
-   - Prestação de contas de entregadores/motoristas que recebem pagamentos na entrega (dinheiro ou comprovante PIX).
-   - Fechamento de rota e repasse financeiro diário com conciliação do montante recebido contra os pedidos entregues.
-5. **Contas a Pagar a Fornecedores:**
-   - Registro de obrigações financeiras originadas de compras a prazo registradas no sistema.
-   - Controle de parcelas, datas de vencimento e quitação de duplicatas de fornecedores.
-6. **Fluxo de Caixa e DRE Gerencial:**
-   - Livro-caixa com movimentações de entradas reais (vendas à vista + recebimentos de fiados) e saídas reais (pagamento de compras, despesas operacionais).
-   - Demonstração do resultado operacional com apuração do Custo da Mercadoria Vendida (CMV real baseado nas movimentações contábeis de saída) e margem de contribuição.
-7. **Dashboards Financeiros e Gerenciais:**
-   - Indicadores visuais na tela inicial (para usuários autorizados): Faturamento do dia/mês, Valor do estoque a preço de custo, Contas a receber vencendo hoje, Total fiado em aberto e Top cestas mais vendidas.
+### 2.1. Custódia de Cestas e Sub-localizações de Estoque
+Para diferenciar estoque disponível no estabelecimento de cestas sob responsabilidade de intermediários:
+1. **Localização Contábil (`location_type`):**
+   - `STORE`: Estoque físico presente no armazém/loja física.
+   - `TRANSIT`: Cestas expedidas sob custódia física de um intermediário (`commercial_agent_id`).
+2. **Ciclo de Movimentação de Expedição:**
+   - **Saída para Rota (`DISPATCH_TRANSFER`):**
+     - Linha 1: `location_type = 'STORE'`, `quantity_delta = -N` (baixa do armazém da loja).
+     - Linha 2: `location_type = 'TRANSIT'`, `commercial_agent_id = :agent_id`, `quantity_delta = +N` (entrada na custódia do agente).
+     - *Saldo global da empresa permanece inalterado, mas o saldo disponível para venda no balcão da loja diminui de forma exata.*
+   - **Venda na Rota (`SALE`):**
+     - Linha: `location_type = 'TRANSIT'`, `commercial_agent_id = :agent_id`, `quantity_delta = -V` (baixa definitiva da cesta vendida).
+   - **Retorno de Sobras Intactas (`DISPATCH_RETURN`):**
+     - Linha 1: `location_type = 'TRANSIT'`, `commercial_agent_id = :agent_id`, `quantity_delta = -R`.
+     - Linha 2: `location_type = 'STORE'`, `quantity_delta = +R` (devolução ao armazém).
+   - **Perdas e Avarias na Rota (`DISPATCH_LOSS`):**
+     - Linha: `location_type = 'TRANSIT'`, `commercial_agent_id = :agent_id`, `quantity_delta = -A` com justificativa obrigatória.
+3. **Equação de Auditoria da Carga:**
+   $$\text{Expedidas} = \text{Vendidas} + \text{Devolvidas} + \text{Avariadas}$$
 
 ---
 
-## 2. Mapa Geral de Fases e Estado do Projeto
+### 2.2. Conciliação e Repasses com Detalhamento Item a Item
+Para auditar divergências sem agregar valores cegamente:
+1. **Três Estados Físicos do Dinheiro:**
+   - `CLIENT_DEBT`: Venda fiada a receber do cliente final (`accounts_receivable.customer_id`).
+   - `AGENT_IN_TRANSIT`: Dinheiro recebido pelo entregador, mas ainda sob custódia do intermediário.
+   - `COMPANY_SETTLED`: Dinheiro recebido e conferido no caixa físico ou conta bancária da empresa.
+2. **Detalhamento da Prestação de Contas (`settlement_allocations`):**
+   Cada acerto (`responsible_settlements`) possui itens detalhados apontando individualmente:
+   - `sale_id`: Vendas à vista realizadas na rota cujo dinheiro foi entregue.
+   - `receivable_payment_id`: Cobranças de fiados antigos que o intermediário recebeu do cliente e está repassando.
+   - `dispatch_item_id`: Cestas devolvidas ou avariadas.
+   - `expense_voucher_id`: Despesas de viagem autorizadas (ex.: combustível com nota) abatidas do repasse.
+   - `discrepancy_cents`: Divergência residual apurada por operação.
+
+---
+
+### 2.3. Metodologia de Custo Médio Ponderado Móvel (CMPM) e CMV Real
+Para assegurar cálculo rigoroso e auditável do CMV e das margens de contribuição:
+1. **Entrada de Compras de Insumos (`purchases`):**
+   Ao confirmar uma compra com quantidade $Q_{compra}$ e custo unitário $C_{compra}$:
+   $$CMPM_{novo} = \frac{(Estoque_{atual} \times CMPM_{antigo}) + (Q_{compra} \times C_{compra})}{Estoque_{atual} + Q_{compra}}$$
+   - Esse valor atualiza o custo de referência do produto em `Product.cost_price_cents`.
+   - O preço de aquisição original da nota fiscal permanece imutável em `purchase_items.unit_price_cents`.
+2. **Ajustes de Estoque:**
+   - Ajuste de Saída (`ADJUSTMENT_OUT`): Baixa contábil valorizada ao CMPM vigente no momento do ajuste (despesa operacional), sem alterar o CMPM unitário do saldo remanescente.
+3. **Montagem de Cestas (`production_batches`):**
+   - Ao produzir um lote de cestas, cada insumo consumido é valorizado pelo seu CMPM no momento da montagem:
+     $$CustoInsumos_{batch} = \sum_{i} (QtdConsumida_i \times CMPM_i)$$
+   - O custo unitário apurado do lote é gravado de forma **imutável** em `production_batches.unit_cost_cents`:
+     $$CustoUnitCesta_{batch} = \frac{CustoInsumos_{batch} + CustoEmbalagem}{QtdCestasProduzidas}$$
+4. **Custo Médio das Cestas Padrão Prontas:**
+   Cestas padrão mantidas em estoque herdam o CMPM das ordens de montagem acumuladas.
+5. **Apuração do CMV Real nas Vendas (`sales`):**
+   - Ao vender uma cesta, o custo unitário do momento da venda é congelado em `sale_items.unit_cost_cents`.
+   - CMV de cada item: $\text{CMV}_{item} = \text{Quantidade} \times \text{unit\_cost\_cents}$.
+   - DRE Gerencial:
+     $$\text{Margem Bruta} = \text{Receita Líquida de Vendas} - \sum \text{CMV}_{itens\_vendidos}$$
+
+---
+
+### 2.4. Contas a Pagar e Prevenção de Duplicidades Financeiras
+1. **Fato Gerador vs. Liquidação Financeira:**
+   - Compras de estoque a prazo (`payment_condition = 'CREDIT_TERM'`) geram títulos em `accounts_payable` com status `OPEN`. Elas **NÃO** geram lançamento imediato no livro-caixa (`cash_flow_entries`).
+   - Compras à vista (`payment_condition = 'CASH_IMMEDIATE'`) geram o título e a liquidação atômica associada debitando a conta financeira da empresa em `cash_flow_entries`.
+   - Essa segregação impede categoricamente a dupla contagem de saídas de caixa.
+2. **Parcelamento:** Títulos de fornecedores suportam parcelamento com vencimentos e valores independentes (`payable_installments` ou parcelas com sufixo `/01`, `/02`).
+3. **Classificação entre Despesas Empresariais e Pessoais:**
+   - `nature = 'BUSINESS'`: Despesas operacionais do negócio (insumos, energia, aluguel, manutenção, frete). Computadas na DRE Operacional.
+   - `nature = 'PERSONAL_WITHDRAWAL'`: Retiradas particulares, pró-labore ou despesas pessoais dos sócios. Deduzem saldo das contas financeiras da empresa, mas são **excluídas da apuração de lucro operacional da DRE**, preservando a análise real do negócio.
+
+---
+
+### 2.5. Integridade do Livro de Fluxo de Caixa (`cash_flow_entries`)
+1. **Razão Financeiro Imutável:**
+   - Entradas de dinheiro reais: `entry_type = 'INFLOW'`.
+   - Saídas de dinheiro reais: `entry_type = 'OUTFLOW'`.
+   - Transferências entre contas da empresa geram par de lançamentos atômico correlacionado (`OUTFLOW` na origem, `INFLOW` no destino).
+2. **Cálculo Auditável de Saldo:**
+   $$\text{Saldo}(\text{conta}) = \text{initial\_balance\_cents} + \sum \text{INFLOW} - \sum \text{OUTFLOW}$$
+3. **Consistência de Títulos:**
+   O saldo devedor de qualquer título de contas a receber ou a pagar é matematicamente validado contra a soma dos pagamentos amortizados:
+   $$\text{balance\_cents} = \text{original\_amount\_cents} + \text{interest\_cents} - \text{discount\_cents} - \sum \text{payments.amount\_cents}$$
+
+---
+
+## 3. Mapa Geral de Fases Revisado
 
 ```
 [FASE 1] Fundação Arquitetural, TLS, Pareamento, WAL & Esqueleto Flutter ----> [CONCLUÍDA & HOMOLOGADA]
 [FASE 2] Produtos, Embalagens/Conversões e Receitas Imutáveis -----------------> [CONCLUÍDA & HOMOLOGADA]
 [FASE 3] Livro-Razão Append-Only, Compras com Conversão e Ajustes ------------> [CONCLUÍDA & HOMOLOGADA]
-======================================= PONTO DE CONTROLE ATUAL ========================================
-[FASE 4] Motor de Montagem e Produção de Cestas (Padrão e Personalizadas) ----> [AGUARDANDO AUTORIZAÇÃO]
-[FASE 5] Vendas, Baixa de Cestas e Venda com Montagem Simultânea -------------> [PLANEJADA]
-[FASE 6] Relatórios Gerenciais, CMV, Margens e Exportações --------------------> [PLANEJADA]
-[FASE 7] Instalação Windows, Agendador de Tarefas e Entrega ------------------> [PLANEJADA]
-[FASE 8+] Módulos Financeiros Avançados, Contas a Receber/Pagar & Expedição -> [BACKLOG FORMALIZADO]
+═══════════════════════════════════════ PONTO DE CONTROLE ATUAL ════════════════════════════════════════
+[FASE 4] Motor de Montagem e Produção de Cestas (Padrão, Personalizadas e CMPM) [AGUARDANDO AUTORIZAÇÃO]
+[FASE 5] Vendas de Cestas, Saídas Físicas e Venda com Montagem Simultânea ------> [PLANEJADA]
+[FASE 6] Expedição, Conferência de Saídas e Prestação de Contas de Agentes ----> [PLANEJADA]
+[FASE 7] Gestão Financeira Completa (Clientes, Contas a Receber/Pagar, Caixa) -> [PLANEJADA]
+[FASE 8] Fluxo de Caixa, DRE Gerencial, CMV Real, Margens e Relatórios --------> [PLANEJADA]
+[FASE 9] Instalação Windows, Agendador de Tarefas e Entrega Final -------------> [PLANEJADA]
 ```
-
----
-
-## 3. Guia de Orientação para Agentes de IA nas Próximas Sessões
-
-Ao iniciar qualquer nova sessão de trabalho neste projeto, o agente de IA **DEVE**:
-1. Ler este arquivo (`ARCHITECTURE.md`) e o arquivo [`Especificacao_Sistema_Estoque_Cestas.md`](file:///c:/Users/jardi/Desktop/ZM%20CESTA%20B%C3%81SICA/Especificacao_Sistema_Estoque_Cestas.md).
-2. Executar a suíte de testes com `& ".\backend\.venv\Scripts\python.exe" -m pytest backend/tests -v` para confirmar que o ponto de partida está 100% verde (101 testes passando).
-3. Verificar o status do Git com `git status` para certificar-se de que a árvore de trabalho está limpa antes de iniciar qualquer modificação.
-4. **Nunca avançar de fase ou implementar código de fases futuras sem a autorização prévia e explícita do usuário.**
-5. Tratar toda operação de escrita como atômica sob `BEGIN IMMEDIATE`, garantir proteção de idempotência em mutações e manter o livro-razão estritamente *append-only*.
