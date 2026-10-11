@@ -44,12 +44,19 @@ class _ProductionDisassemblyDialogState
   bool _isLoading = false;
   String? _errorMessage;
 
+  int get _maxDisassembleQty {
+    final remainingInBatch = widget.batch.quantityProduced - widget.batch.quantityDisassembled;
+    final batchLimit = remainingInBatch > 0 ? remainingInBatch : widget.batch.quantityProduced;
+    final stock = widget.batch.currentBatchStock;
+    if (stock <= 0) return 0;
+    return stock > batchLimit ? batchLimit : stock;
+  }
+
   @override
   void initState() {
     super.initState();
-    final defaultQty = widget.batch.currentBatchStock > 0
-        ? widget.batch.currentBatchStock
-        : widget.batch.quantityProduced;
+    final maxQty = _maxDisassembleQty;
+    final defaultQty = maxQty > 0 ? maxQty : 1;
     _quantityController = TextEditingController(text: defaultQty.toString());
 
     _initTriageItems(defaultQty);
@@ -91,8 +98,8 @@ class _ProductionDisassemblyDialogState
   }
 
   void _markAllIntact() {
-    final qty = int.tryParse(_quantityController.text.trim()) ??
-        widget.batch.currentBatchStock;
+    final maxQty = _maxDisassembleQty;
+    final qty = int.tryParse(_quantityController.text.trim()) ?? (maxQty > 0 ? maxQty : 1);
     _recalcTriage(qty);
   }
 
@@ -115,9 +122,10 @@ class _ProductionDisassemblyDialogState
       return;
     }
 
-    if (qtyToDisassemble > widget.batch.currentBatchStock) {
+    final maxAllowed = _maxDisassembleQty;
+    if (maxAllowed <= 0 || qtyToDisassemble > maxAllowed) {
       setState(() => _errorMessage =
-          'Saldo insuficiente para desmontagem: disponivel ${widget.batch.currentBatchStock} unidades.');
+          'Saldo insuficiente para desmontagem: maximo permitido e de $maxAllowed unidade(s).');
       return;
     }
 
@@ -131,8 +139,8 @@ class _ProductionDisassemblyDialogState
       final loss = int.tryParse(draft.lossController.text.trim()) ?? 0;
       return {
         'product_id': draft.item.productId,
-        'quantity_intact_base_units': intact,
-        'quantity_loss_base_units': loss,
+        'intact_quantity': intact,
+        'loss_quantity': loss,
       };
     }).toList();
 
@@ -257,14 +265,19 @@ class _ProductionDisassemblyDialogState
                           if (n == null || n <= 0) {
                             return 'Minimo 1';
                           }
-                          if (n > widget.batch.currentBatchStock) {
-                            return 'Max: ${widget.batch.currentBatchStock}';
+                          final maxAllowed = _maxDisassembleQty;
+                          if (maxAllowed <= 0) {
+                            return 'Lote sem saldo disponivel';
+                          }
+                          if (n > maxAllowed) {
+                            return 'Max: $maxAllowed';
                           }
                           return null;
                         },
                         onChanged: (val) {
                           final n = int.tryParse(val.trim());
-                          if (n != null && n > 0 && n <= widget.batch.currentBatchStock) {
+                          final maxAllowed = _maxDisassembleQty;
+                          if (n != null && n > 0 && n <= maxAllowed) {
                             _recalcTriage(n);
                           }
                         },

@@ -1,7 +1,7 @@
 import uuid
 import datetime
 from decimal import Decimal, ROUND_HALF_EVEN
-from typing import Optional, List, Tuple, Dict
+from typing import Optional, List, Tuple, Dict, Union, Any
 from sqlalchemy import select, func, or_, desc
 from sqlalchemy.orm import Session, selectinload
 from fastapi import HTTPException, status
@@ -21,6 +21,7 @@ from app.services.inventory import (
     get_product_stock,
     get_basket_stock,
     get_batch_stock,
+    get_batch_disassembled_quantity,
     record_inventory_movement,
 )
 
@@ -64,7 +65,9 @@ def calculate_batch_unit_cost(total_cost_cents: int, quantity_produced: int) -> 
     )
 
 
-def preview_production(db: Session, data: ProductionBatchCreate) -> ProductionPreviewResponse:
+def preview_production(
+    db: Session, data: Union[ProductionPreviewRequest, ProductionBatchCreate]
+) -> ProductionPreviewResponse:
     """
     Pre-flight simulation for production assembly.
     Validates recipe/custom items, computes live ingredient requirements,
@@ -302,7 +305,7 @@ def create_production_batch(db: Session, data: ProductionBatchCreate) -> Product
             quantity_produced=data.quantity_produced,
             status="CONFIRMED",
             is_custom=False,
-            is_direct_sale=False,
+            is_direct_sale=data.is_direct_sale,
             custom_description=None,
             occurred_at=occurred,
             unit_cost_cents=unit_cost,
@@ -438,7 +441,7 @@ def create_production_batch(db: Session, data: ProductionBatchCreate) -> Product
             quantity_produced=data.quantity_produced,
             status="CONFIRMED",
             is_custom=True,
-            is_direct_sale=False,
+            is_direct_sale=data.is_direct_sale,
             custom_description=data.custom_description.strip(),
             occurred_at=occurred,
             unit_cost_cents=unit_cost,
@@ -487,7 +490,7 @@ def create_production_batch(db: Session, data: ProductionBatchCreate) -> Product
 
 def disassemble_production_batch(
     db: Session, batch_id: str, data: DisassemblyRequest
-) -> Tuple[ProductionBatch, int, int]:
+) -> Tuple[ProductionBatch, int, int, int]:
     """
     Executes disassembly / reversal of finished baskets under active BEGIN IMMEDIATE transaction lock.
     Enforces that finished baskets are actually on-hand before permitting disassembly (cannot disassemble sold baskets).
@@ -516,11 +519,23 @@ def disassemble_production_batch(
             detail=f"Apenas lotes confirmados podem ser desmontados ou estornados. Status atual: {batch.status}.",
         )
 
-    qty_to_disassemble = data.quantity_to_disassemble or batch.quantity_produced
-    if qty_to_disassemble <= 0 or qty_to_disassemble > batch.quantity_produced:
+    already_disassembled = get_batch_disassembled_quantity(db, batch.id)
+    remaining_in_batch = batch.quantity_produced - already_disassembled
+    if remaining_in_batch <= 0:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Quantidade a desmontar ({qty_to_disassemble}) invalida. Quantidade produzida no lote: {batch.quantity_produced}.",
+            detail=f"Lote #{batch.batch_number} ja foi integralmente desmontado.",
+        )
+
+    qty_to_disassemble = data.quantity_to_disassemble if data.quantity_to_disassemble is not None else remaining_in_batch
+    if qty_to_disassemble <= 0 or qty_to_disassemble > remaining_in_batch:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=(
+                f"Quantidade a desmontar ({qty_to_disassemble}) invalida. "
+                f"Saldo restante do lote: {remaining_in_batch} "
+                f"(produzido: {batch.quantity_produced}, ja desmontado: {already_disassembled})."
+            ),
         )
 
     # Validate that finished baskets are available in stock
@@ -545,7 +560,26 @@ def disassemble_production_batch(
         )
 
     # Process triage per item
-    triage_map = {t.product_id: t for t in (data.triage_items or [])}
+    batch_product_ids = {it.product_id for it in batch.items}
+    triage_map: Dict[str, Any] = {}
+    if data.triage_items:
+        for t in data.triage_items:
+            if t.product_id not in batch_product_ids:
+                prod = db.get(Product, t.product_id)
+                prod_name = prod.name if prod else t.product_id
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Produto '{prod_name}' na triagem nao pertence a composicao deste lote.",
+                )
+            if t.product_id in triage_map:
+                prod = db.get(Product, t.product_id)
+                prod_name = prod.name if prod else t.product_id
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Produto '{prod_name}' informado em duplicidade na triagem.",
+                )
+            triage_map[t.product_id] = t
+
     intact_returned_count = 0
     loss_recorded_count = 0
     now = utc_now()
@@ -627,11 +661,11 @@ def disassemble_production_batch(
         reason=f"Baixa de cestas acabadas por desmontagem do lote #{batch.batch_number}: {data.reason}",
     )
 
-    # If all produced baskets in the batch were disassembled:
-    if qty_to_disassemble == batch.quantity_produced:
+    # If all produced baskets in the batch were disassembled cumulatively:
+    if (already_disassembled + qty_to_disassemble) >= batch.quantity_produced:
         batch.status = "DISASSEMBLED"
         batch.canceled_at = now
         batch.cancellation_reason = data.reason
 
     db.flush()
-    return batch, intact_returned_count, loss_recorded_count
+    return batch, intact_returned_count, loss_recorded_count, qty_to_disassemble

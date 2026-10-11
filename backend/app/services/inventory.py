@@ -34,6 +34,16 @@ def get_batch_stock(db: Session, production_batch_id: str) -> int:
     )
     return int(db.execute(stmt).scalar_one() or 0)
 
+def get_batch_disassembled_quantity(db: Session, batch_id: str) -> int:
+    """Calculates total quantity of finished baskets disassembled for a given batch."""
+    stmt = select(func.coalesce(func.sum(-InventoryMovement.quantity_delta), 0)).where(
+        InventoryMovement.item_type == "BASKET",
+        InventoryMovement.movement_type == "DISASSEMBLY_DEPARTURE",
+        InventoryMovement.source_type == "PRODUCTION",
+        InventoryMovement.source_id == batch_id,
+    )
+    return int(db.execute(stmt).scalar_one() or 0)
+
 def get_all_products_stock_map(db: Session) -> Dict[str, int]:
     """Returns a dictionary mapping product_id to current calculated stock."""
     stmt = (

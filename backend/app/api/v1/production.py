@@ -27,7 +27,11 @@ from app.services.production import (
     create_production_batch,
     disassemble_production_batch,
 )
-from app.services.inventory import get_batch_stock, get_basket_stock
+from app.services.inventory import (
+    get_batch_stock,
+    get_basket_stock,
+    get_batch_disassembled_quantity,
+)
 
 router = APIRouter()
 
@@ -48,11 +52,13 @@ def serialize_batch(b: ProductionBatch, db: Session) -> ProductionBatchResponse:
         for it in b.items
     ]
 
-    current_stock = (
-        get_batch_stock(db, b.id)
-        if b.is_custom
-        else get_basket_stock(db, b.basket_type_id)
-    )
+    quantity_disassembled = get_batch_disassembled_quantity(db, b.id)
+    remaining_in_batch = max(0, b.quantity_produced - quantity_disassembled)
+    if b.is_custom:
+        current_stock = max(0, min(remaining_in_batch, get_batch_stock(db, b.id)))
+    else:
+        warehouse_stock = get_basket_stock(db, b.basket_type_id)
+        current_stock = max(0, min(remaining_in_batch, warehouse_stock))
 
     return ProductionBatchResponse(
         id=b.id,
@@ -62,6 +68,7 @@ def serialize_batch(b: ProductionBatch, db: Session) -> ProductionBatchResponse:
         recipe_version_id=b.recipe_version_id,
         recipe_version_number=b.recipe_version.version_number if b.recipe_version else None,
         quantity_produced=b.quantity_produced,
+        quantity_disassembled=quantity_disassembled,
         current_batch_stock=current_stock,
         status=b.status,
         is_custom=b.is_custom,
@@ -79,7 +86,7 @@ def serialize_batch(b: ProductionBatch, db: Session) -> ProductionBatchResponse:
 
 @router.post("/production/preview", response_model=ProductionPreviewResponse)
 def preview_assembly(
-    data: ProductionBatchCreate,
+    data: ProductionPreviewRequest,
     db: Session = Depends(get_db),
     current_device: PairedDevice = Depends(get_current_device),
 ):
@@ -245,12 +252,11 @@ def disassemble_batch(
     Exige saldo em estoque de cestas prontas (rejeita desmontar cestas ja vendidas).
     """
     def _execute(session: Session):
-        batch, intact_count, loss_count = disassemble_production_batch(session, batch_id, data)
-        qty_dis = data.quantity_to_disassemble or batch.quantity_produced
+        batch, intact_count, loss_count, actual_qty = disassemble_production_batch(session, batch_id, data)
         resp = DisassemblyResponse(
             batch_id=batch.id,
             batch_number=batch.batch_number,
-            quantity_disassembled=qty_dis,
+            quantity_disassembled=actual_qty,
             status=batch.status,
             intact_items_returned=intact_count,
             loss_items_recorded=loss_count,
@@ -291,18 +297,18 @@ def cancel_batch(
     )
 
     def _execute(session: Session):
-        batch, intact_count, loss_count = disassemble_production_batch(
+        batch, intact_count, loss_count, actual_qty = disassemble_production_batch(
             session, batch_id, disassembly_request
         )
         resp = DisassemblyResponse(
             batch_id=batch.id,
             batch_number=batch.batch_number,
-            quantity_disassembled=batch.quantity_produced,
+            quantity_disassembled=actual_qty,
             status=batch.status,
             intact_items_returned=intact_count,
             loss_items_recorded=0,
             occurred_at=datetime.datetime.now(datetime.timezone.utc),
-            message=f"Lote #{batch.batch_number} estornado com sucesso. Todos os insumos retornaram ao estoque.",
+            message=f"Lote #{batch.batch_number} estornado com sucesso ({actual_qty} cesta(s) desmontada(s)). Todos os insumos retornaram ao estoque.",
         )
         return status.HTTP_200_OK, resp.model_dump(mode="json")
 

@@ -287,7 +287,7 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
         .where((it) => it.quantityPerBasket > 0)
         .map((it) => {
               'product_id': it.productId,
-              'quantity_base_units': it.quantityPerBasket,
+              'quantity_in_base_units': it.quantityPerBasket,
               'section': it.section,
             })
         .toList();
@@ -361,7 +361,7 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
     final customItemsPayload = _customItems
         .map((it) => {
               'product_id': it.productId,
-              'quantity_base_units': it.quantityPerBasket,
+              'quantity_in_base_units': it.quantityPerBasket,
               'section': it.section,
             })
         .toList();

@@ -54,6 +54,7 @@ class ProductionBatch {
   final String? recipeVersionId;
   final int? recipeVersionNumber;
   final int quantityProduced;
+  final int quantityDisassembled;
   final int currentBatchStock;
   final String status;
   final bool isCustom;
@@ -75,6 +76,7 @@ class ProductionBatch {
     this.recipeVersionId,
     this.recipeVersionNumber,
     required this.quantityProduced,
+    this.quantityDisassembled = 0,
     required this.currentBatchStock,
     required this.status,
     required this.isCustom,
@@ -98,6 +100,7 @@ class ProductionBatch {
       recipeVersionId: json['recipe_version_id'] as String?,
       recipeVersionNumber: json['recipe_version_number'] as int?,
       quantityProduced: json['quantity_produced'] as int? ?? 0,
+      quantityDisassembled: json['quantity_disassembled'] as int? ?? 0,
       currentBatchStock: json['current_batch_stock'] as int? ?? 0,
       status: json['status'] as String? ?? 'CONFIRMED',
       isCustom: json['is_custom'] as bool? ?? false,

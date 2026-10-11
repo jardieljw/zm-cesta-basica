@@ -259,8 +259,8 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      if (batch.isCustom)
+                      if (batch.isCustom) ...[
+                        const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
@@ -277,6 +277,26 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                             ),
                           ),
                         ),
+                      ],
+                      if (batch.isDirectSale) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.green.shade100,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.green.shade400),
+                          ),
+                          child: Text(
+                            'Venda Direta',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green.shade800,
+                            ),
+                          ),
+                        ),
+                      ],
                       const Spacer(),
                       IconButton(
                         icon: const Icon(Icons.close),
@@ -315,6 +335,14 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                       ),
                     ],
                   ),
+                  if (batch.quantityDisassembled > 0) ...[
+                    const SizedBox(height: 8),
+                    _buildDetailStat(
+                      'Quantidade Desmontada',
+                      '${batch.quantityDisassembled} un',
+                      Icons.remove_circle_outline,
+                    ),
+                  ],
                   const SizedBox(height: 8),
                   Row(
                     children: [
@@ -675,6 +703,25 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                             ],
                           ),
                         ),
+                        if (b.isDirectSale) ...[
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.green.shade100,
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(color: Colors.green.shade400),
+                            ),
+                            child: Text(
+                              'Venda Direta',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green.shade800,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                        ],
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
@@ -698,7 +745,8 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Produzido: ${b.quantityProduced} un  |  Disponivel: ${b.currentBatchStock} un',
+                          'Produzido: ${b.quantityProduced} un  |  Disponivel: ${b.currentBatchStock} un' +
+                              (b.quantityDisassembled > 0 ? '  |  Desmontado: ${b.quantityDisassembled} un' : ''),
                           style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
                         ),
                         Text(
