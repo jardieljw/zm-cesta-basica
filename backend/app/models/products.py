@@ -15,6 +15,7 @@ class Product(Base):
     minimum_stock: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     barcode: Mapped[Optional[str]] = mapped_column(String(50), unique=True, nullable=True)
     cost_price_cents: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    cost_price_microcents: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     sale_price_cents: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)

@@ -9,6 +9,8 @@ import 'basket_types_view.dart';
 import 'purchases_view.dart';
 import 'inventory_summary_view.dart';
 import 'inventory_movements_view.dart';
+import 'production_batches_view.dart';
+import 'production_assembly_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -313,6 +315,93 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
           ),
+        ),
+        const SizedBox(height: 24),
+        Text(
+          'Montagem & Produção de Cestas (Fase 4)',
+          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ProductionBatchesView()),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.indigo.shade100,
+                          radius: 24,
+                          child: Icon(Icons.precision_manufacturing, color: Colors.indigo.shade800, size: 28),
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Lotes & Produção',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
+                          'Historico de lotes montados, custo unitario, triagem e desmontagem.',
+                          style: TextStyle(color: Colors.black54, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ProductionAssemblyView()),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.orange.shade100,
+                          radius: 24,
+                          child: Icon(Icons.handyman, color: Colors.orange.shade900, size: 28),
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Nova Montagem',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const SizedBox(height: 4),
+                        const Text(
+                          'Montar cestas padrao ou personalizadas com checagem de estoque.',
+                          style: TextStyle(color: Colors.black54, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );

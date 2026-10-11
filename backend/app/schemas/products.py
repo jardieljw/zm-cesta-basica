@@ -11,6 +11,7 @@ class ProductBase(BaseModel):
     base_unit: str = Field(..., min_length=1, max_length=20, description="Unidade de medida base no estoque (KG, UN, LT, G, ML)")
     minimum_stock: int = Field(default=0, ge=0, description="Estoque minimo de seguranca em unidades base")
     cost_price_cents: int = Field(default=0, ge=0, description="Preco de custo base de referencia em centavos")
+    cost_price_microcents: int = Field(default=0, ge=0, description="Preco de custo CMPM unitario em microcentavos (escala fixa 10^-4 centavos)")
     sale_price_cents: int = Field(default=0, ge=0, description="Preco de venda base de referencia em centavos")
     notes: Optional[str] = Field(None, description="Observacoes adicionais")
     is_active: bool = Field(default=True, description="Status ativo do produto")
@@ -53,6 +54,7 @@ class ProductUpdate(BaseModel):
     base_unit: Optional[str] = Field(None, min_length=1, max_length=20)
     minimum_stock: Optional[int] = Field(None, ge=0)
     cost_price_cents: Optional[int] = Field(None, ge=0)
+    cost_price_microcents: Optional[int] = Field(None, ge=0)
     sale_price_cents: Optional[int] = Field(None, ge=0)
     notes: Optional[str] = None
     is_active: Optional[bool] = None

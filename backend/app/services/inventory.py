@@ -29,7 +29,8 @@ def get_basket_stock(db: Session, basket_type_id: str) -> int:
 def get_batch_stock(db: Session, production_batch_id: str) -> int:
     """Calculates live stock for a custom production batch."""
     stmt = select(func.coalesce(func.sum(InventoryMovement.quantity_delta), 0)).where(
-        InventoryMovement.production_batch_id == production_batch_id
+        InventoryMovement.production_batch_id == production_batch_id,
+        InventoryMovement.basket_type_id.is_not(None),
     )
     return int(db.execute(stmt).scalar_one() or 0)
 

@@ -1,5 +1,6 @@
 import uuid
 import datetime
+from decimal import Decimal, ROUND_HALF_EVEN
 from typing import Optional, List, Tuple, Dict
 from sqlalchemy import select, func
 from sqlalchemy.orm import Session, selectinload
@@ -27,16 +28,44 @@ def update_product_cost_price(
     product: Product,
     packaging: Optional[ProductPackaging],
     unit_price_cents: int,
+    quantity_in_base_units: int = 0,
+    total_price_cents: int = 0,
 ) -> None:
-    """Updates product reference cost price from purchase item price under active transaction."""
+    """Updates product reference cost price and microcents CMPM under active transaction."""
     if unit_price_cents <= 0:
         return
 
+    # 1. Update CMPM in microcents if quantity and total are provided
+    if quantity_in_base_units > 0 and total_price_cents > 0:
+        unit_compra_micro = int(
+            (Decimal(total_price_cents) * Decimal(10000) / Decimal(quantity_in_base_units))
+            .quantize(Decimal("1"), rounding=ROUND_HALF_EVEN)
+        )
+        stock_after = get_product_stock(db, product.id)
+        stock_before = max(0, stock_after - quantity_in_base_units)
+
+        current_cmpm = product.cost_price_microcents or (product.cost_price_cents * 10000)
+        if stock_before > 0 and current_cmpm > 0:
+            new_cmpm = int(
+                (
+                    (Decimal(stock_before) * Decimal(current_cmpm) + Decimal(quantity_in_base_units) * Decimal(unit_compra_micro))
+                    / Decimal(stock_before + quantity_in_base_units)
+                ).quantize(Decimal("1"), rounding=ROUND_HALF_EVEN)
+            )
+        else:
+            new_cmpm = unit_compra_micro
+
+        product.cost_price_microcents = new_cmpm
+
+    # 2. Update reference cost_price_cents
     if not packaging:
         product.cost_price_cents = unit_price_cents
     else:
         if product.base_unit.upper() in ("UNIT", "UN") and packaging.quantity_in_base_units > 1:
-            product.cost_price_cents = int(round(unit_price_cents / packaging.quantity_in_base_units))
+            product.cost_price_cents = int(
+                (Decimal(unit_price_cents) / Decimal(packaging.quantity_in_base_units))
+                .quantize(Decimal("1"), rounding=ROUND_HALF_EVEN)
+            )
         else:
             default_pkg = next(
                 (p for p in product.packagings if p.is_default and p.is_active),
@@ -44,9 +73,15 @@ def update_product_cost_price(
             )
             if default_pkg and default_pkg.quantity_in_base_units > 0 and packaging.id != default_pkg.id:
                 ratio = packaging.quantity_in_base_units / default_pkg.quantity_in_base_units
-                product.cost_price_cents = int(round(unit_price_cents / ratio))
+                product.cost_price_cents = int(
+                    (Decimal(unit_price_cents) / Decimal(ratio))
+                    .quantize(Decimal("1"), rounding=ROUND_HALF_EVEN)
+                )
             else:
                 product.cost_price_cents = unit_price_cents
+
+    if product.cost_price_microcents == 0 and product.cost_price_cents > 0:
+        product.cost_price_microcents = product.cost_price_cents * 10000
 
     product.updated_at = utc_now()
     db.add(product)
@@ -157,10 +192,11 @@ def create_purchase_entity(db: Session, data: PurchaseCreate) -> Purchase:
                     + (f" - Fornecedor: {purchase.supplier_name}" if purchase.supplier_name else "")
                 ),
             )
+            db.flush()
             prod = db.get(Product, it.product_id)
             pkg = db.get(ProductPackaging, it.packaging_id) if it.packaging_id else None
             if prod:
-                update_product_cost_price(db, prod, pkg, it.unit_price_cents)
+                update_product_cost_price(db, prod, pkg, it.unit_price_cents, it.quantity_in_base_units, it.total_price_cents)
 
     db.flush()
     return purchase
@@ -201,12 +237,13 @@ def confirm_purchase_entity(db: Session, purchase_id: str) -> Purchase:
                 + (f" - Fornecedor: {purchase.supplier_name}" if purchase.supplier_name else "")
             ),
         )
+        db.flush()
 
         # Update cost price
         product = db.get(Product, it.product_id)
         pkg = db.get(ProductPackaging, it.packaging_id) if it.packaging_id else None
         if product:
-            update_product_cost_price(db, product, pkg, it.unit_price_cents)
+            update_product_cost_price(db, product, pkg, it.unit_price_cents, it.quantity_in_base_units, it.total_price_cents)
 
     db.flush()
     return purchase

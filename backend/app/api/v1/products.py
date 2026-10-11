@@ -91,6 +91,7 @@ def create_product(
         base_unit=data.base_unit.strip().upper(),
         minimum_stock=data.minimum_stock,
         cost_price_cents=data.cost_price_cents,
+        cost_price_microcents=data.cost_price_microcents if data.cost_price_microcents > 0 else (data.cost_price_cents * 10000),
         sale_price_cents=data.sale_price_cents,
         notes=data.notes,
         is_active=data.is_active,
@@ -198,6 +199,10 @@ def update_product(
         product.minimum_stock = data.minimum_stock
     if "cost_price_cents" in fields_set and data.cost_price_cents is not None:
         product.cost_price_cents = data.cost_price_cents
+        if "cost_price_microcents" not in fields_set or data.cost_price_microcents is None:
+            product.cost_price_microcents = data.cost_price_cents * 10000
+    if "cost_price_microcents" in fields_set and data.cost_price_microcents is not None:
+        product.cost_price_microcents = data.cost_price_microcents
     if "sale_price_cents" in fields_set and data.sale_price_cents is not None:
         product.sale_price_cents = data.sale_price_cents
     if "notes" in fields_set:
