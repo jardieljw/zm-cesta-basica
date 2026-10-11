@@ -1,0 +1,28 @@
+name: zm_cesta_basica_client
+description: "Aplicativo Cliente Multiplataforma (Windows e Android) para Gestao de Estoque de Cestas ZM"
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+  flutter: ">=3.19.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.2.1
+  flutter_secure_storage: ^9.0.0
+  shared_preferences: ^2.2.3
+  crypto: ^3.0.3
+  intl: ^0.19.0
+  uuid: ^4.4.0
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^5.1.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
