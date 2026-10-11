@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/production_batch.dart';
 import '../services/production_service.dart';
+import '../l10n/l10n_extension.dart';
+import '../utils/formatters.dart';
+import '../utils/api_error_mapper.dart';
 
 class _TriageItemDraft {
   final ProductionBatchItem item;
@@ -118,14 +121,14 @@ class _ProductionDisassemblyDialogState
 
     final qtyToDisassemble = int.tryParse(_quantityController.text.trim()) ?? 0;
     if (qtyToDisassemble <= 0) {
-      setState(() => _errorMessage = 'A quantidade a desmontar deve ser maior que zero.');
+      setState(() => _errorMessage = context.l10n.validationMustBePositive);
       return;
     }
 
     final maxAllowed = _maxDisassembleQty;
     if (maxAllowed <= 0 || qtyToDisassemble > maxAllowed) {
       setState(() => _errorMessage =
-          'Saldo insuficiente para desmontagem: maximo permitido e de $maxAllowed unidade(s).');
+          context.l10n.validationInsufficientStockForDisassembly(maxAllowed));
       return;
     }
 
@@ -161,7 +164,7 @@ class _ProductionDisassemblyDialogState
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = e.toString().replaceAll('Exception: ', '');
+          _errorMessage = ApiErrorMapper.toLocalizedMessage(e, context.l10n);
           _isLoading = false;
         });
       }
@@ -171,6 +174,7 @@ class _ProductionDisassemblyDialogState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
 
     return AlertDialog(
       title: Row(
@@ -179,7 +183,7 @@ class _ProductionDisassemblyDialogState
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              'Desmontar Lote #${widget.batch.batchNumber}',
+              l10n.productionDisassembleTitle(widget.batch.batchNumber),
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
@@ -205,18 +209,18 @@ class _ProductionDisassemblyDialogState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Cesta: ${widget.batch.basketTypeName}${widget.batch.isCustom ? ' (Personalizada)' : ''}',
+                        'Cesta: ${widget.batch.basketTypeName}${widget.batch.isCustom ? ' (${l10n.productionCustom})' : ''}',
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Produzido: ${widget.batch.quantityProduced} un  |  Saldo Disponivel em Estoque: ${widget.batch.currentBatchStock} un',
+                        '${l10n.productionQuantityProduced}: ${widget.batch.quantityProduced} ${l10n.commonUnit}  |  ${l10n.productionCurrentStock}: ${widget.batch.currentBatchStock} ${l10n.commonUnit}',
                         style: TextStyle(color: Colors.grey.shade800, fontSize: 13),
                       ),
                       const SizedBox(height: 4),
-                      const Text(
-                        'A desmontagem realiza triagem fisica: itens intactos retornam ao estoque e avarias sao registradas como perda sem inflar o estoque fisicamente.',
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
+                      Text(
+                        l10n.productionDisassembleDescription,
+                        style: const TextStyle(fontSize: 12, color: Colors.black54),
                       ),
                     ],
                   ),
@@ -252,22 +256,22 @@ class _ProductionDisassemblyDialogState
                       child: TextFormField(
                         controller: _quantityController,
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'Qtde a Desmontar *',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: '${l10n.productionDisassembleQtyLabel} *',
+                          border: const OutlineInputBorder(),
                           isDense: true,
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
-                            return 'Obrigatorio';
+                            return l10n.commonRequired;
                           }
                           final n = int.tryParse(value.trim());
                           if (n == null || n <= 0) {
-                            return 'Minimo 1';
+                            return l10n.validationMustBePositive;
                           }
                           final maxAllowed = _maxDisassembleQty;
                           if (maxAllowed <= 0) {
-                            return 'Lote sem saldo disponivel';
+                            return l10n.validationInsufficientStockForDisassembly(0);
                           }
                           if (n > maxAllowed) {
                             return 'Max: $maxAllowed';
@@ -288,15 +292,15 @@ class _ProductionDisassemblyDialogState
                       flex: 2,
                       child: TextFormField(
                         controller: _reasonController,
-                        decoration: const InputDecoration(
-                          labelText: 'Motivo da Desmontagem *',
-                          hintText: 'Ex: Avaria em embalagem, readequacao',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: '${l10n.productionDisassembleReasonLabel} *',
+                          hintText: l10n.productionDisassembleReasonHint,
+                          border: const OutlineInputBorder(),
                           isDense: true,
                         ),
                         validator: (value) {
                           if (value == null || value.trim().length < 3) {
-                            return 'Minimo de 3 caracteres';
+                            return l10n.validationMinChars(3);
                           }
                           return null;
                         },
@@ -309,12 +313,12 @@ class _ProductionDisassemblyDialogState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Triagem Fisica dos Insumos',
+                      l10n.productionDisassembleTriageTitle,
                       style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     TextButton.icon(
                       icon: const Icon(Icons.check_circle_outline, size: 16),
-                      label: const Text('100% Intacto (Sem Avarias)', style: TextStyle(fontSize: 12)),
+                      label: Text(l10n.productionDisassembleAllIntact, style: const TextStyle(fontSize: 12)),
                       onPressed: _markAllIntact,
                     ),
                   ],
@@ -351,7 +355,7 @@ class _ProductionDisassemblyDialogState
                                       style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
                                     ),
                                     Text(
-                                      'Consumido total: ${item.quantityConsumedBaseUnits} ${item.productBaseUnit}',
+                                      l10n.productionBatchConsumedTotal(AppFormatters.formatQuantity(item.quantityConsumedBaseUnits, item.productBaseUnit)),
                                       style: TextStyle(color: Colors.grey.shade600, fontSize: 11),
                                     ),
                                   ],
@@ -364,14 +368,14 @@ class _ProductionDisassemblyDialogState
                                   controller: draft.intactController,
                                   keyboardType: TextInputType.number,
                                   decoration: InputDecoration(
-                                    labelText: 'Intacto (${item.productBaseUnit})',
+                                    labelText: l10n.productionIntactQtyLabel(item.productBaseUnit),
                                     isDense: true,
                                     border: const OutlineInputBorder(),
                                   ),
                                   validator: (v) {
-                                    if (v == null || v.trim().isEmpty) return 'Obrigatorio';
+                                    if (v == null || v.trim().isEmpty) return l10n.commonRequired;
                                     final val = int.tryParse(v.trim());
-                                    if (val == null || val < 0) return 'Invalido';
+                                    if (val == null || val < 0) return l10n.validationInvalid;
                                     return null;
                                   },
                                 ),
@@ -383,14 +387,14 @@ class _ProductionDisassemblyDialogState
                                   controller: draft.lossController,
                                   keyboardType: TextInputType.number,
                                   decoration: InputDecoration(
-                                    labelText: 'Perda/Avaria (${item.productBaseUnit})',
+                                    labelText: l10n.productionLossQtyLabel(item.productBaseUnit),
                                     isDense: true,
                                     border: const OutlineInputBorder(),
                                   ),
                                   validator: (v) {
-                                    if (v == null || v.trim().isEmpty) return 'Obrigatorio';
+                                    if (v == null || v.trim().isEmpty) return l10n.commonRequired;
                                     final val = int.tryParse(v.trim());
-                                    if (val == null || val < 0) return 'Invalido';
+                                    if (val == null || val < 0) return l10n.validationInvalid;
                                     return null;
                                   },
                                 ),
@@ -409,7 +413,7 @@ class _ProductionDisassemblyDialogState
       actions: [
         TextButton(
           onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
-          child: const Text('Cancelar'),
+          child: Text(l10n.commonCancel),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -423,7 +427,7 @@ class _ProductionDisassemblyDialogState
                   height: 18,
                   child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                 )
-              : const Text('Confirmar Desmontagem'),
+              : Text(l10n.productionDisassembleConfirm),
         ),
       ],
     );

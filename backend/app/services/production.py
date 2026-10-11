@@ -631,6 +631,13 @@ def disassemble_production_batch(
 
         # b) Log damaged/loss items as ASSEMBLY_LOSS WITHOUT fictitious inventory entry!
         if loss_qty > 0:
+            effective_reason = (loss_reason.strip() if loss_reason else None) or (data.reason.strip() if data.reason else None)
+            if not effective_reason:
+                prod_name = prod.name if prod else item.product_id
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Perda informada para o produto '{prod_name}' ({loss_qty}) exige justificativa obrigatoria.",
+                )
             record_inventory_movement(
                 db=db,
                 item_type="PRODUCT",
@@ -642,7 +649,7 @@ def disassemble_production_batch(
                 basket_type_id=None,
                 production_batch_id=None,
                 occurred_at=now,
-                reason=f"Perda/avaria contabil na desmontagem do lote #{batch.batch_number}: {loss_qty} {unit} descartados. Motivo: {loss_reason or data.reason}",
+                reason=f"Perda/avaria contabil na desmontagem do lote #{batch.batch_number}: {loss_qty} {unit} descartados. Motivo: {effective_reason}",
             )
             loss_recorded_count += 1
 

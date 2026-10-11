@@ -234,7 +234,7 @@ class _BasketTypesViewState extends State<BasketTypesView> {
                   decoration: BoxDecoration(
                     color: Colors.purple.shade50,
                     borderRadius: BorderRadius.circular(6),
-                    border: BorderSide(color: Colors.purple.shade300),
+                    border: Border.all(color: Colors.purple.shade300),
                   ),
                   child: Text(
                     bt.code,

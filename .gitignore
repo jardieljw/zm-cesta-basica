@@ -29,6 +29,11 @@ data/
 build/
 .flutter-plugins
 .flutter-plugins-dependencies
+**/android/local.properties
+**/GeneratedPluginRegistrant.java
+**/generated_plugin_registrant.*
+**/windows/flutter/ephemeral/
+**/windows/flutter/generated_plugins.cmake
 
 # OS artifacts
 .DS_Store

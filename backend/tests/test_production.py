@@ -2,9 +2,11 @@ import uuid
 import threading
 import datetime
 import pytest
-from fastapi import status
+from fastapi import status, HTTPException
 
 from app.models.movements import InventoryMovement
+from app.schemas.production import DisassemblyRequest, DisassemblyTriageItem
+from app.services.production import disassemble_production_batch
 
 
 def test_standard_basket_assembly_success(client, authenticated_device):
@@ -1097,6 +1099,161 @@ def test_serialize_batch_stock_capped_for_custom_batch_as_well(client, authentic
     b_check = client.get(f"/api/v1/production/batches/{batch_id}", headers=headers).json()
     assert b_check["quantity_disassembled"] == 2
     assert b_check["current_batch_stock"] == 2
+
+
+def test_disassembly_triage_validates_quantity_sum_consistency(client, authenticated_device):
+    """
+    Testa que a triagem rejeita divergencia na soma das quantidades intactas e avariadas:
+    a soma (intact_quantity + loss_quantity) deve ser exatamente igual ao total consumido
+    para a quantidade de cestas desmontadas (qty_to_disassemble * quantity_per_basket).
+    """
+    _, _, headers = authenticated_device
+
+    p = client.post("/api/v1/products", json={"name": "Prod Consist Triage", "category": "ALIMENTACAO", "base_unit": "UNIT"}, headers=headers).json()
+    client.post("/api/v1/purchases", json={"items": [{"product_id": p["id"], "packages_count": 30, "unit_price_cents": 100}]}, headers=headers)
+
+    bt = client.post("/api/v1/basket-types", json={"code": "BT_CONSIST", "name": "Cesta Consist"}, headers=headers).json()
+    client.post(f"/api/v1/basket-types/{bt['id']}/recipes", json={
+        "items": [{"product_id": p["id"], "quantity_in_base_units": 3, "section": "ALIMENTACAO"}]
+    }, headers=headers)
+
+    batch = client.post("/api/v1/production/batches", json={
+        "basket_type_id": bt["id"],
+        "quantity_produced": 4,
+    }, headers=headers).json()
+
+    # Desmontar 2 cestas exige 2 * 3 = 6 unidades de insumo.
+    # Se informar intact=4 e loss=1 (total 5 != 6), deve ser rejeitado com 400.
+    r_div_under = client.post(f"/api/v1/production/batches/{batch['id']}/disassemble", json={
+        "quantity_to_disassemble": 2,
+        "reason": "Triagem com soma insuficiente",
+        "triage_items": [
+            {"product_id": p["id"], "intact_quantity": 4, "loss_quantity": 1}
+        ],
+    }, headers=headers)
+    assert r_div_under.status_code == status.HTTP_400_BAD_REQUEST
+    assert "Divergencia na triagem" in r_div_under.json()["detail"]
+
+    # Se informar intact=5 e loss=2 (total 7 != 6), deve ser rejeitado com 400.
+    r_div_over = client.post(f"/api/v1/production/batches/{batch['id']}/disassemble", json={
+        "quantity_to_disassemble": 2,
+        "reason": "Triagem com soma excedente",
+        "triage_items": [
+            {"product_id": p["id"], "intact_quantity": 5, "loss_quantity": 2}
+        ],
+    }, headers=headers)
+    assert r_div_over.status_code == status.HTTP_400_BAD_REQUEST
+    assert "Divergencia na triagem" in r_div_over.json()["detail"]
+
+
+def test_disassembly_triage_loss_reason_and_aliases_support(client, authenticated_device):
+    """
+    Testa o suporte a aliases de entrada na triagem (quantity_intact_base_units, quantity_loss_base_units),
+    a preservacao da justificativa especifica do item e a correta contabilizacao de estoques.
+    """
+    _, _, headers = authenticated_device
+
+    p1 = client.post("/api/v1/products", json={"name": "Prod Alias Triage 1", "category": "ALIMENTACAO", "base_unit": "UNIT"}, headers=headers).json()
+    p2 = client.post("/api/v1/products", json={"name": "Prod Alias Triage 2", "category": "ALIMENTACAO", "base_unit": "UNIT"}, headers=headers).json()
+    client.post("/api/v1/purchases", json={"items": [
+        {"product_id": p1["id"], "packages_count": 20, "unit_price_cents": 100},
+        {"product_id": p2["id"], "packages_count": 20, "unit_price_cents": 200},
+    ]}, headers=headers)
+
+    bt = client.post("/api/v1/basket-types", json={"code": "BT_ALIAS_TRI", "name": "Cesta Alias Tri"}, headers=headers).json()
+    client.post(f"/api/v1/basket-types/{bt['id']}/recipes", json={
+        "items": [
+            {"product_id": p1["id"], "quantity_in_base_units": 2, "section": "ALIMENTACAO"},
+            {"product_id": p2["id"], "quantity_in_base_units": 1, "section": "ALIMENTACAO"},
+        ]
+    }, headers=headers)
+
+    batch = client.post("/api/v1/production/batches", json={
+        "basket_type_id": bt["id"],
+        "quantity_produced": 3,
+    }, headers=headers).json()
+
+    # Desmonta 2 cestas:
+    # p1 total necessario = 4. Usar aliases: quantity_intact_base_units=3, quantity_loss_base_units=1, loss_reason="Embalagem rasgada"
+    # p2 total necessario = 2. Usar aliases: quantity_intact_base_units=2, quantity_loss_base_units=0
+    r_dis = client.post(f"/api/v1/production/batches/{batch['id']}/disassemble", json={
+        "quantity_to_disassemble": 2,
+        "reason": "Desmontagem com aliases e motivo de perda de insumo",
+        "triage_items": [
+            {
+                "product_id": p1["id"],
+                "quantity_intact_base_units": 3,
+                "quantity_loss_base_units": 1,
+                "loss_reason": "Embalagem rasgada no manuseio",
+            },
+            {
+                "product_id": p2["id"],
+                "quantity_intact_base_units": 2,
+                "quantity_loss_base_units": 0,
+            },
+        ],
+    }, headers=headers)
+    assert r_dis.status_code == status.HTTP_200_OK
+    data = r_dis.json()
+    assert data["intact_items_returned"] == 2
+    assert data["loss_items_recorded"] == 1
+
+    # Insumo p1: 20 comprados - 6 consumidos na montagem + 3 retornados intactos = 17 em estoque
+    assert client.get(f"/api/v1/inventory/products/{p1['id']}/stock", headers=headers).json()["current_stock"] == 17
+    # Insumo p2: 20 comprados - 3 consumidos na montagem + 2 retornados intactos = 19 em estoque
+    assert client.get(f"/api/v1/inventory/products/{p2['id']}/stock", headers=headers).json()["current_stock"] == 19
+
+
+def test_disassembly_triage_loss_requires_justification(client, authenticated_device, test_session):
+    """
+    Testa que qualquer perda fisica (loss_quantity > 0) na desmontagem exige justificativa
+    obrigatoria (motivo nao vazio no item ou motivo valido da desmontagem), sendo rejeitada
+    se nenhuma justificativa for informada.
+    """
+    _, _, headers = authenticated_device
+
+    p = client.post("/api/v1/products", json={"name": "Prod Loss Just", "category": "ALIMENTACAO", "base_unit": "UNIT"}, headers=headers).json()
+    client.post("/api/v1/purchases", json={"items": [{"product_id": p["id"], "packages_count": 10, "unit_price_cents": 100}]}, headers=headers)
+
+    bt = client.post("/api/v1/basket-types", json={"code": "BT_LOSS_JUST", "name": "Cesta Loss Just"}, headers=headers).json()
+    client.post(f"/api/v1/basket-types/{bt['id']}/recipes", json={
+        "items": [{"product_id": p["id"], "quantity_in_base_units": 2, "section": "ALIMENTACAO"}]
+    }, headers=headers)
+
+    batch = client.post("/api/v1/production/batches", json={
+        "basket_type_id": bt["id"],
+        "quantity_produced": 2,
+    }, headers=headers).json()
+
+    # 1. API: Envio de motivo em branco ou menor que 3 caracteres e rejeitado com 422
+    r_empty_reason = client.post(f"/api/v1/production/batches/{batch['id']}/disassemble", json={
+        "quantity_to_disassemble": 1,
+        "reason": "  ",
+        "triage_items": [
+            {"product_id": p["id"], "intact_quantity": 1, "loss_quantity": 1, "loss_reason": None}
+        ],
+    }, headers=headers)
+    assert r_empty_reason.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
+
+    # 2. Servico direto: Se effective_reason for None/vazio quando houver loss_quantity > 0, lanca HTTP 400
+    direct_req = DisassemblyRequest.model_construct(
+        quantity_to_disassemble=1,
+        reason="",
+        triage_items=[
+            DisassemblyTriageItem(
+                product_id=p["id"],
+                intact_quantity=1,
+                loss_quantity=1,
+                loss_reason=None,
+            )
+        ],
+    )
+    with pytest.raises(HTTPException) as exc_info:
+        disassemble_production_batch(test_session, batch["id"], direct_req)
+    assert exc_info.value.status_code == status.HTTP_400_BAD_REQUEST
+    assert "exige justificativa obrigatoria" in exc_info.value.detail
+
+
 
 
 

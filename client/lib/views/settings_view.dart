@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../core/secure_storage.dart';
-import '../services/connectivity_service.dart';
 import '../services/auth_service.dart';
 
 class SettingsView extends StatefulWidget {
@@ -12,7 +11,6 @@ class SettingsView extends StatefulWidget {
 
 class _SettingsViewState extends State<SettingsView> {
   final SecureStorageService _storage = SecureStorageService();
-  final ConnectivityService _connectivity = ConnectivityService();
   final AuthService _auth = AuthService();
 
   final TextEditingController _urlCtrl = TextEditingController();

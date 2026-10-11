@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../models/production_batch.dart';
 import '../services/production_service.dart';
+import '../l10n/l10n_extension.dart';
+import '../utils/formatters.dart';
+import '../utils/api_error_mapper.dart';
 import 'production_assembly_view.dart';
 import 'production_disassembly_dialog.dart';
 
@@ -14,9 +16,6 @@ class ProductionBatchesView extends StatefulWidget {
 
 class _ProductionBatchesViewState extends State<ProductionBatchesView> {
   final ProductionService _productionService = ProductionService();
-  final DateFormat _dateFormat = DateFormat('dd/MM/yyyy HH:mm');
-  final NumberFormat _currencyFormat =
-      NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
 
   List<ProductionBatch> _batches = [];
   bool _isLoading = true;
@@ -26,8 +25,6 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
   bool? _isCustomFilter;
   String _searchQuery = '';
   int _currentPage = 1;
-  int _totalPages = 1;
-  int _totalCount = 0;
 
   @override
   void initState() {
@@ -52,8 +49,6 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
 
       setState(() {
         _batches = result.items;
-        _totalCount = result.total;
-        _totalPages = result.totalPages;
         _isLoading = false;
       });
     } catch (e) {
@@ -78,13 +73,14 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
   }
 
   String _formatStatus(String status) {
+    final l10n = context.l10n;
     switch (status) {
       case 'CONFIRMED':
-        return 'CONFIRMADO';
+        return l10n.productionStatusConfirmed;
       case 'DISASSEMBLED':
-        return 'DESMONTADO';
+        return l10n.productionStatusDisassembled;
       case 'CANCELED':
-        return 'CANCELADO';
+        return l10n.productionStatusCanceled;
       default:
         return status;
     }
@@ -101,7 +97,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.orange.shade800,
-            content: Text(result['message'] as String? ?? 'Lote desmontado com sucesso!'),
+            content: Text(result['message'] as String? ?? context.l10n.productionDisassembledSuccess),
           ),
         );
       }
@@ -120,16 +116,14 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: Text('Estorno Total do Lote #${batch.batchNumber}'),
+              title: Text(context.l10n.productionBatchCancelTitle(batch.batchNumber)),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text(
-                    'Esta operacao cancela a ordem de producao, deduz o saldo das cestas acabadas e '
-                    'retorna 100% dos insumos consumidos ao estoque fisicamente.\n\n'
-                    'Requer que todas as cestas acabadas estejam disponiveis em estoque.',
-                    style: TextStyle(fontSize: 13, color: Colors.black87),
+                  Text(
+                    context.l10n.productionBatchCancelDescription,
+                    style: const TextStyle(fontSize: 13, color: Colors.black87),
                   ),
                   const SizedBox(height: 16),
                   if (cancelError != null)
@@ -148,10 +142,10 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                     ),
                   TextField(
                     controller: reasonController,
-                    decoration: const InputDecoration(
-                      labelText: 'Motivo do Estorno *',
-                      hintText: 'Ex: Ordem gerada em duplicidade',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: '${context.l10n.productionBatchCancelReasonLabel} *',
+                      hintText: context.l10n.productionBatchCancelReasonHint,
+                      border: const OutlineInputBorder(),
                     ),
                   ),
                 ],
@@ -159,7 +153,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
               actions: [
                 TextButton(
                   onPressed: isCancelling ? null : () => Navigator.of(context).pop(),
-                  child: const Text('Voltar'),
+                  child: Text(context.l10n.commonBack),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -172,7 +166,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                           final reason = reasonController.text.trim();
                           if (reason.length < 3) {
                             setDialogState(() {
-                              cancelError = 'Informe um motivo valido (minimo 3 caracteres).';
+                              cancelError = context.l10n.validationMinChars(3);
                             });
                             return;
                           }
@@ -193,7 +187,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                                 SnackBar(
                                   backgroundColor: Colors.red.shade800,
                                   content: Text(
-                                    res['message'] as String? ?? 'Lote estornado com sucesso!',
+                                    res['message'] as String? ?? context.l10n.productionBatchCancelSuccess,
                                   ),
                                 ),
                               );
@@ -202,7 +196,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                           } catch (e) {
                             setDialogState(() {
                               isCancelling = false;
-                              cancelError = e.toString().replaceAll('Exception: ', '');
+                              cancelError = ApiErrorMapper.toLocalizedMessage(e, context.l10n);
                             });
                           }
                         },
@@ -212,7 +206,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                           height: 16,
                           child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                         )
-                      : const Text('Confirmar Estorno'),
+                      : Text(context.l10n.productionBatchCancelConfirm),
                 ),
               ],
             );
@@ -269,7 +263,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                             border: Border.all(color: Colors.blue.shade400),
                           ),
                           child: Text(
-                            'Personalizada',
+                            context.l10n.productionCustom,
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -288,7 +282,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                             border: Border.all(color: Colors.green.shade400),
                           ),
                           child: Text(
-                            'Venda Direta',
+                            context.l10n.productionDirectSale,
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -312,7 +306,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                   if (batch.isCustom && batch.customDescription != null) ...[
                     const SizedBox(height: 4),
                     Text(
-                      'Descricao: ${batch.customDescription}',
+                      context.l10n.productionBatchDescriptionLabel(batch.customDescription!),
                       style: TextStyle(color: Colors.blue.shade900, fontWeight: FontWeight.w600),
                     ),
                   ],
@@ -321,14 +315,14 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                     children: [
                       Expanded(
                         child: _buildDetailStat(
-                          'Quantidade Produzida',
+                          context.l10n.productionBatchDetailProduced,
                           '${batch.quantityProduced} un',
                           Icons.inventory,
                         ),
                       ),
                       Expanded(
                         child: _buildDetailStat(
-                          'Saldo Disponivel',
+                          context.l10n.productionBatchDetailStock,
                           '${batch.currentBatchStock} un',
                           Icons.warehouse,
                         ),
@@ -338,7 +332,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                   if (batch.quantityDisassembled > 0) ...[
                     const SizedBox(height: 8),
                     _buildDetailStat(
-                      'Quantidade Desmontada',
+                      context.l10n.productionBatchDetailDisassembled,
                       '${batch.quantityDisassembled} un',
                       Icons.remove_circle_outline,
                     ),
@@ -348,15 +342,15 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                     children: [
                       Expanded(
                         child: _buildDetailStat(
-                          'Custo Unitario',
-                          _currencyFormat.format(batch.unitCostCents / 100),
+                          context.l10n.productionBatchDetailUnitCost,
+                          AppFormatters.formatCurrency(batch.unitCostCents),
                           Icons.monetization_on_outlined,
                         ),
                       ),
                       Expanded(
                         child: _buildDetailStat(
-                          'Custo Total',
-                          _currencyFormat.format(batch.totalCostCents / 100),
+                          context.l10n.productionBatchDetailTotalCost,
+                          AppFormatters.formatCurrency(batch.totalCostCents),
                           Icons.payments_outlined,
                         ),
                       ),
@@ -364,27 +358,30 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Data: ${_dateFormat.format(batch.occurredAt)}',
+                    context.l10n.productionBatchDetailDate(AppFormatters.formatDateTime(batch.occurredAt)),
                     style: TextStyle(color: Colors.grey.shade700, fontSize: 13),
                   ),
                   if (batch.notes != null && batch.notes!.isNotEmpty) ...[
                     const SizedBox(height: 4),
                     Text(
-                      'Observacoes: ${batch.notes}',
+                      context.l10n.productionBatchDetailNotes(batch.notes!),
                       style: TextStyle(color: Colors.grey.shade800, fontSize: 13),
                     ),
                   ],
                   if (batch.canceledAt != null) ...[
                     const SizedBox(height: 4),
                     Text(
-                      'Desmontado em: ${_dateFormat.format(batch.canceledAt!)} (${batch.cancellationReason ?? 'Sem motivo'})',
+                      context.l10n.productionBatchDetailDisassembledAt(
+                        AppFormatters.formatDateTime(batch.canceledAt!),
+                        batch.cancellationReason ?? '-',
+                      ),
                       style: TextStyle(color: Colors.red.shade800, fontSize: 13, fontWeight: FontWeight.w600),
                     ),
                   ],
                   const Divider(height: 32),
-                  const Text(
-                    'Snapshot Imutavel de Insumos Consumidos',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  Text(
+                    context.l10n.productionBatchSnapshotTitle,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 12),
                   ...batch.items.map((it) {
@@ -409,7 +406,10 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                                   ),
                                   Text(
-                                    'Secao: ${it.section} | Custo un: ${_currencyFormat.format(it.unitCostMicrocents / 1000000)}',
+                                    context.l10n.productionBatchSectionLabel(
+                                      it.section,
+                                      AppFormatters.formatCurrencyFromMicrocents(it.unitCostMicrocents),
+                                    ),
                                     style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                                   ),
                                 ],
@@ -419,11 +419,11 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  '${it.quantityConsumedBaseUnits} ${it.productBaseUnit}',
+                                  AppFormatters.formatQuantity(it.quantityConsumedBaseUnits, it.productBaseUnit),
                                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                                 ),
                                 Text(
-                                  'Total: ${_currencyFormat.format(it.totalCostCents / 100)}',
+                                  context.l10n.productionBatchTotalItemCost(AppFormatters.formatCurrency(it.totalCostCents)),
                                   style: TextStyle(color: Colors.grey.shade700, fontSize: 12),
                                 ),
                               ],
@@ -440,7 +440,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                         Expanded(
                           child: OutlinedButton.icon(
                             icon: const Icon(Icons.build_circle_outlined, color: Colors.orange),
-                            label: const Text('Desmontar Lote', style: TextStyle(color: Colors.orange)),
+                            label: Text(context.l10n.productionBatchDisassembleButton, style: const TextStyle(color: Colors.orange)),
                             onPressed: () {
                               Navigator.of(ctx).pop();
                               _openDisassembly(batch);
@@ -452,7 +452,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                           Expanded(
                             child: OutlinedButton.icon(
                               icon: const Icon(Icons.replay, color: Colors.red),
-                              label: const Text('Estorno Total', style: TextStyle(color: Colors.red)),
+                              label: Text(context.l10n.productionBatchCancelButton, style: const TextStyle(color: Colors.red)),
                               onPressed: () {
                                 Navigator.of(ctx).pop();
                                 _openCancelReversal(batch);
@@ -502,18 +502,18 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ordens de Produção & Montagem'),
+        title: Text(context.l10n.productionBatchesTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            tooltip: 'Atualizar Lista',
+            tooltip: context.l10n.commonRefresh,
             onPressed: _loadBatches,
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         icon: const Icon(Icons.add),
-        label: const Text('Nova Montagem'),
+        label: Text(context.l10n.productionBatchNew),
         onPressed: () async {
           final created = await Navigator.push<ProductionBatch>(
             context,
@@ -548,11 +548,11 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
             children: [
               Expanded(
                 child: TextField(
-                  decoration: const InputDecoration(
-                    hintText: 'Buscar por lote (#1), tipo ou observacoes...',
-                    prefixIcon: Icon(Icons.search),
+                  decoration: InputDecoration(
+                    hintText: context.l10n.productionBatchSearchHint,
+                    prefixIcon: const Icon(Icons.search),
                     isDense: true,
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                   ),
                   onChanged: (val) {
                     _searchQuery = val.trim();
@@ -564,11 +564,11 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
               const SizedBox(width: 12),
               DropdownButton<String?>(
                 value: _statusFilter,
-                hint: const Text('Todos os Status'),
-                items: const [
-                  DropdownMenuItem(value: null, child: Text('Todos os Status')),
-                  DropdownMenuItem(value: 'CONFIRMED', child: Text('Confirmados')),
-                  DropdownMenuItem(value: 'DISASSEMBLED', child: Text('Desmontados')),
+                hint: Text(context.l10n.productionBatchFilterAllStatus),
+                items: [
+                  DropdownMenuItem(value: null, child: Text(context.l10n.productionBatchFilterAllStatus)),
+                  DropdownMenuItem(value: 'CONFIRMED', child: Text(context.l10n.productionBatchFilterConfirmed)),
+                  DropdownMenuItem(value: 'DISASSEMBLED', child: Text(context.l10n.productionBatchFilterDisassembled)),
                 ],
                 onChanged: (val) {
                   setState(() {
@@ -581,11 +581,11 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
               const SizedBox(width: 12),
               DropdownButton<bool?>(
                 value: _isCustomFilter,
-                hint: const Text('Todos os Tipos'),
-                items: const [
-                  DropdownMenuItem(value: null, child: Text('Todos os Tipos')),
-                  DropdownMenuItem(value: false, child: Text('Cesta Padrao')),
-                  DropdownMenuItem(value: true, child: Text('Personalizada')),
+                hint: Text(context.l10n.productionBatchFilterAllTypes),
+                items: [
+                  DropdownMenuItem(value: null, child: Text(context.l10n.productionBatchFilterAllTypes)),
+                  DropdownMenuItem(value: false, child: Text(context.l10n.productionBatchFilterStandard)),
+                  DropdownMenuItem(value: true, child: Text(context.l10n.productionBatchFilterCustom)),
                 ],
                 onChanged: (val) {
                   setState(() {
@@ -616,7 +616,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: _loadBatches,
-              child: const Text('Tentar Novamente'),
+              child: Text(context.l10n.commonTryAgain),
             ),
           ],
         ),
@@ -630,14 +630,14 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
           children: [
             Icon(Icons.inventory_2_outlined, size: 64, color: Colors.grey.shade400),
             const SizedBox(height: 16),
-            const Text(
-              'Nenhum lote de producao encontrado.',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+            Text(
+              context.l10n.productionBatchEmpty,
+              style: const TextStyle(fontSize: 16, color: Colors.grey),
             ),
             const SizedBox(height: 12),
             ElevatedButton.icon(
               icon: const Icon(Icons.add),
-              label: const Text('Montar Primeira Cesta'),
+              label: Text(context.l10n.productionBatchMountFirst),
               onPressed: () async {
                 final created = await Navigator.push<ProductionBatch>(
                   context,
@@ -750,7 +750,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                           style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
                         ),
                         Text(
-                          'Custo Unit: ${_currencyFormat.format(b.unitCostCents / 100)}',
+                          'Custo Unit: ${AppFormatters.formatCurrency(b.unitCostCents)}',
                           style: TextStyle(color: Colors.green.shade800, fontWeight: FontWeight.bold, fontSize: 13),
                         ),
                       ],
@@ -760,11 +760,11 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          _dateFormat.format(b.occurredAt),
+                          AppFormatters.formatDateTime(b.occurredAt),
                           style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                         ),
                         Text(
-                          'Total: ${_currencyFormat.format(b.totalCostCents / 100)}',
+                          'Total: ${AppFormatters.formatCurrency(b.totalCostCents)}',
                           style: TextStyle(color: Colors.grey.shade700, fontSize: 12),
                         ),
                       ],

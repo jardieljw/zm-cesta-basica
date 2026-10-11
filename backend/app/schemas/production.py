@@ -151,6 +151,14 @@ class DisassemblyTriageItem(BaseModel):
     )
     loss_reason: Optional[str] = Field(None, description="Motivo especifico da perda/avaria")
 
+    @field_validator("loss_reason", mode="before")
+    @classmethod
+    def normalize_loss_reason(cls, v: Any) -> Optional[str]:
+        if isinstance(v, str):
+            v = v.strip()
+            return v if v else None
+        return v
+
 
 class DisassemblyRequest(BaseModel):
     quantity_to_disassemble: Optional[int] = Field(None, gt=0, description="Quantidade de cestas a desmontar (padrao: total)")

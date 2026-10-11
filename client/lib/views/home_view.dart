@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/connection_status.dart';
 import '../services/connectivity_service.dart';
 import '../core/secure_storage.dart';
+import '../l10n/l10n_extension.dart';
 import 'pairing_view.dart';
 import 'settings_view.dart';
 import 'products_view.dart';
@@ -54,15 +55,16 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
     final isOnline = _serverStatus?.isOnline ?? false;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ZM Cestas - Gestao de Estoque'),
+        title: Text(l10n.homeHeaderTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
-            tooltip: 'Configuracoes',
+            tooltip: l10n.moduleSettings,
             onPressed: () async {
               await Navigator.push(
                 context,
@@ -96,11 +98,12 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildModuleNavigation(ThemeData theme, bool isOnline) {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Cadastros e Receitas (Fase 2)',
+          l10n.homePhase2Header,
           style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
@@ -129,14 +132,14 @@ class _HomeViewState extends State<HomeView> {
                           child: Icon(Icons.inventory_2, color: Colors.blue.shade800, size: 28),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
-                          'Produtos & Insumos',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        Text(
+                          l10n.moduleProducts,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         const SizedBox(height: 4),
-                        const Text(
-                          'Catalogo de itens, embalagens comerciais e estoque minimo.',
-                          style: TextStyle(color: Colors.black54, fontSize: 13),
+                        Text(
+                          l10n.homeProductsDescription,
+                          style: const TextStyle(color: Colors.black54, fontSize: 13),
                         ),
                       ],
                     ),
@@ -168,14 +171,14 @@ class _HomeViewState extends State<HomeView> {
                           child: Icon(Icons.shopping_basket, color: Colors.purple.shade800, size: 28),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
-                          'Cestas & Receitas',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        Text(
+                          l10n.moduleBasketTypes,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         const SizedBox(height: 4),
-                        const Text(
-                          'Tipos de cestas e versionamento imutavel de receitas.',
-                          style: TextStyle(color: Colors.black54, fontSize: 13),
+                        Text(
+                          l10n.homeBasketTypesDescription,
+                          style: const TextStyle(color: Colors.black54, fontSize: 13),
                         ),
                       ],
                     ),
@@ -187,7 +190,7 @@ class _HomeViewState extends State<HomeView> {
         ),
         const SizedBox(height: 24),
         Text(
-          'Estoque, Compras e Razao Contabil (Fase 3)',
+          l10n.homePhase3Header,
           style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
@@ -216,14 +219,14 @@ class _HomeViewState extends State<HomeView> {
                           child: Icon(Icons.local_shipping, color: Colors.teal.shade800, size: 28),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
-                          'Compras & Reposicao',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        Text(
+                          l10n.modulePurchases,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         const SizedBox(height: 4),
-                        const Text(
-                          'Entrada de notas, conversao de fardos/caixas e cancelamento seguro.',
-                          style: TextStyle(color: Colors.black54, fontSize: 13),
+                        Text(
+                          l10n.homePurchasesDescription,
+                          style: const TextStyle(color: Colors.black54, fontSize: 13),
                         ),
                       ],
                     ),
@@ -255,14 +258,14 @@ class _HomeViewState extends State<HomeView> {
                           child: Icon(Icons.assessment, color: Colors.green.shade800, size: 28),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
-                          'Saldo de Estoque & Ajustes',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        Text(
+                          l10n.moduleInventorySummary,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         const SizedBox(height: 4),
-                        const Text(
-                          'Saldo em tempo real, alertas de minimo e auditoria de balanco.',
-                          style: TextStyle(color: Colors.black54, fontSize: 13),
+                        Text(
+                          l10n.homeInventorySummaryDescription,
+                          style: const TextStyle(color: Colors.black54, fontSize: 13),
                         ),
                       ],
                     ),
@@ -294,18 +297,18 @@ class _HomeViewState extends State<HomeView> {
                     child: Icon(Icons.receipt_long, color: Colors.amber.shade900, size: 28),
                   ),
                   const SizedBox(width: 16),
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Livro-Razao Contabil (Append-Only)',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          l10n.moduleInventoryMovements,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
-                          'Extrato imutavel de todas as entradas, saidas, compras, avarias e perdas.',
-                          style: TextStyle(color: Colors.black54, fontSize: 13),
+                          l10n.homeInventoryMovementsDescription,
+                          style: const TextStyle(color: Colors.black54, fontSize: 13),
                         ),
                       ],
                     ),
@@ -318,7 +321,7 @@ class _HomeViewState extends State<HomeView> {
         ),
         const SizedBox(height: 24),
         Text(
-          'Montagem & Produção de Cestas (Fase 4)',
+          l10n.homePhase4Header,
           style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
@@ -347,14 +350,14 @@ class _HomeViewState extends State<HomeView> {
                           child: Icon(Icons.precision_manufacturing, color: Colors.indigo.shade800, size: 28),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
-                          'Lotes & Produção',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        Text(
+                          l10n.moduleProduction,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         const SizedBox(height: 4),
-                        const Text(
-                          'Historico de lotes montados, custo unitario, triagem e desmontagem.',
-                          style: TextStyle(color: Colors.black54, fontSize: 13),
+                        Text(
+                          l10n.homeProductionBatchesDescription,
+                          style: const TextStyle(color: Colors.black54, fontSize: 13),
                         ),
                       ],
                     ),
@@ -386,14 +389,14 @@ class _HomeViewState extends State<HomeView> {
                           child: Icon(Icons.handyman, color: Colors.orange.shade900, size: 28),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
-                          'Nova Montagem',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        Text(
+                          l10n.moduleAssembly,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         const SizedBox(height: 4),
-                        const Text(
-                          'Montar cestas padrao ou personalizadas com checagem de estoque.',
-                          style: TextStyle(color: Colors.black54, fontSize: 13),
+                        Text(
+                          l10n.homeProductionAssemblyDescription,
+                          style: const TextStyle(color: Colors.black54, fontSize: 13),
                         ),
                       ],
                     ),
@@ -528,7 +531,7 @@ class _HomeViewState extends State<HomeView> {
           icon: _isLoading
               ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
               : const Icon(Icons.refresh),
-          label: const Text('Testar Conectividade Agora'),
+          label: Text(context.l10n.homeCheckConnection),
         ),
         const SizedBox(height: 12),
         if (!_isPaired)
@@ -545,7 +548,7 @@ class _HomeViewState extends State<HomeView> {
               _refreshStatus();
             },
             icon: const Icon(Icons.qr_code_scanner),
-            label: const Text('Iniciar Pareamento com Servidor'),
+            label: Text(context.l10n.homePairDevice),
           ),
       ],
     );

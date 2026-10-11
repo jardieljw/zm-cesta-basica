@@ -224,7 +224,7 @@ class _InventorySummaryViewState extends State<InventorySummaryView> {
                                             '${item.currentStock} ${item.baseUnit}',
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              color: item.isBelowMinimum ? Colors.red.shade800 : Colors.black84,
+                                              color: item.isBelowMinimum ? Colors.red.shade800 : Colors.black87,
                                             ),
                                           ),
                                           const SizedBox(width: 16),

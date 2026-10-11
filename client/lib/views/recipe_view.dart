@@ -365,7 +365,7 @@ class _RecipeViewState extends State<RecipeView> {
       decoration: BoxDecoration(
         color: Colors.blue.shade50,
         borderRadius: BorderRadius.circular(12),
-        border: BorderSide(color: Colors.blue.shade300),
+        border: Border.all(color: Colors.blue.shade300),
       ),
       child: const Row(
         children: [

@@ -251,7 +251,7 @@ class _ProductsViewState extends State<ProductsView> {
                   decoration: BoxDecoration(
                     color: catColor.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(6),
-                    border: BorderSide(color: catColor.withOpacity(0.4)),
+                    border: Border.all(color: catColor.withOpacity(0.4)),
                   ),
                   child: Text(
                     p.category,

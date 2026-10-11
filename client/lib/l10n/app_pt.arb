@@ -1,0 +1,294 @@
+{
+  "@@locale": "pt",
+  "appTitle": "ZM Cesta Básica",
+  "homeHeaderTitle": "ZM Cestas - Gestão de Estoque",
+
+  "commonSave": "Salvar",
+  "commonCancel": "Cancelar",
+  "commonConfirm": "Confirmar",
+  "commonDelete": "Excluir",
+  "commonEdit": "Editar",
+  "commonClose": "Fechar",
+  "commonBack": "Voltar",
+  "commonSearch": "Buscar",
+  "commonFilter": "Filtrar",
+  "commonClear": "Limpar",
+  "commonLoading": "Carregando...",
+  "commonRefresh": "Atualizar",
+  "commonStatus": "Status",
+  "commonActions": "Ações",
+  "commonNotes": "Observações",
+  "commonOptional": "Opcional",
+  "commonRequired": "Obrigatório",
+  "commonYes": "Sim",
+  "commonNo": "Não",
+  "commonSuccess": "Operação realizada com sucesso",
+  "commonError": "Ocorreu um erro",
+  "commonWarning": "Atenção",
+  "commonUnit": "un",
+
+  "statusOnline": "Conectado",
+  "statusOffline": "Desconectado",
+  "statusPaired": "Pareado",
+  "statusUnpaired": "Não Pareado",
+  "serverUrlLabel": "URL do Servidor",
+  "fingerprintLabel": "Fingerprint TLS",
+
+  "moduleProducts": "Produtos & Insumos",
+  "moduleBasketTypes": "Tipos de Cestas",
+  "modulePurchases": "Entrada de Compras",
+  "moduleProduction": "Ordens de Produção",
+  "moduleAssembly": "Montar Cestas",
+  "moduleInventorySummary": "Posição de Estoque",
+  "moduleInventoryMovements": "Histórico de Movimentações",
+  "moduleSettings": "Configurações",
+  "modulePairing": "Pareamento de Dispositivo",
+
+  "productsTitle": "Produtos e Insumos",
+  "productNew": "Novo Produto",
+  "productEdit": "Editar Produto",
+  "productName": "Nome do Produto",
+  "productCategory": "Categoria",
+  "productBaseUnit": "Unidade Base",
+  "productCostPrice": "Preço de Custo",
+  "productMinStock": "Estoque Mínimo",
+  "productActive": "Ativo",
+  "productInactive": "Inativo",
+  "productPackagings": "Embalagens / Apresentações",
+
+  "packagingNew": "Nova Embalagem",
+  "packagingName": "Nome da Embalagem",
+  "packagingBarcode": "Código de Barras",
+  "packagingMultiplier": "Fator Multiplicador",
+  "packagingUnit": "Unidade de Embalagem",
+
+  "basketTypesTitle": "Tipos de Cestas",
+  "basketTypeNew": "Novo Tipo de Cesta",
+  "basketTypeEdit": "Editar Tipo de Cesta",
+  "basketTypeCode": "Código da Cesta",
+  "basketTypeName": "Nome da Cesta",
+  "basketTypeAllowsCustom": "Permite Personalização",
+  "recipesTitle": "Ficha Técnica / Receita",
+  "recipeVersionLabel": "Versão da Receita",
+  "recipeAddIngredient": "Adicionar Insumo",
+  "recipeQuantityPerBasket": "Quantidade por Cesta",
+  "recipeSection": "Seção do Insumo",
+
+  "purchasesTitle": "Entrada de Compras",
+  "purchaseNew": "Registrar Compra",
+  "purchaseInvoiceNumber": "Número da NF",
+  "purchaseSupplier": "Fornecedor",
+  "purchaseDate": "Data da Compra",
+  "purchaseItems": "Itens da Compra",
+  "purchasePackagesCount": "Qtd. Embalagens",
+  "purchaseUnitCost": "Preço Unitário",
+  "purchaseTotalCost": "Custo Total",
+
+  "productionBatchesTitle": "Lotes de Produção",
+  "productionBatchNew": "Nova Montagem de Cestas",
+  "productionBatchNumber": "Lote #{number}",
+  "@productionBatchNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "productionQuantityProduced": "Qtd. Produzida",
+  "productionQuantityDisassembled": "Qtd. Desmontada",
+  "productionCurrentStock": "Saldo em Estoque",
+  "productionUnitCost": "Custo Unitário",
+  "productionTotalCost": "Custo Total do Lote",
+  "productionStatusConfirmed": "Confirmado",
+  "productionStatusDisassembled": "Desmontado",
+  "productionStatusCanceled": "Cancelado",
+  "productionDirectSale": "Venda Direta",
+  "productionCustom": "Cesta Personalizada",
+  "productionDisassembleTitle": "Desmontar Lote #{number}",
+  "@productionDisassembleTitle": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "productionDisassembleConfirm": "Confirmar Desmontagem",
+  "productionDisassembleQtyLabel": "Qtd. a Desmontar",
+  "productionDisassembleReasonLabel": "Motivo da Desmontagem",
+  "productionDisassembleReasonHint": "Ex: Avaria em embalagem, readequação",
+  "productionDisassembleTriageTitle": "Triagem Física dos Insumos",
+  "productionDisassembleAllIntact": "100% Intacto (Sem Avarias)",
+  "productionIntactQtyLabel": "Intacto ({unit})",
+  "@productionIntactQtyLabel": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "productionLossQtyLabel": "Perda/Avaria ({unit})",
+  "@productionLossQtyLabel": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "productionLossReasonLabel": "Motivo da Perda",
+  "productionDisassembleDescription": "A desmontagem realiza triagem física: itens intactos retornam ao estoque e avarias são registradas como perda sem inflar o estoque fisicamente.",
+  "productionDisassembledSuccess": "Lote desmontado com sucesso!",
+  "productionBatchSearchHint": "Buscar por lote (#1), tipo ou observações...",
+  "productionBatchFilterAllStatus": "Todos os Status",
+  "productionBatchFilterConfirmed": "Confirmados",
+  "productionBatchFilterDisassembled": "Desmontados",
+  "productionBatchFilterAllTypes": "Todos os Tipos",
+  "productionBatchFilterStandard": "Cesta Padrão",
+  "productionBatchFilterCustom": "Personalizada",
+  "productionBatchEmpty": "Nenhum lote de produção encontrado.",
+  "productionBatchMountFirst": "Montar Primeira Cesta",
+  "productionBatchCancelTitle": "Estorno Total do Lote #{number}",
+  "@productionBatchCancelTitle": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "productionBatchCancelDescription": "Esta operação cancela a ordem de produção, deduz o saldo das cestas acabadas e retorna 100% dos insumos consumidos ao estoque fisicamente.\\n\\nRequer que todas as cestas acabadas estejam disponíveis em estoque.",
+  "productionBatchCancelReasonLabel": "Motivo do Estorno",
+  "productionBatchCancelReasonHint": "Ex: Ordem gerada em duplicidade",
+  "productionBatchCancelConfirm": "Confirmar Estorno",
+  "productionBatchCancelSuccess": "Lote estornado com sucesso!",
+  "productionBatchSnapshotTitle": "Snapshot Imutável de Insumos Consumidos",
+  "productionBatchSectionLabel": "Seção: {section} | Custo un: {cost}",
+  "@productionBatchSectionLabel": {
+    "placeholders": {
+      "section": {
+        "type": "String"
+      },
+      "cost": {
+        "type": "String"
+      }
+    }
+  },
+  "productionBatchTotalItemCost": "Total: {cost}",
+  "@productionBatchTotalItemCost": {
+    "placeholders": {
+      "cost": {
+        "type": "String"
+      }
+    }
+  },
+  "productionBatchDisassembleButton": "Desmontar Lote",
+  "productionBatchCancelButton": "Estorno Total",
+  "productionBatchDetailProduced": "Quantidade Produzida",
+  "productionBatchDetailStock": "Saldo Disponível",
+  "productionBatchDetailDisassembled": "Quantidade Desmontada",
+  "productionBatchDetailUnitCost": "Custo Unitário",
+  "productionBatchDetailTotalCost": "Custo Total",
+  "productionBatchDetailDate": "Data: {date}",
+  "@productionBatchDetailDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "productionBatchDetailNotes": "Observações: {notes}",
+  "@productionBatchDetailNotes": {
+    "placeholders": {
+      "notes": {
+        "type": "String"
+      }
+    }
+  },
+  "productionBatchDetailDisassembledAt": "Desmontado em: {date} ({reason})",
+  "@productionBatchDetailDisassembledAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "productionBatchDescriptionLabel": "Descrição: {description}",
+  "@productionBatchDescriptionLabel": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "productionBatchConsumedTotal": "Consumido total: {quantity}",
+  "@productionBatchConsumedTotal": {
+    "placeholders": {
+      "quantity": {
+        "type": "String"
+      }
+    }
+  },
+
+  "validationInvalid": "Inválido",
+  "validationMinChars": "Mínimo de {min} caracteres",
+  "@validationMinChars": {
+    "placeholders": {
+      "min": {
+        "type": "int"
+      }
+    }
+  },
+  "validationMustBePositive": "A quantidade a desmontar deve ser maior que zero.",
+  "validationInsufficientStockForDisassembly": "Saldo insuficiente para desmontagem: máximo permitido é de {max} unidade(s).",
+  "@validationInsufficientStockForDisassembly": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "commonTryAgain": "Tentar Novamente",
+
+  "homePhase2Header": "Cadastros e Receitas",
+  "homeProductsDescription": "Catálogo de itens, embalagens comerciais e estoque mínimo.",
+  "homeBasketTypesDescription": "Tipos de cestas e versionamento imutável de receitas.",
+  "homePhase3Header": "Estoque, Compras e Razão Contábil",
+  "homePurchasesDescription": "Entrada de notas, conversão de fardos/caixas e cancelamento seguro.",
+  "homeInventorySummaryDescription": "Posição consolidada e alerta de ruptura de estoque.",
+  "homeInventoryMovementsDescription": "Histórico auditável e imutável de todas as movimentações.",
+  "homePhase4Header": "Produção e Desmontagem",
+  "homeProductionBatchesDescription": "Histórico de ordens, desmontagem com triagem e estorno total.",
+  "homeProductionAssemblyDescription": "Simulação de viabilidade com CMPM e baixa atômica.",
+  "homeServerStatusTitle": "Status do Servidor",
+  "homeCentralServer": "Servidor Central",
+  "homeCheckConnection": "Verificar Conexão",
+  "homePairDevice": "Parear Dispositivo",
+
+  "inventorySummaryTitle": "Posição de Estoque",
+  "inventoryMovementsTitle": "Movimentações de Estoque",
+  "stockAdjustmentsTitle": "Ajuste Manual de Estoque",
+  "stockAdjustmentNew": "Novo Ajuste de Estoque",
+  "stockAdjustmentTypeIn": "Entrada (+)",
+  "stockAdjustmentTypeOut": "Saída (-)",
+  "stockAdjustmentReasonLabel": "Justificativa do Ajuste",
+
+  "settingsTitle": "Configurações",
+  "pairingTitle": "Pareamento do Dispositivo",
+  "pairingPinLabel": "PIN de Pareamento",
+  "pairingScanQr": "Escanear QR Code",
+  "pairingDeviceName": "Nome deste Dispositivo",
+
+  "errorInsufficientStock": "Estoque insuficiente para realizar esta operação.",
+  "errorIdempotencyMismatch": "Operação já executada com parâmetros divergentes.",
+  "errorRequestInProgress": "Requisição em processamento concorrente. Aguarde alguns instantes.",
+  "errorUnauthorized": "Dispositivo não autenticado. Realize o pareamento novamente.",
+  "errorDeviceRevoked": "Dispositivo revogado pelo servidor central.",
+  "errorForbidden": "Acesso não permitido.",
+  "errorNotFound": "Registro ou recurso não encontrado.",
+  "errorConflict": "Conflito de estado ou dados inconsistentes na operação.",
+  "errorValidationError": "Dados enviados são inválidos. Verifique os campos preenchidos.",
+  "errorServer": "Erro interno no servidor local. Tente novamente mais tarde.",
+  "errorConnectionFailed": "Não foi possível conectar ao servidor local. Verifique sua rede e se o serviço está ativo.",
+  "errorUnexpected": "Ocorreu um erro inesperado."
+}
