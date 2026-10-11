@@ -12,6 +12,9 @@ import 'inventory_summary_view.dart';
 import 'inventory_movements_view.dart';
 import 'production_batches_view.dart';
 import 'production_assembly_view.dart';
+import 'customers_view.dart';
+import 'sales_view.dart';
+import 'receivables_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -406,6 +409,137 @@ class _HomeViewState extends State<HomeView> {
             ),
           ],
         ),
+        const SizedBox(height: 24),
+        Text(
+          l10n.homePhase5Header,
+          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const CustomersView()),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.blue.shade100,
+                          radius: 24,
+                          child: Icon(Icons.people, color: Colors.blue.shade800, size: 28),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          l10n.moduleCustomers,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          l10n.homeCustomersDescription,
+                          style: const TextStyle(color: Colors.black54, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const SalesView()),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.green.shade100,
+                          radius: 24,
+                          child: Icon(Icons.point_of_sale, color: Colors.green.shade800, size: 28),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          l10n.moduleSales,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          l10n.homeSalesDescription,
+                          style: const TextStyle(color: Colors.black54, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Card(
+          elevation: 2,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ReceivablesView()),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.amber.shade100,
+                    radius: 24,
+                    child: Icon(Icons.account_balance_wallet, color: Colors.amber.shade900, size: 28),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.moduleReceivables,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          l10n.homeReceivablesDescription,
+                          style: const TextStyle(color: Colors.black54, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.black45),
+                ],
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -432,7 +566,7 @@ class _HomeViewState extends State<HomeView> {
 
     return Card(
       elevation: 2,
-      color: badgeColor.withOpacity(0.12),
+      color: badgeColor.withValues(alpha: 0.12),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: BorderSide(color: badgeColor, width: 1.5),
@@ -471,6 +605,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget _buildServerInfoCard(ThemeData theme) {
+    final l10n = context.l10n;
     return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -479,17 +614,17 @@ class _HomeViewState extends State<HomeView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Informacoes da Conexao Local', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+            Text(l10n.homeLocalConnectionInfo, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
             const Divider(height: 24),
-            _infoRow('URL do Servidor:', _serverUrl ?? 'Nao configurado'),
+            _infoRow('${l10n.serverUrlLabel}:', _serverUrl ?? l10n.homeNotConfigured),
             const SizedBox(height: 12),
-            _infoRow('Versao da API:', _serverStatus?.version ?? 'Nao disponivel'),
+            _infoRow('${l10n.homeApiVersionLabel}:', _serverStatus?.version ?? l10n.homeNotAvailable),
             const SizedBox(height: 12),
-            _infoRow('Banco de Dados:', _serverStatus?.databaseStatus ?? 'Nao disponivel'),
+            _infoRow('${l10n.homeDatabaseStatusLabel}:', _serverStatus?.databaseStatus ?? l10n.homeNotAvailable),
             const SizedBox(height: 12),
             _infoRow(
-              'Impressao Digital TLS (SHA-256):',
-              _fingerprint ?? _serverStatus?.tlsFingerprint ?? 'Pendente',
+              '${l10n.homeTlsFingerprintLabel}:',
+              _fingerprint ?? _serverStatus?.tlsFingerprint ?? l10n.homePending,
               isMonospace: true,
             ),
           ],

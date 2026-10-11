@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../models/purchase.dart';
 import '../services/purchase_service.dart';
+import '../l10n/l10n_extension.dart';
+import '../utils/formatters.dart';
 import 'purchase_form_view.dart';
 
 class PurchasesView extends StatefulWidget {
@@ -13,8 +14,6 @@ class PurchasesView extends StatefulWidget {
 
 class _PurchasesViewState extends State<PurchasesView> {
   final PurchaseService _purchaseService = PurchaseService();
-  final DateFormat _dateFormat = DateFormat('dd/MM/yyyy HH:mm');
-  final NumberFormat _currencyFormat = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
 
   List<Purchase> _purchases = [];
   bool _isLoading = true;
@@ -64,20 +63,22 @@ class _PurchasesViewState extends State<PurchasesView> {
     }
   }
 
-  String _formatStatus(String status) {
+  String _formatStatus(BuildContext context, String status) {
+    final l10n = context.l10n;
     switch (status) {
       case 'CONFIRMED':
-        return 'CONFIRMADA';
+        return l10n.purchaseStatusConfirmed;
       case 'DRAFT':
-        return 'RASCUNHO';
+        return l10n.purchaseStatusDraft;
       case 'CANCELED':
-        return 'CANCELADA';
+        return l10n.purchaseStatusCanceled;
       default:
         return status;
     }
   }
 
   Future<void> _showCancelDialog(Purchase purchase) async {
+    final l10n = context.l10n;
     final reasonController = TextEditingController();
     bool isCancelling = false;
     String? cancelError;
@@ -88,15 +89,14 @@ class _PurchasesViewState extends State<PurchasesView> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             return AlertDialog(
-              title: Text('Cancelar Compra #${purchase.purchaseNumber}'),
+              title: Text(l10n.purchaseCancelTitle(purchase.purchaseNumber)),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const Text(
-                    'Esta operacao realizara o estorno contabil dos produtos no livro-razao. '
-                    'Se os produtos ja foram consumidos e nao houver saldo suficiente, a operacao sera rejeitada.',
-                    style: TextStyle(fontSize: 13, color: Colors.black87),
+                  Text(
+                    l10n.purchaseCancelWarning,
+                    style: const TextStyle(fontSize: 13, color: Colors.black87),
                   ),
                   const SizedBox(height: 16),
                   if (cancelError != null)
@@ -112,10 +112,10 @@ class _PurchasesViewState extends State<PurchasesView> {
                     ),
                   TextField(
                     controller: reasonController,
-                    decoration: const InputDecoration(
-                      labelText: 'Motivo do Cancelamento (opcional)',
-                      hintText: 'Ex: Devolucao ou erro de digitacao',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: l10n.purchaseCancelReasonLabel,
+                      hintText: l10n.purchaseCancelReasonHint,
+                      border: const OutlineInputBorder(),
                     ),
                   ),
                 ],
@@ -123,7 +123,7 @@ class _PurchasesViewState extends State<PurchasesView> {
               actions: [
                 TextButton(
                   onPressed: isCancelling ? null : () => Navigator.of(ctx).pop(),
-                  child: const Text('Voltar'),
+                  child: Text(l10n.commonBack),
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: Colors.red.shade700),
@@ -144,7 +144,7 @@ class _PurchasesViewState extends State<PurchasesView> {
                             if (mounted) {
                               Navigator.of(ctx).pop();
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Compra cancelada e estornada com sucesso!')),
+                                SnackBar(content: Text(l10n.purchaseCancelSuccess)),
                               );
                               _loadPurchases();
                             }
@@ -161,7 +161,7 @@ class _PurchasesViewState extends State<PurchasesView> {
                           height: 18,
                           child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                         )
-                      : const Text('Confirmar Estorno', style: TextStyle(color: Colors.white)),
+                      : Text(l10n.purchaseCancelButton, style: const TextStyle(color: Colors.white)),
                 ),
               ],
             );
@@ -172,6 +172,8 @@ class _PurchasesViewState extends State<PurchasesView> {
   }
 
   void _showPurchaseDetails(Purchase purchase) {
+    final l10n = context.l10n;
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -192,7 +194,7 @@ class _PurchasesViewState extends State<PurchasesView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Compra #${purchase.purchaseNumber}',
+                        l10n.purchaseNumberTitle(purchase.purchaseNumber),
                         style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                       ),
                       Container(
@@ -202,39 +204,41 @@ class _PurchasesViewState extends State<PurchasesView> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          _formatStatus(purchase.status),
+                          _formatStatus(context, purchase.status),
                           style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 12),
-                  Text('Fornecedor: ${purchase.supplierName ?? "Nao informado"}', style: const TextStyle(fontSize: 15)),
-                  Text('Data: ${_dateFormat.format(purchase.purchaseDate.toLocal())}', style: const TextStyle(fontSize: 13, color: Colors.black54)),
+                  Text(l10n.purchaseDetailSupplier(purchase.supplierName ?? '-'), style: const TextStyle(fontSize: 15)),
+                  Text(l10n.purchaseDetailDate(AppFormatters.formatDateTime(purchase.purchaseDate.toLocal())), style: const TextStyle(fontSize: 13, color: Colors.black54)),
                   if (purchase.notes != null) ...[
                     const SizedBox(height: 8),
-                    Text('Observacoes: ${purchase.notes!}', style: const TextStyle(fontSize: 13, fontStyle: FontStyle.italic)),
+                    Text('${l10n.commonNotes}: ${purchase.notes!}', style: const TextStyle(fontSize: 13, fontStyle: FontStyle.italic)),
                   ],
                   const Divider(height: 32),
-                  const Text('Itens da Compra', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(l10n.purchaseDetailItems(purchase.items.length), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 12),
                   ...purchase.items.map((item) {
+                    final itemTotalCents = (item.totalPriceReais * 100).round();
+                    final itemUnitCents = (item.unitPriceReais * 100).round();
                     return Card(
                       margin: const EdgeInsets.only(bottom: 8),
                       child: ListTile(
                         title: Text(item.productName, style: const TextStyle(fontWeight: FontWeight.bold)),
                         subtitle: Text(
                           item.packagingName != null
-                              ? '${item.packagesCount} embalagens (${item.packagingName}) = ${item.quantityInBaseUnits} ${item.productBaseUnit}'
-                              : '${item.quantityInBaseUnits} ${item.productBaseUnit} (direto na unidade base)',
+                              ? '${item.packagesCount} (${item.packagingName}) = ${AppFormatters.formatQuantity(item.quantityInBaseUnits, item.productBaseUnit)}'
+                              : AppFormatters.formatQuantity(item.quantityInBaseUnits, item.productBaseUnit),
                         ),
                         trailing: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Text(_currencyFormat.format(item.totalPriceReais),
+                            Text(AppFormatters.formatCurrency(itemTotalCents),
                                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                            Text('Unit: ${_currencyFormat.format(item.unitPriceReais)}',
+                            Text(l10n.purchaseDetailUnitCost(AppFormatters.formatCurrency(itemUnitCents)),
                                 style: const TextStyle(fontSize: 12, color: Colors.black54)),
                           ],
                         ),
@@ -245,9 +249,9 @@ class _PurchasesViewState extends State<PurchasesView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Total Geral:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text(l10n.purchaseTotalCost, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       Text(
-                        _currencyFormat.format(purchase.totalAmountReais),
+                        AppFormatters.formatCurrency((purchase.totalAmountReais * 100).round()),
                         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green.shade800),
                       ),
                     ],
@@ -263,19 +267,21 @@ class _PurchasesViewState extends State<PurchasesView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Compras & Reposicao de Estoque'),
+        title: Text(l10n.purchasesTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
+            tooltip: l10n.commonRefresh,
             onPressed: _loadPurchases,
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         icon: const Icon(Icons.add_shopping_cart),
-        label: const Text('Nova Compra'),
+        label: Text(l10n.purchaseNew),
         onPressed: () async {
           final created = await Navigator.push(
             context,
@@ -292,7 +298,7 @@ class _PurchasesViewState extends State<PurchasesView> {
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Buscar por fornecedor ou NF...',
+                hintText: l10n.purchaseSearchHint,
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
@@ -311,7 +317,7 @@ class _PurchasesViewState extends State<PurchasesView> {
             child: Row(
               children: [
                 FilterChip(
-                  label: const Text('Todas'),
+                  label: Text(l10n.purchaseFilterAll),
                   selected: _statusFilter == null,
                   onSelected: (val) {
                     if (val) {
@@ -322,7 +328,7 @@ class _PurchasesViewState extends State<PurchasesView> {
                 ),
                 const SizedBox(width: 8),
                 FilterChip(
-                  label: const Text('Confirmadas'),
+                  label: Text(l10n.purchaseFilterConfirmed),
                   selected: _statusFilter == 'CONFIRMED',
                   onSelected: (val) {
                     setState(() => _statusFilter = val ? 'CONFIRMED' : null);
@@ -331,7 +337,7 @@ class _PurchasesViewState extends State<PurchasesView> {
                 ),
                 const SizedBox(width: 8),
                 FilterChip(
-                  label: const Text('Rascunhos'),
+                  label: Text(l10n.purchaseFilterDraft),
                   selected: _statusFilter == 'DRAFT',
                   onSelected: (val) {
                     setState(() => _statusFilter = val ? 'DRAFT' : null);
@@ -340,7 +346,7 @@ class _PurchasesViewState extends State<PurchasesView> {
                 ),
                 const SizedBox(width: 8),
                 FilterChip(
-                  label: const Text('Canceladas'),
+                  label: Text(l10n.purchaseFilterCanceled),
                   selected: _statusFilter == 'CANCELED',
                   onSelected: (val) {
                     setState(() => _statusFilter = val ? 'CANCELED' : null);
@@ -364,12 +370,12 @@ class _PurchasesViewState extends State<PurchasesView> {
                             const SizedBox(height: 16),
                             Text(_errorMessage!),
                             const SizedBox(height: 16),
-                            ElevatedButton(onPressed: _loadPurchases, child: const Text('Tentar Novamente')),
+                            ElevatedButton(onPressed: _loadPurchases, child: Text(l10n.commonRefresh)),
                           ],
                         ),
                       )
                     : _purchases.isEmpty
-                        ? const Center(child: Text('Nenhuma compra cadastrada.'))
+                        ? Center(child: Text(l10n.purchaseEmpty))
                         : RefreshIndicator(
                             onRefresh: _loadPurchases,
                             child: ListView.separated(
@@ -378,13 +384,14 @@ class _PurchasesViewState extends State<PurchasesView> {
                               separatorBuilder: (_, __) => const SizedBox(height: 8),
                               itemBuilder: (context, index) {
                                 final p = _purchases[index];
+                                final totalCents = (p.totalAmountReais * 100).round();
                                 return Card(
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                   child: ListTile(
                                     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                     onTap: () => _showPurchaseDetails(p),
                                     leading: CircleAvatar(
-                                      backgroundColor: _getStatusColor(p.status).withOpacity(0.15),
+                                      backgroundColor: _getStatusColor(p.status).withValues(alpha: 0.15),
                                       child: Text(
                                         '#${p.purchaseNumber}',
                                         style: TextStyle(
@@ -395,7 +402,7 @@ class _PurchasesViewState extends State<PurchasesView> {
                                       ),
                                     ),
                                     title: Text(
-                                      p.supplierName ?? 'Fornecedor Nao Informado',
+                                      p.supplierName ?? '-',
                                       style: const TextStyle(fontWeight: FontWeight.bold),
                                     ),
                                     subtitle: Padding(
@@ -403,8 +410,8 @@ class _PurchasesViewState extends State<PurchasesView> {
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(_dateFormat.format(p.purchaseDate.toLocal())),
-                                          Text('${p.items.length} itens cadastrados'),
+                                          Text(AppFormatters.formatDate(p.purchaseDate.toLocal())),
+                                          Text(l10n.purchaseDetailItems(p.items.length)),
                                         ],
                                       ),
                                     ),
@@ -412,14 +419,14 @@ class _PurchasesViewState extends State<PurchasesView> {
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Text(
-                                          _currencyFormat.format(p.totalAmountReais),
+                                          AppFormatters.formatCurrency(totalCents),
                                           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                                         ),
                                         if (p.status == 'CONFIRMED') ...[
                                           const SizedBox(width: 8),
                                           IconButton(
                                             icon: const Icon(Icons.cancel_outlined, color: Colors.red),
-                                            tooltip: 'Estornar Compra',
+                                            tooltip: l10n.purchaseCancelButton,
                                             onPressed: () => _showCancelDialog(p),
                                           ),
                                         ],

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/basket_type.dart';
 import '../services/basket_service.dart';
+import '../l10n/l10n_extension.dart';
+import '../utils/formatters.dart';
 import 'basket_type_form_view.dart';
 import 'recipe_view.dart';
 
@@ -54,7 +56,7 @@ class _BasketTypesViewState extends State<BasketTypesView> {
       if (mounted) {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao carregar tipos de cestas: $e')),
+          SnackBar(content: Text(context.l10n.basketTypeLoadError(e.toString()))),
         );
       }
     }
@@ -64,15 +66,12 @@ class _BasketTypesViewState extends State<BasketTypesView> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Inativar Tipo de Cesta'),
-        content: Text(
-          'Deseja inativar "${bt.name}"?\n\n'
-          'A exclusao fisica e proibida para preservar historico de vendas e montagens.',
-        ),
+        title: Text(context.l10n.basketTypeInactivateTitle),
+        content: Text(context.l10n.basketTypeInactivateConfirm(bt.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancelar'),
+            child: Text(context.l10n.commonCancel),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
@@ -83,41 +82,61 @@ class _BasketTypesViewState extends State<BasketTypesView> {
                 _loadBasketTypes();
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Tipo de cesta inativado com sucesso.')),
+                    SnackBar(content: Text(context.l10n.basketTypeInactivatedSuccess)),
                   );
                 }
               } catch (e) {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Falha ao inativar: $e')),
+                    SnackBar(content: Text(context.l10n.basketTypeInactivateError(e.toString()))),
                   );
                 }
               }
             },
-            child: const Text('Inativar'),
+            child: Text(context.l10n.basketTypeInactivateButton),
           ),
         ],
       ),
     );
   }
 
+  String _formatCategory(BuildContext context, String cat) {
+    final l10n = context.l10n;
+    switch (cat) {
+      case 'TODAS':
+        return l10n.categoryAll;
+      case 'PADRAO':
+        return l10n.categoryStandard;
+      case 'NATALINA':
+        return l10n.categoryChristmas;
+      case 'CARNE':
+        return l10n.categoryMeat;
+      case 'PERSONALIZADA':
+        return l10n.categoryCustom;
+      default:
+        return cat;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tipos de Cestas e Receitas'),
+        title: Text(l10n.basketTypesHeaderTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
+            tooltip: l10n.commonRefresh,
             onPressed: _loadBasketTypes,
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         icon: const Icon(Icons.add),
-        label: const Text('Nova Cesta'),
+        label: Text(l10n.basketTypeNew),
         onPressed: () async {
           final res = await Navigator.push(
             context,
@@ -131,13 +150,13 @@ class _BasketTypesViewState extends State<BasketTypesView> {
           // Filtros
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
             child: Column(
               children: [
                 TextField(
                   controller: _searchCtrl,
                   decoration: InputDecoration(
-                    hintText: 'Buscar por nome ou codigo...',
+                    hintText: l10n.basketTypeSearchHint,
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchCtrl.text.isNotEmpty
                         ? IconButton(
@@ -164,7 +183,7 @@ class _BasketTypesViewState extends State<BasketTypesView> {
                       return Padding(
                         padding: const EdgeInsets.only(right: 8.0),
                         child: ChoiceChip(
-                          label: Text(cat),
+                          label: Text(_formatCategory(context, cat)),
                           selected: isSelected,
                           onSelected: (selected) {
                             if (selected) {
@@ -191,9 +210,9 @@ class _BasketTypesViewState extends State<BasketTypesView> {
                           children: [
                             Icon(Icons.shopping_basket_outlined, size: 64, color: Colors.grey.shade400),
                             const SizedBox(height: 16),
-                            const Text(
-                              'Nenhum tipo de cesta encontrado.',
-                              style: TextStyle(color: Colors.black54, fontSize: 16),
+                            Text(
+                              l10n.basketTypeEmpty,
+                              style: const TextStyle(color: Colors.black54, fontSize: 16),
                             ),
                           ],
                         ),
@@ -216,6 +235,7 @@ class _BasketTypesViewState extends State<BasketTypesView> {
   }
 
   Widget _buildBasketTypeCard(ThemeData theme, BasketType bt) {
+    final l10n = context.l10n;
     final activeRecipe = bt.activeRecipe;
 
     return Card(
@@ -249,7 +269,7 @@ class _BasketTypesViewState extends State<BasketTypesView> {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
-                    bt.category,
+                    _formatCategory(context, bt.category),
                     style: const TextStyle(color: Colors.black54, fontSize: 11, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -261,12 +281,15 @@ class _BasketTypesViewState extends State<BasketTypesView> {
                       color: Colors.red.shade50,
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: const Text('INATIVO', style: TextStyle(color: Colors.red, fontSize: 11, fontWeight: FontWeight.bold)),
+                    child: Text(
+                      l10n.productInactive.toUpperCase(),
+                      style: const TextStyle(color: Colors.red, fontSize: 11, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ],
                 const Spacer(),
                 Text(
-                  'R\$ ${bt.defaultPriceReais.toStringAsFixed(2)}',
+                  AppFormatters.formatCurrency(bt.defaultPriceCents),
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: theme.colorScheme.primary,
@@ -298,8 +321,8 @@ class _BasketTypesViewState extends State<BasketTypesView> {
                 Expanded(
                   child: Text(
                     activeRecipe != null
-                        ? 'Receita Versao ${activeRecipe.versionNumber} Ativa (${activeRecipe.items.length} itens)'
-                        : 'Sem receita cadastrada',
+                        ? l10n.basketTypeRecipeActive(activeRecipe.versionNumber, activeRecipe.items.length)
+                        : l10n.basketTypeRecipeNone,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       color: activeRecipe != null ? Colors.green.shade800 : Colors.amber.shade900,
@@ -320,7 +343,7 @@ class _BasketTypesViewState extends State<BasketTypesView> {
                     foregroundColor: Colors.white,
                   ),
                   icon: const Icon(Icons.receipt_long, size: 16),
-                  label: const Text('Gerenciar Receita'),
+                  label: Text(l10n.basketTypeManageRecipe),
                   onPressed: () async {
                     await Navigator.push(
                       context,
@@ -332,7 +355,7 @@ class _BasketTypesViewState extends State<BasketTypesView> {
                 const SizedBox(width: 8),
                 IconButton(
                   icon: const Icon(Icons.edit_outlined, size: 20),
-                  tooltip: 'Editar',
+                  tooltip: l10n.commonEdit,
                   onPressed: () async {
                     final res = await Navigator.push(
                       context,
@@ -344,7 +367,7 @@ class _BasketTypesViewState extends State<BasketTypesView> {
                 if (bt.isActive)
                   IconButton(
                     icon: const Icon(Icons.delete_outline, size: 20, color: Colors.red),
-                    tooltip: 'Inativar',
+                    tooltip: l10n.basketTypeInactivateButton,
                     onPressed: () => _confirmInactivation(bt),
                   ),
               ],

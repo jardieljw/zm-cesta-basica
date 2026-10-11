@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../models/stock_adjustment.dart';
 import '../services/inventory_service.dart';
+import '../l10n/l10n_extension.dart';
 
 class StockAdjustmentDialog extends StatefulWidget {
   final List<Product> products;
@@ -43,9 +44,10 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
   }
 
   Future<void> _submit() async {
+    final l10n = context.l10n;
     if (!_formKey.currentState!.validate()) return;
     if (_selectedProductId == null) {
-      setState(() => _errorMessage = 'Selecione um produto.');
+      setState(() => _errorMessage = l10n.stockAdjustmentSelectProductError);
       return;
     }
 
@@ -81,12 +83,16 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final selectedProduct = widget.products.where((p) => p.id == _selectedProductId).firstOrNull;
+    final unit = selectedProduct?.baseUnit ?? 'UN';
+
     return AlertDialog(
-      title: const Row(
+      title: Row(
         children: [
-          Icon(Icons.tune, color: Colors.blue),
-          SizedBox(width: 8),
-          Text('Ajuste Manual de Estoque'),
+          const Icon(Icons.tune, color: Colors.blue),
+          const SizedBox(width: 8),
+          Text(l10n.stockAdjustmentDialogTitle),
         ],
       ),
       content: SingleChildScrollView(
@@ -115,10 +121,10 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
 
                 // Seletor de Produto
                 DropdownButtonFormField<String>(
-                  value: _selectedProductId,
-                  decoration: const InputDecoration(
-                    labelText: 'Produto / Insumo *',
-                    border: OutlineInputBorder(),
+                  initialValue: _selectedProductId,
+                  decoration: InputDecoration(
+                    labelText: l10n.stockAdjustmentProductLabel,
+                    border: const OutlineInputBorder(),
                   ),
                   items: widget.products.map((p) {
                     return DropdownMenuItem<String>(
@@ -129,22 +135,22 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
                   onChanged: (val) {
                     setState(() => _selectedProductId = val);
                   },
-                  validator: (v) => v == null ? 'Selecione um produto' : null,
+                  validator: (v) => v == null ? l10n.stockAdjustmentSelectProductError : null,
                 ),
                 const SizedBox(height: 16),
 
                 // Tipo de Ajuste
                 DropdownButtonFormField<String>(
-                  value: _adjustmentType,
-                  decoration: const InputDecoration(
-                    labelText: 'Tipo de Operacao *',
-                    border: OutlineInputBorder(),
+                  initialValue: _adjustmentType,
+                  decoration: InputDecoration(
+                    labelText: l10n.stockAdjustmentTypeLabel,
+                    border: const OutlineInputBorder(),
                   ),
-                  items: const [
-                    DropdownMenuItem(value: 'IN', child: Text('Sobra / Entrada (+) [ADJUSTMENT_IN]')),
-                    DropdownMenuItem(value: 'OUT', child: Text('Avaria / Saida (-) [ADJUSTMENT_OUT]')),
-                    DropdownMenuItem(value: 'LOSS', child: Text('Perda / Descarte (-) [LOSS]')),
-                    DropdownMenuItem(value: 'COUNT', child: Text('Balanco / Contagem Fisica [COUNT]')),
+                  items: [
+                    DropdownMenuItem(value: 'IN', child: Text(l10n.stockAdjustmentTypeIn)),
+                    DropdownMenuItem(value: 'OUT', child: Text(l10n.stockAdjustmentTypeOut)),
+                    DropdownMenuItem(value: 'LOSS', child: Text(l10n.stockAdjustmentTypeLoss)),
+                    DropdownMenuItem(value: 'COUNT', child: Text(l10n.stockAdjustmentTypeCount)),
                   ],
                   onChanged: (val) {
                     if (val != null) setState(() => _adjustmentType = val);
@@ -157,20 +163,15 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
                   controller: _quantityController,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    labelText: _adjustmentType == 'COUNT'
-                        ? 'Saldo Contado em Estoque *'
-                        : 'Quantidade a Ajustar *',
-                    hintText: 'Ex: 10',
+                    labelText: l10n.stockAdjustmentQtyLabel(unit),
+                    hintText: l10n.stockAdjustmentQtyHint,
                     border: const OutlineInputBorder(),
-                    helperText: _adjustmentType == 'COUNT'
-                        ? 'O sistema calculara a diferenca automaticamente.'
-                        : 'Sempre informe um numero inteiro positivo.',
                   ),
                   validator: (v) {
                     final n = int.tryParse(v?.trim() ?? '');
-                    if (n == null) return 'Informe um numero inteiro valido';
-                    if (_adjustmentType != 'COUNT' && n <= 0) return 'Deve ser maior que zero';
-                    if (_adjustmentType == 'COUNT' && n < 0) return 'Nao pode ser negativo';
+                    if (n == null) return l10n.stockAdjustmentQtyRequired;
+                    if (_adjustmentType != 'COUNT' && n <= 0) return l10n.stockAdjustmentQtyRequired;
+                    if (_adjustmentType == 'COUNT' && n < 0) return l10n.stockAdjustmentQtyRequired;
                     return null;
                   },
                 ),
@@ -180,14 +181,14 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
                 TextFormField(
                   controller: _reasonController,
                   maxLines: 2,
-                  decoration: const InputDecoration(
-                    labelText: 'Justificativa Obrigatoria (Auditoria) *',
-                    hintText: 'Ex: Avaria durante transporte de mercadorias',
-                    border: OutlineInputBorder(),
+                  decoration: InputDecoration(
+                    labelText: '${l10n.commonNotes} *',
+                    hintText: l10n.stockAdjustmentReasonHint,
+                    border: const OutlineInputBorder(),
                   ),
                   validator: (v) {
                     if (v == null || v.trim().length < 3) {
-                      return 'A justificativa deve conter pelo menos 3 caracteres.';
+                      return l10n.stockAdjustmentReasonRequired;
                     }
                     return null;
                   },
@@ -200,7 +201,7 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
       actions: [
         TextButton(
           onPressed: _isLoading ? null : () => Navigator.of(context).pop(),
-          child: const Text('Cancelar'),
+          child: Text(l10n.commonCancel),
         ),
         ElevatedButton(
           onPressed: _isLoading ? null : _submit,
@@ -211,7 +212,7 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
                   height: 20,
                   child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                 )
-              : const Text('Confirmar Ajuste', style: TextStyle(color: Colors.white)),
+              : Text(l10n.stockAdjustmentConfirmButton, style: const TextStyle(color: Colors.white)),
         ),
       ],
     );

@@ -325,7 +325,7 @@ class _ProductionDisassemblyDialogState
                 ),
                 const SizedBox(height: 8),
                 if (_triageItems.isEmpty)
-                  const Text('Nenhum insumo registrado neste lote.')
+                  Text(l10n.productionDisassembleNoIngredients)
                 else
                   Container(
                     decoration: BoxDecoration(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/basket_type.dart';
 import '../services/basket_service.dart';
+import '../l10n/l10n_extension.dart';
 
 class BasketTypeFormView extends StatefulWidget {
   final BasketType? basketTypeToEdit;
@@ -93,19 +94,38 @@ class _BasketTypeFormViewState extends State<BasketTypeFormView> {
       if (mounted) {
         setState(() => _isSaving = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Falha ao salvar tipo de cesta: $e')),
+          SnackBar(content: Text(context.l10n.basketTypeFormSaveError(e.toString()))),
         );
       }
     }
   }
 
+  String _formatCategory(BuildContext context, String cat) {
+    final l10n = context.l10n;
+    switch (cat) {
+      case 'PADRAO':
+        return l10n.categoryStandard;
+      case 'NATALINA':
+        return l10n.categoryChristmas;
+      case 'CARNE':
+        return l10n.categoryMeat;
+      case 'PERSONALIZADA':
+        return l10n.categoryCustom;
+      case 'OUTROS':
+        return l10n.categoryOthers;
+      default:
+        return cat;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final isEditing = widget.basketTypeToEdit != null;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEditing ? 'Editar Tipo de Cesta' : 'Novo Tipo de Cesta'),
+        title: Text(isEditing ? l10n.basketTypeFormEditTitle : l10n.basketTypeFormNewTitle),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
@@ -117,34 +137,34 @@ class _BasketTypeFormViewState extends State<BasketTypeFormView> {
               TextFormField(
                 controller: _codeCtrl,
                 enabled: !isEditing, // Codigo identificador e fixo apos criacao
-                decoration: const InputDecoration(
-                  labelText: 'Codigo Identificador * (Letras maiusculas)',
-                  hintText: 'Ex: BASICA_COMPLETA, CESTA_CARNE',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l10n.basketTypeFormCodeLabel,
+                  hintText: l10n.basketTypeFormCodeHint,
+                  border: const OutlineInputBorder(),
                 ),
-                validator: (val) => val == null || val.trim().isEmpty ? 'Codigo e obrigatorio' : null,
+                validator: (val) => val == null || val.trim().isEmpty ? l10n.basketTypeFormCodeRequired : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
                 controller: _nameCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Nome Comercial da Cesta *',
-                  hintText: 'Ex: Cesta Basica Completa (Alimentacao + Limpeza)',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l10n.basketTypeFormNameLabel,
+                  hintText: l10n.basketTypeFormNameHint,
+                  border: const OutlineInputBorder(),
                 ),
-                validator: (val) => val == null || val.trim().isEmpty ? 'Nome e obrigatorio' : null,
+                validator: (val) => val == null || val.trim().isEmpty ? l10n.basketTypeFormNameRequired : null,
               ),
               const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
                     child: DropdownButtonFormField<String>(
-                      value: _category,
-                      decoration: const InputDecoration(
-                        labelText: 'Categoria *',
-                        border: OutlineInputBorder(),
+                      initialValue: _category,
+                      decoration: InputDecoration(
+                        labelText: l10n.basketTypeFormCategoryLabel,
+                        border: const OutlineInputBorder(),
                       ),
-                      items: _categories.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+                      items: _categories.map((c) => DropdownMenuItem(value: c, child: Text(_formatCategory(context, c)))).toList(),
                       onChanged: (val) => setState(() => _category = val!),
                     ),
                   ),
@@ -153,9 +173,9 @@ class _BasketTypeFormViewState extends State<BasketTypeFormView> {
                     child: TextFormField(
                       controller: _defaultPriceCtrl,
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      decoration: const InputDecoration(
-                        labelText: 'Preco Sugerido / Base (R\$)',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: l10n.basketTypeFormPriceLabel,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -165,26 +185,26 @@ class _BasketTypeFormViewState extends State<BasketTypeFormView> {
               TextFormField(
                 controller: _descriptionCtrl,
                 maxLines: 2,
-                decoration: const InputDecoration(
-                  labelText: 'Descricao da Cesta',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l10n.basketTypeFormDescLabel,
+                  border: const OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 16),
               SwitchListTile(
-                title: const Text('Aceita Customizacao na Venda?'),
-                subtitle: const Text('Permite montar e faturar como lote personalizado.'),
+                title: Text(l10n.basketTypeFormAllowsCustom),
+                subtitle: Text(l10n.basketTypeFormAllowsCustomSubtitle),
                 value: _allowsCustomization,
                 onChanged: (val) => setState(() => _allowsCustomization = val),
               ),
               SwitchListTile(
-                title: const Text('Controla Estoque de Cestas Prontas?'),
-                subtitle: const Text('Registra saldo acabado das cestas montadas antes da venda.'),
+                title: Text(l10n.basketTypeFormTracksStock),
+                subtitle: Text(l10n.basketTypeFormTracksStockSubtitle),
                 value: _tracksFinishedStock,
                 onChanged: (val) => setState(() => _tracksFinishedStock = val),
               ),
               SwitchListTile(
-                title: const Text('Status Ativo'),
+                title: Text(l10n.basketTypeFormStatusActive),
                 value: _isActive,
                 onChanged: (val) => setState(() => _isActive = val),
               ),
@@ -200,7 +220,7 @@ class _BasketTypeFormViewState extends State<BasketTypeFormView> {
                 icon: _isSaving
                     ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                     : const Icon(Icons.check),
-                label: Text(isEditing ? 'Atualizar Tipo de Cesta' : 'Cadastrar Tipo de Cesta'),
+                label: Text(isEditing ? l10n.basketTypeFormSaveUpdate : l10n.basketTypeFormSaveCreate),
               ),
             ],
           ),

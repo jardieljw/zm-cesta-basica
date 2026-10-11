@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../services/product_service.dart';
+import '../l10n/l10n_extension.dart';
+import '../utils/formatters.dart';
 import 'product_form_view.dart';
 import 'packagings_dialog.dart';
 
@@ -57,7 +59,7 @@ class _ProductsViewState extends State<ProductsView> {
       if (mounted) {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao carregar produtos: $e')),
+          SnackBar(content: Text(context.l10n.productLoadError(e.toString()))),
         );
       }
     }
@@ -67,15 +69,12 @@ class _ProductsViewState extends State<ProductsView> {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Inativar Produto'),
-        content: Text(
-          'Deseja inativar o produto "${p.name}"?\n\n'
-          'A exclusao fisica e proibida para preservar a integridade das transacoes anteriores. O produto deixara de aparecer em novas composicoes.',
-        ),
+        title: Text(context.l10n.productInactivateTitle),
+        content: Text(context.l10n.productInactivateConfirm(p.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancelar'),
+            child: Text(context.l10n.commonCancel),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
@@ -86,42 +85,63 @@ class _ProductsViewState extends State<ProductsView> {
                 _loadProducts();
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Produto inativado com sucesso.')),
+                    SnackBar(content: Text(context.l10n.productInactivatedSuccess)),
                   );
                 }
               } catch (e) {
                 if (mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Falha ao inativar produto: $e')),
+                    SnackBar(content: Text(context.l10n.productInactivateError(e.toString()))),
                   );
                 }
               }
             },
-            child: const Text('Inativar'),
+            child: Text(context.l10n.productInactivateButton),
           ),
         ],
       ),
     );
   }
 
+  String _formatCategory(BuildContext context, String cat) {
+    final l10n = context.l10n;
+    switch (cat) {
+      case 'TODAS':
+        return l10n.categoryAll;
+      case 'ALIMENTACAO':
+        return l10n.categoryFood;
+      case 'LIMPEZA':
+        return l10n.categoryCleaning;
+      case 'CARNE':
+        return l10n.categoryMeat;
+      case 'OUTROS':
+        return l10n.categoryOthers;
+      case 'INSUMO':
+        return l10n.categoryInput;
+      default:
+        return cat;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Catalogo de Produtos e Insumos'),
+        title: Text(l10n.productsCatalogTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            tooltip: 'Recarregar',
+            tooltip: l10n.commonRefresh,
             onPressed: _loadProducts,
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         icon: const Icon(Icons.add),
-        label: const Text('Novo Produto'),
+        label: Text(l10n.productNew),
         onPressed: () async {
           final res = await Navigator.push(
             context,
@@ -135,13 +155,13 @@ class _ProductsViewState extends State<ProductsView> {
           // Barra de busca e filtros
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+            color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
             child: Column(
               children: [
                 TextField(
                   controller: _searchCtrl,
                   decoration: InputDecoration(
-                    hintText: 'Buscar por nome, SKU ou codigo de barras...',
+                    hintText: l10n.productSearchHint,
                     prefixIcon: const Icon(Icons.search),
                     suffixIcon: _searchCtrl.text.isNotEmpty
                         ? IconButton(
@@ -168,7 +188,7 @@ class _ProductsViewState extends State<ProductsView> {
                       return Padding(
                         padding: const EdgeInsets.only(right: 8.0),
                         child: ChoiceChip(
-                          label: Text(cat),
+                          label: Text(_formatCategory(context, cat)),
                           selected: isSelected,
                           onSelected: (selected) {
                             if (selected) {
@@ -195,9 +215,9 @@ class _ProductsViewState extends State<ProductsView> {
                           children: [
                             Icon(Icons.inventory_2_outlined, size: 64, color: Colors.grey.shade400),
                             const SizedBox(height: 16),
-                            const Text(
-                              'Nenhum produto encontrado com os filtros selecionados.',
-                              style: TextStyle(color: Colors.black54, fontSize: 16),
+                            Text(
+                              l10n.productEmpty,
+                              style: const TextStyle(color: Colors.black54, fontSize: 16),
                             ),
                           ],
                         ),
@@ -220,6 +240,7 @@ class _ProductsViewState extends State<ProductsView> {
   }
 
   Widget _buildProductCard(ThemeData theme, Product p) {
+    final l10n = context.l10n;
     Color catColor;
     switch (p.category) {
       case 'ALIMENTACAO':
@@ -249,12 +270,12 @@ class _ProductsViewState extends State<ProductsView> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: catColor.withOpacity(0.12),
+                    color: catColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: catColor.withOpacity(0.4)),
+                    border: Border.all(color: catColor.withValues(alpha: 0.4)),
                   ),
                   child: Text(
-                    p.category,
+                    _formatCategory(context, p.category),
                     style: TextStyle(color: catColor, fontWeight: FontWeight.bold, fontSize: 11),
                   ),
                 ),
@@ -266,11 +287,14 @@ class _ProductsViewState extends State<ProductsView> {
                       color: Colors.grey.shade200,
                       borderRadius: BorderRadius.circular(6),
                     ),
-                    child: const Text('INATIVO', style: TextStyle(color: Colors.black54, fontSize: 11, fontWeight: FontWeight.bold)),
+                    child: Text(
+                      l10n.productInactive.toUpperCase(),
+                      style: const TextStyle(color: Colors.black54, fontSize: 11, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 const Spacer(),
                 Text(
-                  '${p.baseUnit}',
+                  p.baseUnit,
                   style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blueGrey),
                 ),
               ],
@@ -287,8 +311,8 @@ class _ProductsViewState extends State<ProductsView> {
               const SizedBox(height: 4),
               Row(
                 children: [
-                  if (p.sku != null) Text('SKU: ${p.sku}  ', style: const TextStyle(color: Colors.black54, fontSize: 12)),
-                  if (p.barcode != null) Text('EAN: ${p.barcode}', style: const TextStyle(color: Colors.black54, fontSize: 12)),
+                  if (p.sku != null) Text(l10n.productSkuLabel(p.sku!), style: const TextStyle(color: Colors.black54, fontSize: 12)),
+                  if (p.barcode != null) Text(l10n.productBarcodeLabel(p.barcode!), style: const TextStyle(color: Colors.black54, fontSize: 12)),
                 ],
               ),
             ],
@@ -299,25 +323,25 @@ class _ProductsViewState extends State<ProductsView> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Estoque Minimo:', style: TextStyle(fontSize: 12, color: Colors.black54)),
-                    Text('${p.minimumStock} ${p.baseUnit}', style: const TextStyle(fontWeight: FontWeight.w600)),
+                    Text(l10n.productCostPriceRef, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                    Text(AppFormatters.formatCurrency(p.costPriceCents), style: const TextStyle(fontWeight: FontWeight.w600)),
                   ],
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Custo Ref.:', style: TextStyle(fontSize: 12, color: Colors.black54)),
-                    Text('R\$ ${p.costPriceReais.toStringAsFixed(2)}', style: const TextStyle(fontWeight: FontWeight.w600)),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Venda Ref.:', style: TextStyle(fontSize: 12, color: Colors.black54)),
+                    Text(l10n.productSalePriceRef, style: const TextStyle(fontSize: 12, color: Colors.black54)),
                     Text(
-                      'R\$ ${p.salePriceReais.toStringAsFixed(2)}',
+                      AppFormatters.formatCurrency(p.salePriceCents),
                       style: TextStyle(fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
                     ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(l10n.productMinStock, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                    Text(AppFormatters.formatQuantity(p.minimumStock, p.baseUnit), style: const TextStyle(fontWeight: FontWeight.w600)),
                   ],
                 ),
               ],
@@ -329,7 +353,7 @@ class _ProductsViewState extends State<ProductsView> {
                 OutlinedButton.icon(
                   style: OutlinedButton.styleFrom(visualDensity: VisualDensity.compact),
                   icon: const Icon(Icons.inventory_2_outlined, size: 16),
-                  label: Text('Embalagens (${p.packagings.length})'),
+                  label: Text(l10n.productPackagingsCount(p.packagings.length)),
                   onPressed: () => showDialog(
                     context: context,
                     builder: (_) => PackagingsDialog(product: p),
@@ -338,7 +362,7 @@ class _ProductsViewState extends State<ProductsView> {
                 const SizedBox(width: 8),
                 IconButton(
                   icon: const Icon(Icons.edit_outlined, size: 20),
-                  tooltip: 'Editar',
+                  tooltip: l10n.commonEdit,
                   onPressed: () async {
                     final res = await Navigator.push(
                       context,
@@ -350,7 +374,7 @@ class _ProductsViewState extends State<ProductsView> {
                 if (p.isActive)
                   IconButton(
                     icon: const Icon(Icons.delete_outline, size: 20, color: Colors.red),
-                    tooltip: 'Inativar',
+                    tooltip: l10n.productInactivateButton,
                     onPressed: () => _confirmInactivation(p),
                   ),
               ],

@@ -1,6 +1,6 @@
 import datetime
 from typing import Optional, List
-from sqlalchemy import String, Integer, DateTime, Text, ForeignKey
+from sqlalchemy import String, Integer, DateTime, Text, ForeignKey, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import Base, utc_now
 
@@ -9,28 +9,73 @@ class Sale(Base):
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     sale_number: Mapped[int] = mapped_column(Integer, unique=True, nullable=False, index=True)
-    status: Mapped[str] = mapped_column(String(20), nullable=False, default="CONFIRMED") # CONFIRMED, CANCELED
-    sale_date: Mapped[datetime.datetime] = mapped_column(DateTime, default=utc_now, nullable=False)
-    customer_name: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
-    payment_method: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
+    customer_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("customers.id"), nullable=True, index=True)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="CONFIRMED", index=True) # CONFIRMED, CANCELED
+    sale_mode: Mapped[str] = mapped_column(String(30), nullable=False, default="DIRECT_STORE", index=True) # DIRECT_STORE, COMMERCIAL_ROUTE
+    payment_mode: Mapped[str] = mapped_column(String(30), nullable=False, default="CASH_IMMEDIATE", index=True) # CASH_IMMEDIATE, PIX, CARD, CREDIT_TERM
+    payment_status: Mapped[str] = mapped_column(String(20), nullable=False, default="PAID", index=True) # PAID, PENDING, PARTIAL
+    sale_date: Mapped[datetime.datetime] = mapped_column(DateTime, default=utc_now, nullable=False, index=True)
+    customer_name: Mapped[Optional[str]] = mapped_column(String(200), nullable=True) # Snapshot / free-text
+    payment_method: Mapped[Optional[str]] = mapped_column(String(50), nullable=True) # Legacy / auxiliary
     total_amount_cents: Mapped[int] = mapped_column(Integer, nullable=False)
     idempotency_key: Mapped[Optional[str]] = mapped_column(String(100), unique=True, nullable=True)
     canceled_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime, nullable=True)
     cancellation_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
+    customer: Mapped[Optional["app.models.customers.Customer"]] = relationship("app.models.customers.Customer", back_populates="sales")
     items: Mapped[List["SaleItem"]] = relationship(back_populates="sale", cascade="all, delete-orphan")
+    receivable: Mapped[Optional["SalesReceivable"]] = relationship(back_populates="sale", uselist=False, cascade="all, delete-orphan")
 
 class SaleItem(Base):
     __tablename__ = "sale_items"
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
-    sale_id: Mapped[str] = mapped_column(String(36), ForeignKey("sales.id"), nullable=False)
-    basket_type_id: Mapped[str] = mapped_column(String(36), ForeignKey("basket_types.id"), nullable=False)
-    production_batch_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("production_batches.id"), nullable=True)
+    sale_id: Mapped[str] = mapped_column(String(36), ForeignKey("sales.id"), nullable=False, index=True)
+    basket_type_id: Mapped[str] = mapped_column(String(36), ForeignKey("basket_types.id"), nullable=False, index=True)
+    production_batch_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("production_batches.id"), nullable=True, index=True)
     quantity: Mapped[int] = mapped_column(Integer, nullable=False)
     unit_price_cents: Mapped[int] = mapped_column(Integer, nullable=False)
     discount_cents: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     total_cents: Mapped[int] = mapped_column(Integer, nullable=False)
+    unit_cost_cents: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    total_cost_cents: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
     sale: Mapped["Sale"] = relationship(back_populates="items")
+    basket_type: Mapped["app.models.products.BasketType"] = relationship("app.models.products.BasketType")
+    production_batch: Mapped[Optional["app.models.production.ProductionBatch"]] = relationship("app.models.production.ProductionBatch")
+
+class SalesReceivable(Base):
+    __tablename__ = "sales_receivables"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    sale_id: Mapped[str] = mapped_column(String(36), ForeignKey("sales.id"), nullable=False, index=True)
+    customer_id: Mapped[str] = mapped_column(String(36), ForeignKey("customers.id"), nullable=False, index=True)
+    due_date: Mapped[datetime.datetime] = mapped_column(DateTime, nullable=False, index=True)
+    original_amount_cents: Mapped[int] = mapped_column(Integer, nullable=False)
+    paid_amount_cents: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    balance_cents: Mapped[int] = mapped_column(Integer, nullable=False)
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="OPEN", index=True) # OPEN, PARTIAL, PAID, CANCELED
+    notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=utc_now, nullable=False)
+    updated_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)
+
+    sale: Mapped["Sale"] = relationship(back_populates="receivable")
+    customer: Mapped["app.models.customers.Customer"] = relationship("app.models.customers.Customer", back_populates="receivables")
+    payments: Mapped[List["ReceivablePayment"]] = relationship(back_populates="receivable", cascade="all, delete-orphan")
+
+class ReceivablePayment(Base):
+    __tablename__ = "receivable_payments"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    receivable_id: Mapped[str] = mapped_column(String(36), ForeignKey("sales_receivables.id"), nullable=False, index=True)
+    payment_date: Mapped[datetime.datetime] = mapped_column(DateTime, default=utc_now, nullable=False, index=True)
+    amount_cents: Mapped[int] = mapped_column(Integer, nullable=False)
+    payment_method: Mapped[str] = mapped_column(String(50), nullable=False, default="CASH") # CASH, PIX, CARD, OTHER
+    status: Mapped[str] = mapped_column(String(20), nullable=False, default="CONFIRMED", index=True) # CONFIRMED, REVERSED
+    reversal_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    reversal_of_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("receivable_payments.id"), nullable=True)
+    notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=utc_now, nullable=False)
+
+    receivable: Mapped["SalesReceivable"] = relationship(back_populates="payments")

@@ -59,10 +59,84 @@ void main() {
       expect(l10n.homePairDevice, equals('Parear Dispositivo'));
     });
 
+    test('AppLocalizationsPt returns Portuguese strings for purchases, inventory, pairing and settings', () {
+      expect(l10n.purchasesTitle, equals('Entrada de Compras'));
+      expect(l10n.purchaseFormTitle, equals('Nova Entrada de Compras'));
+      expect(l10n.purchaseFormSuccess, equals('Compra registrada com sucesso!'));
+      expect(l10n.inventorySummaryHeaderTitle, equals('Saldo de Estoque em Tempo Real'));
+      expect(l10n.inventoryMovementsHeaderTitle, equals('Extrato do Razão Contábil'));
+      expect(l10n.stockAdjustmentDialogTitle, equals('Ajuste Manual de Estoque'));
+      expect(l10n.pairingViewTitle, equals('Pareamento do Dispositivo'));
+      expect(l10n.settingsHeaderTitle, equals('Configurações de Rede e Dispositivo'));
+      expect(l10n.movementPurchase, equals('COMPRA'));
+      expect(l10n.movementPurchaseCancel, equals('ESTORNO COMPRA'));
+      expect(l10n.movementAdjustmentIn, equals('SOBRA / ENTRADA'));
+      expect(l10n.movementAdjustmentOut, equals('AVARIA / SAÍDA'));
+      expect(l10n.purchaseDetailUnitCost('R\$ 10,00'), equals('Unit.: R\$ 10,00'));
+      expect(l10n.purchaseStatusConfirmedWithStock, equals('Confirmada (Aumenta Estoque)'));
+      expect(l10n.purchaseStatusDraftWithoutStock, equals('Rascunho (Sem movimentar estoque)'));
+      expect(l10n.purchaseItemIndex(3), equals('Item #3'));
+      expect(l10n.stockAdjustmentTypeIn, equals('Sobra / Entrada (+)'));
+      expect(l10n.stockAdjustmentTypeOut, equals('Avaria / Saída (-)'));
+      expect(l10n.stockAdjustmentQtyHint, equals('Ex: 10'));
+      expect(l10n.categoryFood, equals('Alimentação'));
+      expect(l10n.categoryCleaning, equals('Limpeza'));
+      expect(l10n.categoryMeat, equals('Carnes & Frios'));
+      expect(l10n.categoryAll, equals('Todas'));
+      expect(l10n.recipeUnknownIngredient('XYZ'), equals('Insumo (XYZ)'));
+      expect(l10n.productionBatchViewIngredients, equals('Ver Insumos'));
+      expect(l10n.productionDisassembleNoIngredients, equals('Nenhum insumo registrado neste lote.'));
+      expect(l10n.homeLocalConnectionInfo, equals('Informações da Conexão Local'));
+      expect(l10n.homeApiVersionLabel, equals('Versão da API'));
+      expect(l10n.homeDatabaseStatusLabel, equals('Banco de Dados'));
+    });
+
+    test('AppLocalizationsPt returns Portuguese strings for Phase 5 modules and dialogs', () {
+      expect(l10n.customersTitle, equals('Clientes'));
+      expect(l10n.customersEmpty, equals('Nenhum cliente cadastrado.'));
+      expect(l10n.customerNameHint, equals('Ex: Supermercado São José'));
+      expect(l10n.salesTitle, equals('Vendas de Cestas'));
+      expect(l10n.salesEmpty, equals('Nenhuma venda registrada.'));
+      expect(l10n.saleCreditCustomerRequired, equals('Vendas a prazo (fiado) exigem a seleção de um cliente cadastrado.'));
+      expect(l10n.saleInsufficientStockAlert('Cesta 1', 2, 5), contains('Estoque insuficiente de cestas prontas para "Cesta 1". Saldo: 2, Solicitado: 5.'));
+      expect(l10n.receivablesTitle, equals('Contas a Receber (Fiados)'));
+      expect(l10n.receivablesEmpty, equals('Nenhum título a receber encontrado.'));
+      expect(l10n.receivablePaymentAmountMustBePositive, equals('Informe um valor maior que zero.'));
+      expect(l10n.commonViewDetails, equals('Ver Detalhes'));
+    });
+
     test('AppLocalizations delegate loads pt_BR correctly', () {
       expect(AppLocalizations.supportedLocales.any((loc) => loc.languageCode == 'pt'), isTrue);
       final resolved = lookupAppLocalizations(const Locale('pt', 'BR'));
       expect(resolved.appTitle, equals('ZM Cesta Básica'));
+    });
+
+    testWidgets('MaterialApp with pt_BR locale renders localized widgets seamlessly', (tester) async {
+      await tester.pumpWidget(
+        WidgetsApp(
+          color: const Color(0xFF1E88E5),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: const [
+            Locale('pt', 'BR'),
+            Locale('pt'),
+          ],
+          locale: const Locale('pt', 'BR'),
+          pageRouteBuilder: <T>(RouteSettings settings, WidgetBuilder builder) {
+            return PageRouteBuilder<T>(
+              settings: settings,
+              pageBuilder: (context, _, __) => builder(context),
+            );
+          },
+          home: Builder(
+            builder: (context) {
+              final loc = AppLocalizations.of(context)!;
+              return Text(loc.salesTitle, textDirection: TextDirection.ltr);
+            },
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Vendas de Cestas'), findsOneWidget);
     });
   });
 

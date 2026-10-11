@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../services/product_service.dart';
+import '../l10n/l10n_extension.dart';
 
 class ProductFormView extends StatefulWidget {
   final Product? productToEdit;
@@ -114,19 +115,38 @@ class _ProductFormViewState extends State<ProductFormView> {
       if (mounted) {
         setState(() => _isSaving = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Falha ao salvar produto: $e')),
+          SnackBar(content: Text(context.l10n.productFormSaveError(e.toString()))),
         );
       }
     }
   }
 
+  String _formatCategory(BuildContext context, String cat) {
+    final l10n = context.l10n;
+    switch (cat) {
+      case 'ALIMENTACAO':
+        return l10n.categoryFood;
+      case 'LIMPEZA':
+        return l10n.categoryCleaning;
+      case 'CARNE':
+        return l10n.categoryMeat;
+      case 'OUTROS':
+        return l10n.categoryOthers;
+      case 'INSUMO':
+        return l10n.categoryInput;
+      default:
+        return cat;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final isEditing = widget.productToEdit != null;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEditing ? 'Editar Produto / Insumo' : 'Novo Produto / Insumo'),
+        title: Text(isEditing ? l10n.productFormEditTitle : l10n.productFormNewTitle),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
@@ -137,34 +157,34 @@ class _ProductFormViewState extends State<ProductFormView> {
             children: [
               TextFormField(
                 controller: _nameCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Nome do Produto *',
-                  hintText: 'Ex: Arroz Agulhinha 5kg, Detergente 500ml',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l10n.productFormNameLabel,
+                  hintText: l10n.productFormNameHint,
+                  border: const OutlineInputBorder(),
                 ),
-                validator: (val) => val == null || val.trim().isEmpty ? 'Nome e obrigatorio' : null,
+                validator: (val) => val == null || val.trim().isEmpty ? l10n.productFormNameRequired : null,
               ),
               const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
                     child: DropdownButtonFormField<String>(
-                      value: _category,
-                      decoration: const InputDecoration(
-                        labelText: 'Categoria *',
-                        border: OutlineInputBorder(),
+                      initialValue: _category,
+                      decoration: InputDecoration(
+                        labelText: l10n.productFormCategoryLabel,
+                        border: const OutlineInputBorder(),
                       ),
-                      items: _categories.map((c) => DropdownMenuItem(value: c, child: Text(c))).toList(),
+                      items: _categories.map((c) => DropdownMenuItem(value: c, child: Text(_formatCategory(context, c)))).toList(),
                       onChanged: (val) => setState(() => _category = val!),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: DropdownButtonFormField<String>(
-                      value: _baseUnit,
-                      decoration: const InputDecoration(
-                        labelText: 'Unidade Base no Estoque *',
-                        border: OutlineInputBorder(),
+                      initialValue: _baseUnit,
+                      decoration: InputDecoration(
+                        labelText: l10n.productFormBaseUnitLabel,
+                        border: const OutlineInputBorder(),
                       ),
                       items: _baseUnits.map((u) => DropdownMenuItem(value: u, child: Text(u))).toList(),
                       onChanged: (val) => setState(() => _baseUnit = val!),
@@ -178,10 +198,10 @@ class _ProductFormViewState extends State<ProductFormView> {
                   Expanded(
                     child: TextFormField(
                       controller: _skuCtrl,
-                      decoration: const InputDecoration(
-                        labelText: 'SKU / Codigo Interno',
-                        hintText: 'Ex: ARR-5KG',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: l10n.productFormSkuLabel,
+                        hintText: l10n.productFormSkuHint,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -189,10 +209,10 @@ class _ProductFormViewState extends State<ProductFormView> {
                   Expanded(
                     child: TextFormField(
                       controller: _barcodeCtrl,
-                      decoration: const InputDecoration(
-                        labelText: 'Codigo de Barras / EAN',
-                        hintText: 'Ex: 7891234567890',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: l10n.productFormBarcodeLabel,
+                        hintText: l10n.productFormBarcodeHint,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -206,13 +226,13 @@ class _ProductFormViewState extends State<ProductFormView> {
                       controller: _minStockCtrl,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
-                        labelText: 'Estoque Minimo ($_baseUnit)',
+                        labelText: l10n.productFormMinStockLabel(_baseUnit),
                         border: const OutlineInputBorder(),
                       ),
                       validator: (val) {
                         if (val == null || val.trim().isEmpty) return null;
                         final n = int.tryParse(val.trim());
-                        if (n == null || n < 0) return 'Minimo deve ser >= 0';
+                        if (n == null || n < 0) return l10n.productFormMinStockInvalid;
                         return null;
                       },
                     ),
@@ -222,9 +242,9 @@ class _ProductFormViewState extends State<ProductFormView> {
                     child: TextFormField(
                       controller: _costPriceCtrl,
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      decoration: const InputDecoration(
-                        labelText: 'Preco de Custo (R\$)',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: l10n.productFormCostPriceLabel,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -233,9 +253,9 @@ class _ProductFormViewState extends State<ProductFormView> {
                     child: TextFormField(
                       controller: _salePriceCtrl,
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      decoration: const InputDecoration(
-                        labelText: 'Preco de Venda (R\$)',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: l10n.productFormSalePriceLabel,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                   ),
@@ -245,15 +265,15 @@ class _ProductFormViewState extends State<ProductFormView> {
               TextFormField(
                 controller: _notesCtrl,
                 maxLines: 2,
-                decoration: const InputDecoration(
-                  labelText: 'Observacoes',
-                  border: OutlineInputBorder(),
+                decoration: InputDecoration(
+                  labelText: l10n.productFormNotesLabel,
+                  border: const OutlineInputBorder(),
                 ),
               ),
               const SizedBox(height: 16),
               SwitchListTile(
-                title: const Text('Status Ativo'),
-                subtitle: const Text('Produtos inativos nao podem ser incluidos em novas receitas ou compras.'),
+                title: Text(l10n.productFormStatusActive),
+                subtitle: Text(l10n.productFormStatusActiveSubtitle),
                 value: _isActive,
                 onChanged: (val) => setState(() => _isActive = val),
               ),
@@ -269,7 +289,7 @@ class _ProductFormViewState extends State<ProductFormView> {
                 icon: _isSaving
                     ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                     : const Icon(Icons.check),
-                label: Text(isEditing ? 'Atualizar Produto' : 'Cadastrar Produto'),
+                label: Text(isEditing ? l10n.productFormSaveUpdate : l10n.productFormSaveCreate),
               ),
             ],
           ),

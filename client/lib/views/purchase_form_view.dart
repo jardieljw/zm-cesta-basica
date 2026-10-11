@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../models/product.dart';
 import '../services/product_service.dart';
 import '../services/purchase_service.dart';
+import '../l10n/l10n_extension.dart';
+import '../utils/formatters.dart';
 
 class _PurchaseItemDraft {
   String? productId;
@@ -34,11 +35,9 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
   final _formKey = GlobalKey<FormState>();
   final ProductService _productService = ProductService();
   final PurchaseService _purchaseService = PurchaseService();
-  final NumberFormat _currencyFormat = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
-
   final _supplierController = TextEditingController();
   final _notesController = TextEditingController();
-  DateTime _purchaseDate = DateTime.now();
+  final DateTime _purchaseDate = DateTime.now();
   String _status = 'CONFIRMED';
 
   List<Product> _products = [];
@@ -107,9 +106,10 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
   }
 
   Future<void> _save() async {
+    final l10n = context.l10n;
     if (!_formKey.currentState!.validate()) return;
     if (_items.isEmpty) {
-      setState(() => _errorMessage = 'Adicione pelo menos um item à compra.');
+      setState(() => _errorMessage = l10n.purchaseFormAtLeastOneItem);
       return;
     }
 
@@ -137,7 +137,7 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
       await _purchaseService.createPurchase(payload);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Compra registrada com sucesso!')),
+          SnackBar(content: Text(l10n.purchaseFormSuccess)),
         );
         Navigator.of(context).pop(true);
       }
@@ -153,20 +153,21 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     if (_isLoadingProducts) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Nova Compra')),
+        appBar: AppBar(title: Text(l10n.purchaseFormTitle)),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Registrar Compra de Fornecedor'),
+        title: Text(l10n.purchaseFormTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.check),
-            tooltip: 'Salvar Compra',
+            tooltip: l10n.purchaseFormSaveButton,
             onPressed: _isSaving ? null : _save,
           ),
         ],
@@ -198,15 +199,15 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Dados do Fornecedor e Documento',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text(l10n.purchaseSupplier,
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _supplierController,
-                        decoration: const InputDecoration(
-                          labelText: 'Nome do Fornecedor / Razao Social',
-                          hintText: 'Ex: Atacadao de Alimentos Ltda',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: l10n.purchaseFormSupplierLabel,
+                          hintText: l10n.purchaseFormSupplierHint,
+                          border: const OutlineInputBorder(),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -214,14 +215,14 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                         children: [
                           Expanded(
                             child: DropdownButtonFormField<String>(
-                              value: _status,
-                              decoration: const InputDecoration(
-                                labelText: 'Status da Operacao *',
-                                border: OutlineInputBorder(),
+                              initialValue: _status,
+                              decoration: InputDecoration(
+                                labelText: '${l10n.commonStatus} *',
+                                border: const OutlineInputBorder(),
                               ),
-                              items: const [
-                                DropdownMenuItem(value: 'CONFIRMED', child: Text('Confirmar Imediatamente (Aumenta Estoque)')),
-                                DropdownMenuItem(value: 'DRAFT', child: Text('Salvar Rascunho (Sem movimentar estoque)')),
+                              items: [
+                                DropdownMenuItem(value: 'CONFIRMED', child: Text(l10n.purchaseStatusConfirmedWithStock)),
+                                DropdownMenuItem(value: 'DRAFT', child: Text(l10n.purchaseStatusDraftWithoutStock)),
                               ],
                               onChanged: (v) {
                                 if (v != null) setState(() => _status = v);
@@ -233,10 +234,10 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _notesController,
-                        decoration: const InputDecoration(
-                          labelText: 'Numero da NF-e / Observacoes',
-                          hintText: 'Ex: NF-e 45892 chave 3526...',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: '${l10n.purchaseFormInvoiceLabel} / ${l10n.purchaseFormNotesLabel}',
+                          hintText: l10n.purchaseFormNotesHint,
+                          border: const OutlineInputBorder(),
                         ),
                       ),
                     ],
@@ -249,10 +250,10 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Itens da Compra', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(l10n.purchaseFormItemsHeader, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   ElevatedButton.icon(
                     icon: const Icon(Icons.add),
-                    label: const Text('Adicionar Item'),
+                    label: Text(l10n.purchaseFormAddItem),
                     onPressed: _addItem,
                   ),
                 ],
@@ -284,12 +285,12 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.blue.shade800)),
                               ),
                               const SizedBox(width: 8),
-                              const Text('Item da Compra', style: TextStyle(fontWeight: FontWeight.bold)),
+                              Text(l10n.purchaseItemIndex(index + 1), style: const TextStyle(fontWeight: FontWeight.bold)),
                               const Spacer(),
                               if (_items.length > 1)
                                 IconButton(
                                   icon: const Icon(Icons.delete_outline, color: Colors.red),
-                                  tooltip: 'Remover Item',
+                                  tooltip: l10n.commonDelete,
                                   onPressed: () => _removeItem(index),
                                 ),
                             ],
@@ -298,10 +299,10 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
 
                           // Selecao de Produto
                           DropdownButtonFormField<String>(
-                            value: item.productId,
-                            decoration: const InputDecoration(
-                              labelText: 'Produto / Insumo *',
-                              border: OutlineInputBorder(),
+                            initialValue: item.productId,
+                            decoration: InputDecoration(
+                              labelText: l10n.purchaseFormProductLabel,
+                              border: const OutlineInputBorder(),
                             ),
                             items: _products.map((p) {
                               return DropdownMenuItem<String>(
@@ -330,15 +331,15 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
 
                           // Selecao de Embalagem Comercial ou Unidade Base
                           DropdownButtonFormField<String?>(
-                            value: item.packagingId,
-                            decoration: const InputDecoration(
-                              labelText: 'Embalagem de Compra (Conversao Automatica)',
-                              border: OutlineInputBorder(),
+                            initialValue: item.packagingId,
+                            decoration: InputDecoration(
+                              labelText: l10n.purchaseFormPackagingLabel,
+                              border: const OutlineInputBorder(),
                             ),
                             items: [
                               DropdownMenuItem<String?>(
                                 value: null,
-                                child: Text('Direto na unidade base (${item.product?.baseUnit ?? "UN"})'),
+                                child: Text(l10n.purchaseFormBaseUnitPackaging(item.product?.baseUnit ?? 'UN')),
                               ),
                               ...availablePackagings.map((pkg) {
                                 return DropdownMenuItem<String?>(
@@ -368,8 +369,8 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                                   initialValue: '${item.packagesCount}',
                                   decoration: InputDecoration(
                                     labelText: item.packaging != null
-                                        ? 'Qtd de Embalagens *'
-                                        : 'Qtd de Unidades *',
+                                        ? l10n.purchaseFormQtyLabel
+                                        : '${l10n.purchaseFormQtyLabel} (${item.product?.baseUnit ?? "UN"})',
                                     border: const OutlineInputBorder(),
                                   ),
                                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -380,7 +381,7 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                                   },
                                   validator: (v) {
                                     final n = double.tryParse(v ?? '');
-                                    if (n == null || n <= 0) return 'Informe qtd valida';
+                                    if (n == null || n <= 0) return l10n.purchaseFormQtyRequired;
                                     return null;
                                   },
                                 ),
@@ -390,11 +391,8 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                                 child: TextFormField(
                                   initialValue: item.unitPriceReais > 0 ? '${item.unitPriceReais}' : '',
                                   decoration: InputDecoration(
-                                    labelText: item.packaging != null
-                                        ? 'Preco por Embalagem (R\$) *'
-                                        : 'Preco Unitario (R\$) *',
+                                    labelText: l10n.purchaseFormUnitCostLabel,
                                     border: const OutlineInputBorder(),
-                                    prefixText: 'R\$ ',
                                   ),
                                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                   onChanged: (val) {
@@ -404,7 +402,7 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                                   },
                                   validator: (v) {
                                     final n = double.tryParse(v?.replaceAll(',', '.') ?? '');
-                                    if (n == null || n < 0) return 'Informe preco valido';
+                                    if (n == null || n < 0) return l10n.purchaseFormUnitCostRequired;
                                     return null;
                                   },
                                 ),
@@ -424,14 +422,14 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  'Entrada no Estoque: ${item.quantityInBaseUnits} ${item.product?.baseUnit ?? "UN"}',
+                                  l10n.purchaseFormConvertedStock(item.quantityInBaseUnits, item.product?.baseUnit ?? 'UN'),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.blue.shade900,
                                   ),
                                 ),
                                 Text(
-                                  'Subtotal: ${_currencyFormat.format(item.totalPriceReais)}',
+                                  l10n.purchaseFormTotalItem(AppFormatters.formatCurrency((item.totalPriceReais * 100).round())),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.green.shade900,
@@ -460,10 +458,10 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Total da Compra:',
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text('${l10n.purchaseTotalCost}:',
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       Text(
-                        _currencyFormat.format(_totalPurchaseReais),
+                        AppFormatters.formatCurrency((_totalPurchaseReais * 100).round()),
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -488,7 +486,7 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                         height: 24,
                         child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                       )
-                    : const Text('Salvar Compra', style: TextStyle(color: Colors.white, fontSize: 16)),
+                    : Text(l10n.purchaseFormSaveButton, style: const TextStyle(color: Colors.white, fontSize: 16)),
               ),
             ],
           ),

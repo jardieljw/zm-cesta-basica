@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../models/basket_type.dart';
 import '../models/product.dart';
 import '../models/production_batch.dart';
 import '../services/basket_service.dart';
 import '../services/product_service.dart';
 import '../services/production_service.dart';
+import '../l10n/l10n_extension.dart';
+import '../utils/formatters.dart';
 
 class _CustomItemRow {
   String productId;
@@ -33,8 +34,6 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
   final BasketService _basketService = BasketService();
   final ProductService _productService = ProductService();
   final ProductionService _productionService = ProductionService();
-  final NumberFormat _currencyFormat =
-      NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
 
   bool _isLoadingInitial = true;
   String? _initialError;
@@ -156,6 +155,7 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
   }
 
   Future<void> _submitStandardProduction() async {
+    final l10n = context.l10n;
     if (!_standardFormKey.currentState!.validate()) return;
     if (_selectedStandardBasket == null) return;
 
@@ -164,20 +164,19 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Confirmar Montagem de Cestas'),
+        title: Text(l10n.assemblyConfirmDialogTitle),
         content: Text(
-          'Deseja confirmar a montagem de $qty cesta(s) "${_selectedStandardBasket!.name}"?\n\n'
-          'Os insumos serao baixados e o lote de cestas acabadas sera adicionado ao estoque imediatamente.',
+          l10n.assemblyConfirmDialogContent(qty, _selectedStandardBasket!.name),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Cancelar'),
+            child: Text(l10n.commonCancel),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.green.shade700),
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('Confirmar', style: TextStyle(color: Colors.white)),
+            child: Text(l10n.commonConfirm, style: const TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -202,11 +201,12 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
       });
 
       if (mounted) {
+        final formattedCost = AppFormatters.formatCurrency(batch.unitCostCents);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.green.shade800,
             content: Text(
-              'Lote #${batch.batchNumber} montado com sucesso! Custo unitario: ${_currencyFormat.format(batch.unitCostCents / 100)}',
+              l10n.assemblyConfirmSuccess(batch.batchNumber, formattedCost),
             ),
           ),
         );
@@ -320,10 +320,11 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
   }
 
   Future<void> _submitCustomProduction() async {
+    final l10n = context.l10n;
     if (!_customFormKey.currentState!.validate()) return;
     if (_selectedCustomBaseBasket == null) return;
     if (_customItems.isEmpty) {
-      setState(() => _customPreviewError = 'Adicione ao menos um insumo a cesta.');
+      setState(() => _customPreviewError = l10n.assemblyCustomQtyValidation);
       return;
     }
 
@@ -332,20 +333,19 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Confirmar Montagem Personalizada'),
+        title: Text(l10n.assemblySubmitCustom),
         content: Text(
-          'Deseja confirmar a montagem de $qty cesta(s) personalizadas "${_customDescController.text.trim()}"?\n\n'
-          'Sera gerado um lote exclusivo (#LOTE) com snapshot imutavel da composicao sem alterar as receitas padrao.',
+          l10n.assemblyConfirmDialogContent(qty, _customDescController.text.trim()),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
-            child: const Text('Cancelar'),
+            child: Text(l10n.commonCancel),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade700),
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: const Text('Confirmar', style: TextStyle(color: Colors.white)),
+            child: Text(l10n.commonConfirm, style: const TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -380,11 +380,12 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
       });
 
       if (mounted) {
+        final formattedCost = AppFormatters.formatCurrency(batch.unitCostCents);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.blue.shade800,
             content: Text(
-              'Lote Personalizado #${batch.batchNumber} montado com sucesso! Custo: ${_currencyFormat.format(batch.unitCostCents / 100)}',
+              l10n.assemblyConfirmSuccess(batch.batchNumber, formattedCost),
             ),
           ),
         );
@@ -404,25 +405,26 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     if (_isLoadingInitial) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Nova Ordem de Montagem')),
+        appBar: AppBar(title: Text(l10n.assemblyHeaderTitle)),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     if (_initialError != null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Nova Ordem de Montagem')),
+        appBar: AppBar(title: Text(l10n.assemblyHeaderTitle)),
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Erro: $_initialError', style: const TextStyle(color: Colors.red)),
+              Text('${l10n.commonError}: $_initialError', style: const TextStyle(color: Colors.red)),
               const SizedBox(height: 12),
               ElevatedButton(
                 onPressed: _loadInitialData,
-                child: const Text('Tentar Novamente'),
+                child: Text(l10n.commonRefresh),
               ),
             ],
           ),
@@ -432,13 +434,13 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Montagem & Produção de Cestas'),
+        title: Text(l10n.assemblyHeaderTitle),
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.white,
-          tabs: const [
-            Tab(icon: Icon(Icons.shopping_basket), text: 'Cesta Padrão (Receita Ativa)'),
-            Tab(icon: Icon(Icons.tune), text: 'Cesta Personalizada (Snapshot)'),
+          tabs: [
+            Tab(icon: const Icon(Icons.shopping_basket), text: l10n.assemblyTabStandard),
+            Tab(icon: const Icon(Icons.tune), text: l10n.assemblyTabCustom),
           ],
         ),
       ),
@@ -455,6 +457,7 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
   // ================= TAB 1: STANDARD WIDGETS =================
 
   Widget _buildStandardTab() {
+    final l10n = context.l10n;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Form(
@@ -470,9 +473,9 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Parametros da Ordem de Producao',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    Text(
+                      l10n.assemblyHeaderTitle,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     const SizedBox(height: 16),
                     Row(
@@ -481,15 +484,15 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                         Expanded(
                           flex: 3,
                           child: DropdownButtonFormField<String>(
-                            value: _selectedStandardBasket?.id,
-                            decoration: const InputDecoration(
-                              labelText: 'Tipo de Cesta *',
-                              border: OutlineInputBorder(),
+                            initialValue: _selectedStandardBasket?.id,
+                            decoration: InputDecoration(
+                              labelText: l10n.assemblyStandardBasketLabel,
+                              border: const OutlineInputBorder(),
                             ),
                             items: _basketTypes.map((b) {
                               final ver = b.activeRecipe != null
                                   ? ' (v${b.activeRecipe!.versionNumber})'
-                                  : ' (Sem receita)';
+                                  : ' (${l10n.commonNo} ${l10n.recipesTitle.toLowerCase()})';
                               return DropdownMenuItem(
                                 value: b.id,
                                 child: Text('${b.name}$ver'),
@@ -512,15 +515,15 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                           child: TextFormField(
                             controller: _standardQtyController,
                             keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              labelText: 'Quantidade *',
-                              border: OutlineInputBorder(),
-                              suffixText: 'un',
+                            decoration: InputDecoration(
+                              labelText: l10n.assemblyStandardQtyLabel,
+                              border: const OutlineInputBorder(),
+                              suffixText: l10n.commonUnit,
                             ),
                             validator: (v) {
-                              if (v == null || v.trim().isEmpty) return 'Obrigatorio';
+                              if (v == null || v.trim().isEmpty) return l10n.commonRequired;
                               final n = int.tryParse(v.trim());
-                              if (n == null || n <= 0) return 'Minimo 1';
+                              if (n == null || n <= 0) return l10n.assemblyStandardQtyValidation;
                               return null;
                             },
                             onChanged: (_) => _loadStandardPreview(),
@@ -539,16 +542,16 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                             });
                           },
                         ),
-                        const Text('Venda Direta / Faturamento Imediato'),
+                        Text(l10n.assemblyStandardDirectSale),
                       ],
                     ),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _standardNotesController,
-                      decoration: const InputDecoration(
-                        labelText: 'Observacoes do Lote (opcional)',
-                        hintText: 'Ex: Lote para feira, pedido especial',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: l10n.assemblyStandardNotesLabel,
+                        hintText: l10n.assemblyStandardNotesHint,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                   ],
@@ -573,8 +576,8 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                   : const Icon(Icons.check_circle, color: Colors.white),
               label: Text(
                 _isCreatingStandard
-                    ? 'Gravando Ordem...'
-                    : 'Confirmar Montagem de Cestas',
+                    ? l10n.commonLoading
+                    : l10n.assemblySubmitStandard,
                 style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
               ),
               style: ElevatedButton.styleFrom(
@@ -597,6 +600,7 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
   // ================= TAB 2: CUSTOM WIDGETS =================
 
   Widget _buildCustomTab() {
+    final l10n = context.l10n;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Form(
@@ -612,9 +616,9 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Identificacao do Lote Personalizado',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    Text(
+                      l10n.assemblyTabCustom,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     const SizedBox(height: 16),
                     Row(
@@ -623,10 +627,10 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                         Expanded(
                           flex: 3,
                           child: DropdownButtonFormField<String>(
-                            value: _selectedCustomBaseBasket?.id,
-                            decoration: const InputDecoration(
-                              labelText: 'Cesta Base (Modelo) *',
-                              border: OutlineInputBorder(),
+                            initialValue: _selectedCustomBaseBasket?.id,
+                            decoration: InputDecoration(
+                              labelText: l10n.assemblyCustomBaseBasket,
+                              border: const OutlineInputBorder(),
                             ),
                             items: _basketTypes.map((b) {
                               return DropdownMenuItem(
@@ -651,15 +655,15 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                           child: TextFormField(
                             controller: _customQtyController,
                             keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(
-                              labelText: 'Quantidade *',
-                              border: OutlineInputBorder(),
-                              suffixText: 'un',
+                            decoration: InputDecoration(
+                              labelText: l10n.assemblyStandardQtyLabel,
+                              border: const OutlineInputBorder(),
+                              suffixText: l10n.commonUnit,
                             ),
                             validator: (v) {
-                              if (v == null || v.trim().isEmpty) return 'Obrigatorio';
+                              if (v == null || v.trim().isEmpty) return l10n.commonRequired;
                               final n = int.tryParse(v.trim());
-                              if (n == null || n <= 0) return 'Minimo 1';
+                              if (n == null || n <= 0) return l10n.assemblyStandardQtyValidation;
                               return null;
                             },
                             onChanged: (_) => _loadCustomPreview(),
@@ -670,14 +674,14 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                     const SizedBox(height: 12),
                     TextFormField(
                       controller: _customDescController,
-                      decoration: const InputDecoration(
-                        labelText: 'Descricao da Personalizacao / Cliente *',
-                        hintText: 'Ex: Cesta Especial - Cliente Vale S/A (Mais 2kg Arroz)',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: l10n.assemblyCustomDescLabel,
+                        hintText: l10n.assemblyCustomDescHint,
+                        border: const OutlineInputBorder(),
                       ),
                       validator: (v) {
                         if (v == null || v.trim().length < 3) {
-                          return 'Descricao obrigatoria (minimo 3 caracteres)';
+                          return l10n.assemblyCustomDescRequired;
                         }
                         return null;
                       },
@@ -693,16 +697,16 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                             });
                           },
                         ),
-                        const Text('Venda Direta / Faturamento Imediato'),
+                        Text(l10n.assemblyStandardDirectSale),
                       ],
                     ),
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _customNotesController,
-                      decoration: const InputDecoration(
-                        labelText: 'Observacoes do Lote (opcional)',
-                        hintText: 'Ex: Substituido Oleo por Azeite',
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        labelText: l10n.assemblyStandardNotesLabel,
+                        hintText: l10n.assemblyStandardNotesHint,
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                   ],
@@ -721,21 +725,21 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Composicao Personalizada (Insumos)',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        Text(
+                          l10n.assemblyCustomItemsHeader(_customItems.length),
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         Row(
                           children: [
                             OutlinedButton.icon(
                               icon: const Icon(Icons.sync, size: 16),
-                              label: const Text('Recarregar da Base', style: TextStyle(fontSize: 12)),
+                              label: Text(l10n.commonRefresh, style: const TextStyle(fontSize: 12)),
                               onPressed: _populateCustomFromBase,
                             ),
                             const SizedBox(width: 8),
                             ElevatedButton.icon(
                               icon: const Icon(Icons.add, size: 16),
-                              label: const Text('Adicionar Insumo', style: TextStyle(fontSize: 12)),
+                              label: Text(l10n.assemblyCustomAddItem, style: const TextStyle(fontSize: 12)),
                               onPressed: _addCustomItem,
                             ),
                           ],
@@ -755,11 +759,11 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                             Expanded(
                               flex: 4,
                               child: DropdownButtonFormField<String>(
-                                value: row.productId,
+                                initialValue: row.productId,
                                 isDense: true,
-                                decoration: const InputDecoration(
-                                  labelText: 'Produto / Insumo',
-                                  border: OutlineInputBorder(),
+                                decoration: InputDecoration(
+                                  labelText: l10n.productName,
+                                  border: const OutlineInputBorder(),
                                 ),
                                 items: _products.map((p) {
                                   return DropdownMenuItem(
@@ -781,17 +785,17 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                             Expanded(
                               flex: 2,
                               child: DropdownButtonFormField<String>(
-                                value: row.section,
+                                initialValue: row.section,
                                 isDense: true,
-                                decoration: const InputDecoration(
-                                  labelText: 'Secao',
-                                  border: OutlineInputBorder(),
+                                decoration: InputDecoration(
+                                  labelText: l10n.recipeSection,
+                                  border: const OutlineInputBorder(),
                                 ),
-                                items: const [
-                                  DropdownMenuItem(value: 'ALIMENTOS', child: Text('Alimentos')),
-                                  DropdownMenuItem(value: 'LIMPEZA', child: Text('Limpeza')),
-                                  DropdownMenuItem(value: 'HIGIENE', child: Text('Higiene')),
-                                  DropdownMenuItem(value: 'OUTROS', child: Text('Outros')),
+                                items: [
+                                  DropdownMenuItem(value: 'ALIMENTOS', child: Text(l10n.categoryFood)),
+                                  DropdownMenuItem(value: 'LIMPEZA', child: Text(l10n.categoryCleaning)),
+                                  DropdownMenuItem(value: 'HIGIENE', child: Text(l10n.categoryHygiene)),
+                                  DropdownMenuItem(value: 'OUTROS', child: Text(l10n.categoryOthers)),
                                 ],
                                 onChanged: (val) {
                                   if (val != null) {
@@ -808,9 +812,9 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                               child: TextFormField(
                                 initialValue: row.quantityPerBasket.toString(),
                                 keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'Qtde/Cesta',
-                                  border: OutlineInputBorder(),
+                                decoration: InputDecoration(
+                                  labelText: l10n.recipeQuantityPerBasket,
+                                  border: const OutlineInputBorder(),
                                   isDense: true,
                                 ),
                                 onChanged: (val) {
@@ -824,7 +828,7 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete_outline, color: Colors.red),
-                              tooltip: 'Remover Insumo',
+                              tooltip: l10n.commonDelete,
                               onPressed: _customItems.length > 1
                                   ? () => _removeCustomItem(idx)
                                   : null,
@@ -855,8 +859,8 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                   : const Icon(Icons.check_circle, color: Colors.white),
               label: Text(
                 _isCreatingCustom
-                    ? 'Gravando Lote...'
-                    : 'Confirmar Montagem Personalizada',
+                    ? l10n.commonLoading
+                    : l10n.assemblySubmitCustom,
                 style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
               ),
               style: ElevatedButton.styleFrom(
@@ -884,6 +888,7 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
     required String? errorMessage,
     required VoidCallback onRefresh,
   }) {
+    final l10n = context.l10n;
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -899,15 +904,15 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                   children: [
                     const Icon(Icons.analytics_outlined, color: Colors.indigo),
                     const SizedBox(width: 8),
-                    const Text(
-                      'Simulacao e Pre-Flight Check de Estoque',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    Text(
+                      l10n.assemblyFeasibilityTitle,
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                   ],
                 ),
                 IconButton(
                   icon: const Icon(Icons.refresh, size: 20),
-                  tooltip: 'Atualizar Simulacao',
+                  tooltip: l10n.commonRefresh,
                   onPressed: onRefresh,
                 ),
               ],
@@ -965,8 +970,8 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                         const SizedBox(width: 6),
                         Text(
                           preview.canProduce
-                              ? 'Estoque Suficiente para Montagem'
-                              : 'Estoque Insuficiente (Escassez)',
+                              ? l10n.assemblyFeasibleOk
+                              : l10n.assemblyFeasibleFail,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 13,
@@ -983,11 +988,11 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        'Custo Unitario Estimado: ${_currencyFormat.format(preview.estimatedUnitCostCents / 100)}',
+                        l10n.assemblyUnitCostPreview(AppFormatters.formatCurrency(preview.estimatedUnitCostCents)),
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                       ),
                       Text(
-                        'Custo Total (${preview.quantityProduced} un): ${_currencyFormat.format(preview.estimatedTotalCostCents / 100)}',
+                        l10n.assemblyTotalCostPreview(AppFormatters.formatCurrency(preview.estimatedTotalCostCents)),
                         style: TextStyle(color: Colors.grey.shade700, fontSize: 12),
                       ),
                     ],
@@ -1018,16 +1023,16 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                       const SizedBox(height: 6),
                       ...preview.missingItems.map(
                         (it) => Text(
-                          '• ${it.productName}: Necessario ${it.quantityRequired} ${it.productBaseUnit}, Estoque atual ${it.currentStock} ${it.productBaseUnit} (Faltam ${it.missingQuantity} ${it.productBaseUnit})',
+                          '• ${it.productName}: Necessário ${AppFormatters.formatQuantity(it.quantityRequired, it.productBaseUnit)}, Estoque atual ${AppFormatters.formatQuantity(it.currentStock, it.productBaseUnit)} (Faltam ${AppFormatters.formatQuantity(it.missingQuantity, it.productBaseUnit)})',
                           style: TextStyle(color: Colors.red.shade800, fontSize: 12),
                         ),
                       ),
                     ],
                   ),
                 ),
-              const Text(
-                'Detalhamento dos Insumos:',
-                style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+              Text(
+                '${l10n.recipeSection}:',
+                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
               ),
               const SizedBox(height: 8),
               Container(
@@ -1042,6 +1047,7 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                   separatorBuilder: (_, __) => const Divider(height: 1),
                   itemBuilder: (context, idx) {
                     final it = preview.items[idx];
+                    final unitCostCents = (it.unitCostMicrocents / 10000).round();
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       child: Row(
@@ -1056,7 +1062,7 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                                   style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
                                 ),
                                 Text(
-                                  'Secao: ${it.section} | Custo un: ${_currencyFormat.format(it.unitCostMicrocents / 1000000)}',
+                                  '${l10n.recipeSection}: ${it.section} | ${l10n.productCostPrice}: ${AppFormatters.formatCurrency(unitCostCents)}',
                                   style: TextStyle(color: Colors.grey.shade600, fontSize: 11),
                                 ),
                               ],
@@ -1065,7 +1071,7 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                           Expanded(
                             flex: 2,
                             child: Text(
-                              'Exigido: ${it.quantityRequired} ${it.productBaseUnit}\nSaldo: ${it.currentStock} ${it.productBaseUnit}',
+                              'Exigido: ${AppFormatters.formatQuantity(it.quantityRequired, it.productBaseUnit)}\nSaldo: ${AppFormatters.formatQuantity(it.currentStock, it.productBaseUnit)}',
                               style: const TextStyle(fontSize: 12),
                             ),
                           ),
@@ -1083,7 +1089,7 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                               ),
                             ),
                             child: Text(
-                              it.isSufficient ? 'OK' : 'Faltam ${it.missingQuantity}',
+                              it.isSufficient ? 'OK' : 'Faltam ${AppFormatters.formatQuantity(it.missingQuantity, it.productBaseUnit)}',
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
@@ -1100,9 +1106,9 @@ class _ProductionAssemblyViewState extends State<ProductionAssemblyView>
                 ),
               ),
             ] else
-              const Text(
-                'Selecione os parametros acima para simular a montagem.',
-                style: TextStyle(color: Colors.grey),
+              Text(
+                l10n.recipeQuantityPerBasket,
+                style: const TextStyle(color: Colors.grey),
               ),
           ],
         ),

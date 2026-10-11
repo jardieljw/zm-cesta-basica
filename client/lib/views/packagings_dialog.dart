@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../services/product_service.dart';
+import '../l10n/l10n_extension.dart';
 
 class PackagingsDialog extends StatefulWidget {
   final Product product;
@@ -33,13 +34,14 @@ class _PackagingsDialogState extends State<PackagingsDialog> {
       if (mounted) {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao carregar embalagens: $e')),
+          SnackBar(content: Text(context.l10n.packagingDialogLoadError(e.toString()))),
         );
       }
     }
   }
 
   void _showAddPackagingDialog() {
+    final l10n = context.l10n;
     final nameCtrl = TextEditingController();
     final qtyCtrl = TextEditingController();
     bool isDefault = false;
@@ -48,16 +50,16 @@ class _PackagingsDialogState extends State<PackagingsDialog> {
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (context, setDialogState) => AlertDialog(
-          title: const Text('Nova Embalagem Comercial'),
+          title: Text(l10n.packagingDialogNewTitle),
           content: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextField(
                   controller: nameCtrl,
-                  decoration: const InputDecoration(
-                    labelText: 'Nome da Embalagem *',
-                    hintText: 'Ex: Fardo c/ 10 un, Caixa c/ 12',
+                  decoration: InputDecoration(
+                    labelText: l10n.packagingDialogNameLabel,
+                    hintText: l10n.packagingDialogNameHint,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -65,13 +67,13 @@ class _PackagingsDialogState extends State<PackagingsDialog> {
                   controller: qtyCtrl,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
-                    labelText: 'Quantidade na Unidade Base * (${widget.product.baseUnit})',
-                    hintText: 'Ex: 10, 5000',
+                    labelText: l10n.packagingDialogQtyLabel(widget.product.baseUnit),
+                    hintText: l10n.packagingDialogQtyHint,
                   ),
                 ),
                 const SizedBox(height: 12),
                 SwitchListTile(
-                  title: const Text('Embalagem Padrao de Compra'),
+                  title: Text(l10n.packagingDialogDefaultSwitch),
                   value: isDefault,
                   onChanged: (val) => setDialogState(() => isDefault = val),
                 ),
@@ -81,7 +83,7 @@ class _PackagingsDialogState extends State<PackagingsDialog> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Cancelar'),
+              child: Text(l10n.commonCancel),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -89,7 +91,7 @@ class _PackagingsDialogState extends State<PackagingsDialog> {
                 final qty = int.tryParse(qtyCtrl.text.trim()) ?? 0;
                 if (name.isEmpty || qty <= 0) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Informe nome e quantidade maior que 0.')),
+                    SnackBar(content: Text(l10n.packagingDialogValidation)),
                   );
                   return;
                 }
@@ -105,12 +107,12 @@ class _PackagingsDialogState extends State<PackagingsDialog> {
                 } catch (e) {
                   if (mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Falha ao cadastrar: $e')),
+                      SnackBar(content: Text(context.l10n.packagingDialogSaveError(e.toString()))),
                     );
                   }
                 }
               },
-              child: const Text('Salvar'),
+              child: Text(l10n.commonSave),
             ),
           ],
         ),
@@ -120,6 +122,8 @@ class _PackagingsDialogState extends State<PackagingsDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
@@ -137,11 +141,11 @@ class _PackagingsDialogState extends State<PackagingsDialog> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Embalagens Comerciais',
+                        l10n.packagingsTitle,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        '${widget.product.name} (Base: ${widget.product.baseUnit})',
+                        l10n.packagingProductSubtitle(widget.product.name, widget.product.baseUnit),
                         style: const TextStyle(color: Colors.black54),
                       ),
                     ],
@@ -157,12 +161,12 @@ class _PackagingsDialogState extends State<PackagingsDialog> {
             _isLoading
                 ? const Center(child: Padding(padding: EdgeInsets.all(32), child: CircularProgressIndicator()))
                 : _packagings.isEmpty
-                    ? const Padding(
-                        padding: EdgeInsets.all(24),
+                    ? Padding(
+                        padding: const EdgeInsets.all(24),
                         child: Text(
-                          'Nenhuma embalagem comercial cadastrada. O estoque sera movimentado diretamente na unidade base.',
+                          l10n.packagingEmpty,
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black54),
+                          style: const TextStyle(color: Colors.black54),
                         ),
                       )
                     : ConstrainedBox(
@@ -188,18 +192,22 @@ class _PackagingsDialogState extends State<PackagingsDialog> {
                                   ),
                                 ),
                                 subtitle: Text(
-                                  'Fator: ${p.quantityInBaseUnits} ${widget.product.baseUnit} ${p.isDefault ? "• (Padrao)" : ""}',
+                                  l10n.packagingFactorLabel(
+                                    p.quantityInBaseUnits,
+                                    widget.product.baseUnit,
+                                    p.isDefault ? l10n.packagingDefaultTag : '',
+                                  ),
                                 ),
                                 trailing: p.isActive
                                     ? IconButton(
                                         icon: const Icon(Icons.delete_outline, color: Colors.red),
-                                        tooltip: 'Inativar',
+                                        tooltip: l10n.packagingInactivateTooltip,
                                         onPressed: () async {
                                           await _service.inactivatePackaging(p.id);
                                           _loadPackagings();
                                         },
                                       )
-                                    : const Chip(label: Text('Inativo', style: TextStyle(fontSize: 11))),
+                                    : Chip(label: Text(l10n.productInactive, style: const TextStyle(fontSize: 11))),
                               ),
                             );
                           },
@@ -208,7 +216,7 @@ class _PackagingsDialogState extends State<PackagingsDialog> {
             const SizedBox(height: 16),
             ElevatedButton.icon(
               icon: const Icon(Icons.add),
-              label: const Text('Adicionar Embalagem'),
+              label: Text(l10n.packagingAddButton),
               onPressed: _showAddPackagingDialog,
             ),
           ],

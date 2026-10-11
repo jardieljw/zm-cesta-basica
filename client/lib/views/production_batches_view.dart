@@ -240,7 +240,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: _getStatusColor(batch.status).withOpacity(0.1),
+                          color: _getStatusColor(batch.status).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: _getStatusColor(batch.status)),
                         ),
@@ -612,7 +612,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Erro ao carregar lotes: $_errorMessage', style: const TextStyle(color: Colors.red)),
+            Text('${context.l10n.commonError}: $_errorMessage', style: const TextStyle(color: Colors.red)),
             const SizedBox(height: 12),
             ElevatedButton(
               onPressed: _loadBatches,
@@ -725,7 +725,7 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: _getStatusColor(b.status).withOpacity(0.1),
+                            color: _getStatusColor(b.status).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                             border: Border.all(color: _getStatusColor(b.status)),
                           ),
@@ -745,12 +745,13 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Produzido: ${b.quantityProduced} un  |  Disponivel: ${b.currentBatchStock} un' +
-                              (b.quantityDisassembled > 0 ? '  |  Desmontado: ${b.quantityDisassembled} un' : ''),
+                          '${context.l10n.productionQuantityProduced}: ${b.quantityProduced} un  |  '
+                          '${context.l10n.productionCurrentStock}: ${b.currentBatchStock} un'
+                          '${b.quantityDisassembled > 0 ? "  |  ${context.l10n.productionQuantityDisassembled}: ${b.quantityDisassembled} un" : ""}',
                           style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
                         ),
                         Text(
-                          'Custo Unit: ${AppFormatters.formatCurrency(b.unitCostCents)}',
+                          '${context.l10n.productionUnitCost}: ${AppFormatters.formatCurrency(b.unitCostCents)}',
                           style: TextStyle(color: Colors.green.shade800, fontWeight: FontWeight.bold, fontSize: 13),
                         ),
                       ],
@@ -776,13 +777,13 @@ class _ProductionBatchesViewState extends State<ProductionBatchesView> {
                         children: [
                           TextButton.icon(
                             icon: const Icon(Icons.info_outline, size: 16),
-                            label: const Text('Ver Insumos', style: TextStyle(fontSize: 12)),
+                            label: Text(context.l10n.productionBatchViewIngredients, style: const TextStyle(fontSize: 12)),
                             onPressed: () => _showBatchDetails(b),
                           ),
                           const SizedBox(width: 8),
                           OutlinedButton.icon(
                             icon: const Icon(Icons.build_circle_outlined, size: 16, color: Colors.orange),
-                            label: const Text('Desmontar', style: TextStyle(fontSize: 12, color: Colors.orange)),
+                            label: Text(context.l10n.productionDisassemble, style: const TextStyle(fontSize: 12, color: Colors.orange)),
                             onPressed: () => _openDisassembly(b),
                           ),
                         ],

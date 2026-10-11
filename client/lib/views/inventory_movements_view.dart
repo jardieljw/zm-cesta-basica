@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../models/inventory_movement.dart';
 import '../services/inventory_service.dart';
+import '../l10n/l10n_extension.dart';
+import '../utils/formatters.dart';
 
 class InventoryMovementsView extends StatefulWidget {
   final String? initialProductId;
@@ -14,7 +15,6 @@ class InventoryMovementsView extends StatefulWidget {
 
 class _InventoryMovementsViewState extends State<InventoryMovementsView> {
   final InventoryService _inventoryService = InventoryService();
-  final DateFormat _dateFormat = DateFormat('dd/MM/yyyy HH:mm');
 
   List<InventoryMovement> _movements = [];
   bool _isLoading = true;
@@ -76,24 +76,25 @@ class _InventoryMovementsViewState extends State<InventoryMovementsView> {
     }
   }
 
-  String _formatMovementType(String type) {
+  String _formatMovementType(BuildContext context, String type) {
+    final l10n = context.l10n;
     switch (type) {
       case 'PURCHASE':
-        return 'COMPRA';
+        return l10n.movementPurchase;
       case 'PURCHASE_CANCEL':
-        return 'ESTORNO COMPRA';
+        return l10n.movementPurchaseCancel;
       case 'ADJUSTMENT_IN':
-        return 'SOBRA / ENTRADA';
+        return l10n.movementAdjustmentIn;
       case 'ADJUSTMENT_OUT':
-        return 'AVARIA / SAIDA';
+        return l10n.movementAdjustmentOut;
       case 'LOSS':
-        return 'PERDA / DESCARTE';
+        return l10n.movementLoss;
       case 'ASSEMBLY_CONSUME':
-        return 'CONSUMO MONTAGEM';
+        return l10n.movementAssemblyConsume;
       case 'ASSEMBLY_PRODUCE':
-        return 'CESTA MONTADA';
+        return l10n.movementAssemblyProduce;
       case 'SALE':
-        return 'VENDA';
+        return l10n.movementSale;
       default:
         return type;
     }
@@ -101,12 +102,14 @@ class _InventoryMovementsViewState extends State<InventoryMovementsView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Extrato do Livro-Razao Contabil'),
+        title: Text(l10n.inventoryMovementsHeaderTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
+            tooltip: l10n.commonRefresh,
             onPressed: _loadMovements,
           ),
         ],
@@ -120,7 +123,7 @@ class _InventoryMovementsViewState extends State<InventoryMovementsView> {
             child: Row(
               children: [
                 FilterChip(
-                  label: const Text('Todos'),
+                  label: Text(l10n.inventoryMovementsFilterAll),
                   selected: _selectedMovementType == null,
                   onSelected: (val) {
                     if (val) {
@@ -131,7 +134,7 @@ class _InventoryMovementsViewState extends State<InventoryMovementsView> {
                 ),
                 const SizedBox(width: 8),
                 FilterChip(
-                  label: const Text('Compras'),
+                  label: Text(l10n.inventoryMovementsFilterPurchase),
                   selected: _selectedMovementType == 'PURCHASE',
                   onSelected: (val) {
                     setState(() => _selectedMovementType = val ? 'PURCHASE' : null);
@@ -140,7 +143,7 @@ class _InventoryMovementsViewState extends State<InventoryMovementsView> {
                 ),
                 const SizedBox(width: 8),
                 FilterChip(
-                  label: const Text('Estornos'),
+                  label: Text(l10n.inventoryMovementsFilterCancel),
                   selected: _selectedMovementType == 'PURCHASE_CANCEL',
                   onSelected: (val) {
                     setState(() => _selectedMovementType = val ? 'PURCHASE_CANCEL' : null);
@@ -149,7 +152,7 @@ class _InventoryMovementsViewState extends State<InventoryMovementsView> {
                 ),
                 const SizedBox(width: 8),
                 FilterChip(
-                  label: const Text('Ajustes'),
+                  label: Text(l10n.inventoryMovementsFilterAdjustment),
                   selected: _selectedMovementType == 'ADJUSTMENT_IN',
                   onSelected: (val) {
                     setState(() => _selectedMovementType = val ? 'ADJUSTMENT_IN' : null);
@@ -158,10 +161,10 @@ class _InventoryMovementsViewState extends State<InventoryMovementsView> {
                 ),
                 const SizedBox(width: 8),
                 FilterChip(
-                  label: const Text('Perdas'),
-                  selected: _selectedMovementType == 'LOSS',
+                  label: Text(l10n.inventoryMovementsFilterAssembly),
+                  selected: _selectedMovementType == 'ASSEMBLY_PRODUCE',
                   onSelected: (val) {
-                    setState(() => _selectedMovementType = val ? 'LOSS' : null);
+                    setState(() => _selectedMovementType = val ? 'ASSEMBLY_PRODUCE' : null);
                     _loadMovements();
                   },
                 ),
@@ -182,12 +185,12 @@ class _InventoryMovementsViewState extends State<InventoryMovementsView> {
                             const SizedBox(height: 16),
                             Text(_errorMessage!),
                             const SizedBox(height: 16),
-                            ElevatedButton(onPressed: _loadMovements, child: const Text('Tentar Novamente')),
+                            ElevatedButton(onPressed: _loadMovements, child: Text(l10n.commonRefresh)),
                           ],
                         ),
                       )
                     : _movements.isEmpty
-                        ? const Center(child: Text('Nenhuma movimentacao contabil registrada.'))
+                        ? Center(child: Text(l10n.inventoryMovementsEmpty))
                         : RefreshIndicator(
                             onRefresh: _loadMovements,
                             child: ListView.separated(
@@ -241,7 +244,7 @@ class _InventoryMovementsViewState extends State<InventoryMovementsView> {
                                                       borderRadius: BorderRadius.circular(4),
                                                     ),
                                                     child: Text(
-                                                      _formatMovementType(m.movementType),
+                                                      _formatMovementType(context, m.movementType),
                                                       style: const TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 10,
@@ -251,14 +254,14 @@ class _InventoryMovementsViewState extends State<InventoryMovementsView> {
                                                   ),
                                                   const Spacer(),
                                                   Text(
-                                                    _dateFormat.format(m.occurredAt.toLocal()),
+                                                    AppFormatters.formatDateTime(m.occurredAt.toLocal()),
                                                     style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                                                   ),
                                                 ],
                                               ),
                                               const SizedBox(height: 6),
                                               Text(
-                                                m.productName ?? m.basketTypeName ?? 'Item do Razao',
+                                                m.productName ?? m.basketTypeName ?? '-',
                                                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                                               ),
                                               if (m.reason != null && m.reason!.isNotEmpty) ...[

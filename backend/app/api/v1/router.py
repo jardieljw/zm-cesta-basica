@@ -8,6 +8,9 @@ from app.api.v1.basket_types import router as basket_types_router
 from app.api.v1.inventory import router as inventory_router
 from app.api.v1.purchases import router as purchases_router
 from app.api.v1.production import router as production_router
+from app.api.v1.customers import router as customers_router
+from app.api.v1.sales import router as sales_router
+from app.api.v1.receivables import router as receivables_router
 
 api_v1_router = APIRouter()
 
@@ -20,3 +23,6 @@ api_v1_router.include_router(basket_types_router, tags=["Basket Types & Recipes"
 api_v1_router.include_router(inventory_router, tags=["Inventory & Ledger"])
 api_v1_router.include_router(purchases_router, tags=["Purchases"])
 api_v1_router.include_router(production_router, tags=["Production & Assembly"])
+api_v1_router.include_router(customers_router, tags=["Customers"])
+api_v1_router.include_router(sales_router, tags=["Sales & Direct Assembly"])
+api_v1_router.include_router(receivables_router, tags=["Receivables & Payments"])

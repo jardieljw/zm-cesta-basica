@@ -3,6 +3,8 @@ import '../models/basket_type.dart';
 import '../models/product.dart';
 import '../services/basket_service.dart';
 import '../services/product_service.dart';
+import '../l10n/l10n_extension.dart';
+import '../utils/formatters.dart';
 
 class RecipeView extends StatefulWidget {
   final BasketType basketType;
@@ -42,13 +44,14 @@ class _RecipeViewState extends State<RecipeView> {
       if (mounted) {
         setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao carregar receitas: $e')),
+          SnackBar(content: Text(context.l10n.recipeLoadError(e.toString()))),
         );
       }
     }
   }
 
   void _showNewRecipeVersionDialog() async {
+    final l10n = context.l10n;
     // Carrega produtos ativos disponiveis
     List<Product> activeProducts = [];
     try {
@@ -56,7 +59,7 @@ class _RecipeViewState extends State<RecipeView> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao carregar insumos: $e')),
+          SnackBar(content: Text(context.l10n.recipeLoadProductsError(e.toString()))),
         );
       }
       return;
@@ -65,7 +68,7 @@ class _RecipeViewState extends State<RecipeView> {
     if (activeProducts.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Nenhum insumo ativo encontrado. Cadastre produtos primeiro.')),
+          SnackBar(content: Text(context.l10n.recipeNoActiveProducts)),
         );
       }
       return;
@@ -108,33 +111,33 @@ class _RecipeViewState extends State<RecipeView> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Nova Versao de Receita (Imutavel)',
+                        l10n.recipeDialogTitle,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(ctx)),
                     ],
                   ),
-                  const Text(
-                    'Ao salvar, a composicao atual sera arquivada permanentemente e uma nova versao ativa sera criada.',
-                    style: TextStyle(color: Colors.black54, fontSize: 13),
+                  Text(
+                    l10n.recipeDialogSubtitle,
+                    style: const TextStyle(color: Colors.black54, fontSize: 13),
                   ),
                   const SizedBox(height: 12),
                   TextField(
                     controller: notesCtrl,
-                    decoration: const InputDecoration(
-                      labelText: 'Motivo da revisao / Notas da versao',
-                      hintText: 'Ex: Troca de fornecedor do arroz, ajuste sazonal',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: l10n.recipeDialogNotesLabel,
+                      hintText: l10n.recipeDialogNotesHint,
+                      border: const OutlineInputBorder(),
                     ),
                   ),
                   const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Insumos da Receita (${draftItems.length})', style: const TextStyle(fontWeight: FontWeight.bold)),
+                      Text(l10n.recipeDialogItemsTitle(draftItems.length), style: const TextStyle(fontWeight: FontWeight.bold)),
                       TextButton.icon(
                         icon: const Icon(Icons.add, size: 18),
-                        label: const Text('Adicionar Insumo'),
+                        label: Text(l10n.recipeAddIngredient),
                         onPressed: () {
                           // Adiciona primeiro produto ativo ainda nao na lista
                           final available = activeProducts.where(
@@ -143,7 +146,7 @@ class _RecipeViewState extends State<RecipeView> {
 
                           if (available.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Todos os produtos ativos ja estao na receita.')),
+                              SnackBar(content: Text(l10n.recipeDialogAllProductsAdded)),
                             );
                             return;
                           }
@@ -165,10 +168,10 @@ class _RecipeViewState extends State<RecipeView> {
                   ConstrainedBox(
                     constraints: const BoxConstraints(maxHeight: 280),
                     child: draftItems.isEmpty
-                        ? const Center(
+                        ? Center(
                             child: Padding(
-                              padding: EdgeInsets.all(16),
-                              child: Text('Nenhum insumo adicionado. Clique em "Adicionar Insumo".'),
+                              padding: const EdgeInsets.all(16),
+                              child: Text(l10n.recipeDialogNoItems),
                             ),
                           )
                         : ListView.builder(
@@ -191,7 +194,7 @@ class _RecipeViewState extends State<RecipeView> {
                                         flex: 4,
                                         child: DropdownButtonFormField<String>(
                                           isExpanded: true,
-                                          value: item['product_id'] as String,
+                                          initialValue: item['product_id'] as String,
                                           items: activeProducts.map((p) => DropdownMenuItem(
                                             value: p.id,
                                             child: Text('${p.name} (${p.baseUnit})', overflow: TextOverflow.ellipsis),
@@ -200,7 +203,7 @@ class _RecipeViewState extends State<RecipeView> {
                                             if (val != null) {
                                               if (draftItems.any((it) => it != item && it['product_id'] == val)) {
                                                 ScaffoldMessenger.of(context).showSnackBar(
-                                                  const SnackBar(content: Text('Este insumo ja esta na receita. Consolide a quantidade em um unico item.')),
+                                                  SnackBar(content: Text(l10n.recipeDialogDuplicateItem)),
                                                 );
                                                 return;
                                               }
@@ -216,7 +219,7 @@ class _RecipeViewState extends State<RecipeView> {
                                           initialValue: item['quantity_in_base_units'].toString(),
                                           keyboardType: TextInputType.number,
                                           decoration: InputDecoration(
-                                            labelText: 'Qtd (${selectedProd.baseUnit})',
+                                            labelText: l10n.recipeDialogQtyLabel(selectedProd.baseUnit),
                                             border: const OutlineInputBorder(),
                                           ),
                                           onChanged: (val) {
@@ -231,12 +234,12 @@ class _RecipeViewState extends State<RecipeView> {
                                       Expanded(
                                         flex: 3,
                                         child: DropdownButtonFormField<String>(
-                                          value: item['section'] as String,
-                                          items: const [
-                                            DropdownMenuItem(value: 'ALIMENTACAO', child: Text('Alimentacao')),
-                                            DropdownMenuItem(value: 'LIMPEZA', child: Text('Limpeza')),
-                                            DropdownMenuItem(value: 'CARNE', child: Text('Carne')),
-                                            DropdownMenuItem(value: 'OUTROS', child: Text('Outros')),
+                                          initialValue: item['section'] as String,
+                                          items: [
+                                            DropdownMenuItem(value: 'ALIMENTACAO', child: Text(l10n.categoryFood)),
+                                            DropdownMenuItem(value: 'LIMPEZA', child: Text(l10n.categoryCleaning)),
+                                            DropdownMenuItem(value: 'CARNE', child: Text(l10n.categoryMeat)),
+                                            DropdownMenuItem(value: 'OUTROS', child: Text(l10n.categoryOthers)),
                                           ],
                                           onChanged: (val) {
                                             if (val != null) {
@@ -264,7 +267,7 @@ class _RecipeViewState extends State<RecipeView> {
                     onPressed: () async {
                       if (draftItems.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('A receita deve ter ao menos 1 item.')),
+                          SnackBar(content: Text(l10n.recipeDialogValidationMinItems)),
                         );
                         return;
                       }
@@ -277,18 +280,18 @@ class _RecipeViewState extends State<RecipeView> {
                         _loadVersions();
                         if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Nova versao de receita criada com sucesso!')),
+                            SnackBar(content: Text(l10n.recipeDialogSaveSuccess)),
                           );
                         }
                       } catch (e) {
                         if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Falha ao criar receita: $e')),
+                            SnackBar(content: Text(context.l10n.recipeDialogSaveError(e.toString()))),
                           );
                         }
                       }
                     },
-                    child: const Text('Salvar Nova Versao'),
+                    child: Text(l10n.recipeDialogSaveButton),
                   ),
                 ],
               ),
@@ -302,20 +305,22 @@ class _RecipeViewState extends State<RecipeView> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Receita: ${widget.basketType.name}'),
+        title: Text(l10n.recipeAppTitle(widget.basketType.name)),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
+            tooltip: l10n.commonRefresh,
             onPressed: _loadVersions,
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         icon: const Icon(Icons.playlist_add),
-        label: const Text('Nova Versao'),
+        label: Text(l10n.recipeNewVersionButton),
         onPressed: _showNewRecipeVersionDialog,
       ),
       body: _isLoading
@@ -329,14 +334,14 @@ class _RecipeViewState extends State<RecipeView> {
                       children: [
                         Icon(Icons.receipt_long_outlined, size: 64, color: Colors.grey.shade400),
                         const SizedBox(height: 16),
-                        const Text(
-                          'Nenhuma versao de receita cadastrada para esta cesta.',
-                          style: TextStyle(fontSize: 16, color: Colors.black54),
+                        Text(
+                          l10n.recipeEmptyVersions,
+                          style: const TextStyle(fontSize: 16, color: Colors.black54),
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton.icon(
                           icon: const Icon(Icons.add),
-                          label: const Text('Criar Primeira Versao'),
+                          label: Text(l10n.recipeCreateFirstVersion),
                           onPressed: _showNewRecipeVersionDialog,
                         ),
                       ],
@@ -367,14 +372,14 @@ class _RecipeViewState extends State<RecipeView> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.blue.shade300),
       ),
-      child: const Row(
+      child: Row(
         children: [
-          Icon(Icons.lock_clock, color: Colors.blue),
-          SizedBox(width: 12),
+          const Icon(Icons.lock_clock, color: Colors.blue),
+          const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'Versionamento Imutavel: As receitas gravadas nunca sao sobrescritas. Para alterar componentes, clique em "Nova Versao". Montagens antigas mantem fidelidade exata a composicao da epoca.',
-              style: TextStyle(fontSize: 13, color: Colors.blueGrey),
+              context.l10n.recipeImmutabilityBanner,
+              style: const TextStyle(fontSize: 13, color: Colors.blueGrey),
             ),
           ),
         ],
@@ -383,6 +388,8 @@ class _RecipeViewState extends State<RecipeView> {
   }
 
   Widget _buildVersionSelectorCard(ThemeData theme) {
+    final l10n = context.l10n;
+
     return Card(
       elevation: 1,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -392,7 +399,7 @@ class _RecipeViewState extends State<RecipeView> {
           children: [
             const Icon(Icons.history, color: Colors.blueGrey),
             const SizedBox(width: 12),
-            const Text('Versao em exibicao: ', style: TextStyle(fontWeight: FontWeight.bold)),
+            Text(l10n.recipeVersionDisplayed, style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(width: 8),
             DropdownButton<String>(
               value: _selectedVersion?.id,
@@ -402,7 +409,7 @@ class _RecipeViewState extends State<RecipeView> {
                   value: v.id,
                   child: Row(
                     children: [
-                      Text('Versao ${v.versionNumber}'),
+                      Text(l10n.recipeVersionItem(v.versionNumber)),
                       const SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -411,7 +418,7 @@ class _RecipeViewState extends State<RecipeView> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(
-                          isActive ? 'ATIVA' : 'ARQUIVADA',
+                          isActive ? l10n.recipeStatusActive : l10n.recipeStatusArchived,
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
@@ -435,6 +442,7 @@ class _RecipeViewState extends State<RecipeView> {
   }
 
   Widget _buildRecipeItemsSection(ThemeData theme, RecipeVersion version) {
+    final l10n = context.l10n;
     // Agrupa itens por secao (ALIMENTACAO, LIMPEZA, CARNE, etc.)
     final Map<String, List<RecipeItem>> grouped = {};
     for (var item in version.items) {
@@ -447,7 +455,7 @@ class _RecipeViewState extends State<RecipeView> {
         if (version.notes != null && version.notes!.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(bottom: 12.0),
-            child: Text('Notas da Versao: "${version.notes}"', style: const TextStyle(fontStyle: FontStyle.italic)),
+            child: Text(l10n.recipeNotesLabel(version.notes!), style: const TextStyle(fontStyle: FontStyle.italic)),
           ),
         ...grouped.entries.map((entry) {
           final section = entry.key;
@@ -462,7 +470,7 @@ class _RecipeViewState extends State<RecipeView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Secao: $section (${items.length} itens)',
+                    l10n.recipeSectionHeader(_formatSection(context, section), items.length),
                     style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
                   ),
                   const Divider(height: 20),
@@ -475,12 +483,12 @@ class _RecipeViewState extends State<RecipeView> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              it.productName ?? 'Insumo (${it.productId})',
+                              it.productName ?? l10n.recipeUnknownIngredient(it.productId),
                               style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                             ),
                           ),
                           Text(
-                            '${it.quantityInBaseUnits} ${it.productBaseUnit ?? "un"}',
+                            AppFormatters.formatQuantity(it.quantityInBaseUnits, it.productBaseUnit ?? 'un'),
                             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                           ),
                         ],
@@ -494,5 +502,21 @@ class _RecipeViewState extends State<RecipeView> {
         }),
       ],
     );
+  }
+
+  String _formatSection(BuildContext context, String sec) {
+    final l10n = context.l10n;
+    switch (sec) {
+      case 'ALIMENTACAO':
+        return l10n.categoryFood;
+      case 'LIMPEZA':
+        return l10n.categoryCleaning;
+      case 'CARNE':
+        return l10n.categoryMeat;
+      case 'OUTROS':
+        return l10n.categoryOthers;
+      default:
+        return sec;
+    }
   }
 }

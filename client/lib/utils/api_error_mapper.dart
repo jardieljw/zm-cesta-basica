@@ -29,6 +29,10 @@ class ApiErrorMapper {
             return l10n.errorConflict;
           case 'VALIDATION_ERROR':
             return l10n.errorValidationError;
+          case 'CUSTOMER_DOCUMENT_CONFLICT':
+            return l10n.errorCustomerDocumentConflict;
+          case 'CREDIT_LIMIT_EXCEEDED':
+            return l10n.errorCreditLimitExceeded;
         }
       }
 

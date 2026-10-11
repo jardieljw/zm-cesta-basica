@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/secure_storage.dart';
 import '../services/auth_service.dart';
+import '../l10n/l10n_extension.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -37,13 +38,14 @@ class _SettingsViewState extends State<SettingsView> {
     setState(() {
       _urlCtrl.text = url;
       _fpCtrl.text = fp;
-      _deviceId = id ?? 'Nao definido';
-      _deviceName = name ?? 'Nao definido';
+      _deviceId = id ?? '-';
+      _deviceName = name ?? '-';
       _hasToken = token != null && token.isNotEmpty;
     });
   }
 
   Future<void> _saveSettings() async {
+    final l10n = context.l10n;
     setState(() => _isSaving = true);
     await _storage.saveServerUrl(_urlCtrl.text.trim());
     await _storage.saveFingerprint(_fpCtrl.text.trim());
@@ -51,23 +53,24 @@ class _SettingsViewState extends State<SettingsView> {
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Configuracoes de rede salvas.')),
+        SnackBar(content: Text(l10n.settingsSaved)),
       );
     }
   }
 
   Future<void> _unpairDevice() async {
+    final l10n = context.l10n;
     final confirm = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Confirmar Desconexao'),
-        content: const Text('Deseja realmente desvincular este dispositivo do servidor local?'),
+        title: Text(l10n.settingsUnpairTitle),
+        content: Text(l10n.settingsUnpairContent),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancelar')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l10n.commonCancel)),
           TextButton(
             style: TextButton.styleFrom(foregroundColor: Colors.red),
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Desvincular'),
+            child: Text(l10n.settingsUnpairConfirm),
           ),
         ],
       ),
@@ -78,7 +81,7 @@ class _SettingsViewState extends State<SettingsView> {
       await _loadSettings();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Dispositivo desvinculado com sucesso.')),
+          SnackBar(content: Text(l10n.settingsUnpairedSuccess)),
         );
       }
     }
@@ -86,9 +89,10 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Configuracoes de Rede e Dispositivo'),
+        title: Text(l10n.settingsHeaderTitle),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
@@ -97,45 +101,45 @@ class _SettingsViewState extends State<SettingsView> {
           children: [
             TextField(
               controller: _urlCtrl,
-              decoration: const InputDecoration(
-                labelText: 'URL Base do Servidor Local',
-                hintText: 'https://192.168.1.100:8000',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.dns),
+              decoration: InputDecoration(
+                labelText: l10n.serverUrlLabel,
+                hintText: l10n.settingsServerUrlHint,
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.dns),
               ),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: _fpCtrl,
-              decoration: const InputDecoration(
-                labelText: 'Impressao Digital TLS Pinning (SHA-256)',
-                hintText: 'E3:4A:...',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.security),
+              decoration: InputDecoration(
+                labelText: l10n.fingerprintLabel,
+                hintText: l10n.settingsFingerprintHint,
+                border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.security),
               ),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _isSaving ? null : _saveSettings,
-              child: const Text('Salvar Parametros de Rede'),
+              child: Text(l10n.settingsSaveButton),
             ),
             const Divider(height: 40),
-            Text('Status do Dispositivo', style: Theme.of(context).textTheme.titleMedium),
+            Text(l10n.settingsDeviceInfoSection, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Identificador Publico:'),
-              subtitle: Text(_deviceId ?? ''),
+              title: Text(l10n.settingsDeviceIdLabel),
+              subtitle: Text(_deviceId ?? '-'),
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Nome do Aparelho:'),
-              subtitle: Text(_deviceName ?? ''),
+              title: Text(l10n.settingsDeviceNameLabel),
+              subtitle: Text(_deviceName ?? '-'),
             ),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Token Criptografico Salvo:'),
-              subtitle: Text(_hasToken ? 'Sim (Armazenado de forma segura)' : 'Nao pareado'),
+              title: Text(l10n.settingsDeviceTokenLabel),
+              subtitle: Text(_hasToken ? l10n.settingsDeviceTokenConfigured : l10n.settingsDeviceTokenMissing),
               trailing: Icon(
                 _hasToken ? Icons.check_circle : Icons.cancel,
                 color: _hasToken ? Colors.green : Colors.red,
@@ -150,7 +154,7 @@ class _SettingsViewState extends State<SettingsView> {
                 ),
                 onPressed: _unpairDevice,
                 icon: const Icon(Icons.delete_forever),
-                label: const Text('Desvincular e Apagar Credenciais'),
+                label: Text(l10n.settingsUnpairButton),
               ),
           ],
         ),

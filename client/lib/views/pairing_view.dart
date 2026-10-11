@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import '../services/auth_service.dart';
 import '../core/api_client.dart';
+import '../l10n/l10n_extension.dart';
 
 class PairingView extends StatefulWidget {
   const PairingView({super.key});
@@ -39,17 +40,18 @@ class _PairingViewState extends State<PairingView> with SingleTickerProviderStat
   }
 
   Future<void> _submitManualPairing() async {
+    final l10n = context.l10n;
     final pin = _pinCtrl.text.trim();
     final url = _serverUrlCtrl.text.trim();
     final fp = _fingerprintCtrl.text.trim();
 
     if (pin.length != 6) {
-      setState(() => _errorMessage = 'O PIN deve conter exatamente 6 digitos.');
+      setState(() => _errorMessage = l10n.pairingPinValidation);
       return;
     }
 
     if (url.isEmpty) {
-      setState(() => _errorMessage = 'Informe o endereco IP/URL do servidor.');
+      setState(() => _errorMessage = l10n.pairingUrlValidation);
       return;
     }
 
@@ -70,7 +72,7 @@ class _PairingViewState extends State<PairingView> with SingleTickerProviderStat
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.green.shade700,
-            content: Text('Dispositivo "${creds.deviceName}" pareado com sucesso!'),
+            content: Text(l10n.pairingSuccess(creds.deviceName)),
           ),
         );
         Navigator.pop(context, true);
@@ -78,7 +80,7 @@ class _PairingViewState extends State<PairingView> with SingleTickerProviderStat
     } on ApiException catch (e) {
       setState(() => _errorMessage = e.message);
     } catch (e) {
-      setState(() => _errorMessage = 'Erro ao parear: $e');
+      setState(() => _errorMessage = l10n.pairingError(e.toString()));
     } finally {
       if (mounted) {
         setState(() => _isPairing = false);
@@ -87,6 +89,7 @@ class _PairingViewState extends State<PairingView> with SingleTickerProviderStat
   }
 
   Future<void> _onQrCodeScanned(BarcodeCapture capture) async {
+    final l10n = context.l10n;
     if (_isPairing) return;
     final barcodes = capture.barcodes;
     if (barcodes.isEmpty) return;
@@ -105,7 +108,7 @@ class _PairingViewState extends State<PairingView> with SingleTickerProviderStat
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Colors.green.shade700,
-            content: Text('Pareado via QR Code: "${creds.deviceName}"!'),
+            content: Text(l10n.pairingSuccess(creds.deviceName)),
           ),
         );
         Navigator.pop(context, true);
@@ -113,7 +116,7 @@ class _PairingViewState extends State<PairingView> with SingleTickerProviderStat
     } on ApiException catch (e) {
       setState(() => _errorMessage = e.message);
     } catch (e) {
-      setState(() => _errorMessage = 'QR Code invalido: $e');
+      setState(() => _errorMessage = l10n.pairingError(e.toString()));
     } finally {
       if (mounted) {
         setState(() => _isPairing = false);
@@ -123,14 +126,15 @@ class _PairingViewState extends State<PairingView> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pareamento de Dispositivo'),
+        title: Text(l10n.pairingViewTitle),
         bottom: TabBar(
           controller: _tabController,
-          tabs: const [
-            Tab(icon: Icon(Icons.pin), text: 'PIN Manual'),
-            Tab(icon: Icon(Icons.qr_code_scanner), text: 'Escanear QR Code'),
+          tabs: [
+            Tab(icon: const Icon(Icons.pin), text: l10n.pairingTabManual),
+            Tab(icon: const Icon(Icons.qr_code_scanner), text: l10n.pairingTabQr),
           ],
         ),
       ),
@@ -145,6 +149,7 @@ class _PairingViewState extends State<PairingView> with SingleTickerProviderStat
   }
 
   Widget _buildManualPinTab() {
+    final l10n = context.l10n;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -163,11 +168,11 @@ class _PairingViewState extends State<PairingView> with SingleTickerProviderStat
             ),
           TextField(
             controller: _serverUrlCtrl,
-            decoration: const InputDecoration(
-              labelText: 'URL / IP do Servidor Local',
-              hintText: 'https://192.168.1.100:8000',
-              prefixIcon: Icon(Icons.lan),
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              labelText: l10n.serverUrlLabel,
+              hintText: l10n.pairingServerUrlHint,
+              prefixIcon: const Icon(Icons.lan),
+              border: const OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 16),
@@ -175,31 +180,31 @@ class _PairingViewState extends State<PairingView> with SingleTickerProviderStat
             controller: _pinCtrl,
             keyboardType: TextInputType.number,
             maxLength: 6,
-            decoration: const InputDecoration(
-              labelText: 'PIN Temporario de 6 digitos',
-              hintText: 'Ex: 482910',
-              prefixIcon: Icon(Icons.lock_clock),
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              labelText: l10n.pairingTabManual,
+              hintText: l10n.pairingPinHint,
+              prefixIcon: const Icon(Icons.lock_clock),
+              border: const OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 16),
           TextField(
             controller: _fingerprintCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Impressao Digital TLS (SHA-256)',
-              hintText: 'Ex: E3:4A:... (exibido na tela do servidor)',
-              prefixIcon: Icon(Icons.fingerprint),
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              labelText: l10n.fingerprintLabel,
+              hintText: l10n.pairingFingerprintHint,
+              prefixIcon: const Icon(Icons.fingerprint),
+              border: const OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 16),
           TextField(
             controller: _deviceNameCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Nome deste Aparelho (Opcional)',
-              hintText: 'Ex: Celular Balcao 01',
-              prefixIcon: Icon(Icons.phone_android),
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              labelText: '${l10n.settingsDeviceNameLabel} (${l10n.commonOptional})',
+              hintText: l10n.pairingDeviceNameHint,
+              prefixIcon: const Icon(Icons.phone_android),
+              border: const OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 24),
@@ -211,7 +216,7 @@ class _PairingViewState extends State<PairingView> with SingleTickerProviderStat
             onPressed: _isPairing ? null : _submitManualPairing,
             child: _isPairing
                 ? const CircularProgressIndicator(color: Colors.white)
-                : const Text('Confirmar Pareamento e Gerar Token'),
+                : Text(l10n.pairingButton),
           ),
         ],
       ),
@@ -219,6 +224,7 @@ class _PairingViewState extends State<PairingView> with SingleTickerProviderStat
   }
 
   Widget _buildQrScannerTab() {
+    final l10n = context.l10n;
     return Column(
       children: [
         if (_errorMessage != null)
@@ -232,10 +238,10 @@ class _PairingViewState extends State<PairingView> with SingleTickerProviderStat
             ),
             child: Text(_errorMessage!, style: TextStyle(color: Colors.red.shade900)),
           ),
-        const Padding(
-          padding: EdgeInsets.all(16.0),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Text(
-            'Aponte a camera para o QR Code gerado na tela do computador servidor.',
+            l10n.pairingQrInstructions,
             textAlign: TextAlign.center,
           ),
         ),

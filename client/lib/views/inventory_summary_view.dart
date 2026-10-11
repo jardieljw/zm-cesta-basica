@@ -3,6 +3,8 @@ import '../models/stock_summary.dart';
 import '../models/product.dart';
 import '../services/inventory_service.dart';
 import '../services/product_service.dart';
+import '../l10n/l10n_extension.dart';
+import '../utils/formatters.dart';
 import 'stock_adjustment_dialog.dart';
 import 'inventory_movements_view.dart';
 
@@ -59,6 +61,7 @@ class _InventorySummaryViewState extends State<InventorySummaryView> {
   }
 
   Future<void> _openAdjustmentDialog([String? productId]) async {
+    final l10n = context.l10n;
     final result = await showDialog(
       context: context,
       builder: (_) => StockAdjustmentDialog(
@@ -67,9 +70,9 @@ class _InventorySummaryViewState extends State<InventorySummaryView> {
       ),
     );
 
-    if (result != null) {
+    if (result != null && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ajuste de estoque registrado com sucesso!')),
+        SnackBar(content: Text(l10n.inventorySummaryAdjustmentSuccess)),
       );
       _loadData();
     }
@@ -77,13 +80,14 @@ class _InventorySummaryViewState extends State<InventorySummaryView> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Saldo de Estoque em Tempo Real'),
+        title: Text(l10n.inventorySummaryHeaderTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.history),
-            tooltip: 'Extrato do Razao Contabil',
+            tooltip: l10n.inventorySummaryHistoryTooltip,
             onPressed: () {
               Navigator.push(
                 context,
@@ -93,12 +97,12 @@ class _InventorySummaryViewState extends State<InventorySummaryView> {
           ),
           IconButton(
             icon: const Icon(Icons.tune),
-            tooltip: 'Ajuste Manual',
+            tooltip: l10n.inventorySummaryAdjustmentTooltip,
             onPressed: () => _openAdjustmentDialog(),
           ),
           IconButton(
             icon: const Icon(Icons.refresh),
-            tooltip: 'Atualizar',
+            tooltip: l10n.commonRefresh,
             onPressed: _loadData,
           ),
         ],
@@ -113,7 +117,7 @@ class _InventorySummaryViewState extends State<InventorySummaryView> {
                 Expanded(
                   child: TextField(
                     decoration: InputDecoration(
-                      hintText: 'Buscar por nome ou SKU...',
+                      hintText: l10n.inventorySummarySearchHint,
                       prefixIcon: const Icon(Icons.search),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                       contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
@@ -126,7 +130,7 @@ class _InventorySummaryViewState extends State<InventorySummaryView> {
                 ),
                 const SizedBox(width: 12),
                 FilterChip(
-                  label: const Text('Apenas Abaixo do Minimo'),
+                  label: Text(l10n.inventorySummaryBelowMinFilter),
                   selected: _belowMinimumOnly,
                   selectedColor: Colors.red.shade100,
                   checkmarkColor: Colors.red.shade800,
@@ -152,12 +156,12 @@ class _InventorySummaryViewState extends State<InventorySummaryView> {
                             const SizedBox(height: 16),
                             Text(_errorMessage!),
                             const SizedBox(height: 16),
-                            ElevatedButton(onPressed: _loadData, child: const Text('Tentar Novamente')),
+                            ElevatedButton(onPressed: _loadData, child: Text(l10n.commonRefresh)),
                           ],
                         ),
                       )
                     : _items.isEmpty
-                        ? const Center(child: Text('Nenhum item encontrado no estoque.'))
+                        ? Center(child: Text(l10n.inventorySummaryEmpty))
                         : RefreshIndicator(
                             onRefresh: _loadData,
                             child: ListView.separated(
@@ -204,9 +208,9 @@ class _InventorySummaryViewState extends State<InventorySummaryView> {
                                               color: Colors.red.shade600,
                                               borderRadius: BorderRadius.circular(8),
                                             ),
-                                            child: const Text(
-                                              'ABAIXO DO MINIMO',
-                                              style: TextStyle(
+                                            child: Text(
+                                              l10n.inventorySummaryStatusAlert,
+                                              style: const TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 10,
                                                 fontWeight: FontWeight.bold,
@@ -219,23 +223,24 @@ class _InventorySummaryViewState extends State<InventorySummaryView> {
                                       padding: const EdgeInsets.only(top: 8.0),
                                       child: Row(
                                         children: [
-                                          Text('Saldo Atual: ', style: TextStyle(color: Colors.grey.shade700)),
                                           Text(
-                                            '${item.currentStock} ${item.baseUnit}',
+                                            l10n.inventorySummaryCurrentStock(AppFormatters.formatQuantity(item.currentStock, item.baseUnit)),
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: item.isBelowMinimum ? Colors.red.shade800 : Colors.black87,
                                             ),
                                           ),
                                           const SizedBox(width: 16),
-                                          Text('Minimo: ${item.minimumStock} ${item.baseUnit}',
-                                              style: TextStyle(color: Colors.grey.shade600)),
+                                          Text(
+                                            l10n.inventorySummaryMinStock(AppFormatters.formatQuantity(item.minimumStock, item.baseUnit)),
+                                            style: TextStyle(color: Colors.grey.shade600),
+                                          ),
                                         ],
                                       ),
                                     ),
                                     trailing: IconButton(
                                       icon: const Icon(Icons.tune),
-                                      tooltip: 'Ajustar Estoque Deste Produto',
+                                      tooltip: l10n.inventorySummaryAdjustmentTooltip,
                                       onPressed: () => _openAdjustmentDialog(item.productId),
                                     ),
                                   ),

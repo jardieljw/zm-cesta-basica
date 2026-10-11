@@ -18,7 +18,10 @@ class ZmCestaBasicaApp extends StatelessWidget {
       title: 'ZM Cesta Básica',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
+      supportedLocales: const [
+        Locale('pt', 'BR'),
+        Locale('pt'),
+      ],
       locale: const Locale('pt', 'BR'),
       theme: ThemeData(
         useMaterial3: true,
