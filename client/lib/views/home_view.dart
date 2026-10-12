@@ -15,6 +15,8 @@ import 'production_assembly_view.dart';
 import 'customers_view.dart';
 import 'sales_view.dart';
 import 'receivables_view.dart';
+import 'dispatches_view.dart';
+import 'responsible_persons_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -539,6 +541,93 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
           ),
+        ),
+        const SizedBox(height: 24),
+        Text(
+          l10n.homePhase6Header,
+          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const DispatchesView()),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.blue.shade100,
+                          radius: 24,
+                          child: Icon(Icons.local_shipping, color: Colors.blue.shade800, size: 28),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          l10n.moduleDispatches,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          l10n.homeDispatchesDescription,
+                          style: const TextStyle(color: Colors.black54, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const ResponsiblePersonsView()),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.purple.shade100,
+                          radius: 24,
+                          child: Icon(Icons.badge, color: Colors.purple.shade800, size: 28),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          l10n.moduleResponsiblePersons,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          l10n.homeResponsiblePersonsDescription,
+                          style: const TextStyle(color: Colors.black54, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ],
     );

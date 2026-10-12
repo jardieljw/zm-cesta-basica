@@ -11,6 +11,7 @@ from app.api.v1.production import router as production_router
 from app.api.v1.customers import router as customers_router
 from app.api.v1.sales import router as sales_router
 from app.api.v1.receivables import router as receivables_router
+from app.api.v1.dispatches import router as dispatches_router
 
 api_v1_router = APIRouter()
 
@@ -26,3 +27,4 @@ api_v1_router.include_router(production_router, tags=["Production & Assembly"])
 api_v1_router.include_router(customers_router, tags=["Customers"])
 api_v1_router.include_router(sales_router, tags=["Sales & Direct Assembly"])
 api_v1_router.include_router(receivables_router, tags=["Receivables & Payments"])
+api_v1_router.include_router(dispatches_router, tags=["Expedição / Custódia"])

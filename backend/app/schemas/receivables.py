@@ -5,6 +5,7 @@ from pydantic import BaseModel, ConfigDict, Field
 class ReceivablePaymentCreate(BaseModel):
     amount_cents: int = Field(..., gt=0, description="Valor do pagamento / amortizacao em centavos")
     payment_method: str = Field(default="CASH", description="Forma de pagamento (CASH, PIX, CARD, OTHER)")
+    dispatch_id: Optional[str] = Field(None, description="ID da saida fisica/despacho onde ocorreu o recebimento na rota")
     payment_date: Optional[datetime.datetime] = Field(None, description="Data do recebimento (padrao now)")
     notes: Optional[str] = Field(None, description="Observacoes sobre o recebimento")
 
@@ -14,6 +15,7 @@ class ReceivablePaymentCancelRequest(BaseModel):
 class ReceivablePaymentResponse(BaseModel):
     id: str
     receivable_id: str
+    dispatch_id: Optional[str] = None
     payment_date: datetime.datetime
     amount_cents: int
     payment_method: str

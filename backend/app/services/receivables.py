@@ -7,6 +7,7 @@ from fastapi import HTTPException, status
 
 from app.models.sales import SalesReceivable, ReceivablePayment, Sale
 from app.models.customers import Customer
+from app.models.dispatches import StockDispatch
 from app.models.base import utc_now
 from app.schemas.receivables import ReceivablePaymentCreate, ReceivablePaymentCancelRequest
 
@@ -99,9 +100,18 @@ def record_receivable_payment(
             ),
         )
 
+    if data.dispatch_id:
+        dispatch = db.get(StockDispatch, data.dispatch_id)
+        if not dispatch:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Saida #{data.dispatch_id} nao encontrada.",
+            )
+
     payment = ReceivablePayment(
         id=str(uuid.uuid4()),
         receivable_id=receivable.id,
+        dispatch_id=data.dispatch_id,
         payment_date=data.payment_date or utc_now(),
         amount_cents=data.amount_cents,
         payment_method=data.payment_method,

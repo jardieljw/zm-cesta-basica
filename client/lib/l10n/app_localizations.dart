@@ -3507,6 +3507,726 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Valor informado excede o saldo devedor.'**
   String get receivablePaymentAmountExceedsBalance;
+
+  /// No description provided for @homePhase6Header.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fase 6: Expedição, Conferência e Custódia'**
+  String get homePhase6Header;
+
+  /// No description provided for @moduleDispatches.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saídas e Conferências'**
+  String get moduleDispatches;
+
+  /// No description provided for @homeDispatchesDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Controle de saídas físicas, conferência e repasses'**
+  String get homeDispatchesDescription;
+
+  /// No description provided for @moduleResponsiblePersons.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pessoas Responsáveis'**
+  String get moduleResponsiblePersons;
+
+  /// No description provided for @homeResponsiblePersonsDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastro de entregadores, vendedores externos e motoristas'**
+  String get homeResponsiblePersonsDescription;
+
+  /// No description provided for @responsiblePersonsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pessoas Responsáveis'**
+  String get responsiblePersonsTitle;
+
+  /// No description provided for @responsiblePersonNew.
+  ///
+  /// In pt, this message translates to:
+  /// **'Novo Responsável'**
+  String get responsiblePersonNew;
+
+  /// No description provided for @responsiblePersonEdit.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar Responsável'**
+  String get responsiblePersonEdit;
+
+  /// No description provided for @responsiblePersonName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome'**
+  String get responsiblePersonName;
+
+  /// No description provided for @responsiblePersonPhone.
+  ///
+  /// In pt, this message translates to:
+  /// **'Telefone / WhatsApp'**
+  String get responsiblePersonPhone;
+
+  /// No description provided for @responsiblePersonNotes.
+  ///
+  /// In pt, this message translates to:
+  /// **'Observações'**
+  String get responsiblePersonNotes;
+
+  /// No description provided for @responsiblePersonActive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ativo'**
+  String get responsiblePersonActive;
+
+  /// No description provided for @responsiblePersonInactive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Inativo'**
+  String get responsiblePersonInactive;
+
+  /// No description provided for @responsiblePersonsEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma pessoa responsável cadastrada.'**
+  String get responsiblePersonsEmpty;
+
+  /// No description provided for @responsiblePersonCustodyTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Custódia Atual de Cestas'**
+  String get responsiblePersonCustodyTitle;
+
+  /// No description provided for @responsiblePersonTotalInCustody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Total sob custódia: {qty} cestas'**
+  String responsiblePersonTotalInCustody(int qty);
+
+  /// No description provided for @responsiblePersonNoCustody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma cesta sob custódia no momento.'**
+  String get responsiblePersonNoCustody;
+
+  /// No description provided for @responsiblePersonSavedSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Responsável salvo com sucesso.'**
+  String get responsiblePersonSavedSuccess;
+
+  /// No description provided for @dispatchesTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saídas Físicas e Conferência'**
+  String get dispatchesTitle;
+
+  /// No description provided for @dispatchNew.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nova Saída de Cestas'**
+  String get dispatchNew;
+
+  /// No description provided for @dispatchNumber.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saída #{number}'**
+  String dispatchNumber(int number);
+
+  /// No description provided for @dispatchResponsible.
+  ///
+  /// In pt, this message translates to:
+  /// **'Responsável'**
+  String get dispatchResponsible;
+
+  /// No description provided for @dispatchDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Data da Saída'**
+  String get dispatchDate;
+
+  /// No description provided for @dispatchTotalBaskets.
+  ///
+  /// In pt, this message translates to:
+  /// **'Total de Cestas'**
+  String get dispatchTotalBaskets;
+
+  /// No description provided for @dispatchTotalReference.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor de Referência'**
+  String get dispatchTotalReference;
+
+  /// No description provided for @dispatchStatusOpen.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aberta'**
+  String get dispatchStatusOpen;
+
+  /// No description provided for @dispatchStatusConcluded.
+  ///
+  /// In pt, this message translates to:
+  /// **'Concluída'**
+  String get dispatchStatusConcluded;
+
+  /// No description provided for @dispatchStatusPendingInvestigation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sob Investigação'**
+  String get dispatchStatusPendingInvestigation;
+
+  /// No description provided for @dispatchStatusCanceled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cancelada'**
+  String get dispatchStatusCanceled;
+
+  /// No description provided for @dispatchesEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma saída física registrada.'**
+  String get dispatchesEmpty;
+
+  /// No description provided for @dispatchCancel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cancelar Saída'**
+  String get dispatchCancel;
+
+  /// No description provided for @dispatchCancelConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Deseja realmente cancelar a saída #{number}?'**
+  String dispatchCancelConfirm(int number);
+
+  /// No description provided for @dispatchCancelReason.
+  ///
+  /// In pt, this message translates to:
+  /// **'Motivo do cancelamento'**
+  String get dispatchCancelReason;
+
+  /// No description provided for @dispatchCancelSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saída cancelada com sucesso. Cestas retornadas ao estoque da loja.'**
+  String get dispatchCancelSuccess;
+
+  /// No description provided for @dispatchCreatedSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saída registrada com sucesso.'**
+  String get dispatchCreatedSuccess;
+
+  /// No description provided for @dispatchFormTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registrar Saída Física'**
+  String get dispatchFormTitle;
+
+  /// No description provided for @dispatchSelectResponsible.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecione o Responsável'**
+  String get dispatchSelectResponsible;
+
+  /// No description provided for @dispatchItemsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cestas a Retirar'**
+  String get dispatchItemsTitle;
+
+  /// No description provided for @dispatchAddItem.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar Cesta'**
+  String get dispatchAddItem;
+
+  /// No description provided for @dispatchItemBasket.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tipo de Cesta'**
+  String get dispatchItemBasket;
+
+  /// No description provided for @dispatchItemQuantity.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quantidade'**
+  String get dispatchItemQuantity;
+
+  /// No description provided for @dispatchItemUnitPrice.
+  ///
+  /// In pt, this message translates to:
+  /// **'Preço de Referência'**
+  String get dispatchItemUnitPrice;
+
+  /// No description provided for @dispatchItemSubtotal.
+  ///
+  /// In pt, this message translates to:
+  /// **'Subtotal'**
+  String get dispatchItemSubtotal;
+
+  /// No description provided for @dispatchItemNotes.
+  ///
+  /// In pt, this message translates to:
+  /// **'Personalizações / Observações'**
+  String get dispatchItemNotes;
+
+  /// No description provided for @dispatchAvailableStoreStock.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estoque loja: {qty}'**
+  String dispatchAvailableStoreStock(int qty);
+
+  /// No description provided for @dispatchInsufficientStoreStock.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estoque insuficiente na loja para \"{name}\". Disponível: {stock}, Solicitado: {qty}.'**
+  String dispatchInsufficientStoreStock(String name, int stock, int qty);
+
+  /// No description provided for @dispatchSubmit.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar Saída Física'**
+  String get dispatchSubmit;
+
+  /// No description provided for @conferenceTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferência da Saída #{number}'**
+  String conferenceTitle(int number);
+
+  /// No description provided for @conferenceStatusLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Status da Saída: {status}'**
+  String conferenceStatusLabel(String status);
+
+  /// No description provided for @conferencePhysicalEquationTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Equação Física de Custódia (4 Termos)'**
+  String get conferencePhysicalEquationTitle;
+
+  /// No description provided for @conferenceDispatchedLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'1. Retiradas: {qty}'**
+  String conferenceDispatchedLabel(int qty);
+
+  /// No description provided for @conferenceSoldLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'2. Vendidas: {qty}'**
+  String conferenceSoldLabel(int qty);
+
+  /// No description provided for @conferenceReturnedLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'3. Devolvidas Intactas: {qty}'**
+  String conferenceReturnedLabel(int qty);
+
+  /// No description provided for @conferenceLostLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'4. Avariadas / Perdidas: {qty}'**
+  String conferenceLostLabel(int qty);
+
+  /// No description provided for @conferenceCustodyRemainingLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Em Trânsito / Custódia: {qty}'**
+  String conferenceCustodyRemainingLabel(int qty);
+
+  /// No description provided for @conferenceDiscrepancyLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Divergência Física: {qty} cestas'**
+  String conferenceDiscrepancyLabel(int qty);
+
+  /// No description provided for @conferencePhysicalEquationBalanced.
+  ///
+  /// In pt, this message translates to:
+  /// **'Equação Física Bateu (Sem divergências)'**
+  String get conferencePhysicalEquationBalanced;
+
+  /// No description provided for @conferencePhysicalEquationDivergent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Divergência Física Detectada!'**
+  String get conferencePhysicalEquationDivergent;
+
+  /// No description provided for @conferenceFinancialTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Controle Financeiro de Rota e Repasses'**
+  String get conferenceFinancialTitle;
+
+  /// No description provided for @conferenceExpectedCashLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dinheiro em Mãos Esperado: {amount}'**
+  String conferenceExpectedCashLabel(String amount);
+
+  /// No description provided for @conferenceActualRepaidLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Repasses Realizados: {amount}'**
+  String conferenceActualRepaidLabel(String amount);
+
+  /// No description provided for @conferencePendingCashLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo a Repassar: {amount}'**
+  String conferencePendingCashLabel(String amount);
+
+  /// No description provided for @conferenceCashSalesLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vendas à Vista (Dinheiro): {amount}'**
+  String conferenceCashSalesLabel(String amount);
+
+  /// No description provided for @conferenceDirectCompanyLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pix / Cartão Direto à Empresa: {amount}'**
+  String conferenceDirectCompanyLabel(String amount);
+
+  /// No description provided for @conferenceCreditSalesLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vendas a Prazo (Fiado na rota): {amount}'**
+  String conferenceCreditSalesLabel(String amount);
+
+  /// No description provided for @conferenceDebtCollectedLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cobrança de Fiados em Rota: {amount}'**
+  String conferenceDebtCollectedLabel(String amount);
+
+  /// No description provided for @conferenceExpensesLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Despesas Autorizadas Abatidas: {amount}'**
+  String conferenceExpensesLabel(String amount);
+
+  /// No description provided for @conferenceFinancialDivergent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Divergência Financeira Detectada!'**
+  String get conferenceFinancialDivergent;
+
+  /// No description provided for @conferenceFinancialBalanced.
+  ///
+  /// In pt, this message translates to:
+  /// **'Financeiro Bateu (Repasse integral)'**
+  String get conferenceFinancialBalanced;
+
+  /// No description provided for @conferenceDirectNotice.
+  ///
+  /// In pt, this message translates to:
+  /// **'* Pix e cartões recebidos diretamente na conta da empresa NÃO são devidos pelo motorista/entregador.'**
+  String get conferenceDirectNotice;
+
+  /// No description provided for @conferenceActionReturn.
+  ///
+  /// In pt, this message translates to:
+  /// **'Devolução Intacta'**
+  String get conferenceActionReturn;
+
+  /// No description provided for @conferenceActionLoss.
+  ///
+  /// In pt, this message translates to:
+  /// **'Avaria / Perda'**
+  String get conferenceActionLoss;
+
+  /// No description provided for @conferenceActionExpense.
+  ///
+  /// In pt, this message translates to:
+  /// **'Despesa Autorizada'**
+  String get conferenceActionExpense;
+
+  /// No description provided for @conferenceActionRepayment.
+  ///
+  /// In pt, this message translates to:
+  /// **'Repasse de Dinheiro'**
+  String get conferenceActionRepayment;
+
+  /// No description provided for @conferenceActionSettle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Concluir Acerto / Fechamento'**
+  String get conferenceActionSettle;
+
+  /// No description provided for @conferenceActionInvestigation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Documentar Investigação'**
+  String get conferenceActionInvestigation;
+
+  /// No description provided for @conferenceSettledSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferência registrada com sucesso.'**
+  String get conferenceSettledSuccess;
+
+  /// No description provided for @conferenceInvestigationUpdatedSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Notas de investigação atualizadas com sucesso.'**
+  String get conferenceInvestigationUpdatedSuccess;
+
+  /// No description provided for @conferenceReturnsListTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Devoluções de Cestas Intactas'**
+  String get conferenceReturnsListTitle;
+
+  /// No description provided for @conferenceLossesListTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Avarias e Perdas Físicas'**
+  String get conferenceLossesListTitle;
+
+  /// No description provided for @conferenceExpensesListTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Despesas Autorizadas'**
+  String get conferenceExpensesListTitle;
+
+  /// No description provided for @conferenceRepaymentsListTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Repasses Financeiros Registrados'**
+  String get conferenceRepaymentsListTitle;
+
+  /// No description provided for @conferenceNoReturns.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma devolução intacta registrada.'**
+  String get conferenceNoReturns;
+
+  /// No description provided for @conferenceNoLosses.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma avaria ou perda registrada.'**
+  String get conferenceNoLosses;
+
+  /// No description provided for @conferenceNoExpenses.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma despesa autorizada registrada.'**
+  String get conferenceNoExpenses;
+
+  /// No description provided for @conferenceNoRepayments.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum repasse de dinheiro registrado.'**
+  String get conferenceNoRepayments;
+
+  /// No description provided for @dialogReturnTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registrar Devolução Intacta'**
+  String get dialogReturnTitle;
+
+  /// No description provided for @dialogReturnQty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quantidade Devolvida'**
+  String get dialogReturnQty;
+
+  /// No description provided for @dialogReturnNotes.
+  ///
+  /// In pt, this message translates to:
+  /// **'Observações'**
+  String get dialogReturnNotes;
+
+  /// No description provided for @dialogLossTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registrar Avaria ou Perda'**
+  String get dialogLossTitle;
+
+  /// No description provided for @dialogLossQty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quantidade Avariada/Perdida'**
+  String get dialogLossQty;
+
+  /// No description provided for @dialogLossReason.
+  ///
+  /// In pt, this message translates to:
+  /// **'Justificativa Obrigatória da Perda'**
+  String get dialogLossReason;
+
+  /// No description provided for @dialogLossReasonRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'A justificativa da perda é obrigatória (mínimo 3 caracteres).'**
+  String get dialogLossReasonRequired;
+
+  /// No description provided for @dialogExpenseTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registrar Despesa Autorizada'**
+  String get dialogExpenseTitle;
+
+  /// No description provided for @dialogExpenseAmount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor da Despesa'**
+  String get dialogExpenseAmount;
+
+  /// No description provided for @dialogExpenseDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Descrição (ex: Combustível, Borracharia)'**
+  String get dialogExpenseDesc;
+
+  /// No description provided for @dialogExpenseReceipt.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nº do Comprovante / Cupom'**
+  String get dialogExpenseReceipt;
+
+  /// No description provided for @dialogExpenseAuthorizedBy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Autorizado por'**
+  String get dialogExpenseAuthorizedBy;
+
+  /// No description provided for @dialogRepaymentTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registrar Repasse Financeiro'**
+  String get dialogRepaymentTitle;
+
+  /// No description provided for @dialogRepaymentAmount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor Repassado'**
+  String get dialogRepaymentAmount;
+
+  /// No description provided for @dialogRepaymentMethod.
+  ///
+  /// In pt, this message translates to:
+  /// **'Forma do Repasse'**
+  String get dialogRepaymentMethod;
+
+  /// No description provided for @dialogRepaymentReceivedBy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recebido na Empresa por'**
+  String get dialogRepaymentReceivedBy;
+
+  /// No description provided for @dialogRepaymentNotes.
+  ///
+  /// In pt, this message translates to:
+  /// **'Observações'**
+  String get dialogRepaymentNotes;
+
+  /// No description provided for @dialogSettleTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fechamento Operacional / Acerto'**
+  String get dialogSettleTitle;
+
+  /// No description provided for @dialogSettleAuditedBy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Auditor / Responsável pelo Fechamento'**
+  String get dialogSettleAuditedBy;
+
+  /// No description provided for @dialogSettleAuditedByRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe o nome do responsável pelo fechamento.'**
+  String get dialogSettleAuditedByRequired;
+
+  /// No description provided for @dialogSettleNotes.
+  ///
+  /// In pt, this message translates to:
+  /// **'Observações do Fechamento'**
+  String get dialogSettleNotes;
+
+  /// No description provided for @dialogSettleWarningDivergent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Atenção: Existem divergências físicas ou financeiras. O fechamento será registrado como SOB INVESTIGAÇÃO.'**
+  String get dialogSettleWarningDivergent;
+
+  /// No description provided for @dialogSettleInvestigationNotes.
+  ///
+  /// In pt, this message translates to:
+  /// **'Notas Iniciais da Investigação'**
+  String get dialogSettleInvestigationNotes;
+
+  /// No description provided for @dialogInvestigationTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Investigação de Divergências'**
+  String get dialogInvestigationTitle;
+
+  /// No description provided for @dialogInvestigationNotes.
+  ///
+  /// In pt, this message translates to:
+  /// **'Parecer da Investigação / Justificativas'**
+  String get dialogInvestigationNotes;
+
+  /// No description provided for @dialogInvestigationMarkResolved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Marcar como Resolvido (Divergências apuradas/justificadas)'**
+  String get dialogInvestigationMarkResolved;
+
+  /// No description provided for @dialogInvestigationSave.
+  ///
+  /// In pt, this message translates to:
+  /// **'Salvar Parecer'**
+  String get dialogInvestigationSave;
+
+  /// No description provided for @saleModeLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Modalidade da Venda'**
+  String get saleModeLabel;
+
+  /// No description provided for @saleModeDirectStore.
+  ///
+  /// In pt, this message translates to:
+  /// **'Balcão / Loja'**
+  String get saleModeDirectStore;
+
+  /// No description provided for @saleModeCommercialRoute.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rota / Venda Externa'**
+  String get saleModeCommercialRoute;
+
+  /// No description provided for @saleRouteSelectDispatch.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vincular à Saída / Rota Ativa'**
+  String get saleRouteSelectDispatch;
+
+  /// No description provided for @saleRouteNoDispatches.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma saída aberta disponível para este responsável.'**
+  String get saleRouteNoDispatches;
+
+  /// No description provided for @saleRouteResponsibleLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Responsável pela Rota'**
+  String get saleRouteResponsibleLabel;
+
+  /// No description provided for @saleCustodyStockAvailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo sob custódia: {qty}'**
+  String saleCustodyStockAvailable(int qty);
 }
 
 class _AppLocalizationsDelegate

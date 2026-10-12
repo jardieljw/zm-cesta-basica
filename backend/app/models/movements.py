@@ -17,6 +17,8 @@ class InventoryMovement(Base):
     source_type: Mapped[str] = mapped_column(String(30), nullable=False) # PURCHASE, PRODUCTION, SALE, ADJUSTMENT
     source_id: Mapped[str] = mapped_column(String(36), nullable=False, index=True)
     reversal_of_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("inventory_movements.id"), nullable=True)
+    location_type: Mapped[str] = mapped_column(String(20), nullable=False, default="STORE", index=True) # STORE, TRANSIT
+    responsible_person_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("responsible_persons.id"), nullable=True, index=True)
     occurred_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=utc_now, nullable=False, index=True)
     reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
@@ -24,6 +26,7 @@ class InventoryMovement(Base):
     product: Mapped[Optional["Product"]] = relationship("app.models.products.Product")
     basket_type: Mapped[Optional["BasketType"]] = relationship("app.models.products.BasketType")
     production_batch: Mapped[Optional["ProductionBatch"]] = relationship("app.models.production.ProductionBatch")
+    responsible_person: Mapped[Optional["app.models.dispatches.ResponsiblePerson"]] = relationship("app.models.dispatches.ResponsiblePerson")
 
 
 @event.listens_for(Session, "before_flush")

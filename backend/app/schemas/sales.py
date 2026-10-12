@@ -22,6 +22,8 @@ class SaleCreate(BaseModel):
     customer_id: Optional[str] = Field(None, description="ID do cliente cadastrado (obrigatorio para CREDIT_TERM)")
     customer_name: Optional[str] = Field(None, max_length=200, description="Nome do cliente avulso / balcao")
     sale_mode: str = Field(default="DIRECT_STORE", description="DIRECT_STORE (balcao) ou COMMERCIAL_ROUTE (rota)")
+    dispatch_id: Optional[str] = Field(None, description="ID da saida fisica/despacho associado")
+    responsible_person_id: Optional[str] = Field(None, description="ID da pessoa responsavel pela custodia")
     payment_mode: str = Field(default="CASH_IMMEDIATE", description="CASH_IMMEDIATE, PIX, CARD, CREDIT_TERM")
     sale_date: Optional[datetime.datetime] = Field(None, description="Data da venda (UTC, padrao now)")
     due_date: Optional[datetime.datetime] = Field(None, description="Data de vencimento para venda fiada (padrao 30 dias)")
@@ -53,6 +55,9 @@ class SaleResponse(BaseModel):
     customer_name: Optional[str] = None
     status: str
     sale_mode: str
+    dispatch_id: Optional[str] = None
+    responsible_person_id: Optional[str] = None
+    responsible_person_name: Optional[str] = None
     payment_mode: str
     payment_status: str
     sale_date: datetime.datetime

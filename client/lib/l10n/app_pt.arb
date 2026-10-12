@@ -1251,5 +1251,292 @@
   "receivableStatusCanceled": "Cancelado",
   "receivablesEmpty": "Nenhum título a receber encontrado.",
   "receivablePaymentAmountMustBePositive": "Informe um valor maior que zero.",
-  "receivablePaymentAmountExceedsBalance": "Valor informado excede o saldo devedor."
+  "receivablePaymentAmountExceedsBalance": "Valor informado excede o saldo devedor.",
+
+  "homePhase6Header": "Fase 6: Expedição, Conferência e Custódia",
+  "moduleDispatches": "Saídas e Conferências",
+  "homeDispatchesDescription": "Controle de saídas físicas, conferência e repasses",
+  "moduleResponsiblePersons": "Pessoas Responsáveis",
+  "homeResponsiblePersonsDescription": "Cadastro de entregadores, vendedores externos e motoristas",
+
+  "responsiblePersonsTitle": "Pessoas Responsáveis",
+  "responsiblePersonNew": "Novo Responsável",
+  "responsiblePersonEdit": "Editar Responsável",
+  "responsiblePersonName": "Nome",
+  "responsiblePersonPhone": "Telefone / WhatsApp",
+  "responsiblePersonNotes": "Observações",
+  "responsiblePersonActive": "Ativo",
+  "responsiblePersonInactive": "Inativo",
+  "responsiblePersonsEmpty": "Nenhuma pessoa responsável cadastrada.",
+  "responsiblePersonCustodyTitle": "Custódia Atual de Cestas",
+  "responsiblePersonTotalInCustody": "Total sob custódia: {qty} cestas",
+  "@responsiblePersonTotalInCustody": {
+    "placeholders": {
+      "qty": {
+        "type": "int"
+      }
+    }
+  },
+  "responsiblePersonNoCustody": "Nenhuma cesta sob custódia no momento.",
+  "responsiblePersonSavedSuccess": "Responsável salvo com sucesso.",
+
+  "dispatchesTitle": "Saídas Físicas e Conferência",
+  "dispatchNew": "Nova Saída de Cestas",
+  "dispatchNumber": "Saída #{number}",
+  "@dispatchNumber": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "dispatchResponsible": "Responsável",
+  "dispatchDate": "Data da Saída",
+  "dispatchTotalBaskets": "Total de Cestas",
+  "dispatchTotalReference": "Valor de Referência",
+  "dispatchStatusOpen": "Aberta",
+  "dispatchStatusConcluded": "Concluída",
+  "dispatchStatusPendingInvestigation": "Sob Investigação",
+  "dispatchStatusCanceled": "Cancelada",
+  "dispatchesEmpty": "Nenhuma saída física registrada.",
+  "dispatchCancel": "Cancelar Saída",
+  "dispatchCancelConfirm": "Deseja realmente cancelar a saída #{number}?",
+  "@dispatchCancelConfirm": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "dispatchCancelReason": "Motivo do cancelamento",
+  "dispatchCancelSuccess": "Saída cancelada com sucesso. Cestas retornadas ao estoque da loja.",
+  "dispatchCreatedSuccess": "Saída registrada com sucesso.",
+
+  "dispatchFormTitle": "Registrar Saída Física",
+  "dispatchSelectResponsible": "Selecione o Responsável",
+  "dispatchItemsTitle": "Cestas a Retirar",
+  "dispatchAddItem": "Adicionar Cesta",
+  "dispatchItemBasket": "Tipo de Cesta",
+  "dispatchItemQuantity": "Quantidade",
+  "dispatchItemUnitPrice": "Preço de Referência",
+  "dispatchItemSubtotal": "Subtotal",
+  "dispatchItemNotes": "Personalizações / Observações",
+  "dispatchAvailableStoreStock": "Estoque loja: {qty}",
+  "@dispatchAvailableStoreStock": {
+    "placeholders": {
+      "qty": {
+        "type": "int"
+      }
+    }
+  },
+  "dispatchInsufficientStoreStock": "Estoque insuficiente na loja para \"{name}\". Disponível: {stock}, Solicitado: {qty}.",
+  "@dispatchInsufficientStoreStock": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "stock": {
+        "type": "int"
+      },
+      "qty": {
+        "type": "int"
+      }
+    }
+  },
+  "dispatchSubmit": "Confirmar Saída Física",
+
+  "conferenceTitle": "Conferência da Saída #{number}",
+  "@conferenceTitle": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "conferenceStatusLabel": "Status da Saída: {status}",
+  "@conferenceStatusLabel": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "conferencePhysicalEquationTitle": "Equação Física de Custódia (4 Termos)",
+  "conferenceDispatchedLabel": "1. Retiradas: {qty}",
+  "@conferenceDispatchedLabel": {
+    "placeholders": {
+      "qty": {
+        "type": "int"
+      }
+    }
+  },
+  "conferenceSoldLabel": "2. Vendidas: {qty}",
+  "@conferenceSoldLabel": {
+    "placeholders": {
+      "qty": {
+        "type": "int"
+      }
+    }
+  },
+  "conferenceReturnedLabel": "3. Devolvidas Intactas: {qty}",
+  "@conferenceReturnedLabel": {
+    "placeholders": {
+      "qty": {
+        "type": "int"
+      }
+    }
+  },
+  "conferenceLostLabel": "4. Avariadas / Perdidas: {qty}",
+  "@conferenceLostLabel": {
+    "placeholders": {
+      "qty": {
+        "type": "int"
+      }
+    }
+  },
+  "conferenceCustodyRemainingLabel": "Em Trânsito / Custódia: {qty}",
+  "@conferenceCustodyRemainingLabel": {
+    "placeholders": {
+      "qty": {
+        "type": "int"
+      }
+    }
+  },
+  "conferenceDiscrepancyLabel": "Divergência Física: {qty} cestas",
+  "@conferenceDiscrepancyLabel": {
+    "placeholders": {
+      "qty": {
+        "type": "int"
+      }
+    }
+  },
+  "conferencePhysicalEquationBalanced": "Equação Física Bateu (Sem divergências)",
+  "conferencePhysicalEquationDivergent": "Divergência Física Detectada!",
+  "conferenceFinancialTitle": "Controle Financeiro de Rota e Repasses",
+  "conferenceExpectedCashLabel": "Dinheiro em Mãos Esperado: {amount}",
+  "@conferenceExpectedCashLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "conferenceActualRepaidLabel": "Repasses Realizados: {amount}",
+  "@conferenceActualRepaidLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "conferencePendingCashLabel": "Saldo a Repassar: {amount}",
+  "@conferencePendingCashLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "conferenceCashSalesLabel": "Vendas à Vista (Dinheiro): {amount}",
+  "@conferenceCashSalesLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "conferenceDirectCompanyLabel": "Pix / Cartão Direto à Empresa: {amount}",
+  "@conferenceDirectCompanyLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "conferenceCreditSalesLabel": "Vendas a Prazo (Fiado na rota): {amount}",
+  "@conferenceCreditSalesLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "conferenceDebtCollectedLabel": "Cobrança de Fiados em Rota: {amount}",
+  "@conferenceDebtCollectedLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "conferenceExpensesLabel": "Despesas Autorizadas Abatidas: {amount}",
+  "@conferenceExpensesLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "conferenceFinancialDivergent": "Divergência Financeira Detectada!",
+  "conferenceFinancialBalanced": "Financeiro Bateu (Repasse integral)",
+  "conferenceDirectNotice": "* Pix e cartões recebidos diretamente na conta da empresa NÃO são devidos pelo motorista/entregador.",
+  "conferenceActionReturn": "Devolução Intacta",
+  "conferenceActionLoss": "Avaria / Perda",
+  "conferenceActionExpense": "Despesa Autorizada",
+  "conferenceActionRepayment": "Repasse de Dinheiro",
+  "conferenceActionSettle": "Concluir Acerto / Fechamento",
+  "conferenceActionInvestigation": "Documentar Investigação",
+  "conferenceSettledSuccess": "Conferência registrada com sucesso.",
+  "conferenceInvestigationUpdatedSuccess": "Notas de investigação atualizadas com sucesso.",
+  "conferenceReturnsListTitle": "Devoluções de Cestas Intactas",
+  "conferenceLossesListTitle": "Avarias e Perdas Físicas",
+  "conferenceExpensesListTitle": "Despesas Autorizadas",
+  "conferenceRepaymentsListTitle": "Repasses Financeiros Registrados",
+  "conferenceNoReturns": "Nenhuma devolução intacta registrada.",
+  "conferenceNoLosses": "Nenhuma avaria ou perda registrada.",
+  "conferenceNoExpenses": "Nenhuma despesa autorizada registrada.",
+  "conferenceNoRepayments": "Nenhum repasse de dinheiro registrado.",
+
+  "dialogReturnTitle": "Registrar Devolução Intacta",
+  "dialogReturnQty": "Quantidade Devolvida",
+  "dialogReturnNotes": "Observações",
+  "dialogLossTitle": "Registrar Avaria ou Perda",
+  "dialogLossQty": "Quantidade Avariada/Perdida",
+  "dialogLossReason": "Justificativa Obrigatória da Perda",
+  "dialogLossReasonRequired": "A justificativa da perda é obrigatória (mínimo 3 caracteres).",
+  "dialogExpenseTitle": "Registrar Despesa Autorizada",
+  "dialogExpenseAmount": "Valor da Despesa",
+  "dialogExpenseDesc": "Descrição (ex: Combustível, Borracharia)",
+  "dialogExpenseReceipt": "Nº do Comprovante / Cupom",
+  "dialogExpenseAuthorizedBy": "Autorizado por",
+  "dialogRepaymentTitle": "Registrar Repasse Financeiro",
+  "dialogRepaymentAmount": "Valor Repassado",
+  "dialogRepaymentMethod": "Forma do Repasse",
+  "dialogRepaymentReceivedBy": "Recebido na Empresa por",
+  "dialogRepaymentNotes": "Observações",
+  "dialogSettleTitle": "Fechamento Operacional / Acerto",
+  "dialogSettleAuditedBy": "Auditor / Responsável pelo Fechamento",
+  "dialogSettleAuditedByRequired": "Informe o nome do responsável pelo fechamento.",
+  "dialogSettleNotes": "Observações do Fechamento",
+  "dialogSettleWarningDivergent": "Atenção: Existem divergências físicas ou financeiras. O fechamento será registrado como SOB INVESTIGAÇÃO.",
+  "dialogSettleInvestigationNotes": "Notas Iniciais da Investigação",
+  "dialogInvestigationTitle": "Investigação de Divergências",
+  "dialogInvestigationNotes": "Parecer da Investigação / Justificativas",
+  "dialogInvestigationMarkResolved": "Marcar como Resolvido (Divergências apuradas/justificadas)",
+  "dialogInvestigationSave": "Salvar Parecer",
+
+  "saleModeLabel": "Modalidade da Venda",
+  "saleModeDirectStore": "Balcão / Loja",
+  "saleModeCommercialRoute": "Rota / Venda Externa",
+  "saleRouteSelectDispatch": "Vincular à Saída / Rota Ativa",
+  "saleRouteNoDispatches": "Nenhuma saída aberta disponível para este responsável.",
+  "saleRouteResponsibleLabel": "Responsável pela Rota",
+  "saleCustodyStockAvailable": "Saldo sob custódia: {qty}",
+  "@saleCustodyStockAvailable": {
+    "placeholders": {
+      "qty": {
+        "type": "int"
+      }
+    }
+  }
 }

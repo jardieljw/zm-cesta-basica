@@ -59,6 +59,7 @@ def serialize_receivable_detail(r: SalesReceivable) -> SalesReceivableDetailResp
         ReceivablePaymentResponse(
             id=p.id,
             receivable_id=p.receivable_id,
+            dispatch_id=p.dispatch_id,
             payment_date=p.payment_date,
             amount_cents=p.amount_cents,
             payment_method=p.payment_method,

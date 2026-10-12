@@ -18,20 +18,40 @@ def get_product_stock(db: Session, product_id: str) -> int:
     )
     return int(db.execute(stmt).scalar_one() or 0)
 
-def get_basket_stock(db: Session, basket_type_id: str) -> int:
+def get_basket_stock(
+    db: Session,
+    basket_type_id: str,
+    location_type: Optional[str] = "STORE",
+    responsible_person_id: Optional[str] = None,
+) -> int:
     """Calculates live finished stock for a standard basket type."""
-    stmt = select(func.coalesce(func.sum(InventoryMovement.quantity_delta), 0)).where(
+    filters = [
         InventoryMovement.basket_type_id == basket_type_id,
         InventoryMovement.production_batch_id.is_(None),
-    )
+    ]
+    if location_type:
+        filters.append(InventoryMovement.location_type == location_type)
+    if responsible_person_id:
+        filters.append(InventoryMovement.responsible_person_id == responsible_person_id)
+    stmt = select(func.coalesce(func.sum(InventoryMovement.quantity_delta), 0)).where(and_(*filters))
     return int(db.execute(stmt).scalar_one() or 0)
 
-def get_batch_stock(db: Session, production_batch_id: str) -> int:
+def get_batch_stock(
+    db: Session,
+    production_batch_id: str,
+    location_type: Optional[str] = "STORE",
+    responsible_person_id: Optional[str] = None,
+) -> int:
     """Calculates live stock for a custom production batch."""
-    stmt = select(func.coalesce(func.sum(InventoryMovement.quantity_delta), 0)).where(
+    filters = [
         InventoryMovement.production_batch_id == production_batch_id,
         InventoryMovement.basket_type_id.is_not(None),
-    )
+    ]
+    if location_type:
+        filters.append(InventoryMovement.location_type == location_type)
+    if responsible_person_id:
+        filters.append(InventoryMovement.responsible_person_id == responsible_person_id)
+    stmt = select(func.coalesce(func.sum(InventoryMovement.quantity_delta), 0)).where(and_(*filters))
     return int(db.execute(stmt).scalar_one() or 0)
 
 def get_batch_disassembled_quantity(db: Session, batch_id: str) -> int:
@@ -89,24 +109,32 @@ def validate_sufficient_product_stock(
     return current_stock
 
 def validate_sufficient_basket_stock(
-    db: Session, basket_type_id: str, quantity_needed: int
+    db: Session,
+    basket_type_id: str,
+    quantity_needed: int,
+    location_type: Optional[str] = "STORE",
+    responsible_person_id: Optional[str] = None,
 ) -> int:
     """Validates that finished basket stock is sufficient."""
-    current_stock = get_basket_stock(db, basket_type_id)
+    current_stock = get_basket_stock(
+        db, basket_type_id, location_type=location_type, responsible_person_id=responsible_person_id
+    )
     if current_stock < quantity_needed:
         bt = db.get(BasketType, basket_type_id)
         name = bt.name if bt else basket_type_id
+        loc_label = "em trânsito" if location_type == "TRANSIT" else "em estoque na loja"
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
             detail={
                 "error_code": "INSUFFICIENT_STOCK",
                 "message": (
-                    f"Saldo insuficiente para a cesta '{name}'. "
+                    f"Saldo insuficiente {loc_label} para a cesta '{name}'. "
                     f"Saldo atual: {current_stock}, solicitado: {quantity_needed}."
                 ),
                 "basket_type_id": basket_type_id,
                 "current_stock": current_stock,
                 "requested_quantity": quantity_needed,
+                "location_type": location_type,
             },
         )
     return current_stock
@@ -124,6 +152,8 @@ def record_inventory_movement(
     reversal_of_id: Optional[str] = None,
     reason: Optional[str] = None,
     occurred_at: Optional[datetime.datetime] = None,
+    location_type: str = "STORE",
+    responsible_person_id: Optional[str] = None,
 ) -> InventoryMovement:
     """
     Appends an immutable movement record to inventory_movements.
@@ -142,6 +172,8 @@ def record_inventory_movement(
         reversal_of_id=reversal_of_id,
         occurred_at=occurred_at or utc_now(),
         reason=reason,
+        location_type=location_type,
+        responsible_person_id=responsible_person_id,
     )
     db.add(movement)
     return movement

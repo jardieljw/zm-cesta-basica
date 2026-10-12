@@ -1962,4 +1962,428 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get receivablePaymentAmountExceedsBalance =>
       'Valor informado excede o saldo devedor.';
+
+  @override
+  String get homePhase6Header => 'Fase 6: Expedição, Conferência e Custódia';
+
+  @override
+  String get moduleDispatches => 'Saídas e Conferências';
+
+  @override
+  String get homeDispatchesDescription =>
+      'Controle de saídas físicas, conferência e repasses';
+
+  @override
+  String get moduleResponsiblePersons => 'Pessoas Responsáveis';
+
+  @override
+  String get homeResponsiblePersonsDescription =>
+      'Cadastro de entregadores, vendedores externos e motoristas';
+
+  @override
+  String get responsiblePersonsTitle => 'Pessoas Responsáveis';
+
+  @override
+  String get responsiblePersonNew => 'Novo Responsável';
+
+  @override
+  String get responsiblePersonEdit => 'Editar Responsável';
+
+  @override
+  String get responsiblePersonName => 'Nome';
+
+  @override
+  String get responsiblePersonPhone => 'Telefone / WhatsApp';
+
+  @override
+  String get responsiblePersonNotes => 'Observações';
+
+  @override
+  String get responsiblePersonActive => 'Ativo';
+
+  @override
+  String get responsiblePersonInactive => 'Inativo';
+
+  @override
+  String get responsiblePersonsEmpty =>
+      'Nenhuma pessoa responsável cadastrada.';
+
+  @override
+  String get responsiblePersonCustodyTitle => 'Custódia Atual de Cestas';
+
+  @override
+  String responsiblePersonTotalInCustody(int qty) {
+    return 'Total sob custódia: $qty cestas';
+  }
+
+  @override
+  String get responsiblePersonNoCustody =>
+      'Nenhuma cesta sob custódia no momento.';
+
+  @override
+  String get responsiblePersonSavedSuccess => 'Responsável salvo com sucesso.';
+
+  @override
+  String get dispatchesTitle => 'Saídas Físicas e Conferência';
+
+  @override
+  String get dispatchNew => 'Nova Saída de Cestas';
+
+  @override
+  String dispatchNumber(int number) {
+    return 'Saída #$number';
+  }
+
+  @override
+  String get dispatchResponsible => 'Responsável';
+
+  @override
+  String get dispatchDate => 'Data da Saída';
+
+  @override
+  String get dispatchTotalBaskets => 'Total de Cestas';
+
+  @override
+  String get dispatchTotalReference => 'Valor de Referência';
+
+  @override
+  String get dispatchStatusOpen => 'Aberta';
+
+  @override
+  String get dispatchStatusConcluded => 'Concluída';
+
+  @override
+  String get dispatchStatusPendingInvestigation => 'Sob Investigação';
+
+  @override
+  String get dispatchStatusCanceled => 'Cancelada';
+
+  @override
+  String get dispatchesEmpty => 'Nenhuma saída física registrada.';
+
+  @override
+  String get dispatchCancel => 'Cancelar Saída';
+
+  @override
+  String dispatchCancelConfirm(int number) {
+    return 'Deseja realmente cancelar a saída #$number?';
+  }
+
+  @override
+  String get dispatchCancelReason => 'Motivo do cancelamento';
+
+  @override
+  String get dispatchCancelSuccess =>
+      'Saída cancelada com sucesso. Cestas retornadas ao estoque da loja.';
+
+  @override
+  String get dispatchCreatedSuccess => 'Saída registrada com sucesso.';
+
+  @override
+  String get dispatchFormTitle => 'Registrar Saída Física';
+
+  @override
+  String get dispatchSelectResponsible => 'Selecione o Responsável';
+
+  @override
+  String get dispatchItemsTitle => 'Cestas a Retirar';
+
+  @override
+  String get dispatchAddItem => 'Adicionar Cesta';
+
+  @override
+  String get dispatchItemBasket => 'Tipo de Cesta';
+
+  @override
+  String get dispatchItemQuantity => 'Quantidade';
+
+  @override
+  String get dispatchItemUnitPrice => 'Preço de Referência';
+
+  @override
+  String get dispatchItemSubtotal => 'Subtotal';
+
+  @override
+  String get dispatchItemNotes => 'Personalizações / Observações';
+
+  @override
+  String dispatchAvailableStoreStock(int qty) {
+    return 'Estoque loja: $qty';
+  }
+
+  @override
+  String dispatchInsufficientStoreStock(String name, int stock, int qty) {
+    return 'Estoque insuficiente na loja para \"$name\". Disponível: $stock, Solicitado: $qty.';
+  }
+
+  @override
+  String get dispatchSubmit => 'Confirmar Saída Física';
+
+  @override
+  String conferenceTitle(int number) {
+    return 'Conferência da Saída #$number';
+  }
+
+  @override
+  String conferenceStatusLabel(String status) {
+    return 'Status da Saída: $status';
+  }
+
+  @override
+  String get conferencePhysicalEquationTitle =>
+      'Equação Física de Custódia (4 Termos)';
+
+  @override
+  String conferenceDispatchedLabel(int qty) {
+    return '1. Retiradas: $qty';
+  }
+
+  @override
+  String conferenceSoldLabel(int qty) {
+    return '2. Vendidas: $qty';
+  }
+
+  @override
+  String conferenceReturnedLabel(int qty) {
+    return '3. Devolvidas Intactas: $qty';
+  }
+
+  @override
+  String conferenceLostLabel(int qty) {
+    return '4. Avariadas / Perdidas: $qty';
+  }
+
+  @override
+  String conferenceCustodyRemainingLabel(int qty) {
+    return 'Em Trânsito / Custódia: $qty';
+  }
+
+  @override
+  String conferenceDiscrepancyLabel(int qty) {
+    return 'Divergência Física: $qty cestas';
+  }
+
+  @override
+  String get conferencePhysicalEquationBalanced =>
+      'Equação Física Bateu (Sem divergências)';
+
+  @override
+  String get conferencePhysicalEquationDivergent =>
+      'Divergência Física Detectada!';
+
+  @override
+  String get conferenceFinancialTitle =>
+      'Controle Financeiro de Rota e Repasses';
+
+  @override
+  String conferenceExpectedCashLabel(String amount) {
+    return 'Dinheiro em Mãos Esperado: $amount';
+  }
+
+  @override
+  String conferenceActualRepaidLabel(String amount) {
+    return 'Repasses Realizados: $amount';
+  }
+
+  @override
+  String conferencePendingCashLabel(String amount) {
+    return 'Saldo a Repassar: $amount';
+  }
+
+  @override
+  String conferenceCashSalesLabel(String amount) {
+    return 'Vendas à Vista (Dinheiro): $amount';
+  }
+
+  @override
+  String conferenceDirectCompanyLabel(String amount) {
+    return 'Pix / Cartão Direto à Empresa: $amount';
+  }
+
+  @override
+  String conferenceCreditSalesLabel(String amount) {
+    return 'Vendas a Prazo (Fiado na rota): $amount';
+  }
+
+  @override
+  String conferenceDebtCollectedLabel(String amount) {
+    return 'Cobrança de Fiados em Rota: $amount';
+  }
+
+  @override
+  String conferenceExpensesLabel(String amount) {
+    return 'Despesas Autorizadas Abatidas: $amount';
+  }
+
+  @override
+  String get conferenceFinancialDivergent =>
+      'Divergência Financeira Detectada!';
+
+  @override
+  String get conferenceFinancialBalanced =>
+      'Financeiro Bateu (Repasse integral)';
+
+  @override
+  String get conferenceDirectNotice =>
+      '* Pix e cartões recebidos diretamente na conta da empresa NÃO são devidos pelo motorista/entregador.';
+
+  @override
+  String get conferenceActionReturn => 'Devolução Intacta';
+
+  @override
+  String get conferenceActionLoss => 'Avaria / Perda';
+
+  @override
+  String get conferenceActionExpense => 'Despesa Autorizada';
+
+  @override
+  String get conferenceActionRepayment => 'Repasse de Dinheiro';
+
+  @override
+  String get conferenceActionSettle => 'Concluir Acerto / Fechamento';
+
+  @override
+  String get conferenceActionInvestigation => 'Documentar Investigação';
+
+  @override
+  String get conferenceSettledSuccess => 'Conferência registrada com sucesso.';
+
+  @override
+  String get conferenceInvestigationUpdatedSuccess =>
+      'Notas de investigação atualizadas com sucesso.';
+
+  @override
+  String get conferenceReturnsListTitle => 'Devoluções de Cestas Intactas';
+
+  @override
+  String get conferenceLossesListTitle => 'Avarias e Perdas Físicas';
+
+  @override
+  String get conferenceExpensesListTitle => 'Despesas Autorizadas';
+
+  @override
+  String get conferenceRepaymentsListTitle =>
+      'Repasses Financeiros Registrados';
+
+  @override
+  String get conferenceNoReturns => 'Nenhuma devolução intacta registrada.';
+
+  @override
+  String get conferenceNoLosses => 'Nenhuma avaria ou perda registrada.';
+
+  @override
+  String get conferenceNoExpenses => 'Nenhuma despesa autorizada registrada.';
+
+  @override
+  String get conferenceNoRepayments => 'Nenhum repasse de dinheiro registrado.';
+
+  @override
+  String get dialogReturnTitle => 'Registrar Devolução Intacta';
+
+  @override
+  String get dialogReturnQty => 'Quantidade Devolvida';
+
+  @override
+  String get dialogReturnNotes => 'Observações';
+
+  @override
+  String get dialogLossTitle => 'Registrar Avaria ou Perda';
+
+  @override
+  String get dialogLossQty => 'Quantidade Avariada/Perdida';
+
+  @override
+  String get dialogLossReason => 'Justificativa Obrigatória da Perda';
+
+  @override
+  String get dialogLossReasonRequired =>
+      'A justificativa da perda é obrigatória (mínimo 3 caracteres).';
+
+  @override
+  String get dialogExpenseTitle => 'Registrar Despesa Autorizada';
+
+  @override
+  String get dialogExpenseAmount => 'Valor da Despesa';
+
+  @override
+  String get dialogExpenseDesc => 'Descrição (ex: Combustível, Borracharia)';
+
+  @override
+  String get dialogExpenseReceipt => 'Nº do Comprovante / Cupom';
+
+  @override
+  String get dialogExpenseAuthorizedBy => 'Autorizado por';
+
+  @override
+  String get dialogRepaymentTitle => 'Registrar Repasse Financeiro';
+
+  @override
+  String get dialogRepaymentAmount => 'Valor Repassado';
+
+  @override
+  String get dialogRepaymentMethod => 'Forma do Repasse';
+
+  @override
+  String get dialogRepaymentReceivedBy => 'Recebido na Empresa por';
+
+  @override
+  String get dialogRepaymentNotes => 'Observações';
+
+  @override
+  String get dialogSettleTitle => 'Fechamento Operacional / Acerto';
+
+  @override
+  String get dialogSettleAuditedBy => 'Auditor / Responsável pelo Fechamento';
+
+  @override
+  String get dialogSettleAuditedByRequired =>
+      'Informe o nome do responsável pelo fechamento.';
+
+  @override
+  String get dialogSettleNotes => 'Observações do Fechamento';
+
+  @override
+  String get dialogSettleWarningDivergent =>
+      'Atenção: Existem divergências físicas ou financeiras. O fechamento será registrado como SOB INVESTIGAÇÃO.';
+
+  @override
+  String get dialogSettleInvestigationNotes => 'Notas Iniciais da Investigação';
+
+  @override
+  String get dialogInvestigationTitle => 'Investigação de Divergências';
+
+  @override
+  String get dialogInvestigationNotes =>
+      'Parecer da Investigação / Justificativas';
+
+  @override
+  String get dialogInvestigationMarkResolved =>
+      'Marcar como Resolvido (Divergências apuradas/justificadas)';
+
+  @override
+  String get dialogInvestigationSave => 'Salvar Parecer';
+
+  @override
+  String get saleModeLabel => 'Modalidade da Venda';
+
+  @override
+  String get saleModeDirectStore => 'Balcão / Loja';
+
+  @override
+  String get saleModeCommercialRoute => 'Rota / Venda Externa';
+
+  @override
+  String get saleRouteSelectDispatch => 'Vincular à Saída / Rota Ativa';
+
+  @override
+  String get saleRouteNoDispatches =>
+      'Nenhuma saída aberta disponível para este responsável.';
+
+  @override
+  String get saleRouteResponsibleLabel => 'Responsável pela Rota';
+
+  @override
+  String saleCustodyStockAvailable(int qty) {
+    return 'Saldo sob custódia: $qty';
+  }
 }

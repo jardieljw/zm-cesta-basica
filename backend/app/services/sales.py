@@ -10,6 +10,7 @@ from app.models.customers import Customer
 from app.models.products import BasketType, RecipeVersion
 from app.models.production import ProductionBatch
 from app.models.movements import InventoryMovement
+from app.models.dispatches import StockDispatch, ResponsiblePerson
 from app.models.base import utc_now
 from app.schemas.sales import SaleCreate, SaleCancelRequest, SaleItemCreate
 from app.schemas.production import (
@@ -152,10 +153,51 @@ def create_sale(db: Session, data: SaleCreate) -> Sale:
     payment_status = "PENDING" if data.payment_mode == "CREDIT_TERM" else "PAID"
     cust_name = customer.name if customer else (data.customer_name.strip() if data.customer_name else None)
 
+    # Resolve dispatch and custody responsible person
+    resolved_resp_id = None
+    resp_person_obj = None
+    if data.dispatch_id:
+        dispatch = db.get(StockDispatch, data.dispatch_id)
+        if not dispatch:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Saida #{data.dispatch_id} nao encontrada.",
+            )
+        if dispatch.status != "OPEN":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Saida #{dispatch.dispatch_number} nao esta aberta (status atual: {dispatch.status}).",
+            )
+        if data.responsible_person_id and data.responsible_person_id != dispatch.responsible_person_id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Responsavel informado diverge do responsavel da saida fisica.",
+            )
+        resolved_resp_id = dispatch.responsible_person_id
+        resp_person_obj = dispatch.responsible_person
+    elif data.responsible_person_id:
+        resp_person_obj = db.get(ResponsiblePerson, data.responsible_person_id)
+        if not resp_person_obj:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Pessoa responsavel '{data.responsible_person_id}' nao encontrada.",
+            )
+        if not resp_person_obj.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Pessoa responsavel '{resp_person_obj.name}' esta inativa.",
+            )
+        resolved_resp_id = resp_person_obj.id
+
+    target_location = "TRANSIT" if (data.sale_mode == "COMMERCIAL_ROUTE" and resolved_resp_id) else "STORE"
+    target_resp_id = resolved_resp_id if target_location == "TRANSIT" else None
+
     sale = Sale(
         id=sale_id,
         sale_number=sale_number,
         customer_id=customer.id if customer else None,
+        dispatch_id=data.dispatch_id,
+        responsible_person_id=resolved_resp_id,
         status="CONFIRMED",
         sale_mode=data.sale_mode,
         payment_mode=data.payment_mode,
@@ -265,19 +307,23 @@ def create_sale(db: Session, data: SaleCreate) -> Sale:
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail=f"Lote #{batch.batch_number} nao pertence a cesta '{basket_type.name}'.",
                 )
-            current_batch_stock = get_batch_stock(db, batch.id)
+            current_batch_stock = get_batch_stock(
+                db, batch.id, location_type=target_location, responsible_person_id=target_resp_id
+            )
             if current_batch_stock < item.quantity:
+                loc_label = f"sob custodia de '{resp_person_obj.name}'" if target_location == "TRANSIT" and resp_person_obj else "em estoque na loja"
                 raise HTTPException(
                     status_code=status.HTTP_409_CONFLICT,
                     detail={
                         "error_code": "INSUFFICIENT_STOCK",
                         "message": (
-                            f"Saldo insuficiente para o lote personalizado #{batch.batch_number}. "
+                            f"Saldo insuficiente {loc_label} para o lote personalizado #{batch.batch_number}. "
                             f"Saldo atual: {current_batch_stock}, solicitado: {item.quantity}."
                         ),
                         "production_batch_id": batch.id,
                         "current_stock": current_batch_stock,
                         "requested_quantity": item.quantity,
+                        "location_type": target_location,
                     },
                 )
             item_unit_cost = batch.unit_cost_cents
@@ -294,24 +340,30 @@ def create_sale(db: Session, data: SaleCreate) -> Sale:
                 production_batch_id=batch.id,
                 occurred_at=sale_date,
                 reason=f"Venda #{sale_number} ({basket_type.name}) - Lote personalizado #{batch.batch_number}",
+                location_type=target_location,
+                responsible_person_id=target_resp_id,
             )
 
         else:
             # 3. Sell standard baskets from pre-assembled stock
-            current_finished_stock = get_basket_stock(db, basket_type.id)
+            current_finished_stock = get_basket_stock(
+                db, basket_type.id, location_type=target_location, responsible_person_id=target_resp_id
+            )
             if current_finished_stock < item.quantity:
+                loc_label = f"sob custodia de '{resp_person_obj.name}'" if target_location == "TRANSIT" and resp_person_obj else "de cestas prontas na loja"
                 raise HTTPException(
                     status_code=status.HTTP_409_CONFLICT,
                     detail={
                         "error_code": "INSUFFICIENT_STOCK",
                         "message": (
-                            f"Saldo insuficiente de cestas prontas para '{basket_type.name}'. "
-                            f"Saldo atual em estoque: {current_finished_stock}, solicitado: {item.quantity}. "
+                            f"Saldo insuficiente {loc_label} para '{basket_type.name}'. "
+                            f"Saldo atual: {current_finished_stock}, solicitado: {item.quantity}. "
                             "Se desejar montar na hora, marque a opcao de montagem imediata."
                         ),
                         "basket_type_id": basket_type.id,
                         "current_stock": current_finished_stock,
                         "requested_quantity": item.quantity,
+                        "location_type": target_location,
                     },
                 )
             item_unit_cost = _resolve_standard_basket_cost(db, basket_type.id)
@@ -326,7 +378,9 @@ def create_sale(db: Session, data: SaleCreate) -> Sale:
                 basket_type_id=basket_type.id,
                 production_batch_id=None,
                 occurred_at=sale_date,
-                reason=f"Venda #{sale_number} ({basket_type.name}) - Cestas prontas em estoque",
+                reason=f"Venda #{sale_number} ({basket_type.name}) - {'Rota sob custodia' if target_location == 'TRANSIT' else 'Cestas prontas em estoque'}",
+                location_type=target_location,
+                responsible_person_id=target_resp_id,
             )
 
         sale_item = SaleItem(
@@ -428,6 +482,8 @@ def cancel_sale(db: Session, sale_id: str, data: SaleCancelRequest) -> Sale:
             reversal_of_id=m.id,
             occurred_at=utc_now(),
             reason=f"Estorno da Venda #{sale.sale_number}: {data.reason.strip()}",
+            location_type=m.location_type,
+            responsible_person_id=m.responsible_person_id,
         )
 
     sale.status = "CANCELED"
@@ -446,6 +502,8 @@ def get_sale(db: Session, sale_id: str) -> Sale:
             selectinload(Sale.items).selectinload(SaleItem.basket_type),
             selectinload(Sale.receivable),
             selectinload(Sale.customer),
+            selectinload(Sale.responsible_person),
+            selectinload(Sale.dispatch),
         )
         .where(Sale.id == sale_id)
     )
@@ -475,6 +533,8 @@ def list_sales(
             selectinload(Sale.items).selectinload(SaleItem.basket_type),
             selectinload(Sale.receivable),
             selectinload(Sale.customer),
+            selectinload(Sale.responsible_person),
+            selectinload(Sale.dispatch),
         )
     )
     if customer_id:

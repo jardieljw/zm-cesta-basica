@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import '../models/sale.dart';
 import '../models/basket_type.dart';
 import '../models/customer.dart';
+import '../models/dispatch.dart';
 import '../services/sale_service.dart';
 import '../services/basket_service.dart';
 import '../services/customer_service.dart';
 import '../services/inventory_service.dart';
+import '../services/dispatch_service.dart';
 import '../l10n/l10n_extension.dart';
 import '../utils/formatters.dart';
 import '../utils/api_error_mapper.dart';
@@ -35,10 +37,15 @@ class _SaleFormViewState extends State<SaleFormView> {
   final BasketService _basketService = BasketService();
   final CustomerService _customerService = CustomerService();
   final InventoryService _inventoryService = InventoryService();
+  final DispatchService _dispatchService = DispatchService();
 
   List<BasketType> _basketTypes = [];
   List<Customer> _customers = [];
   Customer? _selectedCustomer;
+
+  String _saleMode = 'DIRECT_STORE';
+  List<StockDispatch> _openDispatches = [];
+  StockDispatch? _selectedDispatch;
 
   String _paymentMode = 'CASH_IMMEDIATE';
   DateTime _dueDate = DateTime.now().add(const Duration(days: 30));
@@ -73,10 +80,18 @@ class _SaleFormViewState extends State<SaleFormView> {
     try {
       final baskets = await _basketService.getBasketTypes(isActive: true);
       final custs = await _customerService.getCustomers(isActive: true);
+      List<StockDispatch> dispatches = [];
+      try {
+        dispatches = await _dispatchService.getDispatches(status: 'OPEN');
+      } catch (_) {}
 
       setState(() {
         _basketTypes = baskets;
         _customers = custs;
+        _openDispatches = dispatches;
+        if (_openDispatches.isNotEmpty) {
+          _selectedDispatch = _openDispatches.first;
+        }
         _isLoadingInitial = false;
       });
 
@@ -115,18 +130,49 @@ class _SaleFormViewState extends State<SaleFormView> {
     if (row.basketType == null) return;
     setState(() => row.isLoadingStock = true);
     try {
-      final res = await _inventoryService.getBasketStock(row.basketType!.id);
-      final currentStock = (res['current_stock'] as num?)?.toInt() ?? 0;
-      if (mounted) {
-        setState(() {
-          row.availableStock = currentStock;
-          row.isLoadingStock = false;
-        });
+      if (_saleMode == 'COMMERCIAL_ROUTE' && _selectedDispatch != null) {
+        final custody = await _dispatchService.getResponsiblePersonCustody(_selectedDispatch!.responsiblePersonId);
+        final found = custody.baskets.where((b) => b.basketTypeId == row.basketType!.id).toList();
+        final bal = found.isNotEmpty ? found.first.balance : 0;
+        if (mounted) {
+          setState(() {
+            row.availableStock = bal;
+            row.isLoadingStock = false;
+          });
+        }
+      } else {
+        final res = await _inventoryService.getBasketStock(row.basketType!.id);
+        final currentStock = (res['current_stock'] as num?)?.toInt() ?? 0;
+        if (mounted) {
+          setState(() {
+            row.availableStock = currentStock;
+            row.isLoadingStock = false;
+          });
+        }
       }
     } catch (_) {
       if (mounted) {
         setState(() => row.isLoadingStock = false);
       }
+    }
+  }
+
+  void _onSaleModeChanged(String mode) {
+    setState(() {
+      _saleMode = mode;
+      if (mode == 'COMMERCIAL_ROUTE' && _selectedDispatch == null && _openDispatches.isNotEmpty) {
+        _selectedDispatch = _openDispatches.first;
+      }
+    });
+    for (final it in _items) {
+      _fetchStockForRow(it);
+    }
+  }
+
+  void _onDispatchChanged(StockDispatch? d) {
+    setState(() => _selectedDispatch = d);
+    for (final it in _items) {
+      _fetchStockForRow(it);
     }
   }
 
@@ -205,7 +251,9 @@ class _SaleFormViewState extends State<SaleFormView> {
       customerName: _selectedCustomer == null && _anonymousCustomerController.text.trim().isNotEmpty
           ? _anonymousCustomerController.text.trim()
           : null,
-      saleMode: 'DIRECT_STORE',
+      saleMode: _saleMode,
+      dispatchId: _saleMode == 'COMMERCIAL_ROUTE' ? _selectedDispatch?.id : null,
+      responsiblePersonId: _saleMode == 'COMMERCIAL_ROUTE' ? _selectedDispatch?.responsiblePersonId : null,
       paymentMode: _paymentMode,
       dueDate: _paymentMode == 'CREDIT_TERM' ? _dueDate : null,
       allowCreditOverride: allowCreditOverride,
@@ -307,6 +355,8 @@ class _SaleFormViewState extends State<SaleFormView> {
               ),
               const SizedBox(height: 16),
             ],
+            _buildSaleModeSection(context),
+            const SizedBox(height: 16),
             _buildCustomerSection(context),
             const SizedBox(height: 16),
             _buildPaymentSection(context),
@@ -323,6 +373,88 @@ class _SaleFormViewState extends State<SaleFormView> {
               ),
             ),
             const SizedBox(height: 80),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSaleModeSection(BuildContext context) {
+    final l10n = context.l10n;
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.saleModeLabel,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            const SizedBox(height: 12),
+            SegmentedButton<String>(
+              segments: [
+                ButtonSegment(
+                  value: 'DIRECT_STORE',
+                  label: Text(l10n.saleModeDirectStore),
+                  icon: const Icon(Icons.storefront),
+                ),
+                ButtonSegment(
+                  value: 'COMMERCIAL_ROUTE',
+                  label: Text(l10n.saleModeCommercialRoute),
+                  icon: const Icon(Icons.local_shipping),
+                ),
+              ],
+              selected: {_saleMode},
+              onSelectionChanged: (set) {
+                if (set.isNotEmpty) _onSaleModeChanged(set.first);
+              },
+            ),
+            if (_saleMode == 'COMMERCIAL_ROUTE') ...[
+              const SizedBox(height: 14),
+              if (_openDispatches.isEmpty)
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.amber.shade300),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.warning_amber_rounded, color: Colors.amber.shade900, size: 20),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          l10n.saleRouteNoDispatches,
+                          style: TextStyle(color: Colors.amber.shade900, fontSize: 13),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              else
+                DropdownButtonFormField<StockDispatch>(
+                  initialValue: _selectedDispatch,
+                  decoration: InputDecoration(
+                    labelText: '${l10n.saleRouteSelectDispatch} *',
+                    border: const OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                  items: _openDispatches.map((d) {
+                    return DropdownMenuItem(
+                      value: d,
+                      child: Text(
+                        '${l10n.dispatchNumber(d.dispatchNumber)} - ${d.responsiblePersonName ?? "Sem responsável"}',
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: _onDispatchChanged,
+                ),
+            ],
           ],
         ),
       ),

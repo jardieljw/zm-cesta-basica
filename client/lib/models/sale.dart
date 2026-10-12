@@ -63,6 +63,8 @@ class SaleCreate {
   final String? customerId;
   final String? customerName;
   final String saleMode;
+  final String? dispatchId;
+  final String? responsiblePersonId;
   final String paymentMode;
   final DateTime? saleDate;
   final DateTime? dueDate;
@@ -74,6 +76,8 @@ class SaleCreate {
     this.customerId,
     this.customerName,
     this.saleMode = 'DIRECT_STORE',
+    this.dispatchId,
+    this.responsiblePersonId,
     this.paymentMode = 'CASH_IMMEDIATE',
     this.saleDate,
     this.dueDate,
@@ -86,6 +90,8 @@ class SaleCreate {
         'customer_id': customerId,
         'customer_name': customerName,
         'sale_mode': saleMode,
+        'dispatch_id': dispatchId,
+        'responsible_person_id': responsiblePersonId,
         'payment_mode': paymentMode,
         'sale_date': saleDate?.toIso8601String(),
         'due_date': dueDate?.toIso8601String(),
@@ -143,6 +149,9 @@ class Sale {
   final String? customerName;
   final String status;
   final String saleMode;
+  final String? dispatchId;
+  final String? responsiblePersonId;
+  final String? responsiblePersonName;
   final String paymentMode;
   final String paymentStatus;
   final DateTime saleDate;
@@ -165,6 +174,9 @@ class Sale {
     this.customerName,
     required this.status,
     required this.saleMode,
+    this.dispatchId,
+    this.responsiblePersonId,
+    this.responsiblePersonName,
     required this.paymentMode,
     required this.paymentStatus,
     required this.saleDate,
@@ -189,6 +201,9 @@ class Sale {
       customerName: json['customer_name'] as String?,
       status: json['status'] as String,
       saleMode: json['sale_mode'] as String? ?? 'DIRECT_STORE',
+      dispatchId: json['dispatch_id'] as String?,
+      responsiblePersonId: json['responsible_person_id'] as String?,
+      responsiblePersonName: json['responsible_person_name'] as String?,
       paymentMode: json['payment_mode'] as String? ?? 'CASH_IMMEDIATE',
       paymentStatus: json['payment_status'] as String? ?? 'PAID',
       saleDate: DateTime.parse(json['sale_date'] as String),
