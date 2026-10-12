@@ -17,6 +17,8 @@ import 'sales_view.dart';
 import 'receivables_view.dart';
 import 'dispatches_view.dart';
 import 'responsible_persons_view.dart';
+import 'payables_view.dart';
+import 'treasury_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -619,6 +621,93 @@ class _HomeViewState extends State<HomeView> {
                         const SizedBox(height: 4),
                         Text(
                           l10n.homeResponsiblePersonsDescription,
+                          style: const TextStyle(color: Colors.black54, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        Text(
+          l10n.homePhase7Header,
+          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const PayablesView()),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.red.shade100,
+                          radius: 24,
+                          child: Icon(Icons.request_quote, color: Colors.red.shade800, size: 28),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          l10n.modulePayables,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          l10n.homePayablesDescription,
+                          style: const TextStyle(color: Colors.black54, fontSize: 13),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Card(
+                elevation: 2,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const TreasuryView()),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.teal.shade100,
+                          radius: 24,
+                          child: Icon(Icons.account_balance, color: Colors.teal.shade800, size: 28),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          l10n.moduleTreasury,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          l10n.homeTreasuryDescription,
                           style: const TextStyle(color: Colors.black54, fontSize: 13),
                         ),
                       ],

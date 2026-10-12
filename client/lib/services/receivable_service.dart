@@ -10,6 +10,13 @@ class ReceivableService {
     String? customerId,
     String? status,
     bool overdueOnly = false,
+    DateTime? saleDateFrom,
+    DateTime? saleDateTo,
+    DateTime? dueDateFrom,
+    DateTime? dueDateTo,
+    String? basketTypeId,
+    int? minAmountCents,
+    int? maxAmountCents,
     int limit = 100,
     int offset = 0,
   }) async {
@@ -25,6 +32,27 @@ class ReceivableService {
     }
     if (overdueOnly) {
       queryParams.add('overdue_only=true');
+    }
+    if (saleDateFrom != null) {
+      queryParams.add('sale_date_from=${Uri.encodeComponent(saleDateFrom.toIso8601String())}');
+    }
+    if (saleDateTo != null) {
+      queryParams.add('sale_date_to=${Uri.encodeComponent(saleDateTo.toIso8601String())}');
+    }
+    if (dueDateFrom != null) {
+      queryParams.add('due_date_from=${Uri.encodeComponent(dueDateFrom.toIso8601String())}');
+    }
+    if (dueDateTo != null) {
+      queryParams.add('due_date_to=${Uri.encodeComponent(dueDateTo.toIso8601String())}');
+    }
+    if (basketTypeId != null && basketTypeId.isNotEmpty) {
+      queryParams.add('basket_type_id=${Uri.encodeComponent(basketTypeId)}');
+    }
+    if (minAmountCents != null) {
+      queryParams.add('min_amount_cents=$minAmountCents');
+    }
+    if (maxAmountCents != null) {
+      queryParams.add('max_amount_cents=$maxAmountCents');
     }
 
     final query = '?${queryParams.join('&')}';

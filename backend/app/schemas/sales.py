@@ -25,6 +25,7 @@ class SaleCreate(BaseModel):
     dispatch_id: Optional[str] = Field(None, description="ID da saida fisica/despacho associado")
     responsible_person_id: Optional[str] = Field(None, description="ID da pessoa responsavel pela custodia")
     payment_mode: str = Field(default="CASH_IMMEDIATE", description="CASH_IMMEDIATE, PIX, CARD, CREDIT_TERM")
+    account_id: Optional[str] = Field(None, description="Conta financeira para recebimento se venda direta a vista")
     sale_date: Optional[datetime.datetime] = Field(None, description="Data da venda (UTC, padrao now)")
     due_date: Optional[datetime.datetime] = Field(None, description="Data de vencimento para venda fiada (padrao 30 dias)")
     allow_credit_override: bool = Field(default=False, description="Se True, confirma liberacao manual caso o limite de credito seja excedido")
@@ -58,6 +59,7 @@ class SaleResponse(BaseModel):
     dispatch_id: Optional[str] = None
     responsible_person_id: Optional[str] = None
     responsible_person_name: Optional[str] = None
+    account_id: Optional[str] = None
     payment_mode: str
     payment_status: str
     sale_date: datetime.datetime

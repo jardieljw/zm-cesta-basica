@@ -13,10 +13,15 @@ class Purchase(Base):
     purchase_date: Mapped[datetime.datetime] = mapped_column(DateTime, default=utc_now, nullable=False)
     supplier_name: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
     total_amount_cents: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    payment_mode: Mapped[str] = mapped_column(String(30), nullable=False, default="CASH_IMMEDIATE") # CASH_IMMEDIATE, CREDIT_TERM
+    due_date: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime, nullable=True)
+    account_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("financial_accounts.id"), nullable=True, index=True)
     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=utc_now, nullable=False)
 
     items: Mapped[List["PurchaseItem"]] = relationship(back_populates="purchase", cascade="all, delete-orphan")
+    financial_account: Mapped[Optional["app.models.financial.FinancialAccount"]] = relationship("app.models.financial.FinancialAccount")
+    payable: Mapped[Optional["app.models.financial.AccountPayable"]] = relationship("app.models.financial.AccountPayable", back_populates="purchase", uselist=False)
 
 class PurchaseItem(Base):
     __tablename__ = "purchase_items"

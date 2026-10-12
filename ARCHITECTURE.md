@@ -2,8 +2,8 @@
 ## ZM Cesta Básica — Sistema de Gestão de Estoque, Produção, Vendas e Financeiro
 
 **Documento Canônico de Engenharia e Princípios de Arquitetura**  
-**Versão:** 5.2 (Complemento Canônico: Consistência entre Vendas, Estoque em Custódia e Acerto Financeiro)
-**Status do Projeto:** Fases 1, 2, 3, 4 e 5 Concluídas e Homologadas (139 testes backend ativos e 38 testes Flutter aprovados; compilações nativas Windows e Android validadas)
+**Versão:** 5.3 (Fases 6 e 7 Homologadas: Expedição, Custódia, Contas a Pagar, Contas a Receber e Tesouraria)
+**Status do Projeto:** Fases 1 a 7 Concluídas e Homologadas (167 testes backend e 71 testes Flutter aprovados; análise estática 100% limpa)
 **Topologia:** Monólito Modular em Rede Local Privada (Wi-Fi/Ethernet) sem dependência de nuvem  
 **Público-alvo:** Desenvolvedores, Engenheiros de Software e Agentes de Inteligência Artificial
 

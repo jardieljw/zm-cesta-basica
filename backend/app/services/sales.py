@@ -11,7 +11,9 @@ from app.models.products import BasketType, RecipeVersion
 from app.models.production import ProductionBatch
 from app.models.movements import InventoryMovement
 from app.models.dispatches import StockDispatch, ResponsiblePerson
+from app.models.financial import FinancialAccount, CashFlowEntry
 from app.models.base import utc_now
+from app.services.financial import record_cash_flow_entry, get_default_financial_account
 from app.schemas.sales import SaleCreate, SaleCancelRequest, SaleItemCreate
 from app.schemas.production import (
     ProductionBatchCreate,
@@ -192,12 +194,27 @@ def create_sale(db: Session, data: SaleCreate) -> Sale:
     target_location = "TRANSIT" if (data.sale_mode == "COMMERCIAL_ROUTE" and resolved_resp_id) else "STORE"
     target_resp_id = resolved_resp_id if target_location == "TRANSIT" else None
 
+    # Resolve financial account for immediate payments
+    target_financial_acc = None
+    if data.payment_mode != "CREDIT_TERM":
+        if data.sale_mode == "DIRECT_STORE":
+            if data.account_id:
+                target_financial_acc = db.get(FinancialAccount, data.account_id)
+            else:
+                target_financial_acc = get_default_financial_account(db, "CASH" if data.payment_mode == "CASH_IMMEDIATE" else "BANK")
+        elif data.sale_mode == "COMMERCIAL_ROUTE" and data.payment_mode in ["PIX", "CARD"]:
+            if data.account_id:
+                target_financial_acc = db.get(FinancialAccount, data.account_id)
+            else:
+                target_financial_acc = get_default_financial_account(db, "BANK")
+
     sale = Sale(
         id=sale_id,
         sale_number=sale_number,
         customer_id=customer.id if customer else None,
         dispatch_id=data.dispatch_id,
         responsible_person_id=resolved_resp_id,
+        account_id=target_financial_acc.id if target_financial_acc else None,
         status="CONFIRMED",
         sale_mode=data.sale_mode,
         payment_mode=data.payment_mode,
@@ -416,6 +433,22 @@ def create_sale(db: Session, data: SaleCreate) -> Sale:
         )
         db.add(receivable)
 
+    # Post immediate cash flow entry to treasury if money entered company
+    if target_financial_acc and calculated_total_amount_cents > 0:
+        record_cash_flow_entry(
+            db=db,
+            account_id=target_financial_acc.id,
+            entry_type="CREDIT",
+            amount_cents=calculated_total_amount_cents,
+            category="VENDAS",
+            description=f"Venda {'balcao' if data.sale_mode == 'DIRECT_STORE' else 'rota'} #{sale.sale_number} ({cust_name or 'Consumidor'})",
+            nature="BUSINESS",
+            source_type="SALE",
+            source_id=sale.id,
+            payment_method=data.payment_mode,
+            occurred_at=sale_date,
+        )
+
     db.flush()
     return sale
 
@@ -484,6 +517,32 @@ def cancel_sale(db: Session, sale_id: str, data: SaleCancelRequest) -> Sale:
             reason=f"Estorno da Venda #{sale.sale_number}: {data.reason.strip()}",
             location_type=m.location_type,
             responsible_person_id=m.responsible_person_id,
+        )
+
+    # Reverse treasury cash flow entry if money entered company
+    if sale.account_id:
+        orig_entry = db.execute(
+            select(CashFlowEntry).where(
+                CashFlowEntry.source_type == "SALE",
+                CashFlowEntry.source_id == sale.id,
+                CashFlowEntry.is_reversal.is_(False),
+            )
+        ).scalars().first()
+        record_cash_flow_entry(
+            db=db,
+            account_id=sale.account_id,
+            entry_type="DEBIT",
+            amount_cents=sale.total_amount_cents,
+            category="VENDAS",
+            description=f"Estorno da Venda #{sale.sale_number}: {data.reason.strip()}",
+            nature="BUSINESS",
+            source_type="SALE",
+            source_id=sale.id,
+            payment_method=sale.payment_mode,
+            occurred_at=utc_now(),
+            is_reversal=True,
+            reversal_of_id=orig_entry.id if orig_entry else None,
+            allow_duplicate_source=True,
         )
 
     sale.status = "CANCELED"

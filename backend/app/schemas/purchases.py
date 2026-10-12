@@ -20,6 +20,9 @@ class PurchaseItemCreate(BaseModel):
 class PurchaseCreate(BaseModel):
     supplier_name: Optional[str] = Field(None, max_length=200, description="Nome ou razao social do fornecedor")
     purchase_date: Optional[datetime.datetime] = Field(None, description="Data da compra/recebimento")
+    payment_mode: str = Field(default="CASH_IMMEDIATE", description="'CASH_IMMEDIATE' ou 'CREDIT_TERM'")
+    due_date: Optional[datetime.datetime] = Field(None, description="Data de vencimento se compra a prazo (CREDIT_TERM)")
+    account_id: Optional[str] = Field(None, description="Conta financeira para pagamento se CASH_IMMEDIATE")
     notes: Optional[str] = Field(None, max_length=1000, description="Observacoes adicionais ou numero da NF-e")
     status: str = Field(default="CONFIRMED", description="'CONFIRMED' ou 'DRAFT'")
     items: List[PurchaseItemCreate] = Field(..., min_length=1, description="Lista de itens da compra")
@@ -31,6 +34,15 @@ class PurchaseCreate(BaseModel):
             v = v.strip().upper()
             if v not in ("CONFIRMED", "DRAFT"):
                 raise ValueError("Status invalido. Valores aceitos: CONFIRMED, DRAFT.")
+        return v
+
+    @field_validator("payment_mode", mode="before")
+    @classmethod
+    def validate_payment_mode(cls, v: Any) -> Any:
+        if isinstance(v, str):
+            v = v.strip().upper()
+            if v not in ("CASH_IMMEDIATE", "CREDIT_TERM"):
+                raise ValueError("payment_mode invalido. Valores aceitos: CASH_IMMEDIATE, CREDIT_TERM.")
         return v
 
     @field_validator("supplier_name", "notes", mode="before")
@@ -62,6 +74,10 @@ class PurchaseResponse(BaseModel):
     purchase_number: int
     status: str
     purchase_date: datetime.datetime
+    payment_mode: str = "CASH_IMMEDIATE"
+    due_date: Optional[datetime.datetime] = None
+    account_id: Optional[str] = None
+    payable_id: Optional[str] = None
     supplier_name: Optional[str] = None
     total_amount_cents: int
     notes: Optional[str] = None

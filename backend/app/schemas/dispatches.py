@@ -174,6 +174,7 @@ class DispatchExpenseResponse(BaseModel):
 class DispatchRepaymentCreate(BaseModel):
     amount_cents: int = Field(..., gt=0, description="Valor repassado à empresa em centavos")
     payment_method: str = Field(default="CASH", description="Forma de repasse (CASH, PIX, TRANSFER)")
+    account_id: Optional[str] = Field(None, description="Conta financeira de destino do recurso na empresa")
     received_by: Optional[str] = Field(None, description="Colaborador que recebeu o dinheiro na empresa")
     repayment_date: Optional[datetime.datetime] = Field(None, description="Data e horário do repasse")
     notes: Optional[str] = Field(None, description="Observações do repasse")
@@ -182,6 +183,7 @@ class DispatchRepaymentCreate(BaseModel):
 class DispatchRepaymentResponse(BaseModel):
     id: str
     dispatch_id: str
+    account_id: Optional[str] = None
     repayment_date: datetime.datetime
     amount_cents: int
     payment_method: str

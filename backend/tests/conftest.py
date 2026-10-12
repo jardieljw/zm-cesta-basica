@@ -35,6 +35,9 @@ def test_engine(test_db_path):
     event.listen(engine, "begin", enforce_begin_immediate)
 
     Base.metadata.create_all(bind=engine)
+    with Session(engine) as _db:
+        from app.services.financial import ensure_default_financial_account
+        ensure_default_financial_account(_db)
     yield engine
     engine.dispose()
 

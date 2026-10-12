@@ -19,7 +19,9 @@ from app.models.sales import Sale, SaleItem, ReceivablePayment
 from app.models.products import BasketType
 from app.models.production import ProductionBatch
 from app.models.movements import InventoryMovement
+from app.models.financial import FinancialAccount
 from app.models.base import utc_now
+from app.services.financial import record_cash_flow_entry, get_default_financial_account
 from app.schemas.dispatches import (
     ResponsiblePersonCreate,
     ResponsiblePersonUpdate,
@@ -700,7 +702,11 @@ def record_dispatch_expense(db: Session, dispatch_id: str, data: DispatchExpense
 
 
 def record_dispatch_repayment(db: Session, dispatch_id: str, data: DispatchRepaymentCreate) -> DispatchRepayment:
-    """Records cash repayment / handover by the responsible person to the company."""
+    """
+    Records cash repayment / handover by the responsible person to the company:
+    - Atomically registers credit entry in treasury cash_flow_entries
+    - Associates with financial account (provided or default CASH account)
+    """
     dispatch = get_dispatch(db, dispatch_id)
     if dispatch.status == "CANCELED":
         raise HTTPException(
@@ -713,10 +719,25 @@ def record_dispatch_repayment(db: Session, dispatch_id: str, data: DispatchRepay
             detail=f"Saida #{dispatch.dispatch_number} ja esta concluida e nao permite novos repasses.",
         )
 
+    target_account = None
+    if data.account_id:
+        target_account = db.get(FinancialAccount, data.account_id)
+        if not target_account or not target_account.is_active:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Conta financeira informada nao encontrada ou inativa.",
+            )
+    else:
+        target_account = get_default_financial_account(db, "CASH")
+
+    repayment_id = str(uuid.uuid4())
+    repayment_date = data.repayment_date or utc_now()
+
     repayment = DispatchRepayment(
-        id=str(uuid.uuid4()),
+        id=repayment_id,
         dispatch_id=dispatch.id,
-        repayment_date=data.repayment_date or utc_now(),
+        account_id=target_account.id if target_account else None,
+        repayment_date=repayment_date,
         amount_cents=data.amount_cents,
         payment_method=data.payment_method,
         received_by=data.received_by.strip() if data.received_by else None,
@@ -724,6 +745,24 @@ def record_dispatch_repayment(db: Session, dispatch_id: str, data: DispatchRepay
         created_at=utc_now(),
     )
     db.add(repayment)
+
+    # Post immutable credit to company treasury
+    if target_account:
+        record_cash_flow_entry(
+            db=db,
+            account_id=target_account.id,
+            entry_type="CREDIT",
+            amount_cents=data.amount_cents,
+            category="REPASSE_ROTA",
+            description=f"Repasse financeiro Saida #{dispatch.dispatch_number} ({dispatch.responsible_person.name})",
+            nature="BUSINESS",
+            source_type="DISPATCH_REPAYMENT",
+            source_id=repayment.id,
+            payment_method=data.payment_method,
+            occurred_at=repayment_date,
+            notes=data.notes,
+        )
+
     db.flush()
     return repayment
 

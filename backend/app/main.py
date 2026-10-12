@@ -30,6 +30,10 @@ async def lifespan(app: FastAPI):
 
     # Initialize database tables if not existing
     Base.metadata.create_all(bind=engine)
+    from sqlalchemy.orm import Session as _Session
+    from app.services.financial import ensure_default_financial_account
+    with _Session(engine) as _init_db:
+        ensure_default_financial_account(_init_db)
 
     yield
 

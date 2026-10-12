@@ -21,6 +21,7 @@ class Sale(Base):
     idempotency_key: Mapped[Optional[str]] = mapped_column(String(100), unique=True, nullable=True)
     dispatch_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("stock_dispatches.id"), nullable=True, index=True)
     responsible_person_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("responsible_persons.id"), nullable=True, index=True)
+    account_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("financial_accounts.id"), nullable=True, index=True)
     canceled_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime, nullable=True)
     cancellation_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
@@ -28,6 +29,7 @@ class Sale(Base):
     customer: Mapped[Optional["app.models.customers.Customer"]] = relationship("app.models.customers.Customer", back_populates="sales")
     dispatch: Mapped[Optional["app.models.dispatches.StockDispatch"]] = relationship("app.models.dispatches.StockDispatch", back_populates="sales")
     responsible_person: Mapped[Optional["app.models.dispatches.ResponsiblePerson"]] = relationship("app.models.dispatches.ResponsiblePerson")
+    financial_account: Mapped[Optional["app.models.financial.FinancialAccount"]] = relationship("app.models.financial.FinancialAccount")
     items: Mapped[List["SaleItem"]] = relationship(back_populates="sale", cascade="all, delete-orphan")
     receivable: Mapped[Optional["SalesReceivable"]] = relationship(back_populates="sale", uselist=False, cascade="all, delete-orphan")
 
@@ -77,6 +79,7 @@ class ReceivablePayment(Base):
     amount_cents: Mapped[int] = mapped_column(Integer, nullable=False)
     payment_method: Mapped[str] = mapped_column(String(50), nullable=False, default="CASH") # CASH, PIX, CARD, OTHER
     dispatch_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("stock_dispatches.id"), nullable=True, index=True)
+    account_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("financial_accounts.id"), nullable=True, index=True)
     status: Mapped[str] = mapped_column(String(20), nullable=False, default="CONFIRMED", index=True) # CONFIRMED, REVERSED
     reversal_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     reversal_of_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("receivable_payments.id"), nullable=True)
@@ -85,3 +88,4 @@ class ReceivablePayment(Base):
 
     receivable: Mapped["SalesReceivable"] = relationship(back_populates="payments")
     dispatch: Mapped[Optional["app.models.dispatches.StockDispatch"]] = relationship("app.models.dispatches.StockDispatch")
+    financial_account: Mapped[Optional["app.models.financial.FinancialAccount"]] = relationship("app.models.financial.FinancialAccount")

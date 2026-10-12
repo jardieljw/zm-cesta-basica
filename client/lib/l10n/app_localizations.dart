@@ -4245,6 +4245,648 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Saldo sob custódia: {qty}'**
   String saleCustodyStockAvailable(int qty);
+
+  /// No description provided for @homePhase7Header.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fase 7: Gestão Financeira & Tesouraria'**
+  String get homePhase7Header;
+
+  /// No description provided for @modulePayables.
+  ///
+  /// In pt, this message translates to:
+  /// **'Contas a Pagar'**
+  String get modulePayables;
+
+  /// No description provided for @homePayablesDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Boletos, cheques, empréstimos, fornecedores e parcelamentos'**
+  String get homePayablesDescription;
+
+  /// No description provided for @moduleTreasury.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tesouraria & Livro-Caixa'**
+  String get moduleTreasury;
+
+  /// No description provided for @homeTreasuryDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Caixa físico, contas bancárias, transferências e conciliação'**
+  String get homeTreasuryDescription;
+
+  /// No description provided for @payablesTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Contas a Pagar'**
+  String get payablesTitle;
+
+  /// No description provided for @payablesNew.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nova Obrigação a Pagar'**
+  String get payablesNew;
+
+  /// No description provided for @payableDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Descrição'**
+  String get payableDescription;
+
+  /// No description provided for @payableBeneficiary.
+  ///
+  /// In pt, this message translates to:
+  /// **'Favorecido / Fornecedor'**
+  String get payableBeneficiary;
+
+  /// No description provided for @payableCategory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Categoria'**
+  String get payableCategory;
+
+  /// No description provided for @payableNature.
+  ///
+  /// In pt, this message translates to:
+  /// **'Natureza'**
+  String get payableNature;
+
+  /// No description provided for @payableNatureBusiness.
+  ///
+  /// In pt, this message translates to:
+  /// **'Operacional (Empresa)'**
+  String get payableNatureBusiness;
+
+  /// No description provided for @payableNaturePersonal.
+  ///
+  /// In pt, this message translates to:
+  /// **'Retirada Particular (Sócios)'**
+  String get payableNaturePersonal;
+
+  /// No description provided for @payableOriginalAmount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor Nominal'**
+  String get payableOriginalAmount;
+
+  /// No description provided for @payablePaidAmount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor Pago'**
+  String get payablePaidAmount;
+
+  /// No description provided for @payableBalance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo Devedor'**
+  String get payableBalance;
+
+  /// No description provided for @payableDueDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vencimento'**
+  String get payableDueDate;
+
+  /// No description provided for @payablePaymentMethod.
+  ///
+  /// In pt, this message translates to:
+  /// **'Forma de Pagamento'**
+  String get payablePaymentMethod;
+
+  /// No description provided for @payableStatus.
+  ///
+  /// In pt, this message translates to:
+  /// **'Situação'**
+  String get payableStatus;
+
+  /// No description provided for @payableStatusOpen.
+  ///
+  /// In pt, this message translates to:
+  /// **'Em Aberto'**
+  String get payableStatusOpen;
+
+  /// No description provided for @payableStatusPartial.
+  ///
+  /// In pt, this message translates to:
+  /// **'Parcialmente Pago'**
+  String get payableStatusPartial;
+
+  /// No description provided for @payableStatusPaid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quitado'**
+  String get payableStatusPaid;
+
+  /// No description provided for @payableStatusCanceled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cancelado'**
+  String get payableStatusCanceled;
+
+  /// No description provided for @payableOverdue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vencido'**
+  String get payableOverdue;
+
+  /// No description provided for @payableInstallment.
+  ///
+  /// In pt, this message translates to:
+  /// **'Parcela {current} de {total}'**
+  String payableInstallment(int current, int total);
+
+  /// No description provided for @payableRecurrent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Despesa Recorrente'**
+  String get payableRecurrent;
+
+  /// No description provided for @payableRecurrenceMonthly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mensal'**
+  String get payableRecurrenceMonthly;
+
+  /// No description provided for @payableRecurrenceWeekly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Semanal'**
+  String get payableRecurrenceWeekly;
+
+  /// No description provided for @payableRecurrenceYearly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Anual'**
+  String get payableRecurrenceYearly;
+
+  /// No description provided for @payableTotalInstallments.
+  ///
+  /// In pt, this message translates to:
+  /// **'Total de Parcelas'**
+  String get payableTotalInstallments;
+
+  /// No description provided for @payablePaymentAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagar / Amortizar'**
+  String get payablePaymentAction;
+
+  /// No description provided for @payableHistoryAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Histórico de Pagamentos'**
+  String get payableHistoryAction;
+
+  /// No description provided for @payableCancelAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cancelar Obrigação'**
+  String get payableCancelAction;
+
+  /// No description provided for @payableCancelReason.
+  ///
+  /// In pt, this message translates to:
+  /// **'Motivo do cancelamento'**
+  String get payableCancelReason;
+
+  /// No description provided for @payableCancelConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar cancelamento do título'**
+  String get payableCancelConfirm;
+
+  /// No description provided for @payablePaymentSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamento registrado com sucesso'**
+  String get payablePaymentSuccess;
+
+  /// No description provided for @payableCancelSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Título cancelado com sucesso'**
+  String get payableCancelSuccess;
+
+  /// No description provided for @payableReversePaymentSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamento estornado com sucesso'**
+  String get payableReversePaymentSuccess;
+
+  /// No description provided for @payablePaymentAmountExceedsBalance.
+  ///
+  /// In pt, this message translates to:
+  /// **'O valor informado excede o saldo devedor.'**
+  String get payablePaymentAmountExceedsBalance;
+
+  /// No description provided for @payablePaymentAmountMustBePositive.
+  ///
+  /// In pt, this message translates to:
+  /// **'O valor do pagamento deve ser maior que zero.'**
+  String get payablePaymentAmountMustBePositive;
+
+  /// No description provided for @payableSelectAccount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta Financeira de Saída'**
+  String get payableSelectAccount;
+
+  /// No description provided for @payableNoPayables.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma obrigação a pagar encontrada.'**
+  String get payableNoPayables;
+
+  /// No description provided for @payableFilterMonth.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mês'**
+  String get payableFilterMonth;
+
+  /// No description provided for @payableFilterYear.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ano'**
+  String get payableFilterYear;
+
+  /// No description provided for @treasuryTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tesouraria & Conciliação'**
+  String get treasuryTitle;
+
+  /// No description provided for @treasuryTabAccounts.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldos & Contas'**
+  String get treasuryTabAccounts;
+
+  /// No description provided for @treasuryTabLedger.
+  ///
+  /// In pt, this message translates to:
+  /// **'Livro-Caixa (Extrato)'**
+  String get treasuryTabLedger;
+
+  /// No description provided for @treasuryTabSummary.
+  ///
+  /// In pt, this message translates to:
+  /// **'Visão Gerencial'**
+  String get treasuryTabSummary;
+
+  /// No description provided for @treasuryTotalAvailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo Disponível (Caixa e Bancos)'**
+  String get treasuryTotalAvailable;
+
+  /// No description provided for @treasuryCashBalance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Caixa Físico da Loja'**
+  String get treasuryCashBalance;
+
+  /// No description provided for @treasuryBankBalance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Contas Bancárias'**
+  String get treasuryBankBalance;
+
+  /// No description provided for @treasuryRouteCashPending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dinheiro em Rota (em trânsito)'**
+  String get treasuryRouteCashPending;
+
+  /// No description provided for @treasuryProjectedNet.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo Líquido Projetado'**
+  String get treasuryProjectedNet;
+
+  /// No description provided for @treasuryOpenReceivables.
+  ///
+  /// In pt, this message translates to:
+  /// **'A Receber (Fiados Pendentes)'**
+  String get treasuryOpenReceivables;
+
+  /// No description provided for @treasuryOverdueReceivables.
+  ///
+  /// In pt, this message translates to:
+  /// **'A Receber Vencidos'**
+  String get treasuryOverdueReceivables;
+
+  /// No description provided for @treasuryOpenPayables.
+  ///
+  /// In pt, this message translates to:
+  /// **'A Pagar (Obrigações Abertas)'**
+  String get treasuryOpenPayables;
+
+  /// No description provided for @treasuryOverduePayables.
+  ///
+  /// In pt, this message translates to:
+  /// **'A Pagar Vencidos'**
+  String get treasuryOverduePayables;
+
+  /// No description provided for @treasuryBusinessExpenses.
+  ///
+  /// In pt, this message translates to:
+  /// **'Despesas Operacionais (Mês)'**
+  String get treasuryBusinessExpenses;
+
+  /// No description provided for @treasuryPersonalWithdrawals.
+  ///
+  /// In pt, this message translates to:
+  /// **'Retiradas de Sócios (Mês)'**
+  String get treasuryPersonalWithdrawals;
+
+  /// No description provided for @treasuryNewAccount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nova Conta Financeira'**
+  String get treasuryNewAccount;
+
+  /// No description provided for @treasuryEditAccount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar Conta Financeira'**
+  String get treasuryEditAccount;
+
+  /// No description provided for @treasuryAccountName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome da Conta'**
+  String get treasuryAccountName;
+
+  /// No description provided for @treasuryAccountType.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tipo de Conta'**
+  String get treasuryAccountType;
+
+  /// No description provided for @treasuryTypeCash.
+  ///
+  /// In pt, this message translates to:
+  /// **'Caixa Físico'**
+  String get treasuryTypeCash;
+
+  /// No description provided for @treasuryTypeBank.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta Bancária'**
+  String get treasuryTypeBank;
+
+  /// No description provided for @treasuryTypeOther.
+  ///
+  /// In pt, this message translates to:
+  /// **'Outra Conta / Cofre'**
+  String get treasuryTypeOther;
+
+  /// No description provided for @treasuryBankName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Instituição Financeira / Banco'**
+  String get treasuryBankName;
+
+  /// No description provided for @treasuryAccountNumber.
+  ///
+  /// In pt, this message translates to:
+  /// **'Agência e Conta'**
+  String get treasuryAccountNumber;
+
+  /// No description provided for @treasuryInitialBalance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo Inicial de Abertura'**
+  String get treasuryInitialBalance;
+
+  /// No description provided for @treasuryIsDefault.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta Padrão'**
+  String get treasuryIsDefault;
+
+  /// No description provided for @treasuryTransferTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Transferência entre Contas'**
+  String get treasuryTransferTitle;
+
+  /// No description provided for @treasurySourceAccount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta de Origem (Saída)'**
+  String get treasurySourceAccount;
+
+  /// No description provided for @treasuryDestinationAccount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta de Destino (Entrada)'**
+  String get treasuryDestinationAccount;
+
+  /// No description provided for @treasuryTransferAmount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor da Transferência'**
+  String get treasuryTransferAmount;
+
+  /// No description provided for @treasuryTransferSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Transferência realizada com sucesso'**
+  String get treasuryTransferSuccess;
+
+  /// No description provided for @treasuryManualEntryTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lançamento no Livro-Caixa'**
+  String get treasuryManualEntryTitle;
+
+  /// No description provided for @treasuryEntryType.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tipo de Lançamento'**
+  String get treasuryEntryType;
+
+  /// No description provided for @treasuryEntryCredit.
+  ///
+  /// In pt, this message translates to:
+  /// **'Crédito (Entrada)'**
+  String get treasuryEntryCredit;
+
+  /// No description provided for @treasuryEntryDebit.
+  ///
+  /// In pt, this message translates to:
+  /// **'Débito (Saída)'**
+  String get treasuryEntryDebit;
+
+  /// No description provided for @treasuryEntryCategory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Categoria'**
+  String get treasuryEntryCategory;
+
+  /// No description provided for @treasuryEntryDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Descrição do Lançamento'**
+  String get treasuryEntryDescription;
+
+  /// No description provided for @treasuryEntryAmount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor'**
+  String get treasuryEntryAmount;
+
+  /// No description provided for @treasuryEntrySuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lançamento registrado com sucesso'**
+  String get treasuryEntrySuccess;
+
+  /// No description provided for @treasuryNoEntries.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma movimentação registrada no livro-caixa.'**
+  String get treasuryNoEntries;
+
+  /// No description provided for @treasuryNoAccounts.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma conta financeira cadastrada.'**
+  String get treasuryNoAccounts;
+
+  /// No description provided for @treasuryReversalBadge.
+  ///
+  /// In pt, this message translates to:
+  /// **'ESTORNO'**
+  String get treasuryReversalBadge;
+
+  /// No description provided for @treasuryImmutableNote.
+  ///
+  /// In pt, this message translates to:
+  /// **'Livro-Caixa imutável: todas as operações são estritamente append-only.'**
+  String get treasuryImmutableNote;
+
+  /// No description provided for @receivableRepassDirect.
+  ///
+  /// In pt, this message translates to:
+  /// **'Direto na Empresa / Loja'**
+  String get receivableRepassDirect;
+
+  /// No description provided for @receivableRepassPending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pendente de Repasse (Dinheiro em Rota)'**
+  String get receivableRepassPending;
+
+  /// No description provided for @receivableRepassDone.
+  ///
+  /// In pt, this message translates to:
+  /// **'Repassado e Liquidado'**
+  String get receivableRepassDone;
+
+  /// No description provided for @receivableReversePayment.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estornar Recebimento'**
+  String get receivableReversePayment;
+
+  /// No description provided for @receivableReverseReason.
+  ///
+  /// In pt, this message translates to:
+  /// **'Justificativa do estorno do recebimento'**
+  String get receivableReverseReason;
+
+  /// No description provided for @receivableReverseSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recebimento estornado com sucesso'**
+  String get receivableReverseSuccess;
+
+  /// No description provided for @payableGenerateNextRecurrence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerar Próxima Recorrência'**
+  String get payableGenerateNextRecurrence;
+
+  /// No description provided for @payableRecurrenceSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nova parcela de recorrência gerada com sucesso!'**
+  String get payableRecurrenceSuccess;
+
+  /// No description provided for @payableFilterPeriod.
+  ///
+  /// In pt, this message translates to:
+  /// **'Período de Vencimento'**
+  String get payableFilterPeriod;
+
+  /// No description provided for @payableFilterPeriodAll.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todos os períodos'**
+  String get payableFilterPeriodAll;
+
+  /// No description provided for @receivableFilterPeriod.
+  ///
+  /// In pt, this message translates to:
+  /// **'Período da Venda'**
+  String get receivableFilterPeriod;
+
+  /// No description provided for @receivableFilterDuePeriod.
+  ///
+  /// In pt, this message translates to:
+  /// **'Período do Vencimento'**
+  String get receivableFilterDuePeriod;
+
+  /// No description provided for @receivableFilterCustomer.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cliente'**
+  String get receivableFilterCustomer;
+
+  /// No description provided for @receivableFilterBasketType.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cesta'**
+  String get receivableFilterBasketType;
+
+  /// No description provided for @receivableFilterMinValue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor Mínimo'**
+  String get receivableFilterMinValue;
+
+  /// No description provided for @receivableFilterMaxValue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor Máximo'**
+  String get receivableFilterMaxValue;
+
+  /// No description provided for @receivableFilterAdvanced.
+  ///
+  /// In pt, this message translates to:
+  /// **'Filtros Avançados'**
+  String get receivableFilterAdvanced;
+
+  /// No description provided for @receivableFilterHideAdvanced.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ocultar Filtros'**
+  String get receivableFilterHideAdvanced;
+
+  /// No description provided for @receivableFilterClear.
+  ///
+  /// In pt, this message translates to:
+  /// **'Limpar Filtros'**
+  String get receivableFilterClear;
+
+  /// No description provided for @receivableFilterApply.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aplicar Filtros'**
+  String get receivableFilterApply;
 }
 
 class _AppLocalizationsDelegate

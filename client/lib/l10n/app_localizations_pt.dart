@@ -2397,4 +2397,336 @@ class AppLocalizationsPt extends AppLocalizations {
   String saleCustodyStockAvailable(int qty) {
     return 'Saldo sob custódia: $qty';
   }
+
+  @override
+  String get homePhase7Header => 'Fase 7: Gestão Financeira & Tesouraria';
+
+  @override
+  String get modulePayables => 'Contas a Pagar';
+
+  @override
+  String get homePayablesDescription =>
+      'Boletos, cheques, empréstimos, fornecedores e parcelamentos';
+
+  @override
+  String get moduleTreasury => 'Tesouraria & Livro-Caixa';
+
+  @override
+  String get homeTreasuryDescription =>
+      'Caixa físico, contas bancárias, transferências e conciliação';
+
+  @override
+  String get payablesTitle => 'Contas a Pagar';
+
+  @override
+  String get payablesNew => 'Nova Obrigação a Pagar';
+
+  @override
+  String get payableDescription => 'Descrição';
+
+  @override
+  String get payableBeneficiary => 'Favorecido / Fornecedor';
+
+  @override
+  String get payableCategory => 'Categoria';
+
+  @override
+  String get payableNature => 'Natureza';
+
+  @override
+  String get payableNatureBusiness => 'Operacional (Empresa)';
+
+  @override
+  String get payableNaturePersonal => 'Retirada Particular (Sócios)';
+
+  @override
+  String get payableOriginalAmount => 'Valor Nominal';
+
+  @override
+  String get payablePaidAmount => 'Valor Pago';
+
+  @override
+  String get payableBalance => 'Saldo Devedor';
+
+  @override
+  String get payableDueDate => 'Vencimento';
+
+  @override
+  String get payablePaymentMethod => 'Forma de Pagamento';
+
+  @override
+  String get payableStatus => 'Situação';
+
+  @override
+  String get payableStatusOpen => 'Em Aberto';
+
+  @override
+  String get payableStatusPartial => 'Parcialmente Pago';
+
+  @override
+  String get payableStatusPaid => 'Quitado';
+
+  @override
+  String get payableStatusCanceled => 'Cancelado';
+
+  @override
+  String get payableOverdue => 'Vencido';
+
+  @override
+  String payableInstallment(int current, int total) {
+    return 'Parcela $current de $total';
+  }
+
+  @override
+  String get payableRecurrent => 'Despesa Recorrente';
+
+  @override
+  String get payableRecurrenceMonthly => 'Mensal';
+
+  @override
+  String get payableRecurrenceWeekly => 'Semanal';
+
+  @override
+  String get payableRecurrenceYearly => 'Anual';
+
+  @override
+  String get payableTotalInstallments => 'Total de Parcelas';
+
+  @override
+  String get payablePaymentAction => 'Pagar / Amortizar';
+
+  @override
+  String get payableHistoryAction => 'Histórico de Pagamentos';
+
+  @override
+  String get payableCancelAction => 'Cancelar Obrigação';
+
+  @override
+  String get payableCancelReason => 'Motivo do cancelamento';
+
+  @override
+  String get payableCancelConfirm => 'Confirmar cancelamento do título';
+
+  @override
+  String get payablePaymentSuccess => 'Pagamento registrado com sucesso';
+
+  @override
+  String get payableCancelSuccess => 'Título cancelado com sucesso';
+
+  @override
+  String get payableReversePaymentSuccess => 'Pagamento estornado com sucesso';
+
+  @override
+  String get payablePaymentAmountExceedsBalance =>
+      'O valor informado excede o saldo devedor.';
+
+  @override
+  String get payablePaymentAmountMustBePositive =>
+      'O valor do pagamento deve ser maior que zero.';
+
+  @override
+  String get payableSelectAccount => 'Conta Financeira de Saída';
+
+  @override
+  String get payableNoPayables => 'Nenhuma obrigação a pagar encontrada.';
+
+  @override
+  String get payableFilterMonth => 'Mês';
+
+  @override
+  String get payableFilterYear => 'Ano';
+
+  @override
+  String get treasuryTitle => 'Tesouraria & Conciliação';
+
+  @override
+  String get treasuryTabAccounts => 'Saldos & Contas';
+
+  @override
+  String get treasuryTabLedger => 'Livro-Caixa (Extrato)';
+
+  @override
+  String get treasuryTabSummary => 'Visão Gerencial';
+
+  @override
+  String get treasuryTotalAvailable => 'Saldo Disponível (Caixa e Bancos)';
+
+  @override
+  String get treasuryCashBalance => 'Caixa Físico da Loja';
+
+  @override
+  String get treasuryBankBalance => 'Contas Bancárias';
+
+  @override
+  String get treasuryRouteCashPending => 'Dinheiro em Rota (em trânsito)';
+
+  @override
+  String get treasuryProjectedNet => 'Saldo Líquido Projetado';
+
+  @override
+  String get treasuryOpenReceivables => 'A Receber (Fiados Pendentes)';
+
+  @override
+  String get treasuryOverdueReceivables => 'A Receber Vencidos';
+
+  @override
+  String get treasuryOpenPayables => 'A Pagar (Obrigações Abertas)';
+
+  @override
+  String get treasuryOverduePayables => 'A Pagar Vencidos';
+
+  @override
+  String get treasuryBusinessExpenses => 'Despesas Operacionais (Mês)';
+
+  @override
+  String get treasuryPersonalWithdrawals => 'Retiradas de Sócios (Mês)';
+
+  @override
+  String get treasuryNewAccount => 'Nova Conta Financeira';
+
+  @override
+  String get treasuryEditAccount => 'Editar Conta Financeira';
+
+  @override
+  String get treasuryAccountName => 'Nome da Conta';
+
+  @override
+  String get treasuryAccountType => 'Tipo de Conta';
+
+  @override
+  String get treasuryTypeCash => 'Caixa Físico';
+
+  @override
+  String get treasuryTypeBank => 'Conta Bancária';
+
+  @override
+  String get treasuryTypeOther => 'Outra Conta / Cofre';
+
+  @override
+  String get treasuryBankName => 'Instituição Financeira / Banco';
+
+  @override
+  String get treasuryAccountNumber => 'Agência e Conta';
+
+  @override
+  String get treasuryInitialBalance => 'Saldo Inicial de Abertura';
+
+  @override
+  String get treasuryIsDefault => 'Conta Padrão';
+
+  @override
+  String get treasuryTransferTitle => 'Transferência entre Contas';
+
+  @override
+  String get treasurySourceAccount => 'Conta de Origem (Saída)';
+
+  @override
+  String get treasuryDestinationAccount => 'Conta de Destino (Entrada)';
+
+  @override
+  String get treasuryTransferAmount => 'Valor da Transferência';
+
+  @override
+  String get treasuryTransferSuccess => 'Transferência realizada com sucesso';
+
+  @override
+  String get treasuryManualEntryTitle => 'Lançamento no Livro-Caixa';
+
+  @override
+  String get treasuryEntryType => 'Tipo de Lançamento';
+
+  @override
+  String get treasuryEntryCredit => 'Crédito (Entrada)';
+
+  @override
+  String get treasuryEntryDebit => 'Débito (Saída)';
+
+  @override
+  String get treasuryEntryCategory => 'Categoria';
+
+  @override
+  String get treasuryEntryDescription => 'Descrição do Lançamento';
+
+  @override
+  String get treasuryEntryAmount => 'Valor';
+
+  @override
+  String get treasuryEntrySuccess => 'Lançamento registrado com sucesso';
+
+  @override
+  String get treasuryNoEntries =>
+      'Nenhuma movimentação registrada no livro-caixa.';
+
+  @override
+  String get treasuryNoAccounts => 'Nenhuma conta financeira cadastrada.';
+
+  @override
+  String get treasuryReversalBadge => 'ESTORNO';
+
+  @override
+  String get treasuryImmutableNote =>
+      'Livro-Caixa imutável: todas as operações são estritamente append-only.';
+
+  @override
+  String get receivableRepassDirect => 'Direto na Empresa / Loja';
+
+  @override
+  String get receivableRepassPending =>
+      'Pendente de Repasse (Dinheiro em Rota)';
+
+  @override
+  String get receivableRepassDone => 'Repassado e Liquidado';
+
+  @override
+  String get receivableReversePayment => 'Estornar Recebimento';
+
+  @override
+  String get receivableReverseReason =>
+      'Justificativa do estorno do recebimento';
+
+  @override
+  String get receivableReverseSuccess => 'Recebimento estornado com sucesso';
+
+  @override
+  String get payableGenerateNextRecurrence => 'Gerar Próxima Recorrência';
+
+  @override
+  String get payableRecurrenceSuccess =>
+      'Nova parcela de recorrência gerada com sucesso!';
+
+  @override
+  String get payableFilterPeriod => 'Período de Vencimento';
+
+  @override
+  String get payableFilterPeriodAll => 'Todos os períodos';
+
+  @override
+  String get receivableFilterPeriod => 'Período da Venda';
+
+  @override
+  String get receivableFilterDuePeriod => 'Período do Vencimento';
+
+  @override
+  String get receivableFilterCustomer => 'Cliente';
+
+  @override
+  String get receivableFilterBasketType => 'Cesta';
+
+  @override
+  String get receivableFilterMinValue => 'Valor Mínimo';
+
+  @override
+  String get receivableFilterMaxValue => 'Valor Máximo';
+
+  @override
+  String get receivableFilterAdvanced => 'Filtros Avançados';
+
+  @override
+  String get receivableFilterHideAdvanced => 'Ocultar Filtros';
+
+  @override
+  String get receivableFilterClear => 'Limpar Filtros';
+
+  @override
+  String get receivableFilterApply => 'Aplicar Filtros';
 }

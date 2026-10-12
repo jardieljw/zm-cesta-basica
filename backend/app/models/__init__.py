@@ -5,6 +5,7 @@ from app.models.products import Product, ProductPackaging, BasketType, RecipeVer
 from app.models.purchases import Purchase, PurchaseItem
 from app.models.production import ProductionBatch, ProductionBatchItem
 from app.models.customers import Customer
+from app.models.sales import Sale, SaleItem, SalesReceivable, ReceivablePayment
 from app.models.movements import InventoryMovement
 from app.models.dispatches import (
     ResponsiblePerson,
@@ -15,6 +16,12 @@ from app.models.dispatches import (
     DispatchExpense,
     DispatchRepayment,
     DispatchSettlement,
+)
+from app.models.financial import (
+    FinancialAccount,
+    CashFlowEntry,
+    AccountPayable,
+    PayablePayment,
 )
 
 __all__ = [
@@ -46,4 +53,8 @@ __all__ = [
     "DispatchExpense",
     "DispatchRepayment",
     "DispatchSettlement",
+    "FinancialAccount",
+    "CashFlowEntry",
+    "AccountPayable",
+    "PayablePayment",
 ]

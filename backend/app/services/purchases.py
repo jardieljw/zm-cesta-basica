@@ -9,6 +9,7 @@ from fastapi import HTTPException, status
 from app.models.purchases import Purchase, PurchaseItem
 from app.models.products import Product, ProductPackaging
 from app.models.movements import InventoryMovement
+from app.models.financial import FinancialAccount, CashFlowEntry, AccountPayable, PayablePayment
 from app.models.base import utc_now
 from app.schemas.purchases import PurchaseCreate
 from app.services.inventory import (
@@ -16,6 +17,86 @@ from app.services.inventory import (
     validate_sufficient_product_stock,
     record_inventory_movement,
 )
+from app.services.financial import (
+    record_cash_flow_entry,
+    get_default_financial_account,
+    generate_next_payable_number,
+)
+
+def _process_purchase_financial_impact(db: Session, purchase: Purchase) -> None:
+    """Handles financial impact for confirmed purchases: open payable for CREDIT_TERM or cash debit for CASH_IMMEDIATE."""
+    if purchase.payment_mode == "CREDIT_TERM":
+        p_num = generate_next_payable_number(db)
+        due = purchase.due_date or (purchase.purchase_date + datetime.timedelta(days=30))
+        payable = AccountPayable(
+            id=str(uuid.uuid4()),
+            payable_number=p_num,
+            description=f"Compra #{purchase.purchase_number}" + (f" ({purchase.supplier_name})" if purchase.supplier_name else ""),
+            beneficiary=purchase.supplier_name or "Fornecedor",
+            category="FORNECEDOR",
+            nature="BUSINESS",
+            original_amount_cents=purchase.total_amount_cents,
+            paid_amount_cents=0,
+            balance_cents=purchase.total_amount_cents,
+            due_date=due,
+            payment_method="BOLETO",
+            status="OPEN",
+            purchase_id=purchase.id,
+            installment_number=1,
+            total_installments=1,
+            created_at=utc_now(),
+            updated_at=utc_now(),
+        )
+        db.add(payable)
+    else:  # CASH_IMMEDIATE
+        target_acc = db.get(FinancialAccount, purchase.account_id) if purchase.account_id else get_default_financial_account(db, "CASH")
+        if target_acc and purchase.total_amount_cents > 0:
+            p_num = generate_next_payable_number(db)
+            payable = AccountPayable(
+                id=str(uuid.uuid4()),
+                payable_number=p_num,
+                description=f"Compra #{purchase.purchase_number}" + (f" ({purchase.supplier_name})" if purchase.supplier_name else ""),
+                beneficiary=purchase.supplier_name or "Fornecedor",
+                category="FORNECEDOR",
+                nature="BUSINESS",
+                original_amount_cents=purchase.total_amount_cents,
+                paid_amount_cents=purchase.total_amount_cents,
+                balance_cents=0,
+                due_date=purchase.purchase_date,
+                payment_method="DINHEIRO",
+                status="PAID",
+                purchase_id=purchase.id,
+                installment_number=1,
+                total_installments=1,
+                created_at=utc_now(),
+                updated_at=utc_now(),
+            )
+            db.add(payable)
+            payment = PayablePayment(
+                id=str(uuid.uuid4()),
+                payable_id=payable.id,
+                account_id=target_acc.id,
+                payment_date=purchase.purchase_date,
+                amount_cents=purchase.total_amount_cents,
+                payment_method="DINHEIRO",
+                status="CONFIRMED",
+                notes=f"Pagamento a vista na Compra #{purchase.purchase_number}",
+                created_at=utc_now(),
+            )
+            db.add(payment)
+            record_cash_flow_entry(
+                db=db,
+                account_id=target_acc.id,
+                entry_type="DEBIT",
+                amount_cents=purchase.total_amount_cents,
+                category="COMPRA_INSUMOS",
+                description=f"Pagamento a vista Compra #{purchase.purchase_number}" + (f" ({purchase.supplier_name})" if purchase.supplier_name else ""),
+                nature="BUSINESS",
+                source_type="PURCHASE",
+                source_id=purchase.id,
+                payment_method="CASH",
+                occurred_at=purchase.purchase_date,
+            )
 
 def generate_next_purchase_number(db: Session) -> int:
     """Generates the next sequential unique purchase number under active transaction."""
@@ -101,6 +182,9 @@ def create_purchase_entity(db: Session, data: PurchaseCreate) -> Purchase:
         purchase_number=purchase_number,
         status=status_str,
         purchase_date=purchase_date,
+        payment_mode=data.payment_mode.upper() if data.payment_mode else "CASH_IMMEDIATE",
+        due_date=data.due_date,
+        account_id=data.account_id,
         supplier_name=data.supplier_name.strip() if data.supplier_name else None,
         total_amount_cents=0,
         notes=data.notes.strip() if data.notes else None,
@@ -198,6 +282,9 @@ def create_purchase_entity(db: Session, data: PurchaseCreate) -> Purchase:
             if prod:
                 update_product_cost_price(db, prod, pkg, it.unit_price_cents, it.quantity_in_base_units, it.total_price_cents)
 
+        # Process financial impact (open payable if credit, cash flow debit if cash immediate)
+        _process_purchase_financial_impact(db, purchase)
+
     db.flush()
     return purchase
 
@@ -245,6 +332,9 @@ def confirm_purchase_entity(db: Session, purchase_id: str) -> Purchase:
         if product:
             update_product_cost_price(db, product, pkg, it.unit_price_cents, it.quantity_in_base_units, it.total_price_cents)
 
+    # Process financial impact (open payable if credit, cash flow debit if cash immediate)
+    _process_purchase_financial_impact(db, purchase)
+
     db.flush()
     return purchase
 
@@ -255,6 +345,7 @@ def cancel_purchase_entity(
     Cancels a purchase. If CONFIRMED, strictly verifies current live stock is sufficient
     for all products before posting reverse movements (PURCHASE_CANCEL).
     Rejects with HTTP 409 if any product has insufficient stock, preventing negative inventory.
+    Reverses linked open payables or debits in cash flow.
     """
     purchase = db.execute(
         select(Purchase).options(selectinload(Purchase.items)).where(Purchase.id == purchase_id)
@@ -325,6 +416,48 @@ def cancel_purchase_entity(
             occurred_at=utc_now(),
         )
         reversal_count += 1
+
+    # Check and reverse all linked AccountPayable titles and cash entries
+    linked_payables = list(db.execute(
+        select(AccountPayable).options(selectinload(AccountPayable.payments)).where(AccountPayable.purchase_id == purchase.id)
+    ).scalars().all())
+
+    for linked_payable in linked_payables:
+        if linked_payable.status == "OPEN" and linked_payable.paid_amount_cents == 0:
+            linked_payable.status = "CANCELED"
+            linked_payable.balance_cents = 0
+            linked_payable.updated_at = utc_now()
+        elif linked_payable.status in ["PAID", "PARTIAL"]:
+            # Reverse confirmed payments in treasury
+            for pay in linked_payable.payments:
+                if pay.status == "CONFIRMED":
+                    pay.status = "REVERSED"
+                    pay.reversal_reason = f"Estorno automatico por cancelamento da compra #{purchase.purchase_number}"
+                    orig_entry = db.execute(
+                        select(CashFlowEntry).where(
+                            CashFlowEntry.source_type.in_(["PAYABLE_PAYMENT", "PURCHASE"]),
+                            CashFlowEntry.source_id.in_([pay.id, purchase.id]),
+                            CashFlowEntry.is_reversal.is_(False),
+                        )
+                    ).scalars().first()
+                    record_cash_flow_entry(
+                        db=db,
+                        account_id=pay.account_id,
+                        entry_type="CREDIT",
+                        amount_cents=pay.amount_cents,
+                        category="COMPRA_INSUMOS",
+                        description=f"Estorno por cancelamento da Compra #{purchase.purchase_number}",
+                        nature="BUSINESS",
+                        source_type="PURCHASE",
+                        source_id=purchase.id,
+                        is_reversal=True,
+                        reversal_of_id=orig_entry.id if orig_entry else None,
+                        occurred_at=utc_now(),
+                        allow_duplicate_source=True,
+                    )
+            linked_payable.status = "CANCELED"
+            linked_payable.balance_cents = 0
+            linked_payable.updated_at = utc_now()
 
     db.flush()
     return purchase, reversal_count

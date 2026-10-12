@@ -159,6 +159,33 @@ class ApiClient {
     }
   }
 
+  Future<dynamic> patch(
+    String path, {
+    dynamic body,
+    String? idempotencyKey,
+    bool isMutation = true,
+  }) async {
+    final client = await _getClient();
+    final baseUrl = await _getBaseUrl();
+    final uri = Uri.parse('$baseUrl$path');
+    final headers = await _buildHeaders(
+      isMutation: isMutation,
+      customIdempotencyKey: idempotencyKey,
+    );
+
+    final encodedBody = body != null ? json.encode(body) : null;
+
+    try {
+      final response = await client.patch(uri, headers: headers, body: encodedBody);
+      return _processResponse(response);
+    } on SocketException catch (e) {
+      throw ApiException(
+        statusCode: 0,
+        message: 'Nao foi possivel conectar ao servidor local: ${e.message}',
+      );
+    }
+  }
+
   Future<dynamic> delete(String path, {bool isMutation = true}) async {
     final client = await _getClient();
     final baseUrl = await _getBaseUrl();

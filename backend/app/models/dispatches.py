@@ -113,11 +113,13 @@ class DispatchRepayment(Base):
     repayment_date: Mapped[datetime.datetime] = mapped_column(DateTime, default=utc_now, nullable=False, index=True)
     amount_cents: Mapped[int] = mapped_column(Integer, nullable=False)
     payment_method: Mapped[str] = mapped_column(String(50), default="CASH", nullable=False)
+    account_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("financial_accounts.id"), nullable=True, index=True)
     received_by: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=utc_now, nullable=False)
 
     dispatch: Mapped["StockDispatch"] = relationship(back_populates="repayments")
+    financial_account: Mapped[Optional["app.models.financial.FinancialAccount"]] = relationship("app.models.financial.FinancialAccount")
 
 
 class DispatchSettlement(Base):
