@@ -122,5 +122,73 @@ void main() {
       expect(bytes25, isNotEmpty);
       expect(bytes25.length, greaterThan(1000));
     });
+
+    test('buildReportPdf sanitizes Unicode punctuation without throwing PdfException', () async {
+      final unicodeReport = ReportResponse(
+        metadata: ReportMetadata(
+          reportType: 'sales-dispatches',
+          title: 'Relatório “Oficial” – Teste de Pontuação … Especial',
+          companyName: 'ZM Cesta Básica — Matriz',
+          generatedAt: DateTime.parse('2026-10-12T14:30:00Z'),
+          filterInfo: FilterInfo(filterType: 'all', label: 'Item • com marcadores \u00A0'),
+          totalRows: 1,
+        ),
+        headers: ['Operação', 'Descrição “Item”', 'Observação – Rota'],
+        columns: ['operation', 'description', 'notes'],
+        rows: [
+          {
+            'operation': 'Venda – Balcão',
+            'description': 'Cesta “Família” Especial …',
+            'notes': 'Entregue • Sem divergência \u2014 Confirmado',
+          },
+        ],
+        totals: {},
+      );
+
+      final bytes = await ReportPdfBuilder.buildReportPdf(unicodeReport);
+      expect(bytes, isNotEmpty);
+      expect(utf8.decode(bytes.sublist(0, 5)), '%PDF-');
+    });
+
+    test('buildReportPdf formats audit-type reports with audit signature layout', () async {
+      final auditReport = ReportResponse(
+        metadata: ReportMetadata(
+          reportType: 'audit-dispatch_conference',
+          title: 'Folha de Conferência de Saídas de Cestas (Auditoria Física)',
+          companyName: 'ZM Cesta Básica',
+          generatedAt: DateTime.now(),
+          filterInfo: FilterInfo(filterType: 'all', label: 'Auditoria de Prancheta'),
+          totalRows: 2,
+        ),
+        headers: ['Nº Carga', 'Responsável', 'Qtd Saída', 'Qtd Vendida', 'Custódia', 'Visto'],
+        columns: ['dispatch_number', 'responsible', 'qty_dispatched', 'qty_sold', 'qty_custody', 'signature'],
+        rows: [
+          {
+            'dispatch_number': 'Saída #101',
+            'responsible': 'Carlos Motorista',
+            'qty_dispatched': 50,
+            'qty_sold': 45,
+            'qty_custody': 5,
+            'signature': 'PENDING_INVESTIGATION',
+          },
+        ],
+        totals: {
+          'qty_dispatched': 50,
+          'qty_sold': 45,
+        },
+      );
+
+      final bytes = await ReportPdfBuilder.buildReportPdf(auditReport, isLandscape: true);
+      expect(bytes, isNotEmpty);
+      expect(utf8.decode(bytes.sublist(0, 5)), '%PDF-');
+    });
+
+    test('formatTotalLabel returns friendly Portuguese labels', () {
+      expect(ReportPdfBuilder.formatTotalLabel('quantity'), 'Qtd Total');
+      expect(ReportPdfBuilder.formatTotalLabel('total_price_cents'), 'Valor Total');
+      expect(ReportPdfBuilder.formatTotalLabel('balance_cents'), 'Saldo em Aberto');
+      expect(ReportPdfBuilder.formatTotalLabel('qty_dispatched'), 'Qtd Retirada');
+      expect(ReportPdfBuilder.formatTotalLabel('custom_unknown_key'), 'custom_unknown_key');
+    });
   });
 }

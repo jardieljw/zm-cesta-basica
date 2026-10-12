@@ -645,13 +645,16 @@ def get_report_sales_dispatches(
         sales_q = sales_q.filter(Sale.sale_mode == sale_mode)
     sales = sales_q.order_by(Sale.sale_date.desc()).all()
 
-    # 2. Dispatches
-    disp_q = db.query(StockDispatch).filter(StockDispatch.status != "CANCELED")
-    if start_dt and end_dt:
-        disp_q = disp_q.filter(StockDispatch.dispatch_date >= start_dt, StockDispatch.dispatch_date <= end_dt)
-    if responsible_id:
-        disp_q = disp_q.filter(StockDispatch.responsible_person_id == responsible_id)
-    dispatches = disp_q.order_by(StockDispatch.dispatch_date.desc()).all()
+    # 2. Dispatches (only when not filtering specifically by customer or sale_mode)
+    if customer_id or sale_mode:
+        dispatches = []
+    else:
+        disp_q = db.query(StockDispatch).filter(StockDispatch.status != "CANCELED")
+        if start_dt and end_dt:
+            disp_q = disp_q.filter(StockDispatch.dispatch_date >= start_dt, StockDispatch.dispatch_date <= end_dt)
+        if responsible_id:
+            disp_q = disp_q.filter(StockDispatch.responsible_person_id == responsible_id)
+        dispatches = disp_q.order_by(StockDispatch.dispatch_date.desc()).all()
 
     headers = [
         "Data/Hora", "Tipo de Operação", "Referência", "Cliente / Responsável",
@@ -672,6 +675,20 @@ def get_report_sales_dispatches(
     for s in sales:
         party = s.customer.name if s.customer else (s.customer_name or "Consumidor Final")
         op_type = "Venda Balcão" if s.sale_mode == "DIRECT_STORE" else "Venda em Rota"
+        if not s.items and not basket_type_id:
+            total_sold_cents += s.total_amount_cents
+            rows.append({
+                "date": s.sale_date,
+                "operation_type": op_type,
+                "reference": f"Venda #{s.sale_number}",
+                "party": party,
+                "basket_name": "-",
+                "quantity": 1,
+                "unit_price_cents": s.total_amount_cents,
+                "total_price_cents": s.total_amount_cents,
+                "payment_info": s.payment_mode,
+                "status": s.status,
+            })
         for it in s.items:
             if basket_type_id and it.basket_type_id != basket_type_id:
                 continue
@@ -692,6 +709,19 @@ def get_report_sales_dispatches(
 
     for d in dispatches:
         party = d.responsible_person.name if d.responsible_person else "Responsável"
+        if not d.items and not basket_type_id:
+            rows.append({
+                "date": d.dispatch_date,
+                "operation_type": "Saída Custódia",
+                "reference": f"Saída #{d.dispatch_number}",
+                "party": party,
+                "basket_name": "-",
+                "quantity": 0,
+                "unit_price_cents": 0,
+                "total_price_cents": 0,
+                "payment_info": "Custódia",
+                "status": d.status,
+            })
         for it in d.items:
             if basket_type_id and it.basket_type_id != basket_type_id:
                 continue
@@ -1061,7 +1091,6 @@ def get_report_dispatch_settlements(
     for d in dispatches:
         resp_name = d.responsible_person.name if d.responsible_person else "Responsável"
         total_disp = sum(it.quantity for it in d.items)
-        tot_disp += total_disp
 
         settlement = d.settlements[0] if d.settlements else None
         if settlement:
@@ -1079,7 +1108,7 @@ def get_report_dispatch_settlements(
             q_sold = sum(it.quantity for s in d.sales for it in s.items if s.status == "CONFIRMED")
             q_ret = sum(r.quantity for r in d.returns)
             q_lost = sum(l.quantity for l in d.losses)
-            q_cust = total_disp - (q_sold + q_ret + q_lost)
+            q_cust = max(0, total_disp - (q_sold + q_ret + q_lost))
             q_diff = 0
             cash_sales = sum(
                 s.total_amount_cents
@@ -1097,13 +1126,14 @@ def get_report_dispatch_settlements(
             )
             st = d.status
 
+        if status_filter and st != status_filter:
+            continue
+
+        tot_disp += total_disp
         tot_sold += q_sold
         tot_ret += q_ret
         tot_repaid += c_rep
         tot_diff += c_diff
-
-        if status_filter and st != status_filter:
-            continue
 
         rows.append({
             "dispatch_number": f"Saída #{d.dispatch_number}",
@@ -1194,8 +1224,8 @@ def get_report_physical_inventory(
             "status": status,
         })
 
-    # Add Basket types
-    if not category or category.lower() in ["cesta", "cestas"]:
+    # Add Basket types (only when not filtering for below minimum)
+    if not only_below_min and (not category or category.lower() in ["cesta", "cestas"]):
         basket_types = db.query(BasketType).filter(BasketType.is_active == True).order_by(BasketType.name.asc()).all()
         for bt in basket_types:
             b_stock = db.query(func.coalesce(func.sum(InventoryMovement.quantity_delta), 0)).filter(
@@ -1284,14 +1314,20 @@ def get_report_financial_summary(
         func.coalesce(func.sum(FinancialAccount.current_balance_cents), 0)
     ).filter(FinancialAccount.is_active == True).scalar() or 0
 
-    open_rec_cents = sum(
-        r.balance_cents
-        for r in db.query(SalesReceivable).filter(SalesReceivable.status.in_(["OPEN", "PARTIAL"])).all()
-    )
-    open_pay_cents = sum(
-        p.balance_cents
-        for p in db.query(AccountPayable).filter(AccountPayable.status.in_(["OPEN", "PARTIAL"])).all()
-    )
+    # Filter receivables and payables due within the period
+    proj_rec_query = db.query(SalesReceivable).filter(SalesReceivable.status.in_(["OPEN", "PARTIAL"]))
+    proj_pay_query = db.query(AccountPayable).filter(AccountPayable.status.in_(["OPEN", "PARTIAL"]))
+    if start_dt and end_dt:
+        proj_rec_query = proj_rec_query.filter(
+            SalesReceivable.due_date >= start_dt,
+            SalesReceivable.due_date <= end_dt
+        )
+        proj_pay_query = proj_pay_query.filter(
+            AccountPayable.due_date >= start_dt,
+            AccountPayable.due_date <= end_dt
+        )
+    open_rec_cents = sum(r.balance_cents for r in proj_rec_query.all())
+    open_pay_cents = sum(p.balance_cents for p in proj_pay_query.all())
     projected_balance_cents = current_balance_cents + open_rec_cents - open_pay_cents
 
     headers = ["Indicador Gerencial / Financeiro", "Classificação", "Valor (R$)", "Observação"]
@@ -1475,22 +1511,30 @@ def get_blank_form_data(
                 settlement = d.settlements[0] if d.settlements else None
                 for it in d.items:
                     b_name = it.basket_type.name if it.basket_type else "Cesta"
-                    custom_desc = "Personalizada" if (it.production_batch and it.production_batch.is_custom) else "Padrão"
-                    if settlement:
-                        q_sold = settlement.total_sold_qty
-                        q_ret = settlement.total_returned_qty
-                        q_lost = settlement.total_lost_qty
-                        q_cust = settlement.total_remaining_custody_qty
-                        sig = settlement.status
-                    else:
-                        q_sold = sum(s_it.quantity for s in d.sales for s_it in s.items if s.status == "CONFIRMED")
-                        q_ret = sum(r.quantity for r in d.returns)
-                        q_lost = sum(l.quantity for l in d.losses)
-                        q_cust = it.quantity - (q_sold + q_ret + q_lost)
-                        sig = d.status
+                    # Basket-specific metrics
+                    q_sold_item = sum(
+                        s_it.quantity
+                        for s in d.sales
+                        if s.status == "CONFIRMED"
+                        for s_it in s.items
+                        if s_it.basket_type_id == it.basket_type_id
+                    )
+                    q_ret_item = sum(
+                        r.quantity
+                        for r in d.returns
+                        if r.basket_type_id == it.basket_type_id
+                    )
+                    q_lost_item = sum(
+                        l.quantity
+                        for l in d.losses
+                        if l.basket_type_id == it.basket_type_id
+                    )
+                    q_cust_item = max(0, it.quantity - (q_sold_item + q_ret_item + q_lost_item))
+                    sig = settlement.status if settlement else d.status
+                    custom_desc = it.notes or ("Personalizada" if (it.production_batch and it.production_batch.is_custom) else "-")
 
                     tot_disp += it.quantity
-                    tot_sold += q_sold
+                    tot_sold += q_sold_item
                     rows.append({
                         "date_time": d.dispatch_date,
                         "responsible": resp_name,
@@ -1498,10 +1542,10 @@ def get_blank_form_data(
                         "qty_dispatched": it.quantity,
                         "unit_price_cents": it.unit_price_cents,
                         "customizations": custom_desc,
-                        "qty_sold": q_sold,
-                        "qty_returned": q_ret,
-                        "qty_lost": q_lost,
-                        "qty_custody": q_cust,
+                        "qty_sold": q_sold_item,
+                        "qty_returned": q_ret_item,
+                        "qty_lost": q_lost_item,
+                        "qty_custody": q_cust_item,
                         "signature": sig,
                     })
             totals = {

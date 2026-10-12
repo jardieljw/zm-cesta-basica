@@ -6,11 +6,63 @@ import '../models/report.dart';
 
 class ReportPdfBuilder {
   static final _currencyFormat = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
-  static final _dateFormat = DateFormat('dd/MM/yyyy HH:mm');
+  static final _dateTimeFormat = DateFormat('dd/MM/yyyy HH:mm');
+  static final _dateFormat = DateFormat('dd/MM/yyyy');
+
+  /// Cleans and sanitizes strings to be safe for Helvetica/Standard-14 PDF fonts.
+  /// Translates common Unicode punctuation to safe ASCII equivalents.
+  static String _cleanText(String input) {
+    if (input.isEmpty) return input;
+    var text = input
+        .replaceAll('\u2013', '-')
+        .replaceAll('\u2014', '--')
+        .replaceAll('\u2018', "'")
+        .replaceAll('\u2019', "'")
+        .replaceAll('\u201C', '"')
+        .replaceAll('\u201D', '"')
+        .replaceAll('\u2022', '*')
+        .replaceAll('\u2026', '...')
+        .replaceAll('\u00A0', ' ')
+        .replaceAll('•', '*')
+        .replaceAll('–', '-')
+        .replaceAll('—', '--')
+        .replaceAll('“', '"')
+        .replaceAll('”', '"')
+        .replaceAll('’', "'")
+        .replaceAll('‘', "'");
+
+    final runes = text.runes.map((r) => r <= 255 ? r : 0x3F).toList();
+    return String.fromCharCodes(runes);
+  }
+
+  /// Translates snake_case database total keys into human-readable Portuguese labels.
+  static String formatTotalLabel(String key) {
+    const labels = {
+      'quantity': 'Qtd Total',
+      'total_price_cents': 'Valor Total',
+      'quantity_produced': 'Qtd Produzida',
+      'total_cost_cents': 'Custo Total',
+      'quantity_delta': 'Variação Líquida',
+      'original_amount_cents': 'Valor Original',
+      'paid_amount_cents': 'Valor Pago',
+      'balance_cents': 'Saldo em Aberto',
+      'qty_dispatched': 'Qtd Retirada',
+      'qty_sold': 'Qtd Vendida',
+      'qty_returned': 'Qtd Devolvida',
+      'repaid_cash_cents': 'Total Repassado',
+      'cash_discrepancy_cents': 'Diferença Caixa',
+      'total_stock_value_cents': 'Valor Total Estoque',
+      'amount_cents': 'Resultado Líquido',
+      'total_cents': 'Valor Total',
+      'received_cents': 'Valor Recebido',
+    };
+    return labels[key] ?? key;
+  }
 
   static String _formatCell(dynamic value, String colName) {
     if (value == null) return '';
-    if (colName.endsWith('_cents') || colName.contains('valor') || colName.contains('preco') || colName.contains('total')) {
+    final colLower = colName.toLowerCase();
+    if (colLower.endsWith('_cents') || colLower.contains('valor') || colLower.contains('preco')) {
       if (value is int) {
         return _currencyFormat.format(value / 100.0);
       } else if (value is double) {
@@ -18,9 +70,21 @@ class ReportPdfBuilder {
       }
     }
     if (value is DateTime) {
-      return _dateFormat.format(value);
+      if (value.hour == 0 && value.minute == 0) {
+        return _dateFormat.format(value);
+      }
+      return _dateTimeFormat.format(value);
     }
-    return value.toString();
+    if (value is String && (colLower.contains('date') || colLower.contains('data') || colLower.contains('at') || colLower.contains('vencimento'))) {
+      final parsed = DateTime.tryParse(value);
+      if (parsed != null) {
+        if (parsed.hour == 0 && parsed.minute == 0 && !value.contains('T')) {
+          return _dateFormat.format(parsed);
+        }
+        return _dateTimeFormat.format(parsed);
+      }
+    }
+    return _cleanText(value.toString());
   }
 
   /// Builds a paginated A4 PDF for any of the 8 canonical filled reports.
@@ -30,6 +94,38 @@ class ReportPdfBuilder {
   }) async {
     final pdf = pw.Document();
     final pageFormat = isLandscape ? PdfPageFormat.a4.landscape : PdfPageFormat.a4;
+
+    // Calculate column alignments
+    final cellAlignments = <int, pw.AlignmentGeometry>{};
+    final headerAlignments = <int, pw.AlignmentGeometry>{};
+    for (var i = 0; i < report.columns.length; i++) {
+      final col = report.columns[i].toLowerCase();
+      if (col.endsWith('_cents') ||
+          col.contains('valor') ||
+          col.contains('preco') ||
+          col.contains('qty') ||
+          col.contains('quantity') ||
+          col.contains('delta') ||
+          col.contains('stock') ||
+          col.contains('saldo')) {
+        cellAlignments[i] = pw.Alignment.centerRight;
+        headerAlignments[i] = pw.Alignment.centerRight;
+      } else if (col.contains('date') ||
+          col.contains('data') ||
+          col.contains('at') ||
+          col.contains('vencimento') ||
+          col.contains('status') ||
+          col.contains('sig') ||
+          col.contains('is_')) {
+        cellAlignments[i] = pw.Alignment.center;
+        headerAlignments[i] = pw.Alignment.center;
+      } else {
+        cellAlignments[i] = pw.Alignment.centerLeft;
+        headerAlignments[i] = pw.Alignment.centerLeft;
+      }
+    }
+
+    final sanitizedHeaders = report.headers.map(_cleanText).toList();
 
     pdf.addPage(
       pw.MultiPage(
@@ -48,7 +144,7 @@ class ReportPdfBuilder {
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
                     pw.Text(
-                      report.metadata.companyName.toUpperCase(),
+                      _cleanText(report.metadata.companyName.toUpperCase()),
                       style: const pw.TextStyle(
                         fontSize: 10,
                         fontWeight: pw.FontWeight.bold,
@@ -56,7 +152,7 @@ class ReportPdfBuilder {
                       ),
                     ),
                     pw.Text(
-                      report.metadata.title,
+                      _cleanText(report.metadata.title),
                       style: const pw.TextStyle(
                         fontSize: 14,
                         fontWeight: pw.FontWeight.bold,
@@ -64,7 +160,7 @@ class ReportPdfBuilder {
                       ),
                     ),
                     pw.Text(
-                      'Filtro: ${report.metadata.filterInfo.label}',
+                      _cleanText('Filtro: ${report.metadata.filterInfo.label}'),
                       style: const pw.TextStyle(
                         fontSize: 9,
                         color: PdfColors.grey800,
@@ -76,7 +172,7 @@ class ReportPdfBuilder {
                   crossAxisAlignment: pw.CrossAxisAlignment.end,
                   children: [
                     pw.Text(
-                      'Emissão: ${_dateFormat.format(report.metadata.generatedAt)}',
+                      'Emissão: ${_dateTimeFormat.format(report.metadata.generatedAt)}',
                       style: const pw.TextStyle(fontSize: 8, color: PdfColors.grey700),
                     ),
                     if (context.pageNumber > 1)
@@ -115,7 +211,7 @@ class ReportPdfBuilder {
           return [
             pw.SizedBox(height: 12),
             pw.TableHelper.fromTextArray(
-              headers: report.headers,
+              headers: sanitizedHeaders,
               data: report.rows.map((row) {
                 return report.columns.map((col) => _formatCell(row[col], col)).toList();
               }).toList(),
@@ -131,8 +227,12 @@ class ReportPdfBuilder {
               cellStyle: pw.TextStyle(
                 fontSize: isLandscape ? 7.5 : 7,
               ),
-              cellAlignment: pw.Alignment.centerLeft,
-              cellPadding: const pw.EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+              cellAlignments: cellAlignments,
+              headerAlignments: headerAlignments,
+              cellPadding: pw.EdgeInsets.symmetric(
+                horizontal: 4,
+                vertical: report.metadata.reportType.startsWith('audit-') ? 6 : 4,
+              ),
             ),
             if (report.totals.isNotEmpty) ...[
               pw.SizedBox(height: 8),
@@ -154,7 +254,7 @@ class ReportPdfBuilder {
                         return pw.Padding(
                           padding: const pw.EdgeInsets.only(left: 16),
                           child: pw.Text(
-                            '${entry.key}: ${_formatCell(entry.value, entry.key)}',
+                            '${formatTotalLabel(entry.key)}: ${_formatCell(entry.value, entry.key)}',
                             style: const pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9),
                           ),
                         );
@@ -162,6 +262,28 @@ class ReportPdfBuilder {
                     ),
                   ],
                 ),
+              ),
+            ],
+            if (report.metadata.reportType.startsWith('audit-')) ...[
+              pw.SizedBox(height: 20),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
+                children: [
+                  pw.Column(
+                    children: [
+                      pw.Container(width: 180, height: 1, color: PdfColors.black),
+                      pw.SizedBox(height: 3),
+                      pw.Text('Assinatura do Responsável', style: const pw.TextStyle(fontSize: 8)),
+                    ],
+                  ),
+                  pw.Column(
+                    children: [
+                      pw.Container(width: 180, height: 1, color: PdfColors.black),
+                      pw.SizedBox(height: 3),
+                      pw.Text('Visto do Conferente / Auditor', style: const pw.TextStyle(fontSize: 8)),
+                    ],
+                  ),
+                ],
               ),
             ],
           ];
@@ -180,6 +302,7 @@ class ReportPdfBuilder {
   }) async {
     final pdf = pw.Document();
     final pageFormat = isLandscape ? PdfPageFormat.a4.landscape : PdfPageFormat.a4;
+    final sanitizedHeaders = blankReport.headers.map(_cleanText).toList();
 
     pdf.addPage(
       pw.MultiPage(
@@ -202,7 +325,7 @@ class ReportPdfBuilder {
                       style: const pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold),
                     ),
                     pw.Text(
-                      blankReport.metadata.title,
+                      _cleanText(blankReport.metadata.title),
                       style: const pw.TextStyle(fontSize: 13, fontWeight: pw.FontWeight.bold),
                     ),
                     pw.Text(
@@ -266,13 +389,13 @@ class ReportPdfBuilder {
           // Generate empty row data
           final emptyRows = List.generate(
             blankRowCount,
-            (_) => List.generate(blankReport.headers.length, (_) => ''),
+            (_) => List.generate(sanitizedHeaders.length, (_) => ''),
           );
 
           return [
             pw.SizedBox(height: 10),
             pw.TableHelper.fromTextArray(
-              headers: blankReport.headers,
+              headers: sanitizedHeaders,
               data: emptyRows,
               border: pw.TableBorder.all(color: PdfColors.black, width: 0.8),
               headerStyle: pw.TextStyle(

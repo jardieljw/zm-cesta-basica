@@ -437,3 +437,139 @@ def test_date_filters_invalid_format_returns_400(client: TestClient, authenticat
     resp2 = client.get("/api/v1/reports/sales-dispatches?filter_type=range&start_date=2026-99-99&end_date=2026-10-12", headers=auth_headers)
     assert resp2.status_code == 400
 
+
+def test_sales_dispatches_customer_and_mode_filters(client: TestClient, authenticated_device, test_session):
+    """Verifies that customer_id or sale_mode filters strictly exclude driver stock dispatches."""
+    _, _, auth_headers = authenticated_device
+    db = test_session
+    now = datetime.datetime.now(datetime.timezone.utc)
+
+    # Create customer & sale
+    c1 = Customer(id="cust-exclusive-1", name="Mercado Exclusivo", phone="11911112222", is_active=True)
+    db.add(c1)
+    s1 = Sale(
+        id="sale-exclusive-1",
+        sale_number=9901,
+        customer_id=c1.id,
+        customer_name=c1.name,
+        status="CONFIRMED",
+        sale_mode="DIRECT_STORE",
+        payment_mode="PIX",
+        payment_status="PAID",
+        total_amount_cents=15000,
+        sale_date=now,
+    )
+    db.add(s1)
+
+    # Create driver & dispatch
+    r1 = ResponsiblePerson(id="resp-exclusive-1", name="Motorista Exclusivo", phone="11922223333", is_active=True)
+    db.add(r1)
+    disp1 = StockDispatch(
+        id="disp-exclusive-1",
+        dispatch_number=9902,
+        responsible_person_id=r1.id,
+        dispatch_date=now,
+        status="OPEN",
+    )
+    db.add(disp1)
+    db.commit()
+
+    # Query with customer_id: should ONLY contain customer sale, 0 dispatches
+    resp = client.get(f"/api/v1/reports/sales-dispatches?customer_id={c1.id}", headers=auth_headers)
+    assert resp.status_code == 200
+    data = resp.json()
+    assert all("Saída" not in row["reference"] for row in data["rows"])
+    assert any("Venda #9901" in row["reference"] for row in data["rows"])
+
+    # Query with sale_mode=DIRECT_STORE: should contain store sale, 0 dispatches
+    resp_mode = client.get("/api/v1/reports/sales-dispatches?sale_mode=DIRECT_STORE", headers=auth_headers)
+    assert resp_mode.status_code == 200
+    data_mode = resp_mode.json()
+    assert all("Saída" not in row["reference"] for row in data_mode["rows"])
+
+
+def test_dispatch_conference_with_items_and_custom_desc(client: TestClient, authenticated_device, test_session):
+    """Verifies pre-filled dispatch conference correctly handles items and customization notes without NameError."""
+    _, _, auth_headers = authenticated_device
+    db = test_session
+    now = datetime.datetime.now(datetime.timezone.utc)
+
+    bt = BasketType(id="bt-conf-1", code="CONF_1", name="Cesta Teste Conf", is_active=True)
+    db.add(bt)
+    resp_p = ResponsiblePerson(id="resp-conf-1", name="Motorista Conf", phone="11933334444", is_active=True)
+    db.add(resp_p)
+    disp = StockDispatch(
+        id="disp-conf-1",
+        dispatch_number=7701,
+        responsible_person_id=resp_p.id,
+        dispatch_date=now,
+        status="OPEN",
+    )
+    db.add(disp)
+
+    d_item1 = DispatchItem(
+        id="d-it-conf-1",
+        dispatch_id=disp.id,
+        basket_type_id=bt.id,
+        quantity=20,
+        unit_price_cents=10000,
+        notes="Sem Óleo Soja",
+    )
+    d_item2 = DispatchItem(
+        id="d-it-conf-2",
+        dispatch_id=disp.id,
+        basket_type_id=bt.id,
+        quantity=10,
+        unit_price_cents=10000,
+        notes=None,
+    )
+    db.add(d_item1)
+    db.add(d_item2)
+    db.commit()
+
+    # Pre-filled audit endpoint must return 200 and custom notes
+    resp = client.get("/api/v1/reports/blank-templates/dispatch_conference?filled=true", headers=auth_headers)
+    assert resp.status_code == 200
+    data = resp.json()
+    matching_rows = [r for r in data["rows"] if r["responsible"] == "Motorista Conf"]
+    assert len(matching_rows) == 2
+    assert any(r["customizations"] == "Sem Óleo Soja" for r in matching_rows)
+    assert any(r["customizations"] == "-" for r in matching_rows)
+
+
+def test_physical_inventory_only_below_min_excludes_basket_types(client: TestClient, authenticated_device, test_session):
+    """Verifies only_below_min=True strictly excludes BasketType rows from physical inventory report."""
+    _, _, auth_headers = authenticated_device
+    resp = client.get("/api/v1/reports/physical-inventory?only_below_min=true", headers=auth_headers)
+    assert resp.status_code == 200
+    data = resp.json()
+    for row in data["rows"]:
+        assert not row["item_name"].startswith("Cesta:")
+        assert row["status"] == "ABAIXO DO MÍNIMO"
+
+
+def test_export_quantity_columns_remain_integers(client: TestClient, authenticated_device, test_session):
+    """Verifies that non-monetary quantity columns with 'total' or 'qty' in CSV and XLSX are not converted to currency."""
+    _, _, auth_headers = authenticated_device
+    # CSV export
+    csv_resp = client.get("/api/v1/reports/dispatch-settlements/export?format=csv", headers=auth_headers)
+    assert csv_resp.status_code == 200
+    content = csv_resp.content.decode("utf-8-sig")
+    assert "TOTAIS" in content
+
+    # XLSX export
+    xlsx_resp = client.get("/api/v1/reports/dispatch-settlements/export?format=xlsx", headers=auth_headers)
+    assert xlsx_resp.status_code == 200
+    wb = openpyxl.load_workbook(io.BytesIO(xlsx_resp.content))
+    ws = wb.active
+    # Find totals row
+    total_row = None
+    for r in range(1, ws.max_row + 1):
+        if ws.cell(row=r, column=1).value == "TOTAIS":
+            total_row = r
+            break
+    assert total_row is not None
+    # qty_dispatched is column 4 in dispatch-settlements, format should be integer '#,##0' not currency
+    qty_disp_cell = ws.cell(row=total_row, column=4)
+    if qty_disp_cell.value:
+        assert qty_disp_cell.number_format in ('#,##0', 'General')

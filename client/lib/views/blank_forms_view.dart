@@ -4,6 +4,7 @@ import 'package:printing/printing.dart';
 import '../models/report.dart';
 import '../services/reports_service.dart';
 import '../utils/report_pdf_builder.dart';
+import '../utils/formatters.dart';
 import '../utils/api_error_mapper.dart';
 import '../l10n/l10n_extension.dart';
 import 'pdf_viewer_screen.dart';
@@ -438,7 +439,11 @@ class _BlankFormsViewState extends State<BlankFormsView> {
                   columns: report.headers.map((h) => DataColumn(label: Text(h, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)))).toList(),
                   rows: report.rows.take(5).map((r) {
                     return DataRow(
-                      cells: report.columns.map((c) => DataCell(Text(r[c]?.toString() ?? '', style: const TextStyle(fontSize: 11)))).toList(),
+                      cells: report.columns.map((c) {
+                        final val = r[c];
+                        final display = _formatPreviewCell(val, c);
+                        return DataCell(Text(display, style: const TextStyle(fontSize: 11)));
+                      }).toList(),
                     );
                   }).toList(),
                 ),
@@ -448,5 +453,22 @@ class _BlankFormsViewState extends State<BlankFormsView> {
         ),
       ),
     );
+  }
+
+  String _formatPreviewCell(dynamic val, String col) {
+    if (val == null) return '';
+    final colLower = col.toLowerCase();
+    if (colLower.endsWith('_cents') || colLower.contains('valor') || colLower.contains('preco')) {
+      if (val is int) return AppFormatters.formatCurrency(val);
+      if (val is double) return AppFormatters.formatCurrency((val * 100).round());
+    }
+    if (val is DateTime) return AppFormatters.formatDateTime(val);
+    if (val is String && (colLower.contains('date') || colLower.contains('data') || colLower.contains('at') || colLower.contains('vencimento'))) {
+      final parsed = DateTime.tryParse(val);
+      if (parsed != null) {
+        return val.contains('T') ? AppFormatters.formatDateTime(parsed) : AppFormatters.formatDate(parsed);
+      }
+    }
+    return val.toString();
   }
 }

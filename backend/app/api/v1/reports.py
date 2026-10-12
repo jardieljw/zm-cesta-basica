@@ -244,6 +244,10 @@ def export_report(
     category: Optional[str] = Query(None),
     status: Optional[str] = Query(None),
     nature: Optional[str] = Query(None),
+    sale_mode: Optional[str] = Query(None),
+    is_custom: Optional[bool] = Query(None),
+    movement_type: Optional[str] = Query(None),
+    only_below_min: bool = Query(False),
     db: Session = Depends(get_db),
     device: PairedDevice = Depends(get_current_device),
 ):
@@ -262,17 +266,19 @@ def export_report(
         report_data = get_report_sales_dispatches(
             db=db, filter_type=filter_type, date_str=date, start_date_str=start_date,
             end_date_str=end_date, month=month, year=year, basket_type_id=basket_type_id,
-            customer_id=customer_id, responsible_id=responsible_id
+            customer_id=customer_id, responsible_id=responsible_id, sale_mode=sale_mode,
         )
     elif report_type == "assembly":
         report_data = get_report_assembly(
             db=db, filter_type=filter_type, date_str=date, start_date_str=start_date,
-            end_date_str=end_date, month=month, year=year, basket_type_id=basket_type_id
+            end_date_str=end_date, month=month, year=year, basket_type_id=basket_type_id,
+            is_custom=is_custom,
         )
     elif report_type == "purchases-movements":
         report_data = get_report_purchases_movements(
             db=db, filter_type=filter_type, date_str=date, start_date_str=start_date,
-            end_date_str=end_date, month=month, year=year, product_id=product_id
+            end_date_str=end_date, month=month, year=year, product_id=product_id,
+            movement_type=movement_type,
         )
     elif report_type == "receivables":
         report_data = get_report_receivables(
@@ -291,7 +297,7 @@ def export_report(
         )
     elif report_type == "physical-inventory":
         report_data = get_report_physical_inventory(
-            db=db, category=category
+            db=db, category=category, only_below_min=only_below_min,
         )
     elif report_type == "financial-summary":
         report_data = get_report_financial_summary(

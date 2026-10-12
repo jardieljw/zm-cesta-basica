@@ -169,11 +169,21 @@ class _ReportsViewState extends State<ReportsView> {
 
   String _formatCellValue(dynamic value, String col) {
     if (value == null) return '';
-    if (col.endsWith('_cents') || col.contains('valor') || col.contains('preco') || col.contains('total')) {
+    final colLower = col.toLowerCase();
+    if (colLower.endsWith('_cents') || colLower.contains('valor') || colLower.contains('preco')) {
       if (value is int) {
         return AppFormatters.formatCurrency(value);
       } else if (value is double) {
         return AppFormatters.formatCurrency((value * 100).round());
+      }
+    }
+    if (value is DateTime) {
+      return AppFormatters.formatDateTime(value);
+    }
+    if (value is String && (colLower.contains('date') || colLower.contains('data') || colLower.contains('at') || colLower.contains('vencimento'))) {
+      final parsed = DateTime.tryParse(value);
+      if (parsed != null) {
+        return value.contains('T') ? AppFormatters.formatDateTime(parsed) : AppFormatters.formatDate(parsed);
       }
     }
     return value.toString();
@@ -671,7 +681,7 @@ class _ReportsViewState extends State<ReportsView> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '${entry.key}: ',
+                      '${ReportPdfBuilder.formatTotalLabel(entry.key)}: ',
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                     ),
                     Text(

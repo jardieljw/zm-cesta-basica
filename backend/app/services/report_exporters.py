@@ -37,7 +37,7 @@ def export_report_to_csv(report: ReportResponse) -> bytes:
         for col in report.columns:
             val = row.get(col, "")
             if isinstance(val, (int, float)):
-                if col.endswith("_cents") or "valor" in col or "preco" in col or "total" in col:
+                if col.endswith("_cents") or "valor" in col or "preco" in col:
                     # Currency field
                     row_values.append(f"{(val / 100.0):.2f}".replace(".", ","))
                 else:
@@ -224,9 +224,14 @@ def export_blank_template_to_xlsx(template_type: str, report: Optional[ReportRes
         bottom=Side(style="double", color="34495E")
     )
 
+    has_real_data = bool(
+        report
+        and report.metadata.report_type.startswith("audit-")
+        and len(report.rows) > 0
+    )
     templates = {
         "payments": {
-            "title": "Tabela de Pagamentos de Cestas (Auditoria e Conferência Física)" if (report and any(any(r.values()) for r in report.rows)) else "Tabela de Pagamentos de Cestas (Formulário em Branco)",
+            "title": "Tabela de Pagamentos de Cestas (Auditoria e Conferência Física)" if has_real_data else "Tabela de Pagamentos de Cestas (Formulário em Branco)",
             "headers": [
                 "Data Venda", "Cliente / Identificação", "Tipo de Cesta", "Qtd",
                 "Valor Total (R$)", "Data Prevista", "Data Pagamento", "Valor Recebido (R$)",
@@ -235,7 +240,7 @@ def export_blank_template_to_xlsx(template_type: str, report: Optional[ReportRes
             "sheet_name": "Pagamentos Cestas"
         },
         "payables": {
-            "title": "Tabela de Contas a Pagar (Auditoria e Conferência Física)" if (report and any(any(r.values()) for r in report.rows)) else "Tabela de Contas a Pagar (Formulário em Branco)",
+            "title": "Tabela de Contas a Pagar (Auditoria e Conferência Física)" if has_real_data else "Tabela de Contas a Pagar (Formulário em Branco)",
             "headers": [
                 "Descrição da Obrigação", "Beneficiário / Fornecedor", "Categoria", "Valor (R$)",
                 "Data Vencimento", "Data Pagamento", "Forma Pagamento", "Quitação / Visto", "Observações / NF"
@@ -243,7 +248,7 @@ def export_blank_template_to_xlsx(template_type: str, report: Optional[ReportRes
             "sheet_name": "Contas a Pagar"
         },
         "dispatch_conference": {
-            "title": "Folha de Conferência de Saídas de Cestas (Auditoria Física)" if (report and any(any(r.values()) for r in report.rows)) else "Folha de Conferência de Saídas de Cestas (Formulário em Branco)",
+            "title": "Folha de Conferência de Saídas de Cestas (Auditoria Física)" if has_real_data else "Folha de Conferência de Saídas de Cestas (Formulário em Branco)",
             "headers": [
                 "Data / Horário", "Responsável", "Tipo de Cesta", "Qtd Retirada", "Preço Unit. (R$)",
                 "Personalizações", "Vendidas", "Devolvidas", "Avariadas", "Custódia", "Visto Conferência"
@@ -251,7 +256,7 @@ def export_blank_template_to_xlsx(template_type: str, report: Optional[ReportRes
             "sheet_name": "Conferência Saídas"
         },
         "physical_inventory": {
-            "title": "Folha de Contagem Física de Estoque (Auditoria e Balanço)" if (report and any(any(r.values()) for r in report.rows)) else "Folha de Contagem Física de Estoque (Formulário em Branco)",
+            "title": "Folha de Contagem Física de Estoque (Auditoria e Balanço)" if has_real_data else "Folha de Contagem Física de Estoque (Formulário em Branco)",
             "headers": [
                 "Produto / Cesta", "Unidade", "Saldo Sistema", "Quantidade Física (Contada)",
                 "Diferença (+/-)", "Observações e Justificativa", "Assinatura / Visto"
@@ -286,8 +291,6 @@ def export_blank_template_to_xlsx(template_type: str, report: Optional[ReportRes
 
     curr_row_idx = header_row_idx + 1
 
-    has_real_data = report and any(any(r.values()) for r in report.rows)
-
     if has_real_data:
         # Populate real rows
         for r_idx, row in enumerate(report.rows):
@@ -303,7 +306,7 @@ def export_blank_template_to_xlsx(template_type: str, report: Optional[ReportRes
                 cell.border = thin_border
                 val = cell.value
 
-                if col.endswith("_cents") or "valor" in col or "preco" in col or "total" in col:
+                if col.endswith("_cents") or "valor" in col or "preco" in col:
                     if isinstance(val, (int, float)) and val != "":
                         cell.value = val / 100.0
                         cell.number_format = '"R$" #,##0.00'
@@ -341,7 +344,7 @@ def export_blank_template_to_xlsx(template_type: str, report: Optional[ReportRes
                 cell.fill = total_fill
                 cell.border = total_border
                 val = cell.value
-                if col.endswith("_cents") or "valor" in col:
+                if col.endswith("_cents") or "valor" in col or "preco" in col:
                     if isinstance(val, (int, float)):
                         cell.value = val / 100.0
                         cell.number_format = '"R$" #,##0.00'
