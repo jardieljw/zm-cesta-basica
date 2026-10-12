@@ -25,6 +25,7 @@ from app.schemas.dispatches import (
     ResponsiblePersonUpdate,
     ResponsiblePersonCustodyResponse,
     CustodyBasketBalance,
+    DispatchItemCreate,
     StockDispatchCreate,
     DispatchReturnCreate,
     DispatchLossCreate,
@@ -187,8 +188,42 @@ def create_dispatch(db: Session, data: StockDispatchCreate) -> StockDispatch:
             detail=f"Pessoa responsavel '{person.name}' esta inativa no cadastro.",
         )
 
-    # 1. Validate stock sufficiency in STORE for all items prior to mutation
+    # 1. Consolidate items with same (basket_type_id, production_batch_id) to avoid duplicate lines and prevent stock overdraft
+    consolidated_items_dict: Dict[Tuple[str, Optional[str]], DispatchItemCreate] = {}
     for item in data.items:
+        key = (item.basket_type_id, item.production_batch_id)
+        if key in consolidated_items_dict:
+            existing = consolidated_items_dict[key]
+            merged_qty = existing.quantity + item.quantity
+            existing_notes = (existing.notes or "").strip()
+            item_notes = (item.notes or "").strip()
+            merged_notes = None
+            if existing_notes and item_notes:
+                merged_notes = f"{existing_notes}; {item_notes}"
+            elif existing_notes:
+                merged_notes = existing_notes
+            elif item_notes:
+                merged_notes = item_notes
+
+            unit_price = (
+                item.unit_price_cents
+                if (item.unit_price_cents and item.unit_price_cents > 0)
+                else existing.unit_price_cents
+            )
+            consolidated_items_dict[key] = DispatchItemCreate(
+                basket_type_id=item.basket_type_id,
+                production_batch_id=item.production_batch_id,
+                quantity=merged_qty,
+                unit_price_cents=unit_price,
+                notes=merged_notes,
+            )
+        else:
+            consolidated_items_dict[key] = item
+
+    items_to_process = list(consolidated_items_dict.values())
+
+    # 2. Validate stock sufficiency in STORE for all consolidated items prior to mutation
+    for item in items_to_process:
         bt = db.get(BasketType, item.basket_type_id)
         if not bt:
             raise HTTPException(
@@ -259,7 +294,7 @@ def create_dispatch(db: Session, data: StockDispatchCreate) -> StockDispatch:
     db.add(dispatch)
 
     dispatch_items: List[DispatchItem] = []
-    for item in data.items:
+    for item in items_to_process:
         bt = db.get(BasketType, item.basket_type_id)
         unit_price = item.unit_price_cents if (item.unit_price_cents and item.unit_price_cents > 0) else 0
 

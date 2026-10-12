@@ -1163,6 +1163,29 @@ class _DispatchConferenceViewState extends State<DispatchConferenceView> {
                         rec.pendingCashCents > 0 ? Colors.orange.shade900 : Colors.grey.shade700,
                         isBold: true,
                       ),
+                      if (rec.expectedCashCents < 0) ...[
+                        const SizedBox(height: 10),
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: Colors.amber.shade50,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: Colors.amber.shade400),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.info_outline, size: 20, color: Colors.amber.shade900),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  'As despesas autorizadas superaram as vendas em dinheiro da rota. Saldo credor ao entregador / ressarcimento pela empresa.',
+                                  style: TextStyle(fontSize: 12, color: Colors.amber.shade900, fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                       const Divider(height: 16),
 
                       // Direct company account segregation notice

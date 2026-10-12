@@ -253,21 +253,32 @@ def post_dispatch_return(
     data: DispatchReturnCreate,
     db: Session = Depends(get_db),
     device: PairedDevice = Depends(get_current_device),
+    idempotency_key: Optional[str] = Depends(get_idempotency_key),
 ):
     """Registra devolução física de cestas intactas de volta ao estoque da loja."""
-    ret = record_dispatch_return(db, dispatch_id, data)
-    db.commit()
-    return DispatchReturnResponse(
-        id=ret.id,
-        dispatch_id=ret.dispatch_id,
-        basket_type_id=ret.basket_type_id,
-        basket_type_name=ret.basket_type.name if ret.basket_type else None,
-        production_batch_id=ret.production_batch_id,
-        quantity=ret.quantity,
-        returned_at=ret.returned_at,
-        notes=ret.notes,
-        created_at=ret.created_at,
+    def callback(session: Session):
+        ret = record_dispatch_return(session, dispatch_id, data)
+        resp = DispatchReturnResponse(
+            id=ret.id,
+            dispatch_id=ret.dispatch_id,
+            basket_type_id=ret.basket_type_id,
+            basket_type_name=ret.basket_type.name if ret.basket_type else None,
+            production_batch_id=ret.production_batch_id,
+            quantity=ret.quantity,
+            returned_at=ret.returned_at,
+            notes=ret.notes,
+            created_at=ret.created_at,
+        ).model_dump(mode="json")
+        return status.HTTP_201_CREATED, resp
+
+    result = process_transactional_idempotency(
+        db=db,
+        idempotency_key=idempotency_key,
+        operation_type="DISPATCH_RETURN",
+        payload={"dispatch_id": dispatch_id, **data.model_dump(mode="json")},
+        business_callback=callback,
     )
+    return JSONResponse(status_code=result.status_code, content=result.to_json_dict())
 
 
 @router.post("/{dispatch_id}/losses", response_model=DispatchLossResponse, status_code=status.HTTP_201_CREATED)
@@ -276,21 +287,32 @@ def post_dispatch_loss(
     data: DispatchLossCreate,
     db: Session = Depends(get_db),
     device: PairedDevice = Depends(get_current_device),
+    idempotency_key: Optional[str] = Depends(get_idempotency_key),
 ):
     """Registra avaria ou perda operacional de cestas durante o trânsito com justificativa obrigatória."""
-    loss = record_dispatch_loss(db, dispatch_id, data)
-    db.commit()
-    return DispatchLossResponse(
-        id=loss.id,
-        dispatch_id=loss.dispatch_id,
-        basket_type_id=loss.basket_type_id,
-        basket_type_name=loss.basket_type.name if loss.basket_type else None,
-        production_batch_id=loss.production_batch_id,
-        quantity=loss.quantity,
-        occurred_at=loss.occurred_at,
-        reason=loss.reason,
-        created_at=loss.created_at,
+    def callback(session: Session):
+        loss = record_dispatch_loss(session, dispatch_id, data)
+        resp = DispatchLossResponse(
+            id=loss.id,
+            dispatch_id=loss.dispatch_id,
+            basket_type_id=loss.basket_type_id,
+            basket_type_name=loss.basket_type.name if loss.basket_type else None,
+            production_batch_id=loss.production_batch_id,
+            quantity=loss.quantity,
+            occurred_at=loss.occurred_at,
+            reason=loss.reason,
+            created_at=loss.created_at,
+        ).model_dump(mode="json")
+        return status.HTTP_201_CREATED, resp
+
+    result = process_transactional_idempotency(
+        db=db,
+        idempotency_key=idempotency_key,
+        operation_type="DISPATCH_LOSS",
+        payload={"dispatch_id": dispatch_id, **data.model_dump(mode="json")},
+        business_callback=callback,
     )
+    return JSONResponse(status_code=result.status_code, content=result.to_json_dict())
 
 
 # ==================== EXPENSES & REPAYMENTS ====================
@@ -301,11 +323,22 @@ def post_dispatch_expense(
     data: DispatchExpenseCreate,
     db: Session = Depends(get_db),
     device: PairedDevice = Depends(get_current_device),
+    idempotency_key: Optional[str] = Depends(get_idempotency_key),
 ):
     """Registra despesa de rota autorizada que abate do dinheiro esperado em mãos."""
-    expense = record_dispatch_expense(db, dispatch_id, data)
-    db.commit()
-    return DispatchExpenseResponse.model_validate(expense)
+    def callback(session: Session):
+        expense = record_dispatch_expense(session, dispatch_id, data)
+        resp = DispatchExpenseResponse.model_validate(expense).model_dump(mode="json")
+        return status.HTTP_201_CREATED, resp
+
+    result = process_transactional_idempotency(
+        db=db,
+        idempotency_key=idempotency_key,
+        operation_type="DISPATCH_EXPENSE",
+        payload={"dispatch_id": dispatch_id, **data.model_dump(mode="json")},
+        business_callback=callback,
+    )
+    return JSONResponse(status_code=result.status_code, content=result.to_json_dict())
 
 
 @router.post("/{dispatch_id}/repayments", response_model=DispatchRepaymentResponse, status_code=status.HTTP_201_CREATED)
@@ -314,11 +347,22 @@ def post_dispatch_repayment(
     data: DispatchRepaymentCreate,
     db: Session = Depends(get_db),
     device: PairedDevice = Depends(get_current_device),
+    idempotency_key: Optional[str] = Depends(get_idempotency_key),
 ):
     """Registra repasse financeiro de dinheiro entregue pelo responsável à empresa."""
-    repayment = record_dispatch_repayment(db, dispatch_id, data)
-    db.commit()
-    return DispatchRepaymentResponse.model_validate(repayment)
+    def callback(session: Session):
+        repayment = record_dispatch_repayment(session, dispatch_id, data)
+        resp = DispatchRepaymentResponse.model_validate(repayment).model_dump(mode="json")
+        return status.HTTP_201_CREATED, resp
+
+    result = process_transactional_idempotency(
+        db=db,
+        idempotency_key=idempotency_key,
+        operation_type="DISPATCH_REPAYMENT",
+        payload={"dispatch_id": dispatch_id, **data.model_dump(mode="json")},
+        business_callback=callback,
+    )
+    return JSONResponse(status_code=result.status_code, content=result.to_json_dict())
 
 
 # ==================== RECONCILIATION & SETTLEMENT ====================
@@ -344,15 +388,26 @@ def post_dispatch_settlement(
     data: DispatchSettlementCreate,
     db: Session = Depends(get_db),
     device: PairedDevice = Depends(get_current_device),
+    idempotency_key: Optional[str] = Depends(get_idempotency_key),
 ):
     """
     Realiza o fechamento operacional / conferência formal da saída física:
     - Se todas as quantidades e valores baterem sem divergências, conclui a saída.
     - Se houver divergências não justificadas, registra como PENDING_INVESTIGATION sem mascarar dados.
     """
-    settlement = execute_dispatch_settlement(db, dispatch_id, data)
-    db.commit()
-    return DispatchSettlementResponse.model_validate(settlement)
+    def callback(session: Session):
+        settlement = execute_dispatch_settlement(session, dispatch_id, data)
+        resp = DispatchSettlementResponse.model_validate(settlement).model_dump(mode="json")
+        return status.HTTP_201_CREATED, resp
+
+    result = process_transactional_idempotency(
+        db=db,
+        idempotency_key=idempotency_key,
+        operation_type="DISPATCH_SETTLEMENT",
+        payload={"dispatch_id": dispatch_id, **data.model_dump(mode="json")},
+        business_callback=callback,
+    )
+    return JSONResponse(status_code=result.status_code, content=result.to_json_dict())
 
 
 @router.put("/{dispatch_id}/settlement/investigation", response_model=DispatchSettlementResponse)

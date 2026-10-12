@@ -700,3 +700,338 @@ def test_idempotency_dispatch_creation(client: TestClient, authenticated_device)
     # Custody should be exactly 4, NOT 8!
     custody_res = client.get(f"/api/v1/dispatches/responsible-persons/{person_id}/custody", headers=headers)
     assert custody_res.json()["total_custody_baskets"] == 4
+
+
+def test_route_expense_exceeding_cash_sales_and_investigation_resolution(client: TestClient, authenticated_device):
+    """
+    Edge Case 1: Route expense exceeding total cash sales:
+    - Expected cash becomes negative (credit balance in favor of driver).
+    - Pending cash is negative.
+    - Repayment dialog / driver does not make positive repayments for negative debt.
+    - Closing triggers PENDING_INVESTIGATION due to deliberate divergence.
+    - Documenting company reimbursement and marking as resolved transitions to CONCLUDED.
+    """
+    _, _, headers = authenticated_device
+    basket_id = _setup_test_basket_and_stock(client, headers, initial_stock=10)
+
+    p_res = client.post(
+        "/api/v1/dispatches/responsible-persons",
+        json={"name": "Carlos Despesa Rota"},
+        headers=headers,
+    )
+    person_id = p_res.json()["id"]
+
+    # Dispatch 5 baskets
+    disp_res = client.post(
+        "/api/v1/dispatches",
+        json={
+            "responsible_person_id": person_id,
+            "items": [{"basket_type_id": basket_id, "quantity": 5, "unit_price_cents": 5000}],
+        },
+        headers=headers,
+    )
+    assert disp_res.status_code == 201
+    dispatch_id = disp_res.json()["id"]
+
+    # 1. Driver sells 1 basket for cash R$ 50,00 (5000 cents)
+    sale_res = client.post(
+        "/api/v1/sales",
+        json={
+            "sale_mode": "COMMERCIAL_ROUTE",
+            "dispatch_id": dispatch_id,
+            "payment_mode": "CASH_IMMEDIATE",
+            "items": [{"basket_type_id": basket_id, "quantity": 1, "unit_price_cents": 5000}],
+        },
+        headers=headers,
+    )
+    assert sale_res.status_code == 201
+
+    # 2. Driver records emergency route expense of R$ 120,00 (12000 cents) - Exceeds cash sales!
+    exp_res = client.post(
+        f"/api/v1/dispatches/{dispatch_id}/expenses",
+        json={
+            "amount_cents": 12000,
+            "description": "Combustível de emergência e reparo pneu",
+            "receipt_ref": "NF-99882",
+            "authorized_by": "Gerente Operações",
+        },
+        headers=headers,
+    )
+    assert exp_res.status_code == 201
+
+    # Return remaining 4 baskets intact
+    ret_res = client.post(
+        f"/api/v1/dispatches/{dispatch_id}/returns",
+        json={"basket_type_id": basket_id, "quantity": 4},
+        headers=headers,
+    )
+    assert ret_res.status_code == 201
+
+    # 3. Check reconciliation balances:
+    recon_res = client.get(f"/api/v1/dispatches/{dispatch_id}/reconciliation", headers=headers)
+    assert recon_res.status_code == 200
+    recon = recon_res.json()
+
+    assert recon["cash_sales_cents"] == 5000
+    assert recon["expenses_cents"] == 12000
+    # Expected cash MUST be negative: 5000 - 12000 = -7000 cents (-R$ 70,00)
+    assert recon["expected_cash_cents"] == -7000
+    assert recon["actual_repaid_cash_cents"] == 0
+    assert recon["pending_cash_cents"] == -7000
+    # Divergence is actual (0) - expected (-7000) = +7000 cents
+    assert recon["cash_discrepancy_cents"] == 7000
+    assert recon["has_cash_discrepancy"] is True
+    # Physical equation is fully balanced: 5 dispatched = 1 sold + 4 returned
+    assert recon["basket_discrepancy_qty"] == 0
+    assert recon["has_basket_discrepancy"] is False
+
+    # 4. Attempt settlement: since cash discrepancy exists, MUST transition to PENDING_INVESTIGATION
+    settle_res = client.post(
+        f"/api/v1/dispatches/{dispatch_id}/settlement",
+        json={
+            "audited_by": "Auditora Juliana",
+            "notes": "Despesa comprovada superou vendas em dinheiro. Saldo credor ao motorista.",
+            "investigation_notes": "Aguardando reembolso de R$ 70,00 pela tesouraria",
+        },
+        headers=headers,
+    )
+    assert settle_res.status_code == 201
+    settle = settle_res.json()
+    assert settle["status"] == "PENDING_INVESTIGATION"
+
+    # Dispatch remains OPEN
+    disp_check = client.get(f"/api/v1/dispatches/{dispatch_id}", headers=headers).json()
+    assert disp_check["status"] == "OPEN"
+
+    # 5. Resolve investigation formally
+    invest_res = client.put(
+        f"/api/v1/dispatches/{dispatch_id}/settlement/investigation",
+        json={
+            "investigation_notes": "Tesouraria efetuou Pix de reembolso de R$ 70,00 ao entregador. Comprovante #77123 anexado.",
+            "mark_as_resolved": True,
+        },
+        headers=headers,
+    )
+    assert invest_res.status_code == 200
+    invest = invest_res.json()
+    assert invest["status"] == "RESOLVED"
+    assert "Comprovante #77123" in invest["investigation_notes"]
+
+    # Dispatch transitions to CONCLUDED
+    disp_concluded = client.get(f"/api/v1/dispatches/{dispatch_id}", headers=headers).json()
+    assert disp_concluded["status"] == "CONCLUDED"
+
+
+def test_multiple_consecutive_partial_returns_and_route_sales(client: TestClient, authenticated_device):
+    """
+    Edge Case 2: Consecutive partial returns and route sales with idempotency:
+    - 15 baskets dispatched.
+    - Partial return 1 (4 intact) -> custody 11.
+    - Route sale 1 (3 sold) -> custody 8.
+    - Partial return 2 (3 intact) with X-Idempotency-Key -> custody 5.
+    - Replay identical return with same key -> exact replay without double return.
+    - Route sale 2 (4 sold) -> custody 1.
+    - Partial return 3 (1 intact) -> custody 0.
+    - Attempt return with empty custody -> rejected with HTTP 409 INSUFFICIENT_STOCK.
+    - Full 4-term reconciliation check.
+    """
+    _, _, headers = authenticated_device
+    basket_id = _setup_test_basket_and_stock(client, headers, initial_stock=20)
+
+    p_res = client.post(
+        "/api/v1/dispatches/responsible-persons",
+        json={"name": "Marcos Retornos Multiplos"},
+        headers=headers,
+    )
+    person_id = p_res.json()["id"]
+
+    # Dispatch 15 baskets
+    disp_res = client.post(
+        "/api/v1/dispatches",
+        json={
+            "responsible_person_id": person_id,
+            "items": [{"basket_type_id": basket_id, "quantity": 15, "unit_price_cents": 10000}],
+        },
+        headers=headers,
+    )
+    dispatch_id = disp_res.json()["id"]
+
+    # Partial return 1: 4 intact baskets
+    ret1 = client.post(
+        f"/api/v1/dispatches/{dispatch_id}/returns",
+        json={"basket_type_id": basket_id, "quantity": 4},
+        headers=headers,
+    )
+    assert ret1.status_code == 201
+
+    custody1 = client.get(f"/api/v1/dispatches/responsible-persons/{person_id}/custody", headers=headers).json()
+    assert custody1["total_custody_baskets"] == 11
+
+    # Route sale 1: 3 baskets
+    sale1 = client.post(
+        "/api/v1/sales",
+        json={
+            "sale_mode": "COMMERCIAL_ROUTE",
+            "dispatch_id": dispatch_id,
+            "payment_mode": "CASH_IMMEDIATE",
+            "items": [{"basket_type_id": basket_id, "quantity": 3, "unit_price_cents": 10000}],
+        },
+        headers=headers,
+    )
+    assert sale1.status_code == 201
+
+    custody2 = client.get(f"/api/v1/dispatches/responsible-persons/{person_id}/custody", headers=headers).json()
+    assert custody2["total_custody_baskets"] == 8
+
+    # Partial return 2 with idempotency: 3 intact baskets
+    ret2_key = f"ret2-{uuid.uuid4().hex}"
+    ret2_headers = {**headers, "X-Idempotency-Key": ret2_key}
+    ret2 = client.post(
+        f"/api/v1/dispatches/{dispatch_id}/returns",
+        json={"basket_type_id": basket_id, "quantity": 3, "notes": "Segundo retorno parcial"},
+        headers=ret2_headers,
+    )
+    assert ret2.status_code == 201
+    ret2_data = ret2.json()
+
+    # Replay identical return request with same idempotency key
+    ret2_replay = client.post(
+        f"/api/v1/dispatches/{dispatch_id}/returns",
+        json={"basket_type_id": basket_id, "quantity": 3, "notes": "Segundo retorno parcial"},
+        headers=ret2_headers,
+    )
+    assert ret2_replay.status_code == 201
+    assert ret2_replay.json()["id"] == ret2_data["id"]
+
+    # Custody must be 8 - 3 = 5, NOT 8 - 6 = 2!
+    custody3 = client.get(f"/api/v1/dispatches/responsible-persons/{person_id}/custody", headers=headers).json()
+    assert custody3["total_custody_baskets"] == 5
+
+    # Route sale 2: 4 baskets
+    sale2 = client.post(
+        "/api/v1/sales",
+        json={
+            "sale_mode": "COMMERCIAL_ROUTE",
+            "dispatch_id": dispatch_id,
+            "payment_mode": "CASH_IMMEDIATE",
+            "items": [{"basket_type_id": basket_id, "quantity": 4, "unit_price_cents": 10000}],
+        },
+        headers=headers,
+    )
+    assert sale2.status_code == 201
+
+    custody4 = client.get(f"/api/v1/dispatches/responsible-persons/{person_id}/custody", headers=headers).json()
+    assert custody4["total_custody_baskets"] == 1
+
+    # Partial return 3: 1 intact basket
+    ret3 = client.post(
+        f"/api/v1/dispatches/{dispatch_id}/returns",
+        json={"basket_type_id": basket_id, "quantity": 1},
+        headers=headers,
+    )
+    assert ret3.status_code == 201
+
+    custody5 = client.get(f"/api/v1/dispatches/responsible-persons/{person_id}/custody", headers=headers).json()
+    assert custody5["total_custody_baskets"] == 0
+
+    # Attempt 4th return when custody is 0 -> MUST raise 409 INSUFFICIENT_STOCK
+    ret_fail = client.post(
+        f"/api/v1/dispatches/{dispatch_id}/returns",
+        json={"basket_type_id": basket_id, "quantity": 1},
+        headers=headers,
+    )
+    assert ret_fail.status_code == 409
+    assert ret_fail.json()["detail"]["error_code"] == "INSUFFICIENT_STOCK"
+
+    # Repay full cash (7 baskets * 10000 = 70000 cents)
+    client.post(
+        f"/api/v1/dispatches/{dispatch_id}/repayments",
+        json={"amount_cents": 70000},
+        headers=headers,
+    )
+
+    # Validate 4-term physical and financial equation
+    recon = client.get(f"/api/v1/dispatches/{dispatch_id}/reconciliation", headers=headers).json()
+    assert recon["total_dispatched_qty"] == 15
+    assert recon["total_sold_qty"] == 7
+    assert recon["total_returned_qty"] == 8
+    assert recon["total_lost_qty"] == 0
+    assert recon["total_remaining_custody_qty"] == 0
+    assert recon["basket_discrepancy_qty"] == 0
+    assert recon["expected_cash_cents"] == 70000
+    assert recon["actual_repaid_cash_cents"] == 70000
+    assert recon["pending_cash_cents"] == 0
+    assert recon["cash_discrepancy_cents"] == 0
+    assert recon["has_basket_discrepancy"] is False
+    assert recon["has_cash_discrepancy"] is False
+
+    # Settlement succeeds as RESOLVED and CONCLUDED
+    settle = client.post(
+        f"/api/v1/dispatches/{dispatch_id}/settlement",
+        json={"audited_by": "Auditor Chefe"},
+        headers=headers,
+    )
+    assert settle.status_code == 201
+    assert settle.json()["status"] == "RESOLVED"
+
+    disp_final = client.get(f"/api/v1/dispatches/{dispatch_id}", headers=headers).json()
+    assert disp_final["status"] == "CONCLUDED"
+
+
+def test_dispatch_creation_with_duplicate_basket_lines_consolidation(client: TestClient, authenticated_device):
+    """
+    Edge Case 3: Dispatch creation with multiple lines for the same basket type:
+    - Automatically consolidates into a single item with summed quantities and combined notes.
+    - Accurately checks aggregate store stock sufficiency, preventing stock breach.
+    """
+    _, _, headers = authenticated_device
+    basket_id = _setup_test_basket_and_stock(client, headers, initial_stock=15)
+
+    p_res = client.post(
+        "/api/v1/dispatches/responsible-persons",
+        json={"name": "Beatriz Consolidacao"},
+        headers=headers,
+    )
+    person_id = p_res.json()["id"]
+
+    # 1. Request with 2 duplicate lines for the same basket (6 + 6 = 12 baskets)
+    disp_res = client.post(
+        "/api/v1/dispatches",
+        json={
+            "responsible_person_id": person_id,
+            "items": [
+                {"basket_type_id": basket_id, "quantity": 6, "unit_price_cents": 10000, "notes": "Lote Manha"},
+                {"basket_type_id": basket_id, "quantity": 6, "unit_price_cents": 10000, "notes": "Lote Tarde"},
+            ],
+        },
+        headers=headers,
+    )
+    assert disp_res.status_code == 201
+    disp = disp_res.json()
+    assert disp["total_items_quantity"] == 12
+
+    # Verification: Must have exactly 1 consolidated item, not 2!
+    assert len(disp["items"]) == 1
+    assert disp["items"][0]["quantity"] == 12
+    assert "Lote Manha; Lote Tarde" in disp["items"][0]["notes"]
+
+    # Check store balance: 15 - 12 = 3
+    custody = client.get(f"/api/v1/dispatches/responsible-persons/{person_id}/custody", headers=headers).json()
+    assert custody["total_custody_baskets"] == 12
+
+    # 2. Request with duplicate lines that individually might pass (e.g. 2 and 2) but together exceed store stock (only 3 left!)
+    fail_res = client.post(
+        "/api/v1/dispatches",
+        json={
+            "responsible_person_id": person_id,
+            "items": [
+                {"basket_type_id": basket_id, "quantity": 2},
+                {"basket_type_id": basket_id, "quantity": 2},
+            ],
+        },
+        headers=headers,
+    )
+    # Aggregate requested is 4 > 3 -> MUST return 409 INSUFFICIENT_STOCK
+    assert fail_res.status_code == 409
+    assert fail_res.json()["detail"]["error_code"] == "INSUFFICIENT_STOCK"
+

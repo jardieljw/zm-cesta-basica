@@ -90,8 +90,13 @@ class _DispatchFormViewState extends State<DispatchFormView> {
   void _addItem() {
     final row = _DispatchItemRow();
     if (_basketTypes.isNotEmpty) {
-      row.basketType = _basketTypes.first;
-      row.unitPriceCents = _basketTypes.first.defaultPriceCents;
+      final usedIds = _items.map((it) => it.basketType?.id).whereType<String>().toSet();
+      final unused = _basketTypes.firstWhere(
+        (b) => !usedIds.contains(b.id),
+        orElse: () => _basketTypes.first,
+      );
+      row.basketType = unused;
+      row.unitPriceCents = unused.defaultPriceCents;
       _fetchStockForRow(row);
     }
     setState(() {
@@ -155,6 +160,8 @@ class _DispatchFormViewState extends State<DispatchFormView> {
 
     if (_items.isEmpty) return;
 
+    // 1. Validate individual fields and calculate total quantity per basket type
+    final totalQtyPerBasket = <String, int>{};
     for (final it in _items) {
       if (it.basketType == null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -168,11 +175,17 @@ class _DispatchFormViewState extends State<DispatchFormView> {
         );
         return;
       }
-      if (it.availableStoreStock < it.quantity) {
+      totalQtyPerBasket[it.basketType!.id] = (totalQtyPerBasket[it.basketType!.id] ?? 0) + it.quantity;
+    }
+
+    // 2. Validate aggregate stock sufficiency for each basket type
+    for (final it in _items) {
+      final totalRequested = totalQtyPerBasket[it.basketType!.id] ?? it.quantity;
+      if (it.availableStoreStock < totalRequested) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              l10n.dispatchInsufficientStoreStock(it.basketType!.name, it.availableStoreStock, it.quantity),
+              l10n.dispatchInsufficientStoreStock(it.basketType!.name, it.availableStoreStock, totalRequested),
             ),
           ),
         );
@@ -185,14 +198,31 @@ class _DispatchFormViewState extends State<DispatchFormView> {
       _errorMessage = null;
     });
 
-    final dispatchItems = _items.map((it) {
-      return DispatchItemCreate(
-        basketTypeId: it.basketType!.id,
-        quantity: it.quantity,
-        unitPriceCents: it.unitPriceCents,
-        notes: it.notesController.text.trim().isNotEmpty ? it.notesController.text.trim() : null,
-      );
-    }).toList();
+    // 3. Consolidate duplicate rows for same basket type before sending to backend
+    final consolidatedMap = <String, DispatchItemCreate>{};
+    for (final it in _items) {
+      final bId = it.basketType!.id;
+      final notes = it.notesController.text.trim();
+      if (consolidatedMap.containsKey(bId)) {
+        final existing = consolidatedMap[bId]!;
+        final mergedNotes = [existing.notes, notes].where((s) => s != null && s.isNotEmpty).join('; ');
+        consolidatedMap[bId] = DispatchItemCreate(
+          basketTypeId: bId,
+          quantity: existing.quantity + it.quantity,
+          unitPriceCents: it.unitPriceCents > 0 ? it.unitPriceCents : existing.unitPriceCents,
+          notes: mergedNotes.isNotEmpty ? mergedNotes : null,
+        );
+      } else {
+        consolidatedMap[bId] = DispatchItemCreate(
+          basketTypeId: bId,
+          quantity: it.quantity,
+          unitPriceCents: it.unitPriceCents,
+          notes: notes.isNotEmpty ? notes : null,
+        );
+      }
+    }
+
+    final dispatchItems = consolidatedMap.values.toList();
 
     final data = StockDispatchCreate(
       responsiblePersonId: _selectedPerson!.id,
@@ -431,6 +461,29 @@ class _DispatchFormViewState extends State<DispatchFormView> {
                           ],
                         ],
                       ),
+                      if (row.basketType != null &&
+                          _items.where((it) => it.basketType?.id == row.basketType?.id).length > 1) ...[
+                        const SizedBox(height: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.amber.shade50,
+                            borderRadius: BorderRadius.circular(6),
+                            border: Border.all(color: Colors.amber.shade300),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.info_outline, size: 14, color: Colors.amber.shade900),
+                              const SizedBox(width: 4),
+                              Text(
+                                'Cesta repetida: será consolidada automaticamente no despacho.',
+                                style: TextStyle(fontSize: 11, color: Colors.amber.shade900),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 10),
                       Row(
                         children: [

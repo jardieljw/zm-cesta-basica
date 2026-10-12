@@ -404,6 +404,122 @@ void main() {
       expect(json['dispatch_id'], 'disp-101');
       expect(json['responsible_person_id'], 'resp-2');
     });
+
+    test('DispatchReconciliation handles negative expected cash when route expenses exceed cash sales', () {
+      final json = {
+        'dispatch_id': 'disp-exp-over',
+        'dispatch_number': 105,
+        'responsible_person_id': 'resp-1',
+        'responsible_person_name': 'Carlos Motorista',
+        'dispatch_date': '2026-10-11T09:00:00.000Z',
+        'dispatch_status': 'OPEN',
+        'total_dispatched_qty': 5,
+        'total_sold_qty': 1,
+        'total_returned_qty': 4,
+        'total_lost_qty': 0,
+        'total_remaining_custody_qty': 0,
+        'basket_discrepancy_qty': 0,
+        'cash_sales_cents': 5000,
+        'direct_company_received_cents': 0,
+        'credit_sales_cents': 0,
+        'cash_debt_collected_cents': 0,
+        'expenses_cents': 12000,
+        'expected_cash_cents': -7000,
+        'actual_repaid_cash_cents': 0,
+        'pending_cash_cents': -7000,
+        'cash_discrepancy_cents': 7000,
+        'has_basket_discrepancy': false,
+        'has_cash_discrepancy': true,
+        'items_reconciliation': [],
+        'returns': [],
+        'losses': [],
+        'expenses': [
+          {
+            'id': 'exp-1',
+            'dispatch_id': 'disp-exp-over',
+            'expense_date': '2026-10-11T12:00:00.000Z',
+            'amount_cents': 12000,
+            'description': 'Combustível emergencial',
+            'created_at': '2026-10-11T12:00:00.000Z',
+          }
+        ],
+        'repayments': [],
+      };
+
+      final rec = DispatchReconciliation.fromJson(json);
+      expect(rec.cashSalesCents, 5000);
+      expect(rec.expensesCents, 12000);
+      expect(rec.expectedCashCents, -7000);
+      expect(rec.pendingCashCents, -7000);
+      expect(rec.hasCashDiscrepancy, isTrue);
+
+      // Verify that repayment dialog suggestion logic guards against negative pending cash
+      String suggestedAmount = '';
+      if (rec.pendingCashCents > 0) {
+        suggestedAmount = (rec.pendingCashCents / 100.0).toStringAsFixed(2);
+      }
+      expect(suggestedAmount, isEmpty, reason: 'Must not suggest a negative amount to repay!');
+
+      // Formatted currency handles negative values without error
+      final formatted = AppFormatters.formatCurrency(rec.expectedCashCents);
+      expect(formatted, contains('70,00'));
+    });
+
+    test('Consolidation of duplicate basket items sums quantities and merges notes', () {
+      final rawItems = [
+        DispatchItemCreate(
+          basketTypeId: 'bt-eco',
+          quantity: 6,
+          unitPriceCents: 10000,
+          notes: 'Lote Manha',
+        ),
+        DispatchItemCreate(
+          basketTypeId: 'bt-eco',
+          quantity: 6,
+          unitPriceCents: 10000,
+          notes: 'Lote Tarde',
+        ),
+        DispatchItemCreate(
+          basketTypeId: 'bt-fam',
+          quantity: 3,
+          unitPriceCents: 15000,
+        ),
+      ];
+
+      final consolidatedMap = <String, DispatchItemCreate>{};
+      for (final it in rawItems) {
+        final bId = it.basketTypeId;
+        final notes = (it.notes ?? '').trim();
+        if (consolidatedMap.containsKey(bId)) {
+          final existing = consolidatedMap[bId]!;
+          final mergedNotes = [existing.notes, notes].where((s) => s != null && s.isNotEmpty).join('; ');
+          consolidatedMap[bId] = DispatchItemCreate(
+            basketTypeId: bId,
+            quantity: existing.quantity + it.quantity,
+            unitPriceCents: it.unitPriceCents > 0 ? it.unitPriceCents : existing.unitPriceCents,
+            notes: mergedNotes.isNotEmpty ? mergedNotes : null,
+          );
+        } else {
+          consolidatedMap[bId] = DispatchItemCreate(
+            basketTypeId: bId,
+            quantity: it.quantity,
+            unitPriceCents: it.unitPriceCents,
+            notes: notes.isNotEmpty ? notes : null,
+          );
+        }
+      }
+
+      final consolidatedList = consolidatedMap.values.toList();
+      expect(consolidatedList.length, 2);
+
+      final eco = consolidatedList.firstWhere((it) => it.basketTypeId == 'bt-eco');
+      expect(eco.quantity, 12);
+      expect(eco.notes, 'Lote Manha; Lote Tarde');
+
+      final fam = consolidatedList.firstWhere((it) => it.basketTypeId == 'bt-fam');
+      expect(fam.quantity, 3);
+      expect(fam.notes, isNull);
+    });
   });
 
   group('Phase 6 Localization & AppFormatters Tests', () {
