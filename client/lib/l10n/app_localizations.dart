@@ -2716,6 +2716,54 @@ abstract class AppLocalizations {
   /// **'Novo Pareamento'**
   String get settingsPairNewButton;
 
+  /// Título da seção de geração de QR Code para celular
+  ///
+  /// In pt, this message translates to:
+  /// **'Pareamento de Celulares / Tablets'**
+  String get settingsGenerateQrTitle;
+
+  /// Botão para gerar QR Code de pareamento
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerar QR Code para Celular'**
+  String get settingsGenerateQrButton;
+
+  /// Título do diálogo de QR Code gerado
+  ///
+  /// In pt, this message translates to:
+  /// **'Conectar Celular / Tablet'**
+  String get settingsQrDialogTitle;
+
+  /// Instruções do diálogo de QR Code
+  ///
+  /// In pt, this message translates to:
+  /// **'No celular Android, abra o aplicativo, toque em \'Parear Dispositivo\' > aba \'Escanear QR\' e aponte a câmera para a imagem abaixo:'**
+  String get settingsQrDialogInstructions;
+
+  /// PIN temporário de validação
+  ///
+  /// In pt, this message translates to:
+  /// **'PIN válido por 5 minutos: {pin}'**
+  String settingsPinExpiresLabel(String pin);
+
+  /// Botão fechar do diálogo QR
+  ///
+  /// In pt, this message translates to:
+  /// **'Fechar'**
+  String get settingsQrClose;
+
+  /// Mensagem quando a câmera precisa ser ativada
+  ///
+  /// In pt, this message translates to:
+  /// **'Câmera aguardando permissão ou reinicialização.'**
+  String get cameraPermissionDenied;
+
+  /// Botão para solicitar permissão de câmera
+  ///
+  /// In pt, this message translates to:
+  /// **'Ativar Câmera'**
+  String get cameraPermissionRequest;
+
   /// No description provided for @purchaseDetailUnitCost.
   ///
   /// In pt, this message translates to:
@@ -3807,6 +3855,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Conferência da Saída #{number}'**
   String conferenceTitle(int number);
+
+  /// Título genérico da tela de conferência de saída durante carregamento ou erro
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferência de Saída'**
+  String get conferenceScreenTitle;
 
   /// No description provided for @conferenceStatusLabel.
   ///
@@ -5265,6 +5319,870 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Modelos formatados com linhas amplas (mínimo de 8 a 10 mm) para escrita manual confortável em prancheta.'**
   String get formBlankNotice;
+
+  /// Mensagem de sucesso ao baixar modelo ou auditoria XLSX
+  ///
+  /// In pt, this message translates to:
+  /// **'Planilha XLSX baixada com sucesso: {filename}'**
+  String formXlsxDownloadSuccess(String filename);
+
+  /// Mensagem de erro ao baixar modelo ou auditoria XLSX
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao baixar planilha: {error}'**
+  String formXlsxDownloadError(String error);
+
+  /// Mensagem durante busca de impressoras
+  ///
+  /// In pt, this message translates to:
+  /// **'Localizando impressoras instaladas...'**
+  String get printerLocating;
+
+  /// Badge de impressora padrão do sistema operacional
+  ///
+  /// In pt, this message translates to:
+  /// **'Padrão do Sistema'**
+  String get printerSystemDefault;
+
+  /// Badge de impressora online/disponível
+  ///
+  /// In pt, this message translates to:
+  /// **'Disponível'**
+  String get printerAvailable;
+
+  /// Botão de impressão direta
+  ///
+  /// In pt, this message translates to:
+  /// **'Imprimir'**
+  String get printerActionPrint;
+
+  /// Mensagem de sucesso ao exportar relatório em CSV ou XLSX
+  ///
+  /// In pt, this message translates to:
+  /// **'Planilha {format} exportada com sucesso!'**
+  String reportExportSuccess(String format);
+
+  /// Mensagem de erro ao exportar relatório
+  ///
+  /// In pt, this message translates to:
+  /// **'Erro ao exportar {format}: {error}'**
+  String reportExportError(String format, String error);
+
+  /// Label com a data selecionada
+  ///
+  /// In pt, this message translates to:
+  /// **'Data: {date}'**
+  String commonSelectedDateLabel(String date);
+
+  /// Botão para alterar data ou período
+  ///
+  /// In pt, this message translates to:
+  /// **'Alterar'**
+  String get commonChange;
+
+  /// Label com intervalo de datas
+  ///
+  /// In pt, this message translates to:
+  /// **'Período: {start} até {end}'**
+  String commonPeriodLabel(String start, String end);
+
+  /// Exibição do número do mês
+  ///
+  /// In pt, this message translates to:
+  /// **'Mês {month}'**
+  String commonMonthNumber(int month);
+
+  /// Rótulo do seletor de ano
+  ///
+  /// In pt, this message translates to:
+  /// **'Ano:'**
+  String get commonYearLabel;
+
+  /// Filtro de contagem física
+  ///
+  /// In pt, this message translates to:
+  /// **'Exibir apenas itens abaixo do estoque mínimo'**
+  String get reportPhysicalBelowMinOnly;
+
+  /// Data selecionada no dashboard
+  ///
+  /// In pt, this message translates to:
+  /// **'Data selecionada: {date}'**
+  String dashboardSelectedDate(String date);
+
+  /// Título da lista de lotes com contagem
+  ///
+  /// In pt, this message translates to:
+  /// **'Lotes ({count})'**
+  String dashboardBatchesCount(int count);
+
+  /// Estado vazio da lista de lotes
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum lote montado no período.'**
+  String get dashboardNoBatches;
+
+  /// Título da lista de vendas com contagem
+  ///
+  /// In pt, this message translates to:
+  /// **'Vendas ({count})'**
+  String dashboardSalesCount(int count);
+
+  /// Estado vazio da lista de vendas
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma venda registrada no período.'**
+  String get dashboardNoSales;
+
+  /// Título da lista de saídas com contagem
+  ///
+  /// In pt, this message translates to:
+  /// **'Saídas ({count})'**
+  String dashboardDispatchesCount(int count);
+
+  /// Botão de conferência com divergências pendentes
+  ///
+  /// In pt, this message translates to:
+  /// **'Examinar Divergências Pendentes ({count})'**
+  String dashboardExaminePendingDivergences(int count);
+
+  /// Estado vazio de saídas
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma saída registrada no período.'**
+  String get dashboardNoDispatches;
+
+  /// Subtítulo do item de saída no dashboard
+  ///
+  /// In pt, this message translates to:
+  /// **'Data: {date} | Cestas: {baskets} un.'**
+  String dashboardDispatchItemSubtitle(String date, int baskets);
+
+  /// Estado vazio de valores retidos por responsáveis
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum valor retido por responsável no momento.'**
+  String get dashboardNoRetainedValues;
+
+  /// Telefone do responsável
+  ///
+  /// In pt, this message translates to:
+  /// **'Tel: {phone}'**
+  String dashboardResponsiblePhone(String phone);
+
+  /// Data da saída do responsável
+  ///
+  /// In pt, this message translates to:
+  /// **'Data: {date}'**
+  String dashboardResponsibleDate(String date);
+
+  /// Estado vazio de divergências
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma divergência pendente.'**
+  String get dashboardNoDivergences;
+
+  /// Data e hora do acerto da divergência
+  ///
+  /// In pt, this message translates to:
+  /// **'Acerto em: {date}'**
+  String dashboardSettledAt(String date);
+
+  /// Observações prefixadas
+  ///
+  /// In pt, this message translates to:
+  /// **'Obs: {notes}'**
+  String commonNotesPrefix(String notes);
+
+  /// Coluna Cesta no cabeçalho de estoque
+  ///
+  /// In pt, this message translates to:
+  /// **'Cesta'**
+  String get dashboardStockColBasket;
+
+  /// Coluna Loja no cabeçalho de estoque
+  ///
+  /// In pt, this message translates to:
+  /// **'Loja'**
+  String get dashboardStockColStore;
+
+  /// Coluna Trânsito no cabeçalho de estoque
+  ///
+  /// In pt, this message translates to:
+  /// **'Trânsito'**
+  String get dashboardStockColTransit;
+
+  /// Coluna Total no cabeçalho de estoque
+  ///
+  /// In pt, this message translates to:
+  /// **'Total'**
+  String get dashboardStockColTotal;
+
+  /// Alerta de que não há insumos em falta
+  ///
+  /// In pt, this message translates to:
+  /// **'Todos os itens estão acima do estoque mínimo.'**
+  String get dashboardAllAboveMinStock;
+
+  /// Código SKU do item
+  ///
+  /// In pt, this message translates to:
+  /// **'SKU: {sku}'**
+  String dashboardItemSku(String sku);
+
+  /// Contagem de lançamentos de caixa
+  ///
+  /// In pt, this message translates to:
+  /// **'Caixa ({count})'**
+  String dashboardCashRecordsCount(int count);
+
+  /// Total de entradas financeiras previstas
+  ///
+  /// In pt, this message translates to:
+  /// **'Entradas Previstas: {amount}'**
+  String dashboardProjectedInflow(String amount);
+
+  /// Total de saídas financeiras previstas
+  ///
+  /// In pt, this message translates to:
+  /// **'Saídas Previstas: {amount}'**
+  String dashboardProjectedOutflow(String amount);
+
+  /// Estado vazio do extrato de caixa
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum lançamento no período.'**
+  String get dashboardNoCashRecords;
+
+  /// Estado vazio de títulos a receber
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum título a receber em aberto.'**
+  String get dashboardNoOpenReceivables;
+
+  /// Estado vazio de contas a pagar
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma conta a pagar em aberto.'**
+  String get dashboardNoOpenPayables;
+
+  /// Forma de repasse: Dinheiro em Mãos
+  ///
+  /// In pt, this message translates to:
+  /// **'Dinheiro em Mãos'**
+  String get conferenceMethodCashHand;
+
+  /// Forma de repasse: PIX Repassado
+  ///
+  /// In pt, this message translates to:
+  /// **'PIX Repassado'**
+  String get conferenceMethodPixSettled;
+
+  /// Forma de repasse: Transferência Bancária
+  ///
+  /// In pt, this message translates to:
+  /// **'Transferência Bancária'**
+  String get conferenceMethodBankTransfer;
+
+  /// Prefixo de observações completas
+  ///
+  /// In pt, this message translates to:
+  /// **'Observações: {notes}'**
+  String commonObservationsPrefix(String notes);
+
+  /// Categoria de conta: Fornecedor
+  ///
+  /// In pt, this message translates to:
+  /// **'Fornecedor'**
+  String get payableCategorySupplier;
+
+  /// Categoria de conta: Energia Elétrica
+  ///
+  /// In pt, this message translates to:
+  /// **'Energia Elétrica'**
+  String get payableCategoryElectricity;
+
+  /// Categoria de conta: Aluguel
+  ///
+  /// In pt, this message translates to:
+  /// **'Aluguel'**
+  String get payableCategoryRent;
+
+  /// Categoria de conta: Frete / Logística
+  ///
+  /// In pt, this message translates to:
+  /// **'Frete / Logística'**
+  String get payableCategoryFreight;
+
+  /// Categoria de conta: Frete simplificado
+  ///
+  /// In pt, this message translates to:
+  /// **'Frete'**
+  String get payableCategoryFreightShort;
+
+  /// Categoria de conta: Manutenção
+  ///
+  /// In pt, this message translates to:
+  /// **'Manutenção'**
+  String get payableCategoryMaintenance;
+
+  /// Categoria de conta: Empréstimo
+  ///
+  /// In pt, this message translates to:
+  /// **'Empréstimo'**
+  String get payableCategoryLoan;
+
+  /// Categoria de conta: Cartão de Crédito
+  ///
+  /// In pt, this message translates to:
+  /// **'Cartão de Crédito'**
+  String get payableCategoryCreditCard;
+
+  /// Categoria de conta: Retirada de Sócios
+  ///
+  /// In pt, this message translates to:
+  /// **'Retirada Sócios'**
+  String get payableCategoryPartnerWithdrawal;
+
+  /// Categoria de conta: Impostos / Taxas
+  ///
+  /// In pt, this message translates to:
+  /// **'Impostos / Taxas'**
+  String get payableCategoryTaxes;
+
+  /// Categoria de conta: Impostos simplificado
+  ///
+  /// In pt, this message translates to:
+  /// **'Impostos'**
+  String get payableCategoryTaxesShort;
+
+  /// Categoria de conta: Outros
+  ///
+  /// In pt, this message translates to:
+  /// **'Outros'**
+  String get payableCategoryOthers;
+
+  /// Forma de pagamento de despesa: Boleto
+  ///
+  /// In pt, this message translates to:
+  /// **'Boleto'**
+  String get payablePaymentMethodBoleto;
+
+  /// Forma de pagamento de despesa: PIX
+  ///
+  /// In pt, this message translates to:
+  /// **'PIX'**
+  String get payablePaymentMethodPix;
+
+  /// Forma de pagamento de despesa: Transferência
+  ///
+  /// In pt, this message translates to:
+  /// **'Transferência'**
+  String get payablePaymentMethodTransfer;
+
+  /// Forma de pagamento de despesa: Cheque
+  ///
+  /// In pt, this message translates to:
+  /// **'Cheque'**
+  String get payablePaymentMethodCheck;
+
+  /// Forma de pagamento de despesa: Cartão de Crédito
+  ///
+  /// In pt, this message translates to:
+  /// **'Cartão de Crédito'**
+  String get payablePaymentMethodCard;
+
+  /// Forma de pagamento de despesa: Dinheiro
+  ///
+  /// In pt, this message translates to:
+  /// **'Dinheiro'**
+  String get payablePaymentMethodCash;
+
+  /// Forma de pagamento de despesa: Outro
+  ///
+  /// In pt, this message translates to:
+  /// **'Outro'**
+  String get payablePaymentMethodOther;
+
+  /// Campo de periodicidade de recorrência
+  ///
+  /// In pt, this message translates to:
+  /// **'Periodicidade'**
+  String get payableRecurrenceFrequency;
+
+  /// Histórico vazio de pagamentos de uma conta a pagar
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum pagamento efetuado até o momento.'**
+  String get payableNoPaymentsYet;
+
+  /// Título do modal de estorno de pagamento
+  ///
+  /// In pt, this message translates to:
+  /// **'Estornar Pagamento'**
+  String get payableRevertPaymentTitle;
+
+  /// Campo de justificativa para estorno
+  ///
+  /// In pt, this message translates to:
+  /// **'Justificativa do Estorno'**
+  String get payableRevertPaymentReason;
+
+  /// Confirmação de cancelamento de conta a pagar
+  ///
+  /// In pt, this message translates to:
+  /// **'Tem certeza que deseja cancelar a obrigação?'**
+  String get payableConfirmCancelObligation;
+
+  /// Janeiro abreviado
+  ///
+  /// In pt, this message translates to:
+  /// **'Jan'**
+  String get monthJan;
+
+  /// Fevereiro abreviado
+  ///
+  /// In pt, this message translates to:
+  /// **'Fev'**
+  String get monthFeb;
+
+  /// Março abreviado
+  ///
+  /// In pt, this message translates to:
+  /// **'Mar'**
+  String get monthMar;
+
+  /// Abril abreviado
+  ///
+  /// In pt, this message translates to:
+  /// **'Abr'**
+  String get monthApr;
+
+  /// Maio abreviado
+  ///
+  /// In pt, this message translates to:
+  /// **'Mai'**
+  String get monthMay;
+
+  /// Junho abreviado
+  ///
+  /// In pt, this message translates to:
+  /// **'Jun'**
+  String get monthJun;
+
+  /// Julho abreviado
+  ///
+  /// In pt, this message translates to:
+  /// **'Jul'**
+  String get monthJul;
+
+  /// Agosto abreviado
+  ///
+  /// In pt, this message translates to:
+  /// **'Ago'**
+  String get monthAug;
+
+  /// Setembro abreviado
+  ///
+  /// In pt, this message translates to:
+  /// **'Set'**
+  String get monthSep;
+
+  /// Outubro abreviado
+  ///
+  /// In pt, this message translates to:
+  /// **'Out'**
+  String get monthOct;
+
+  /// Novembro abreviado
+  ///
+  /// In pt, this message translates to:
+  /// **'Nov'**
+  String get monthNov;
+
+  /// Dezembro abreviado
+  ///
+  /// In pt, this message translates to:
+  /// **'Dez'**
+  String get monthDec;
+
+  /// Opção Todos em filtros suspensos
+  ///
+  /// In pt, this message translates to:
+  /// **'Todos'**
+  String get filterAllOption;
+
+  /// Alerta de contas insuficientes para transferência
+  ///
+  /// In pt, this message translates to:
+  /// **'São necessárias ao menos 2 contas para realizar transferências.'**
+  String get treasuryNeedTwoAccountsForTransfer;
+
+  /// Rótulo do seletor de conta financeira
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta Financeira'**
+  String get treasuryAccountLabel;
+
+  /// Filtro de conta
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta'**
+  String get treasuryAccountFilterLabel;
+
+  /// Botão de novo lançamento na tesouraria
+  ///
+  /// In pt, this message translates to:
+  /// **'Lançamento'**
+  String get treasuryLaunchEntry;
+
+  /// Título do quadro consolidado da tesouraria
+  ///
+  /// In pt, this message translates to:
+  /// **'Posição Consolidada da Empresa'**
+  String get treasuryConsolidatedPosition;
+
+  /// Saldo em espécie/caixa físico
+  ///
+  /// In pt, this message translates to:
+  /// **'Caixa Físico: {amount}'**
+  String treasuryCashPhysicalLabel(String amount);
+
+  /// Saldo em contas bancárias
+  ///
+  /// In pt, this message translates to:
+  /// **'Bancos: {amount}'**
+  String treasuryBankLabel(String amount);
+
+  /// Legenda explicativa do cálculo de previsão
+  ///
+  /// In pt, this message translates to:
+  /// **'Fórmula: Disponível + A Receber - A Pagar'**
+  String get treasuryFormulaExplanation;
+
+  /// Título do quadro de compromissos futuros
+  ///
+  /// In pt, this message translates to:
+  /// **'Compromissos Futuros & Fiados'**
+  String get treasuryFutureCommitmentsTitle;
+
+  /// Subtítulo de valores em custódia externa
+  ///
+  /// In pt, this message translates to:
+  /// **'Em custódia de entregadores'**
+  String get treasuryCustodyCouriers;
+
+  /// Título do quadro de segregação de despesas
+  ///
+  /// In pt, this message translates to:
+  /// **'Segregação de Despesas (Mês)'**
+  String get treasuryExpenseSegregationTitle;
+
+  /// Descrição de despesas empresariais
+  ///
+  /// In pt, this message translates to:
+  /// **'Gastos operacionais da atividade'**
+  String get treasuryBusinessExpensesDesc;
+
+  /// Descrição de retiradas de sócios
+  ///
+  /// In pt, this message translates to:
+  /// **'Não misturar com contas da empresa'**
+  String get treasuryPersonalWithdrawalsDesc;
+
+  /// Categoria: Aporte de Capital
+  ///
+  /// In pt, this message translates to:
+  /// **'Aporte de Capital'**
+  String get treasuryCatCapitalContribution;
+
+  /// Categoria: Receita de Vendas
+  ///
+  /// In pt, this message translates to:
+  /// **'Receita de Vendas'**
+  String get treasuryCatSalesRevenue;
+
+  /// Categoria: Recebimento de Cliente
+  ///
+  /// In pt, this message translates to:
+  /// **'Recebimento de Cliente'**
+  String get treasuryCatCustomerReceipt;
+
+  /// Categoria: Outros Créditos
+  ///
+  /// In pt, this message translates to:
+  /// **'Outros Créditos'**
+  String get treasuryCatOtherCredits;
+
+  /// Categoria: Retirada de Sócios / Pró-labore
+  ///
+  /// In pt, this message translates to:
+  /// **'Retirada de Sócios / Pró-labore'**
+  String get treasuryCatPartnerWithdrawal;
+
+  /// Categoria: Pagamento Fornecedor
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamento Fornecedor'**
+  String get treasuryCatSupplierPayment;
+
+  /// Categoria: Energia Elétrica
+  ///
+  /// In pt, this message translates to:
+  /// **'Energia Elétrica'**
+  String get treasuryCatElectricity;
+
+  /// Categoria: Aluguel
+  ///
+  /// In pt, this message translates to:
+  /// **'Aluguel'**
+  String get treasuryCatRent;
+
+  /// Categoria: Frete / Combustível
+  ///
+  /// In pt, this message translates to:
+  /// **'Frete / Combustível'**
+  String get treasuryCatFreightFuel;
+
+  /// Categoria: Manutenção
+  ///
+  /// In pt, this message translates to:
+  /// **'Manutenção'**
+  String get treasuryCatMaintenance;
+
+  /// Categoria: Outras Despesas
+  ///
+  /// In pt, this message translates to:
+  /// **'Outras Despesas'**
+  String get treasuryCatOtherExpenses;
+
+  /// Método de pagamento: PIX
+  ///
+  /// In pt, this message translates to:
+  /// **'PIX'**
+  String get treasuryMethodPix;
+
+  /// Método de pagamento: Dinheiro
+  ///
+  /// In pt, this message translates to:
+  /// **'Dinheiro'**
+  String get treasuryMethodCash;
+
+  /// Método de pagamento: Transferência
+  ///
+  /// In pt, this message translates to:
+  /// **'Transferência'**
+  String get treasuryMethodTransfer;
+
+  /// Método de pagamento: Cartão
+  ///
+  /// In pt, this message translates to:
+  /// **'Cartão'**
+  String get treasuryMethodCard;
+
+  /// Método de pagamento: Outro
+  ///
+  /// In pt, this message translates to:
+  /// **'Outro'**
+  String get treasuryMethodOther;
+
+  /// Resumo de cestas do recebível
+  ///
+  /// In pt, this message translates to:
+  /// **'Cestas: {summary}'**
+  String receivablesBasketsPrefix(String summary);
+
+  /// Confirmação de cancelamento de obrigação com nome
+  ///
+  /// In pt, this message translates to:
+  /// **'Tem certeza que deseja cancelar a obrigação \"{description}\"?'**
+  String payableConfirmCancelObligationNamed(String description);
+
+  /// Tooltip do botão de seleção de impressoras e Epson
+  ///
+  /// In pt, this message translates to:
+  /// **'Imprimir / Selecionar Impressora (Epson Wi-Fi)'**
+  String get tooltipPrintSelectPrinter;
+
+  /// Tooltip para compartilhar ou salvar arquivo PDF
+  ///
+  /// In pt, this message translates to:
+  /// **'Compartilhar / Salvar PDF'**
+  String get tooltipShareSavePdf;
+
+  /// Texto auxiliar para parcelamento de conta a pagar
+  ///
+  /// In pt, this message translates to:
+  /// **'Dividir em N parcelas mensais'**
+  String get payableInstallmentsHelper;
+
+  /// Tooltip do botão de estorno de pagamento
+  ///
+  /// In pt, this message translates to:
+  /// **'Estornar este pagamento'**
+  String get payableRevertPaymentTooltip;
+
+  /// Dica de preenchimento para observações de saída física
+  ///
+  /// In pt, this message translates to:
+  /// **'Observações da saída física (opcional)'**
+  String get dispatchPhysicalNotesHint;
+
+  /// Dica de personalização de cesta na saída
+  ///
+  /// In pt, this message translates to:
+  /// **'Ex: Cesta personalizada, lote específico'**
+  String get dispatchCustomizationHint;
+
+  /// Dica de justificativa para avaria ou perda na conferência
+  ///
+  /// In pt, this message translates to:
+  /// **'Ex: Caixa molhou na chuva durante entrega'**
+  String get conferenceLossReasonHint;
+
+  /// Dica do conferente que recebeu o repasse
+  ///
+  /// In pt, this message translates to:
+  /// **'Colaborador que conferiu e recebeu'**
+  String get conferenceReceivedByHint;
+
+  /// Dica do nome do auditor na finalização do acerto
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome do conferente / auditor'**
+  String get conferenceAuditorNameHint;
+
+  /// Dica para justificativa inicial de pendências
+  ///
+  /// In pt, this message translates to:
+  /// **'Justificativa inicial das divergências'**
+  String get conferenceInitialJustificationHint;
+
+  /// Dica para investigação de divergência
+  ///
+  /// In pt, this message translates to:
+  /// **'Descreva a apuração, se foi justificado, perdas aceitas ou ressarcimento'**
+  String get conferenceInvestigationHint;
+
+  /// Mensagem durante a inicialização da câmera
+  ///
+  /// In pt, this message translates to:
+  /// **'Iniciando leitor de câmera...'**
+  String get cameraStarting;
+
+  /// Título da seção de pareamento no celular
+  ///
+  /// In pt, this message translates to:
+  /// **'Conexão com o Servidor Local'**
+  String get settingsPairDeviceSection;
+
+  /// Descrição do pareamento no celular
+  ///
+  /// In pt, this message translates to:
+  /// **'Escaneie o QR Code gerado na tela de Configurações do computador ou informe o PIN manualmente para conectar este celular.'**
+  String get settingsPairDeviceDesc;
+
+  /// Botão para abrir a tela de pareamento
+  ///
+  /// In pt, this message translates to:
+  /// **'Parear Dispositivo (Escanear QR / PIN)'**
+  String get settingsPairDeviceButton;
+
+  /// Título da seção de rede
+  ///
+  /// In pt, this message translates to:
+  /// **'Rede e Conexão'**
+  String get settingsServerNetworkSection;
+
+  /// Descrição da geração de QR Code no Windows
+  ///
+  /// In pt, this message translates to:
+  /// **'Gere um QR Code neste computador para que celulares Android possam escanear e parear automaticamente sem digitar IP, PIN ou Fingerprint.'**
+  String get settingsGenerateQrDesc;
+
+  /// Status conectado e autenticado
+  ///
+  /// In pt, this message translates to:
+  /// **'Conectado e Pareado com Sucesso'**
+  String get settingsStatusConnectedPaired;
+
+  /// Status conectado sem autenticacao
+  ///
+  /// In pt, this message translates to:
+  /// **'Conectado (Aguardando Pareamento)'**
+  String get settingsStatusConnectedWaiting;
+
+  /// Status desconectado
+  ///
+  /// In pt, this message translates to:
+  /// **'Servidor Local Desconectado'**
+  String get settingsStatusDisconnected;
+
+  /// Subtítulo quando pareado
+  ///
+  /// In pt, this message translates to:
+  /// **'Operações comerciais autenticadas ativas.'**
+  String get settingsStatusPairedSubtitle;
+
+  /// Subtítulo aguardando pareamento
+  ///
+  /// In pt, this message translates to:
+  /// **'Pareie este dispositivo com o servidor para habilitar operações.'**
+  String get settingsStatusWaitingSubtitle;
+
+  /// Título para dados de pareamento manual
+  ///
+  /// In pt, this message translates to:
+  /// **'Ou conecte manualmente no celular:'**
+  String get settingsQrManualTitle;
+
+  /// Rótulo de URL no diálogo de QR
+  ///
+  /// In pt, this message translates to:
+  /// **'URL do Servidor:'**
+  String get settingsQrServerUrlLabel;
+
+  /// Rótulo de Fingerprint TLS no diálogo de QR
+  ///
+  /// In pt, this message translates to:
+  /// **'Fingerprint TLS (Impressão Digital):'**
+  String get settingsQrFingerprintLabel;
+
+  /// Rótulo do PIN no diálogo de QR
+  ///
+  /// In pt, this message translates to:
+  /// **'PIN de Pareamento:'**
+  String get settingsQrPinLabel;
+
+  /// Notificação de texto copiado
+  ///
+  /// In pt, this message translates to:
+  /// **'Copiado para a área de transferência!'**
+  String get settingsCopiedToClipboard;
+
+  /// Explicação amigável do Fingerprint TLS
+  ///
+  /// In pt, this message translates to:
+  /// **'O Fingerprint TLS é o código de segurança criptográfico gerado pelo servidor para garantir que seu celular está conectando diretamente no seu computador com HTTPS confiável.'**
+  String get settingsFingerprintExplanation;
+
+  /// Descrição da seção de rede no Windows
+  ///
+  /// In pt, this message translates to:
+  /// **'Endereço local onde o servidor está operando neste computador.'**
+  String get settingsNetworkSectionDescWindows;
+
+  /// Descrição da seção de rede no Android
+  ///
+  /// In pt, this message translates to:
+  /// **'Endereço do servidor e certificado seguro para comunicação em rede local.'**
+  String get settingsNetworkSectionDescAndroid;
+
+  /// Dica de inicialização da câmera
+  ///
+  /// In pt, this message translates to:
+  /// **'Toque no botão abaixo para inicializar a captura da câmera:'**
+  String get pairingCameraInitializeHint;
 }
 
 class _AppLocalizationsDelegate

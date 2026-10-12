@@ -131,7 +131,7 @@ class _ReportsViewState extends State<ReportsView> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Planilha $format exportada com sucesso!'),
+            content: Text(context.l10n.reportExportSuccess(format)),
             backgroundColor: Colors.green.shade700,
           ),
         );
@@ -140,7 +140,7 @@ class _ReportsViewState extends State<ReportsView> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Erro ao exportar $format: $e'),
+            content: Text(context.l10n.reportExportError(format, e.toString())),
             backgroundColor: Colors.red.shade700,
           ),
         );
@@ -200,7 +200,7 @@ class _ReportsViewState extends State<ReportsView> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            tooltip: 'Recarregar Relatório',
+            tooltip: l10n.commonRefresh,
             onPressed: _loadReport,
           ),
         ],
@@ -400,11 +400,11 @@ class _ReportsViewState extends State<ReportsView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Data: ${AppFormatters.formatDate(_selectedDate)}'),
+                  Text(context.l10n.commonSelectedDateLabel(AppFormatters.formatDate(_selectedDate))),
                   const SizedBox(width: 8),
                   TextButton.icon(
                     icon: const Icon(Icons.calendar_today, size: 16),
-                    label: const Text('Alterar'),
+                    label: Text(context.l10n.commonChange),
                     onPressed: () async {
                       final picked = await showDatePicker(
                         context: context,
@@ -425,11 +425,14 @@ class _ReportsViewState extends State<ReportsView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Período: ${AppFormatters.formatDate(_selectedRange.start)} até ${AppFormatters.formatDate(_selectedRange.end)}'),
+                  Text(context.l10n.commonPeriodLabel(
+                    AppFormatters.formatDate(_selectedRange.start),
+                    AppFormatters.formatDate(_selectedRange.end),
+                  )),
                   const SizedBox(width: 8),
                   TextButton.icon(
                     icon: const Icon(Icons.date_range, size: 16),
-                    label: const Text('Alterar'),
+                    label: Text(context.l10n.commonChange),
                     onPressed: () async {
                       final picked = await showDateRangePicker(
                         context: context,
@@ -453,7 +456,7 @@ class _ReportsViewState extends State<ReportsView> {
                   DropdownButton<int>(
                     value: _selectedMonth,
                     items: List.generate(12, (i) => i + 1).map((m) {
-                      return DropdownMenuItem(value: m, child: Text('Mês $m'));
+                      return DropdownMenuItem(value: m, child: Text(context.l10n.commonMonthNumber(m)));
                     }).toList(),
                     onChanged: (val) {
                       if (val != null) {
@@ -482,7 +485,7 @@ class _ReportsViewState extends State<ReportsView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Ano: '),
+                  Text(context.l10n.commonYearLabel),
                   const SizedBox(width: 8),
                   DropdownButton<int>(
                     value: _selectedYear,
@@ -504,7 +507,7 @@ class _ReportsViewState extends State<ReportsView> {
               CheckboxListTile(
                 contentPadding: EdgeInsets.zero,
                 dense: true,
-                title: const Text('Exibir apenas itens abaixo do estoque mínimo'),
+                title: Text(context.l10n.reportPhysicalBelowMinOnly),
                 value: _onlyBelowMin,
                 onChanged: (val) {
                   setState(() => _onlyBelowMin = val ?? false);

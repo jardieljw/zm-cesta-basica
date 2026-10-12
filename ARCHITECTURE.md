@@ -2,8 +2,8 @@
 ## ZM Cesta Básica — Sistema de Gestão de Estoque, Produção, Vendas e Financeiro
 
 **Documento Canônico de Engenharia e Princípios de Arquitetura**  
-**Versão:** 5.4 (Fases 1 a 8 Homologadas: Gestão Completa, Relatórios, Planilhas e Impressão Direta)
-**Status do Projeto:** Fases 1 a 8 Concluídas e Homologadas (179 testes backend e 91 testes Flutter aprovados; análise estática 100% limpa)
+**Versão:** 6.0 (Fases 1 a 9 Concluídas e Homologadas: Gestão Completa, Relatórios, Impressão, Backup Quente, Instalação Windows e Entrega de Produção)
+**Status do Projeto:** Fases 1 a 9 Concluídas e Homologadas (180 testes backend e 93 testes Flutter aprovados; compilações nativas Windows x64 e Android release APK geradas; análise estática 100% limpa)
 **Topologia:** Monólito Modular em Rede Local Privada (Wi-Fi/Ethernet) sem dependência de nuvem  
 **Público-alvo:** Desenvolvedores, Engenheiros de Software e Agentes de Inteligência Artificial
 
@@ -36,7 +36,7 @@ O sistema é estruturado como um **Monólito Modular** de alta coesão e baixo a
 
 ### 1.2. Evolução Segura e Preservação de Comportamento
 1. **Inspeção Prévia Obrigatória:** Antes de editar código, inspecionar arquivos afetados e identificar todos os pontos de consumo.
-2. **Avaliação de Impacto e Não-Regressão:** Executar a suíte completa de testes automatizados (`pytest backend/tests -v` e `flutter test`), mantendo 100% de aprovação verde (atualmente 139 testes de backend e 38 testes de front-end aprovados).
+2. **Avaliação de Impacto e Não-Regressão:** Executar a suíte completa de testes automatizados (`pytest backend/tests -v` e `flutter test`), mantendo 100% de aprovação verde (atualmente 180 testes de backend e 93 testes de front-end aprovados).
 3. **Proibição de Exclusão ou Substituição Silenciosa:** Proibido remover ou alterar endpoints, schemas ou regras homologadas sem autorização explícita do usuário.
 4. **Evolução do Banco via Migrações Versionadas:** Schema gerenciado exclusivamente pelo Alembic com suporte bidirecional a `upgrade()` e `downgrade()`.
 5. **Rastreabilidade Contábil Imutável:** O livro-razão `inventory_movements` e o livro-caixa `cash_flow_entries` são estritamente *append-only* (protegidos por triggers nativos contra `UPDATE` e `DELETE`). Correções ocorrem exclusivamente por lançamentos reversos rastreáveis (estornos).
@@ -268,7 +268,7 @@ Nenhum código de IA adicionado neste momento. Arquitetura desacoplada via Provi
   └── Cria tabela base `sales_receivables` e `receivable_payments` (Saldo devedor e amortizações)
         │
         ▼
-[FASE 6: Saídas Físicas, Responsáveis & Conferência] ----------> [AGUARDANDO AUTORIZAÇÃO]
+[FASE 6: Saídas Físicas, Responsáveis & Conferência] ----------> [CONCLUÍDA & HOMOLOGADA]
   ├── Cria `responsible_persons` (Cadastro simples de colaboradores/entregadores)
   ├── Cria `stock_dispatches` e `dispatch_items` (Saída física STORE -> TRANSIT)
   ├── Estende `inventory_movements` (location_type e responsible_person_id)
@@ -276,24 +276,26 @@ Nenhum código de IA adicionado neste momento. Arquitetura desacoplada via Provi
   └── Cria `dispatch_settlements` (Conferência de 4 termos e acerto financeiro segregado)
         │
         ▼
-[FASE 7: Gestão Financeira Completa & Tesouraria] ------------> [PLANEJADA]
+[FASE 7: Gestão Financeira Completa & Tesouraria] ------------> [CONCLUÍDA & HOMOLOGADA]
   ├── Cria contas financeiras `financial_accounts` (Caixa da Loja, Bancos)
   ├── Cria contas a pagar `accounts_payable` e `payable_payments` (Compras e Despesas)
   ├── Cria livro-caixa imutável `cash_flow_entries` (Append-Only)
   └── Integra recebimentos da Fase 5 e repasses da Fase 6 à tesouraria da empresa
         │
         ▼
-[FASE 8: Relatórios, Planilhas, Formulários A4 & Impressão] --> [PLANEJADA]
+[FASE 8: Relatórios, Planilhas, Formulários A4 & Impressão] --> [CONCLUÍDA & HOMOLOGADA]
   ├── Consultas consolidadas de DRE Gerencial, Margens e Fluxo de Caixa
   ├── Exportadores para Planilhas Digitais (CSV e XLSX)
   ├── Gerador de Formulários Paginados A4 (Preenchidos e em Branco para Preenchimento Manual)
   └── Módulo de Impressão Direta Flutter (Spoolers Windows e Android, Epson Wi-Fi e Contingência PDF)
         │
         ▼
-[FASE 9: Instalação Windows, Agendador & Validação de Impressão] [PLANEJADA]
-  ├── Instalador local do Windows e configuração do serviço automático
-  ├── Rotinas de backup agendado
-  └── Validação em Hardware Real (Impressão física em Windows e Android com Epson Wi-Fi)
+[FASE 9: Auditoria Final, Backup, Instalação & Entrega] -------> [CONCLUÍDA & HOMOLOGADA]
+  ├── Instalador local do Windows, firewall e tarefas agendadas automáticas (Task Scheduler)
+  ├── CLI e rotinas de backup quente online com integridade SQLite verificada e retenção
+  ├── Teste E2E de ciclo de vida operacional ponta a ponta (180 testes backend e 93 testes Flutter)
+  ├── Compilações nativas de produção (Windows x64 Release .exe e Android Release APK 74.1MB)
+  └── Manuais operacionais, de instalação, backup/DRP e impressão Epson Wi-Fi
 ```
 
 ---
@@ -308,10 +310,10 @@ Nenhum código de IA adicionado neste momento. Arquitetura desacoplada via Provi
          Triagem de Desmontagem, i18n Flutter e Compilações Nativas) --------> [CONCLUÍDA & HOMOLOGADA]
 [FASE 5] Vendas de Cestas, Cadastro de Clientes, Vendas a Prazo e Montagem
          Simultânea (139 testes backend, 38 testes Flutter) ------------------> [CONCLUÍDA & HOMOLOGADA]
-═══════════════════════════════════════ PONTO DE CONTROLE ATUAL ════════════════════════════════════════
-[FASE 6] Saídas Físicas, Responsáveis por Cestas e Conferência Operacional ---> [AGUARDANDO AUTORIZAÇÃO]
-[FASE 7] Gestão Financeira Completa (Contas a Pagar, Tesouraria e Caixa) ------> [PLANEJADA]
+[FASE 6] Saídas Físicas, Responsáveis por Cestas e Conferência Operacional ---> [CONCLUÍDA & HOMOLOGADA]
+[FASE 7] Gestão Financeira Completa (Contas a Pagar, Tesouraria e Caixa) ------> [CONCLUÍDA & HOMOLOGADA]
 [FASE 8] Relatórios Gerenciais, DRE, Planilhas (CSV/XLSX), Formulários A4
-         e Módulo de Impressão Direta (Multiplataforma / Epson Wi-Fi) ---------> [PLANEJADA]
-[FASE 9] Instalação Windows, Agendador, Validação de Impressão e Entrega -----> [PLANEJADA]
+         e Módulo de Impressão Direta (Multiplataforma / Epson Wi-Fi) ---------> [CONCLUÍDA & HOMOLOGADA]
+[FASE 9] Auditoria Final, Robustez, Backup Quente, Instalação e Entrega ------> [CONCLUÍDA & HOMOLOGADA]
+══════════════════════════ PROJETO 100% CONCLUÍDO E ENTREGUE ══════════════════════════════
 ```

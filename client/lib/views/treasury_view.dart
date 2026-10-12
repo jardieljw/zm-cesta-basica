@@ -244,7 +244,7 @@ class _TreasuryViewState extends State<TreasuryView> with SingleTickerProviderSt
     final l10n = context.l10n;
     if (_accounts.length < 2) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('São necessárias ao menos 2 contas para realizar transferências.')),
+        SnackBar(content: Text(l10n.treasuryNeedTwoAccountsForTransfer)),
       );
       return;
     }
@@ -424,9 +424,9 @@ class _TreasuryViewState extends State<TreasuryView> with SingleTickerProviderSt
                       ],
                       DropdownButtonFormField<String>(
                         initialValue: selectedAccountId,
-                        decoration: const InputDecoration(
-                          labelText: 'Conta Financeira',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: l10n.treasuryAccountLabel,
+                          border: const OutlineInputBorder(),
                         ),
                         items: _accounts.map((a) {
                           return DropdownMenuItem(
@@ -490,20 +490,20 @@ class _TreasuryViewState extends State<TreasuryView> with SingleTickerProviderSt
                           border: const OutlineInputBorder(),
                         ),
                         items: entryType == 'CREDIT'
-                            ? const [
-                                DropdownMenuItem(value: 'APORTE', child: Text('Aporte de Capital')),
-                                DropdownMenuItem(value: 'VENDAS', child: Text('Receita de Vendas')),
-                                DropdownMenuItem(value: 'RECEBIMENTO_CLIENTE', child: Text('Recebimento de Cliente')),
-                                DropdownMenuItem(value: 'OUTROS', child: Text('Outros Créditos')),
+                            ? [
+                                DropdownMenuItem(value: 'APORTE', child: Text(l10n.treasuryCatCapitalContribution)),
+                                DropdownMenuItem(value: 'VENDAS', child: Text(l10n.treasuryCatSalesRevenue)),
+                                DropdownMenuItem(value: 'RECEBIMENTO_CLIENTE', child: Text(l10n.treasuryCatCustomerReceipt)),
+                                DropdownMenuItem(value: 'OUTROS', child: Text(l10n.treasuryCatOtherCredits)),
                               ]
-                            : const [
-                                DropdownMenuItem(value: 'RETIRADA_SOCIO', child: Text('Retirada de Sócios / Pró-labore')),
-                                DropdownMenuItem(value: 'FORNECEDOR', child: Text('Pagamento Fornecedor')),
-                                DropdownMenuItem(value: 'ENERGIA', child: Text('Energia Elétrica')),
-                                DropdownMenuItem(value: 'ALUGUEL', child: Text('Aluguel')),
-                                DropdownMenuItem(value: 'FRETE', child: Text('Frete / Combustível')),
-                                DropdownMenuItem(value: 'MANUTENCAO', child: Text('Manutenção')),
-                                DropdownMenuItem(value: 'OUTROS', child: Text('Outras Despesas')),
+                            : [
+                                DropdownMenuItem(value: 'RETIRADA_SOCIO', child: Text(l10n.treasuryCatPartnerWithdrawal)),
+                                DropdownMenuItem(value: 'FORNECEDOR', child: Text(l10n.treasuryCatSupplierPayment)),
+                                DropdownMenuItem(value: 'ENERGIA', child: Text(l10n.treasuryCatElectricity)),
+                                DropdownMenuItem(value: 'ALUGUEL', child: Text(l10n.treasuryCatRent)),
+                                DropdownMenuItem(value: 'FRETE', child: Text(l10n.treasuryCatFreightFuel)),
+                                DropdownMenuItem(value: 'MANUTENCAO', child: Text(l10n.treasuryCatMaintenance)),
+                                DropdownMenuItem(value: 'OUTROS', child: Text(l10n.treasuryCatOtherExpenses)),
                               ],
                         onChanged: (val) {
                           if (val != null) setDialogState(() => category = val);
@@ -531,12 +531,12 @@ class _TreasuryViewState extends State<TreasuryView> with SingleTickerProviderSt
                                 labelText: l10n.payablePaymentMethod,
                                 border: const OutlineInputBorder(),
                               ),
-                              items: const [
-                                DropdownMenuItem(value: 'PIX', child: Text('PIX')),
-                                DropdownMenuItem(value: 'CASH', child: Text('Dinheiro')),
-                                DropdownMenuItem(value: 'BANK_TRANSFER', child: Text('Transferência')),
-                                DropdownMenuItem(value: 'CARD', child: Text('Cartão')),
-                                DropdownMenuItem(value: 'OTHER', child: Text('Outro')),
+                              items: [
+                                DropdownMenuItem(value: 'PIX', child: Text(l10n.treasuryMethodPix)),
+                                DropdownMenuItem(value: 'CASH', child: Text(l10n.treasuryMethodCash)),
+                                DropdownMenuItem(value: 'BANK_TRANSFER', child: Text(l10n.treasuryMethodTransfer)),
+                                DropdownMenuItem(value: 'CARD', child: Text(l10n.treasuryMethodCard)),
+                                DropdownMenuItem(value: 'OTHER', child: Text(l10n.treasuryMethodOther)),
                               ],
                               onChanged: (val) {
                                 if (val != null) setDialogState(() => paymentMethod = val);
@@ -773,10 +773,10 @@ class _TreasuryViewState extends State<TreasuryView> with SingleTickerProviderSt
               Expanded(
                 child: DropdownButtonFormField<String?>(
                   initialValue: _selectedAccountId,
-                  decoration: const InputDecoration(
-                    labelText: 'Conta',
+                  decoration: InputDecoration(
+                    labelText: l10n.treasuryAccountFilterLabel,
                     isDense: true,
-                    border: OutlineInputBorder(),
+                    border: const OutlineInputBorder(),
                   ),
                   items: [
                     DropdownMenuItem(value: null, child: Text(l10n.categoryAll)),
@@ -831,7 +831,7 @@ class _TreasuryViewState extends State<TreasuryView> with SingleTickerProviderSt
               const SizedBox(width: 8),
               ElevatedButton.icon(
                 icon: const Icon(Icons.add),
-                label: const Text('Lançamento'),
+                label: Text(l10n.treasuryLaunchEntry),
                 onPressed: _showManualEntryDialog,
               ),
             ],
@@ -902,7 +902,7 @@ class _TreasuryViewState extends State<TreasuryView> with SingleTickerProviderSt
                               style: const TextStyle(fontSize: 11, color: Colors.purple, fontWeight: FontWeight.bold),
                             ),
                           if (e.notes != null)
-                            Text('Obs: ${e.notes}', style: const TextStyle(fontSize: 11, color: Colors.black45)),
+                            Text(context.l10n.commonNotesPrefix(e.notes!), style: const TextStyle(fontSize: 11, color: Colors.black45)),
                         ],
                       ),
                       trailing: Text(
@@ -931,7 +931,7 @@ class _TreasuryViewState extends State<TreasuryView> with SingleTickerProviderSt
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Section 1: Saldo Disponível vs Compromissos Futuros
-          Text('Posição Consolidada da Empresa', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+          Text(l10n.treasuryConsolidatedPosition, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -951,8 +951,8 @@ class _TreasuryViewState extends State<TreasuryView> with SingleTickerProviderSt
                           style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.green.shade800),
                         ),
                         const SizedBox(height: 8),
-                        Text('Caixa Físico: ${AppFormatters.formatCurrency(_summary!.cashBalanceCents)}', style: const TextStyle(fontSize: 12)),
-                        Text('Bancos: ${AppFormatters.formatCurrency(_summary!.bankBalanceCents)}', style: const TextStyle(fontSize: 12)),
+                        Text(l10n.treasuryCashPhysicalLabel(AppFormatters.formatCurrency(_summary!.cashBalanceCents)), style: const TextStyle(fontSize: 12)),
+                        Text(l10n.treasuryBankLabel(AppFormatters.formatCurrency(_summary!.bankBalanceCents)), style: const TextStyle(fontSize: 12)),
                       ],
                     ),
                   ),
@@ -979,7 +979,7 @@ class _TreasuryViewState extends State<TreasuryView> with SingleTickerProviderSt
                           ),
                         ),
                         const SizedBox(height: 8),
-                        const Text('Fórmula: Disponível + A Receber - A Pagar', style: TextStyle(fontSize: 11, color: Colors.black45)),
+                        Text(l10n.treasuryFormulaExplanation, style: const TextStyle(fontSize: 11, color: Colors.black45)),
                       ],
                     ),
                   ),
@@ -989,7 +989,7 @@ class _TreasuryViewState extends State<TreasuryView> with SingleTickerProviderSt
           ),
           const SizedBox(height: 16),
           // Section 2: Compromissos Futuros
-          Text('Compromissos Futuros & Fiados', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+          Text(l10n.treasuryFutureCommitmentsTitle, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -1061,7 +1061,7 @@ class _TreasuryViewState extends State<TreasuryView> with SingleTickerProviderSt
                           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.purple),
                         ),
                         const SizedBox(height: 4),
-                        const Text('Em custódia de entregadores', style: TextStyle(fontSize: 11, color: Colors.black45)),
+                        Text(l10n.treasuryCustodyCouriers, style: const TextStyle(fontSize: 11, color: Colors.black45)),
                       ],
                     ),
                   ),
@@ -1071,7 +1071,7 @@ class _TreasuryViewState extends State<TreasuryView> with SingleTickerProviderSt
           ),
           const SizedBox(height: 16),
           // Section 3: Segregação Operacional vs Particular
-          Text('Segregação de Despesas (Mês)', style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+          Text(l10n.treasuryExpenseSegregationTitle, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -1092,7 +1092,7 @@ class _TreasuryViewState extends State<TreasuryView> with SingleTickerProviderSt
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade900),
                         ),
                         const SizedBox(height: 4),
-                        const Text('Gastos operacionais da atividade', style: TextStyle(fontSize: 11, color: Colors.black45)),
+                        Text(l10n.treasuryBusinessExpensesDesc, style: const TextStyle(fontSize: 11, color: Colors.black45)),
                       ],
                     ),
                   ),
@@ -1116,7 +1116,7 @@ class _TreasuryViewState extends State<TreasuryView> with SingleTickerProviderSt
                           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.purple.shade900),
                         ),
                         const SizedBox(height: 4),
-                        const Text('Não misturar com contas da empresa', style: TextStyle(fontSize: 11, color: Colors.black45)),
+                        Text(l10n.treasuryPersonalWithdrawalsDesc, style: const TextStyle(fontSize: 11, color: Colors.black45)),
                       ],
                     ),
                   ),

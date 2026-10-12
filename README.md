@@ -17,18 +17,25 @@ Para entender a arquitetura, regras de engenharia, especificações de negócio 
 
 ## 🚀 Status do Projeto
 
-| Fase | Escopo | Situação | Testes |
+| Fase | Escopo | Situação | Testes / Evidências |
 | :--- | :--- | :---: | :---: |
 | **Fase 1** | Fundação Arquitetural, TLS local autoassinado com pinning SHA-256, pareamento por PIN de 6 dígitos, SQLite WAL + `synchronous=FULL`, `BEGIN IMMEDIATE`, idempotência e backups | **CONCLUÍDA** | 26/26 ✅ |
 | **Fase 2** | Cadastro de produtos/insumos, embalagens comerciais com fator de conversão, tipos de cestas e versionamento imutável de receitas padrão | **CONCLUÍDA** | 44/44 ✅ |
 | **Fase 3** | Livro-razão contábil *append-only* com triggers SQLite, entradas de compras com conversão automática, estorno contábil condicionado a saldo e ajustes manuais | **CONCLUÍDA** | 31/31 ✅ |
-| **Fase 4** | Motor de Montagem e Produção de Cestas (padrão e lotes personalizados com rastreabilidade) | *Aguardando autorização* | — |
-| **Fase 5** | Vendas, Baixa de Cestas e Venda com Montagem Simultânea | *Planejada* | — |
-| **Fase 6** | Relatórios Gerenciais, CMV Real, Margens de Lucro e Exportações | *Planejada* | — |
-| **Fase 7** | Instalação no Windows, Inicialização em Segundo Plano e Entrega | *Planejada* | — |
-| **Futuro** | Módulos Financeiros (Vendas Fiadas, Contas a Receber/Pagar, Caixa) e Conferência de Saídas | *Mapeado* | — |
+| **Fase 4** | Motor de Montagem e Produção de Cestas (lotes padrão e personalizados), CMPM em escala de microcentavos e desmontagem com triagem | **CONCLUÍDA** | 21/21 ✅ |
+| **Fase 5** | Vendas de Balcão e Rotas, Cadastro de Clientes, Contas a Receber (Fiado) e Montagem Simultânea sob Demanda | **CONCLUÍDA** | 17/17 ✅ |
+| **Fase 6** | Saídas Físicas (`STORE` $\rightarrow$ `TRANSIT`), Responsáveis por Rota, Baixa Exclusiva de Trânsito, Equação Canônica de 4 Termos e Acerto Segregado | **CONCLUÍDA** | 18/18 ✅ |
+| **Fase 7** | Gestão Financeira Completa, Contas a Pagar (`BUSINESS` vs `PERSONAL_WITHDRAWAL`), Tesouraria e Livro-Caixa Imutável | **CONCLUÍDA** | 14/14 ✅ |
+| **Fase 8** | Dashboard Consolidado, DRE Gerencial, Exportação Digital (CSV/XLSX), Formulários A4 em Branco para Prancheta e Impressão Direta (Epson Wi-Fi) | **CONCLUÍDA** | 8/8 ✅ |
+| **Fase 9** | Auditoria Final, Ciclo E2E Completo, CLI e Agendamento de Backup Quente, Tarefas Windows, Compilações Nativas e 4 Manuais Técnicos/Operacionais | **CONCLUÍDA** | 1/1 ✅ |
 
-**Total de testes automatizados ativos e aprovados:** **101 testes (100% verde)**.
+- **Backend (pytest):** **180 testes automatizados aprovados (100% verde)**.
+- **Frontend (flutter test):** **93 testes automatizados aprovados (100% verde)**.
+- **Análise Estática (dart analyze):** **0 erros / 0 avisos**.
+- **Binário Windows Release:** `client/build/windows/x64/runner/Release/zm_cesta_basica_client.exe` (92.160 bytes).
+- **Binário Android Release APK:** `client/build/app/outputs/flutter-apk/app-release.apk` (74.1 MB).
+- **Manuais Técnicos e Operacionais:** Diretório `docs/` (`MANUAL_OPERACIONAL.md`, `MANUAL_INSTALACAO_WINDOWS.md`, `MANUAL_BACKUP_RESTAURACAO.md`, `MANUAL_IMPRESSAO_EPSON.md`).
+- **Scripts de Automação:** Diretório `scripts/` (`start_backend_server.bat`, `run_scheduled_backup.bat`, `setup_firewall_rules.ps1`, `install_windows_service.ps1`, `backup_cli.py`).
 
 ---
 

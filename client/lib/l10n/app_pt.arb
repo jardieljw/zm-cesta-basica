@@ -2,7 +2,6 @@
   "@@locale": "pt",
   "appTitle": "ZM Cesta Básica",
   "homeHeaderTitle": "ZM Cestas - Gestão de Estoque",
-
   "commonSave": "Salvar",
   "commonCancel": "Cancelar",
   "commonConfirm": "Confirmar",
@@ -27,14 +26,12 @@
   "commonWarning": "Atenção",
   "commonUnit": "un",
   "commonViewDetails": "Ver Detalhes",
-
   "statusOnline": "Conectado",
   "statusOffline": "Desconectado",
   "statusPaired": "Pareado",
   "statusUnpaired": "Não Pareado",
   "serverUrlLabel": "URL do Servidor",
   "fingerprintLabel": "Fingerprint TLS",
-
   "moduleProducts": "Produtos & Insumos",
   "moduleBasketTypes": "Tipos de Cestas",
   "modulePurchases": "Entrada de Compras",
@@ -44,7 +41,6 @@
   "moduleInventoryMovements": "Histórico de Movimentações",
   "moduleSettings": "Configurações",
   "modulePairing": "Pareamento de Dispositivo",
-
   "productsTitle": "Produtos e Insumos",
   "productNew": "Novo Produto",
   "productEdit": "Editar Produto",
@@ -56,13 +52,11 @@
   "productActive": "Ativo",
   "productInactive": "Inativo",
   "productPackagings": "Embalagens / Apresentações",
-
   "packagingNew": "Nova Embalagem",
   "packagingName": "Nome da Embalagem",
   "packagingBarcode": "Código de Barras",
   "packagingMultiplier": "Fator Multiplicador",
   "packagingUnit": "Unidade de Embalagem",
-
   "basketTypesTitle": "Tipos de Cestas",
   "basketTypeNew": "Novo Tipo de Cesta",
   "basketTypeEdit": "Editar Tipo de Cesta",
@@ -74,7 +68,6 @@
   "recipeAddIngredient": "Adicionar Insumo",
   "recipeQuantityPerBasket": "Quantidade por Cesta",
   "recipeSection": "Seção do Insumo",
-
   "purchasesTitle": "Entrada de Compras",
   "purchaseNew": "Registrar Compra",
   "purchaseInvoiceNumber": "Número da NF",
@@ -84,7 +77,6 @@
   "purchasePackagesCount": "Qtd. Embalagens",
   "purchaseUnitCost": "Preço Unitário",
   "purchaseTotalCost": "Custo Total",
-
   "productionBatchesTitle": "Lotes de Produção",
   "productionBatchNew": "Nova Montagem de Cestas",
   "productionBatchNumber": "Lote #{number}",
@@ -230,7 +222,6 @@
       }
     }
   },
-
   "validationInvalid": "Inválido",
   "validationMinChars": "Mínimo de {min} caracteres",
   "@validationMinChars": {
@@ -250,7 +241,6 @@
     }
   },
   "commonTryAgain": "Tentar Novamente",
-
   "homePhase2Header": "Cadastros e Receitas",
   "homeProductsDescription": "Catálogo de itens, embalagens comerciais e estoque mínimo.",
   "homeBasketTypesDescription": "Tipos de cestas e versionamento imutável de receitas.",
@@ -265,21 +255,18 @@
   "homeCentralServer": "Servidor Central",
   "homeCheckConnection": "Verificar Conexão",
   "homePairDevice": "Parear Dispositivo",
-
   "inventorySummaryTitle": "Posição de Estoque",
   "inventoryMovementsTitle": "Movimentações de Estoque",
   "stockAdjustmentsTitle": "Ajuste Manual de Estoque",
   "stockAdjustmentNew": "Novo Ajuste de Estoque",
-  "stockAdjustmentTypeIn": "Entrada (+)",
-  "stockAdjustmentTypeOut": "Saída (-)",
+  "stockAdjustmentTypeIn": "Sobra / Entrada (+)",
+  "stockAdjustmentTypeOut": "Avaria / Saída (-)",
   "stockAdjustmentReasonLabel": "Justificativa do Ajuste",
-
   "settingsTitle": "Configurações",
   "pairingTitle": "Pareamento do Dispositivo",
   "pairingPinLabel": "PIN de Pareamento",
   "pairingScanQr": "Escanear QR Code",
   "pairingDeviceName": "Nome deste Dispositivo",
-
   "errorInsufficientStock": "Estoque insuficiente para realizar esta operação.",
   "errorIdempotencyMismatch": "Operação já executada com parâmetros divergentes.",
   "errorRequestInProgress": "Requisição em processamento concorrente. Aguarde alguns instantes.",
@@ -292,7 +279,6 @@
   "errorServer": "Erro interno no servidor local. Tente novamente mais tarde.",
   "errorConnectionFailed": "Não foi possível conectar ao servidor local. Verifique sua rede e se o serviço está ativo.",
   "errorUnexpected": "Ocorreu um erro inesperado.",
-
   "productsCatalogTitle": "Catálogo de Produtos e Insumos",
   "productSearchHint": "Buscar por nome, SKU ou código de barras...",
   "productEmpty": "Nenhum produto encontrado com os filtros selecionados.",
@@ -349,7 +335,6 @@
       }
     }
   },
-
   "productFormNewTitle": "Novo Produto / Insumo",
   "productFormEditTitle": "Editar Produto / Insumo",
   "productFormNameLabel": "Nome do Produto *",
@@ -385,7 +370,6 @@
       }
     }
   },
-
   "packagingsTitle": "Embalagens Comerciais",
   "packagingProductSubtitle": "{name} (Base: {unit})",
   "@packagingProductSubtitle": {
@@ -446,7 +430,6 @@
       }
     }
   },
-
   "basketTypesHeaderTitle": "Tipos de Cestas e Receitas",
   "basketTypeSearchHint": "Buscar por nome ou código...",
   "basketTypeEmpty": "Nenhum tipo de cesta encontrado.",
@@ -490,7 +473,6 @@
   },
   "basketTypeRecipeNone": "Sem receita cadastrada",
   "basketTypeManageRecipe": "Gerenciar Receita",
-
   "basketTypeFormNewTitle": "Novo Tipo de Cesta",
   "basketTypeFormEditTitle": "Editar Tipo de Cesta",
   "basketTypeFormCodeLabel": "Código da Cesta *",
@@ -517,7 +499,6 @@
       }
     }
   },
-
   "recipeAppTitle": "Receita: {name}",
   "@recipeAppTitle": {
     "placeholders": {
@@ -611,7 +592,6 @@
     }
   },
   "recipeNoActiveProducts": "Nenhum insumo ativo encontrado. Cadastre produtos primeiro.",
-
   "purchaseNumberTitle": "Compra #{number}",
   "@purchaseNumberTitle": {
     "placeholders": {
@@ -699,7 +679,6 @@
   "purchaseStatusDraft": "RASCUNHO",
   "purchaseStatusCanceled": "CANCELADA",
   "purchaseCancelButton": "Cancelar Compra",
-
   "purchaseFormTitle": "Nova Entrada de Compras",
   "purchaseFormSupplierLabel": "Fornecedor *",
   "purchaseFormSupplierHint": "Ex: Atacadão Distribuidora Ltda",
@@ -763,7 +742,6 @@
       }
     }
   },
-
   "inventorySummaryHeaderTitle": "Saldo de Estoque em Tempo Real",
   "inventorySummaryHistoryTooltip": "Extrato do Razão Contábil",
   "inventorySummaryAdjustmentTooltip": "Ajuste Manual",
@@ -813,7 +791,6 @@
   },
   "inventorySummaryStatusOk": "ESTOQUE REGULAR",
   "inventorySummaryStatusAlert": "ALERTA: ABAIXO DO MÍNIMO",
-
   "inventoryMovementsHeaderTitle": "Extrato do Razão Contábil",
   "inventoryMovementsFilterAll": "Todos os Tipos",
   "inventoryMovementsFilterPurchase": "Compras",
@@ -867,7 +844,6 @@
       }
     }
   },
-
   "movementPurchase": "COMPRA",
   "movementPurchaseCancel": "ESTORNO COMPRA",
   "movementAdjustmentIn": "SOBRA / ENTRADA",
@@ -876,7 +852,6 @@
   "movementAssemblyConsume": "CONSUMO MONTAGEM",
   "movementAssemblyProduce": "CESTA MONTADA",
   "movementSale": "VENDA",
-
   "stockAdjustmentDialogTitle": "Ajuste Manual de Estoque",
   "stockAdjustmentProductLabel": "Produto *",
   "stockAdjustmentTypeLabel": "Tipo de Ajuste *",
@@ -895,7 +870,6 @@
   "stockAdjustmentReasonRequired": "A justificativa é obrigatória para auditoria contábil",
   "stockAdjustmentConfirmButton": "Confirmar Ajuste",
   "stockAdjustmentSelectProductError": "Selecione um produto.",
-
   "assemblyHeaderTitle": "Montagem de Cestas (Ordem de Produção)",
   "assemblyTabStandard": "Cesta Padrão",
   "assemblyTabCustom": "Cesta Personalizada",
@@ -964,7 +938,6 @@
   },
   "assemblyCustomAddItem": "Adicionar Insumo",
   "assemblyCustomQtyValidation": "Quantidade inválida",
-
   "pairingViewTitle": "Pareamento do Dispositivo",
   "pairingTabManual": "Código PIN",
   "pairingTabQr": "Escanear QR",
@@ -993,7 +966,6 @@
   "pairingButton": "Parear Dispositivo",
   "pairingQrInstructions": "Aponte a câmera para o QR Code de Pareamento exibido na tela do servidor central.",
   "pairingScanning": "Processando pareamento...",
-
   "settingsHeaderTitle": "Configurações de Rede e Dispositivo",
   "settingsServerSection": "Servidor Local",
   "settingsServerUrlHint": "Ex: https://192.168.1.100:8000",
@@ -1012,7 +984,21 @@
   "settingsUnpairConfirm": "Desvincular",
   "settingsUnpairedSuccess": "Dispositivo desvinculado com sucesso.",
   "settingsPairNewButton": "Novo Pareamento",
-
+  "settingsGenerateQrTitle": "Pareamento de Celulares / Tablets",
+  "settingsGenerateQrButton": "Gerar QR Code para Celular",
+  "settingsQrDialogTitle": "QR Code de Pareamento (Rede Local)",
+  "settingsQrDialogInstructions": "No celular Android, abra Configurações > Parear Dispositivo > Escanear QR e aponte para esta tela.",
+  "settingsPinExpiresLabel": "PIN Válido por 5 minutos: {pin}",
+  "@settingsPinExpiresLabel": {
+    "placeholders": {
+      "pin": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsQrClose": "Fechar",
+  "cameraPermissionDenied": "Permissão da câmera necessária para escanear QR Code.",
+  "cameraPermissionRequest": "Conceder Permissão",
   "purchaseDetailUnitCost": "Unit.: {cost}",
   "@purchaseDetailUnitCost": {
     "placeholders": {
@@ -1031,8 +1017,6 @@
       }
     }
   },
-  "stockAdjustmentTypeIn": "Sobra / Entrada (+)",
-  "stockAdjustmentTypeOut": "Avaria / Saída (-)",
   "stockAdjustmentQtyHint": "Ex: 10",
   "categoryFood": "Alimentação",
   "categoryCleaning": "Limpeza",
@@ -1062,10 +1046,8 @@
   "homeNotConfigured": "Não configurado",
   "homeNotAvailable": "Não disponível",
   "homePending": "Pendente",
-
   "errorCustomerDocumentConflict": "Já existe um cliente cadastrado com este documento (CPF/CNPJ).",
   "errorCreditLimitExceeded": "Limite de crédito do cliente excedido para esta operação.",
-
   "homePhase5Header": "Fase 5 — Vendas, Clientes e Recebíveis",
   "homeCustomersDescription": "Cadastro de clientes, limites de crédito e histórico financeiro",
   "homeSalesDescription": "Vendas diretas, montagem sob demanda e vendas a prazo",
@@ -1073,7 +1055,6 @@
   "moduleCustomers": "Clientes",
   "moduleSales": "Vendas de Cestas",
   "moduleReceivables": "Contas a Receber (Fiados)",
-
   "customersTitle": "Clientes",
   "customerNew": "Novo Cliente",
   "customerEdit": "Editar Cliente",
@@ -1113,7 +1094,6 @@
   "customerDocumentHint": "CPF ou CNPJ",
   "customerPhoneHint": "(11) 99999-9999",
   "customerAddressHint": "Rua, número, bairro, cidade",
-
   "salesTitle": "Vendas de Cestas",
   "saleNew": "Nova Venda",
   "saleNumber": "Venda #{number}",
@@ -1220,7 +1200,6 @@
       }
     }
   },
-
   "receivablesTitle": "Contas a Receber (Fiados)",
   "receivablesSummaryTotal": "Total a Receber",
   "receivablesSummaryOpen": "Títulos em Aberto",
@@ -1252,13 +1231,11 @@
   "receivablesEmpty": "Nenhum título a receber encontrado.",
   "receivablePaymentAmountMustBePositive": "Informe um valor maior que zero.",
   "receivablePaymentAmountExceedsBalance": "Valor informado excede o saldo devedor.",
-
   "homePhase6Header": "Fase 6: Expedição, Conferência e Custódia",
   "moduleDispatches": "Saídas e Conferências",
   "homeDispatchesDescription": "Controle de saídas físicas, conferência e repasses",
   "moduleResponsiblePersons": "Pessoas Responsáveis",
   "homeResponsiblePersonsDescription": "Cadastro de entregadores, vendedores externos e motoristas",
-
   "responsiblePersonsTitle": "Pessoas Responsáveis",
   "responsiblePersonNew": "Novo Responsável",
   "responsiblePersonEdit": "Editar Responsável",
@@ -1279,7 +1256,6 @@
   },
   "responsiblePersonNoCustody": "Nenhuma cesta sob custódia no momento.",
   "responsiblePersonSavedSuccess": "Responsável salvo com sucesso.",
-
   "dispatchesTitle": "Saídas Físicas e Conferência",
   "dispatchNew": "Nova Saída de Cestas",
   "dispatchNumber": "Saída #{number}",
@@ -1312,7 +1288,6 @@
   "dispatchCancelReason": "Motivo do cancelamento",
   "dispatchCancelSuccess": "Saída cancelada com sucesso. Cestas retornadas ao estoque da loja.",
   "dispatchCreatedSuccess": "Saída registrada com sucesso.",
-
   "dispatchFormTitle": "Registrar Saída Física",
   "dispatchSelectResponsible": "Selecione o Responsável",
   "dispatchItemsTitle": "Cestas a Retirar",
@@ -1346,7 +1321,6 @@
   },
   "dispatchDuplicateBasketConsolidatedNotice": "Cesta repetida: será consolidada automaticamente no despacho.",
   "dispatchSubmit": "Confirmar Saída Física",
-
   "conferenceTitle": "Conferência da Saída #{number}",
   "@conferenceTitle": {
     "placeholders": {
@@ -1354,6 +1328,10 @@
         "type": "int"
       }
     }
+  },
+  "conferenceScreenTitle": "Conferência de Saída",
+  "@conferenceScreenTitle": {
+    "description": "Título genérico da tela de conferência de saída durante carregamento ou erro"
   },
   "conferenceStatusLabel": "Status da Saída: {status}",
   "@conferenceStatusLabel": {
@@ -1499,7 +1477,6 @@
   "conferenceNoLosses": "Nenhuma avaria ou perda registrada.",
   "conferenceNoExpenses": "Nenhuma despesa autorizada registrada.",
   "conferenceNoRepayments": "Nenhum repasse de dinheiro registrado.",
-
   "dialogReturnTitle": "Registrar Devolução Intacta",
   "dialogReturnQty": "Quantidade Devolvida",
   "dialogReturnNotes": "Observações",
@@ -1527,7 +1504,6 @@
   "dialogInvestigationNotes": "Parecer da Investigação / Justificativas",
   "dialogInvestigationMarkResolved": "Marcar como Resolvido (Divergências apuradas/justificadas)",
   "dialogInvestigationSave": "Salvar Parecer",
-
   "saleModeLabel": "Modalidade da Venda",
   "saleModeDirectStore": "Balcão / Loja",
   "saleModeCommercialRoute": "Rota / Venda Externa",
@@ -1542,13 +1518,11 @@
       }
     }
   },
-
   "homePhase7Header": "Fase 7: Gestão Financeira & Tesouraria",
   "modulePayables": "Contas a Pagar",
   "homePayablesDescription": "Boletos, cheques, empréstimos, fornecedores e parcelamentos",
   "moduleTreasury": "Tesouraria & Livro-Caixa",
   "homeTreasuryDescription": "Caixa físico, contas bancárias, transferências e conciliação",
-
   "payablesTitle": "Contas a Pagar",
   "payablesNew": "Nova Obrigação a Pagar",
   "payableDescription": "Descrição",
@@ -1571,8 +1545,12 @@
   "payableInstallment": "Parcela {current} de {total}",
   "@payableInstallment": {
     "placeholders": {
-      "current": { "type": "int" },
-      "total": { "type": "int" }
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "payableRecurrent": "Despesa Recorrente",
@@ -1594,7 +1572,6 @@
   "payableNoPayables": "Nenhuma obrigação a pagar encontrada.",
   "payableFilterMonth": "Mês",
   "payableFilterYear": "Ano",
-
   "treasuryTitle": "Tesouraria & Conciliação",
   "treasuryTabAccounts": "Saldos & Contas",
   "treasuryTabLedger": "Livro-Caixa (Extrato)",
@@ -1638,14 +1615,12 @@
   "treasuryNoAccounts": "Nenhuma conta financeira cadastrada.",
   "treasuryReversalBadge": "ESTORNO",
   "treasuryImmutableNote": "Livro-Caixa imutável: todas as operações são estritamente append-only.",
-
   "receivableRepassDirect": "Direto na Empresa / Loja",
   "receivableRepassPending": "Pendente de Repasse (Dinheiro em Rota)",
   "receivableRepassDone": "Repassado e Liquidado",
   "receivableReversePayment": "Estornar Recebimento",
   "receivableReverseReason": "Justificativa do estorno do recebimento",
   "receivableReverseSuccess": "Recebimento estornado com sucesso",
-
   "payableGenerateNextRecurrence": "Gerar Próxima Recorrência",
   "payableRecurrenceSuccess": "Nova parcela de recorrência gerada com sucesso!",
   "payableFilterPeriod": "Período de Vencimento",
@@ -1660,7 +1635,6 @@
   "receivableFilterHideAdvanced": "Ocultar Filtros",
   "receivableFilterClear": "Limpar Filtros",
   "receivableFilterApply": "Aplicar Filtros",
-
   "homePhase8Header": "Fase 8: Dashboard, Relatórios, Planilhas e Impressão",
   "moduleDashboard": "Dashboard Geral",
   "homeDashboardDescription": "Visão consolidada operacional, faturamento e livro-caixa",
@@ -1668,7 +1642,6 @@
   "homeReportsDescription": "Consultas analíticas, exportação CSV/XLSX e impressão PDF",
   "moduleBlankForms": "Formulários A4 & Impressão",
   "homeBlankFormsDescription": "Modelos em branco para prancheta e folhas preenchidas para auditoria",
-
   "dashboardTitle": "Dashboard Operacional e Financeiro",
   "dashboardFilterToday": "Hoje",
   "dashboardFilterDate": "Data Específica",
@@ -1700,7 +1673,6 @@
   "dashboardTreasuryBalance": "Saldo Disponível (Tesouraria)",
   "dashboardProjectedCash": "Saldo de Caixa Projetado",
   "dashboardProjectionNotice": "Atenção: Valores projetados são estimativas futuras e NÃO constituem dinheiro disponível em caixa.",
-
   "reportsTitle": "Relatórios Gerenciais e Planilhas",
   "reportSalesDispatches": "Vendas e Saídas de Cestas",
   "reportAssembly": "Montagem e Produção de Cestas",
@@ -1715,7 +1687,6 @@
   "reportPrintPdf": "Imprimir / PDF A4",
   "reportEmpty": "Nenhum registro encontrado para os filtros selecionados.",
   "reportTotals": "Totais Consolidados",
-
   "blankFormsTitle": "Formulários A4 para Impressão",
   "blankFormsSubtitle": "Modelos em branco para preenchimento manual à caneta e folhas para auditoria física",
   "formTypePayments": "Tabela de Pagamentos de Cestas (Fiados / Quitações)",
@@ -1726,5 +1697,757 @@
   "formModeFilled": "Documento Preenchido (Auditoria Física)",
   "formActionPrint": "Visualizar e Imprimir A4",
   "formActionDownloadXlsx": "Baixar Modelo XLSX Vazio",
-  "formBlankNotice": "Modelos formatados com linhas amplas (mínimo de 8 a 10 mm) para escrita manual confortável em prancheta."
+  "formBlankNotice": "Modelos formatados com linhas amplas (mínimo de 8 a 10 mm) para escrita manual confortável em prancheta.",
+  "formXlsxDownloadSuccess": "Planilha XLSX baixada com sucesso: {filename}",
+  "@formXlsxDownloadSuccess": {
+    "description": "Mensagem de sucesso ao baixar modelo ou auditoria XLSX",
+    "placeholders": {
+      "filename": {
+        "type": "String"
+      }
+    }
+  },
+  "formXlsxDownloadError": "Erro ao baixar planilha: {error}",
+  "@formXlsxDownloadError": {
+    "description": "Mensagem de erro ao baixar modelo ou auditoria XLSX",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "printerLocating": "Localizando impressoras instaladas...",
+  "@printerLocating": {
+    "description": "Mensagem durante busca de impressoras"
+  },
+  "printerSystemDefault": "Padrão do Sistema",
+  "@printerSystemDefault": {
+    "description": "Badge de impressora padrão do sistema operacional"
+  },
+  "printerAvailable": "Disponível",
+  "@printerAvailable": {
+    "description": "Badge de impressora online/disponível"
+  },
+  "printerActionPrint": "Imprimir",
+  "@printerActionPrint": {
+    "description": "Botão de impressão direta"
+  },
+  "reportExportSuccess": "Planilha {format} exportada com sucesso!",
+  "@reportExportSuccess": {
+    "description": "Mensagem de sucesso ao exportar relatório em CSV ou XLSX",
+    "placeholders": {
+      "format": {
+        "type": "String"
+      }
+    }
+  },
+  "reportExportError": "Erro ao exportar {format}: {error}",
+  "@reportExportError": {
+    "description": "Mensagem de erro ao exportar relatório",
+    "placeholders": {
+      "format": {
+        "type": "String"
+      },
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "commonSelectedDateLabel": "Data: {date}",
+  "@commonSelectedDateLabel": {
+    "description": "Label com a data selecionada",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "commonChange": "Alterar",
+  "@commonChange": {
+    "description": "Botão para alterar data ou período"
+  },
+  "commonPeriodLabel": "Período: {start} até {end}",
+  "@commonPeriodLabel": {
+    "description": "Label com intervalo de datas",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "commonMonthNumber": "Mês {month}",
+  "@commonMonthNumber": {
+    "description": "Exibição do número do mês",
+    "placeholders": {
+      "month": {
+        "type": "int"
+      }
+    }
+  },
+  "commonYearLabel": "Ano:",
+  "@commonYearLabel": {
+    "description": "Rótulo do seletor de ano"
+  },
+  "reportPhysicalBelowMinOnly": "Exibir apenas itens abaixo do estoque mínimo",
+  "@reportPhysicalBelowMinOnly": {
+    "description": "Filtro de contagem física"
+  },
+  "dashboardSelectedDate": "Data selecionada: {date}",
+  "@dashboardSelectedDate": {
+    "description": "Data selecionada no dashboard",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "dashboardBatchesCount": "Lotes ({count})",
+  "@dashboardBatchesCount": {
+    "description": "Título da lista de lotes com contagem",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashboardNoBatches": "Nenhum lote montado no período.",
+  "@dashboardNoBatches": {
+    "description": "Estado vazio da lista de lotes"
+  },
+  "dashboardSalesCount": "Vendas ({count})",
+  "@dashboardSalesCount": {
+    "description": "Título da lista de vendas com contagem",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashboardNoSales": "Nenhuma venda registrada no período.",
+  "@dashboardNoSales": {
+    "description": "Estado vazio da lista de vendas"
+  },
+  "dashboardDispatchesCount": "Saídas ({count})",
+  "@dashboardDispatchesCount": {
+    "description": "Título da lista de saídas com contagem",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashboardExaminePendingDivergences": "Examinar Divergências Pendentes ({count})",
+  "@dashboardExaminePendingDivergences": {
+    "description": "Botão de conferência com divergências pendentes",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashboardNoDispatches": "Nenhuma saída registrada no período.",
+  "@dashboardNoDispatches": {
+    "description": "Estado vazio de saídas"
+  },
+  "dashboardDispatchItemSubtitle": "Data: {date} | Cestas: {baskets} un.",
+  "@dashboardDispatchItemSubtitle": {
+    "description": "Subtítulo do item de saída no dashboard",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "baskets": {
+        "type": "int"
+      }
+    }
+  },
+  "dashboardNoRetainedValues": "Nenhum valor retido por responsável no momento.",
+  "@dashboardNoRetainedValues": {
+    "description": "Estado vazio de valores retidos por responsáveis"
+  },
+  "dashboardResponsiblePhone": "Tel: {phone}",
+  "@dashboardResponsiblePhone": {
+    "description": "Telefone do responsável",
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "dashboardResponsibleDate": "Data: {date}",
+  "@dashboardResponsibleDate": {
+    "description": "Data da saída do responsável",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "dashboardNoDivergences": "Nenhuma divergência pendente.",
+  "@dashboardNoDivergences": {
+    "description": "Estado vazio de divergências"
+  },
+  "dashboardSettledAt": "Acerto em: {date}",
+  "@dashboardSettledAt": {
+    "description": "Data e hora do acerto da divergência",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "commonNotesPrefix": "Obs: {notes}",
+  "@commonNotesPrefix": {
+    "description": "Observações prefixadas",
+    "placeholders": {
+      "notes": {
+        "type": "String"
+      }
+    }
+  },
+  "dashboardStockColBasket": "Cesta",
+  "@dashboardStockColBasket": {
+    "description": "Coluna Cesta no cabeçalho de estoque"
+  },
+  "dashboardStockColStore": "Loja",
+  "@dashboardStockColStore": {
+    "description": "Coluna Loja no cabeçalho de estoque"
+  },
+  "dashboardStockColTransit": "Trânsito",
+  "@dashboardStockColTransit": {
+    "description": "Coluna Trânsito no cabeçalho de estoque"
+  },
+  "dashboardStockColTotal": "Total",
+  "@dashboardStockColTotal": {
+    "description": "Coluna Total no cabeçalho de estoque"
+  },
+  "dashboardAllAboveMinStock": "Todos os itens estão acima do estoque mínimo.",
+  "@dashboardAllAboveMinStock": {
+    "description": "Alerta de que não há insumos em falta"
+  },
+  "dashboardItemSku": "SKU: {sku}",
+  "@dashboardItemSku": {
+    "description": "Código SKU do item",
+    "placeholders": {
+      "sku": {
+        "type": "String"
+      }
+    }
+  },
+  "dashboardCashRecordsCount": "Caixa ({count})",
+  "@dashboardCashRecordsCount": {
+    "description": "Contagem de lançamentos de caixa",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dashboardProjectedInflow": "Entradas Previstas: {amount}",
+  "@dashboardProjectedInflow": {
+    "description": "Total de entradas financeiras previstas",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "dashboardProjectedOutflow": "Saídas Previstas: {amount}",
+  "@dashboardProjectedOutflow": {
+    "description": "Total de saídas financeiras previstas",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "dashboardNoCashRecords": "Nenhum lançamento no período.",
+  "@dashboardNoCashRecords": {
+    "description": "Estado vazio do extrato de caixa"
+  },
+  "dashboardNoOpenReceivables": "Nenhum título a receber em aberto.",
+  "@dashboardNoOpenReceivables": {
+    "description": "Estado vazio de títulos a receber"
+  },
+  "dashboardNoOpenPayables": "Nenhuma conta a pagar em aberto.",
+  "@dashboardNoOpenPayables": {
+    "description": "Estado vazio de contas a pagar"
+  },
+  "conferenceMethodCashHand": "Dinheiro em Mãos",
+  "@conferenceMethodCashHand": {
+    "description": "Forma de repasse: Dinheiro em Mãos"
+  },
+  "conferenceMethodPixSettled": "PIX Repassado",
+  "@conferenceMethodPixSettled": {
+    "description": "Forma de repasse: PIX Repassado"
+  },
+  "conferenceMethodBankTransfer": "Transferência Bancária",
+  "@conferenceMethodBankTransfer": {
+    "description": "Forma de repasse: Transferência Bancária"
+  },
+  "commonObservationsPrefix": "Observações: {notes}",
+  "@commonObservationsPrefix": {
+    "description": "Prefixo de observações completas",
+    "placeholders": {
+      "notes": {
+        "type": "String"
+      }
+    }
+  },
+  "payableCategorySupplier": "Fornecedor",
+  "@payableCategorySupplier": {
+    "description": "Categoria de conta: Fornecedor"
+  },
+  "payableCategoryElectricity": "Energia Elétrica",
+  "@payableCategoryElectricity": {
+    "description": "Categoria de conta: Energia Elétrica"
+  },
+  "payableCategoryRent": "Aluguel",
+  "@payableCategoryRent": {
+    "description": "Categoria de conta: Aluguel"
+  },
+  "payableCategoryFreight": "Frete / Logística",
+  "@payableCategoryFreight": {
+    "description": "Categoria de conta: Frete / Logística"
+  },
+  "payableCategoryFreightShort": "Frete",
+  "@payableCategoryFreightShort": {
+    "description": "Categoria de conta: Frete simplificado"
+  },
+  "payableCategoryMaintenance": "Manutenção",
+  "@payableCategoryMaintenance": {
+    "description": "Categoria de conta: Manutenção"
+  },
+  "payableCategoryLoan": "Empréstimo",
+  "@payableCategoryLoan": {
+    "description": "Categoria de conta: Empréstimo"
+  },
+  "payableCategoryCreditCard": "Cartão de Crédito",
+  "@payableCategoryCreditCard": {
+    "description": "Categoria de conta: Cartão de Crédito"
+  },
+  "payableCategoryPartnerWithdrawal": "Retirada Sócios",
+  "@payableCategoryPartnerWithdrawal": {
+    "description": "Categoria de conta: Retirada de Sócios"
+  },
+  "payableCategoryTaxes": "Impostos / Taxas",
+  "@payableCategoryTaxes": {
+    "description": "Categoria de conta: Impostos / Taxas"
+  },
+  "payableCategoryTaxesShort": "Impostos",
+  "@payableCategoryTaxesShort": {
+    "description": "Categoria de conta: Impostos simplificado"
+  },
+  "payableCategoryOthers": "Outros",
+  "@payableCategoryOthers": {
+    "description": "Categoria de conta: Outros"
+  },
+  "payablePaymentMethodBoleto": "Boleto",
+  "@payablePaymentMethodBoleto": {
+    "description": "Forma de pagamento de despesa: Boleto"
+  },
+  "payablePaymentMethodPix": "PIX",
+  "@payablePaymentMethodPix": {
+    "description": "Forma de pagamento de despesa: PIX"
+  },
+  "payablePaymentMethodTransfer": "Transferência",
+  "@payablePaymentMethodTransfer": {
+    "description": "Forma de pagamento de despesa: Transferência"
+  },
+  "payablePaymentMethodCheck": "Cheque",
+  "@payablePaymentMethodCheck": {
+    "description": "Forma de pagamento de despesa: Cheque"
+  },
+  "payablePaymentMethodCard": "Cartão de Crédito",
+  "@payablePaymentMethodCard": {
+    "description": "Forma de pagamento de despesa: Cartão de Crédito"
+  },
+  "payablePaymentMethodCash": "Dinheiro",
+  "@payablePaymentMethodCash": {
+    "description": "Forma de pagamento de despesa: Dinheiro"
+  },
+  "payablePaymentMethodOther": "Outro",
+  "@payablePaymentMethodOther": {
+    "description": "Forma de pagamento de despesa: Outro"
+  },
+  "payableRecurrenceFrequency": "Periodicidade",
+  "@payableRecurrenceFrequency": {
+    "description": "Campo de periodicidade de recorrência"
+  },
+  "payableNoPaymentsYet": "Nenhum pagamento efetuado até o momento.",
+  "@payableNoPaymentsYet": {
+    "description": "Histórico vazio de pagamentos de uma conta a pagar"
+  },
+  "payableRevertPaymentTitle": "Estornar Pagamento",
+  "@payableRevertPaymentTitle": {
+    "description": "Título do modal de estorno de pagamento"
+  },
+  "payableRevertPaymentReason": "Justificativa do Estorno",
+  "@payableRevertPaymentReason": {
+    "description": "Campo de justificativa para estorno"
+  },
+  "payableConfirmCancelObligation": "Tem certeza que deseja cancelar a obrigação?",
+  "@payableConfirmCancelObligation": {
+    "description": "Confirmação de cancelamento de conta a pagar"
+  },
+  "monthJan": "Jan",
+  "@monthJan": {
+    "description": "Janeiro abreviado"
+  },
+  "monthFeb": "Fev",
+  "@monthFeb": {
+    "description": "Fevereiro abreviado"
+  },
+  "monthMar": "Mar",
+  "@monthMar": {
+    "description": "Março abreviado"
+  },
+  "monthApr": "Abr",
+  "@monthApr": {
+    "description": "Abril abreviado"
+  },
+  "monthMay": "Mai",
+  "@monthMay": {
+    "description": "Maio abreviado"
+  },
+  "monthJun": "Jun",
+  "@monthJun": {
+    "description": "Junho abreviado"
+  },
+  "monthJul": "Jul",
+  "@monthJul": {
+    "description": "Julho abreviado"
+  },
+  "monthAug": "Ago",
+  "@monthAug": {
+    "description": "Agosto abreviado"
+  },
+  "monthSep": "Set",
+  "@monthSep": {
+    "description": "Setembro abreviado"
+  },
+  "monthOct": "Out",
+  "@monthOct": {
+    "description": "Outubro abreviado"
+  },
+  "monthNov": "Nov",
+  "@monthNov": {
+    "description": "Novembro abreviado"
+  },
+  "monthDec": "Dez",
+  "@monthDec": {
+    "description": "Dezembro abreviado"
+  },
+  "filterAllOption": "Todos",
+  "@filterAllOption": {
+    "description": "Opção Todos em filtros suspensos"
+  },
+  "treasuryNeedTwoAccountsForTransfer": "São necessárias ao menos 2 contas para realizar transferências.",
+  "@treasuryNeedTwoAccountsForTransfer": {
+    "description": "Alerta de contas insuficientes para transferência"
+  },
+  "treasuryAccountLabel": "Conta Financeira",
+  "@treasuryAccountLabel": {
+    "description": "Rótulo do seletor de conta financeira"
+  },
+  "treasuryAccountFilterLabel": "Conta",
+  "@treasuryAccountFilterLabel": {
+    "description": "Filtro de conta"
+  },
+  "treasuryLaunchEntry": "Lançamento",
+  "@treasuryLaunchEntry": {
+    "description": "Botão de novo lançamento na tesouraria"
+  },
+  "treasuryConsolidatedPosition": "Posição Consolidada da Empresa",
+  "@treasuryConsolidatedPosition": {
+    "description": "Título do quadro consolidado da tesouraria"
+  },
+  "treasuryCashPhysicalLabel": "Caixa Físico: {amount}",
+  "@treasuryCashPhysicalLabel": {
+    "description": "Saldo em espécie/caixa físico",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "treasuryBankLabel": "Bancos: {amount}",
+  "@treasuryBankLabel": {
+    "description": "Saldo em contas bancárias",
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "treasuryFormulaExplanation": "Fórmula: Disponível + A Receber - A Pagar",
+  "@treasuryFormulaExplanation": {
+    "description": "Legenda explicativa do cálculo de previsão"
+  },
+  "treasuryFutureCommitmentsTitle": "Compromissos Futuros & Fiados",
+  "@treasuryFutureCommitmentsTitle": {
+    "description": "Título do quadro de compromissos futuros"
+  },
+  "treasuryCustodyCouriers": "Em custódia de entregadores",
+  "@treasuryCustodyCouriers": {
+    "description": "Subtítulo de valores em custódia externa"
+  },
+  "treasuryExpenseSegregationTitle": "Segregação de Despesas (Mês)",
+  "@treasuryExpenseSegregationTitle": {
+    "description": "Título do quadro de segregação de despesas"
+  },
+  "treasuryBusinessExpensesDesc": "Gastos operacionais da atividade",
+  "@treasuryBusinessExpensesDesc": {
+    "description": "Descrição de despesas empresariais"
+  },
+  "treasuryPersonalWithdrawalsDesc": "Não misturar com contas da empresa",
+  "@treasuryPersonalWithdrawalsDesc": {
+    "description": "Descrição de retiradas de sócios"
+  },
+  "treasuryCatCapitalContribution": "Aporte de Capital",
+  "@treasuryCatCapitalContribution": {
+    "description": "Categoria: Aporte de Capital"
+  },
+  "treasuryCatSalesRevenue": "Receita de Vendas",
+  "@treasuryCatSalesRevenue": {
+    "description": "Categoria: Receita de Vendas"
+  },
+  "treasuryCatCustomerReceipt": "Recebimento de Cliente",
+  "@treasuryCatCustomerReceipt": {
+    "description": "Categoria: Recebimento de Cliente"
+  },
+  "treasuryCatOtherCredits": "Outros Créditos",
+  "@treasuryCatOtherCredits": {
+    "description": "Categoria: Outros Créditos"
+  },
+  "treasuryCatPartnerWithdrawal": "Retirada de Sócios / Pró-labore",
+  "@treasuryCatPartnerWithdrawal": {
+    "description": "Categoria: Retirada de Sócios / Pró-labore"
+  },
+  "treasuryCatSupplierPayment": "Pagamento Fornecedor",
+  "@treasuryCatSupplierPayment": {
+    "description": "Categoria: Pagamento Fornecedor"
+  },
+  "treasuryCatElectricity": "Energia Elétrica",
+  "@treasuryCatElectricity": {
+    "description": "Categoria: Energia Elétrica"
+  },
+  "treasuryCatRent": "Aluguel",
+  "@treasuryCatRent": {
+    "description": "Categoria: Aluguel"
+  },
+  "treasuryCatFreightFuel": "Frete / Combustível",
+  "@treasuryCatFreightFuel": {
+    "description": "Categoria: Frete / Combustível"
+  },
+  "treasuryCatMaintenance": "Manutenção",
+  "@treasuryCatMaintenance": {
+    "description": "Categoria: Manutenção"
+  },
+  "treasuryCatOtherExpenses": "Outras Despesas",
+  "@treasuryCatOtherExpenses": {
+    "description": "Categoria: Outras Despesas"
+  },
+  "treasuryMethodPix": "PIX",
+  "@treasuryMethodPix": {
+    "description": "Método de pagamento: PIX"
+  },
+  "treasuryMethodCash": "Dinheiro",
+  "@treasuryMethodCash": {
+    "description": "Método de pagamento: Dinheiro"
+  },
+  "treasuryMethodTransfer": "Transferência",
+  "@treasuryMethodTransfer": {
+    "description": "Método de pagamento: Transferência"
+  },
+  "treasuryMethodCard": "Cartão",
+  "@treasuryMethodCard": {
+    "description": "Método de pagamento: Cartão"
+  },
+  "treasuryMethodOther": "Outro",
+  "@treasuryMethodOther": {
+    "description": "Método de pagamento: Outro"
+  },
+  "receivablesBasketsPrefix": "Cestas: {summary}",
+  "@receivablesBasketsPrefix": {
+    "description": "Resumo de cestas do recebível",
+    "placeholders": {
+      "summary": {
+        "type": "String"
+      }
+    }
+  },
+  "payableConfirmCancelObligationNamed": "Tem certeza que deseja cancelar a obrigação \"{description}\"?",
+  "@payableConfirmCancelObligationNamed": {
+    "description": "Confirmação de cancelamento de obrigação com nome",
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "tooltipPrintSelectPrinter": "Imprimir / Selecionar Impressora (Epson Wi-Fi)",
+  "@tooltipPrintSelectPrinter": {
+    "description": "Tooltip do botão de seleção de impressoras e Epson"
+  },
+  "tooltipShareSavePdf": "Compartilhar / Salvar PDF",
+  "@tooltipShareSavePdf": {
+    "description": "Tooltip para compartilhar ou salvar arquivo PDF"
+  },
+  "payableInstallmentsHelper": "Dividir em N parcelas mensais",
+  "@payableInstallmentsHelper": {
+    "description": "Texto auxiliar para parcelamento de conta a pagar"
+  },
+  "payableRevertPaymentTooltip": "Estornar este pagamento",
+  "@payableRevertPaymentTooltip": {
+    "description": "Tooltip do botão de estorno de pagamento"
+  },
+  "dispatchPhysicalNotesHint": "Observações da saída física (opcional)",
+  "@dispatchPhysicalNotesHint": {
+    "description": "Dica de preenchimento para observações de saída física"
+  },
+  "dispatchCustomizationHint": "Ex: Cesta personalizada, lote específico",
+  "@dispatchCustomizationHint": {
+    "description": "Dica de personalização de cesta na saída"
+  },
+  "conferenceLossReasonHint": "Ex: Caixa molhou na chuva durante entrega",
+  "@conferenceLossReasonHint": {
+    "description": "Dica de justificativa para avaria ou perda na conferência"
+  },
+  "conferenceReceivedByHint": "Colaborador que conferiu e recebeu",
+  "@conferenceReceivedByHint": {
+    "description": "Dica do conferente que recebeu o repasse"
+  },
+  "conferenceAuditorNameHint": "Nome do conferente / auditor",
+  "@conferenceAuditorNameHint": {
+    "description": "Dica do nome do auditor na finalização do acerto"
+  },
+  "conferenceInitialJustificationHint": "Justificativa inicial das divergências",
+  "@conferenceInitialJustificationHint": {
+    "description": "Dica para justificativa inicial de pendências"
+  },
+  "conferenceInvestigationHint": "Descreva a apuração, se foi justificado, perdas aceitas ou ressarcimento",
+  "@conferenceInvestigationHint": {
+    "description": "Dica para investigação de divergência"
+  },
+  "settingsGenerateQrTitle": "Pareamento de Celulares / Tablets",
+  "@settingsGenerateQrTitle": {
+    "description": "Título da seção de geração de QR Code para celular"
+  },
+  "settingsGenerateQrButton": "Gerar QR Code para Celular",
+  "@settingsGenerateQrButton": {
+    "description": "Botão para gerar QR Code de pareamento"
+  },
+  "settingsQrDialogTitle": "Conectar Celular / Tablet",
+  "@settingsQrDialogTitle": {
+    "description": "Título do diálogo de QR Code gerado"
+  },
+  "settingsQrDialogInstructions": "No celular Android, abra o aplicativo, toque em 'Parear Dispositivo' > aba 'Escanear QR' e aponte a câmera para a imagem abaixo:",
+  "@settingsQrDialogInstructions": {
+    "description": "Instruções do diálogo de QR Code"
+  },
+  "settingsPinExpiresLabel": "PIN válido por 5 minutos: {pin}",
+  "@settingsPinExpiresLabel": {
+    "description": "PIN temporário de validação",
+    "placeholders": {
+      "pin": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsQrClose": "Fechar",
+  "@settingsQrClose": {
+    "description": "Botão fechar do diálogo QR"
+  },
+  "cameraPermissionDenied": "Câmera aguardando permissão ou reinicialização.",
+  "@cameraPermissionDenied": {
+    "description": "Mensagem quando a câmera precisa ser ativada"
+  },
+  "cameraPermissionRequest": "Ativar Câmera",
+  "@cameraPermissionRequest": {
+    "description": "Botão para solicitar permissão de câmera"
+  },
+  "cameraStarting": "Iniciando leitor de câmera...",
+  "@cameraStarting": {
+    "description": "Mensagem durante a inicialização da câmera"
+  },
+  "settingsPairDeviceSection": "Conexão com o Servidor Local",
+  "@settingsPairDeviceSection": {
+    "description": "Título da seção de pareamento no celular"
+  },
+  "settingsPairDeviceDesc": "Escaneie o QR Code gerado na tela de Configurações do computador ou informe o PIN manualmente para conectar este celular.",
+  "@settingsPairDeviceDesc": {
+    "description": "Descrição do pareamento no celular"
+  },
+  "settingsPairDeviceButton": "Parear Dispositivo (Escanear QR / PIN)",
+  "@settingsPairDeviceButton": {
+    "description": "Botão para abrir a tela de pareamento"
+  },
+  "settingsServerNetworkSection": "Rede e Conexão",
+  "@settingsServerNetworkSection": {
+    "description": "Título da seção de rede"
+  },
+  "settingsGenerateQrDesc": "Gere um QR Code neste computador para que celulares Android possam escanear e parear automaticamente sem digitar IP, PIN ou Fingerprint.",
+  "@settingsGenerateQrDesc": {
+    "description": "Descrição da geração de QR Code no Windows"
+  },
+  "settingsStatusConnectedPaired": "Conectado e Pareado com Sucesso",
+  "@settingsStatusConnectedPaired": {
+    "description": "Status conectado e autenticado"
+  },
+  "settingsStatusConnectedWaiting": "Conectado (Aguardando Pareamento)",
+  "@settingsStatusConnectedWaiting": {
+    "description": "Status conectado sem autenticacao"
+  },
+  "settingsStatusDisconnected": "Servidor Local Desconectado",
+  "@settingsStatusDisconnected": {
+    "description": "Status desconectado"
+  },
+  "settingsStatusPairedSubtitle": "Operações comerciais autenticadas ativas.",
+  "@settingsStatusPairedSubtitle": {
+    "description": "Subtítulo quando pareado"
+  },
+  "settingsStatusWaitingSubtitle": "Pareie este dispositivo com o servidor para habilitar operações.",
+  "@settingsStatusWaitingSubtitle": {
+    "description": "Subtítulo aguardando pareamento"
+  },
+  "settingsQrManualTitle": "Ou conecte manualmente no celular:",
+  "@settingsQrManualTitle": {
+    "description": "Título para dados de pareamento manual"
+  },
+  "settingsQrServerUrlLabel": "URL do Servidor:",
+  "@settingsQrServerUrlLabel": {
+    "description": "Rótulo de URL no diálogo de QR"
+  },
+  "settingsQrFingerprintLabel": "Fingerprint TLS (Impressão Digital):",
+  "@settingsQrFingerprintLabel": {
+    "description": "Rótulo de Fingerprint TLS no diálogo de QR"
+  },
+  "settingsQrPinLabel": "PIN de Pareamento:",
+  "@settingsQrPinLabel": {
+    "description": "Rótulo do PIN no diálogo de QR"
+  },
+  "settingsCopiedToClipboard": "Copiado para a área de transferência!",
+  "@settingsCopiedToClipboard": {
+    "description": "Notificação de texto copiado"
+  },
+  "settingsFingerprintExplanation": "O Fingerprint TLS é o código de segurança criptográfico gerado pelo servidor para garantir que seu celular está conectando diretamente no seu computador com HTTPS confiável.",
+  "@settingsFingerprintExplanation": {
+    "description": "Explicação amigável do Fingerprint TLS"
+  },
+  "settingsNetworkSectionDescWindows": "Endereço local onde o servidor está operando neste computador.",
+  "@settingsNetworkSectionDescWindows": {
+    "description": "Descrição da seção de rede no Windows"
+  },
+  "settingsNetworkSectionDescAndroid": "Endereço do servidor e certificado seguro para comunicação em rede local.",
+  "@settingsNetworkSectionDescAndroid": {
+    "description": "Descrição da seção de rede no Android"
+  },
+  "pairingCameraInitializeHint": "Toque no botão abaixo para inicializar a captura da câmera:",
+  "@pairingCameraInitializeHint": {
+    "description": "Dica de inicialização da câmera"
+  }
 }

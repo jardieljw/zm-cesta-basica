@@ -828,7 +828,7 @@ class _ReceivablesViewState extends State<ReceivablesView> {
                   ),
                 if (r.basketTypesSummary != null && r.basketTypesSummary!.isNotEmpty)
                   Chip(
-                    label: Text('Cestas: ${r.basketTypesSummary}', style: const TextStyle(fontSize: 11)),
+                    label: Text(l10n.receivablesBasketsPrefix(r.basketTypesSummary!), style: const TextStyle(fontSize: 11)),
                     backgroundColor: Colors.grey.shade200,
                   ),
               ],

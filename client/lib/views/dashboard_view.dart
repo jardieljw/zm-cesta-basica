@@ -99,7 +99,7 @@ class _DashboardViewState extends State<DashboardView> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            tooltip: 'Atualizar Dashboard',
+            tooltip: l10n.commonRefresh,
             onPressed: _loadDashboard,
           ),
         ],
@@ -141,7 +141,7 @@ class _DashboardViewState extends State<DashboardView> {
                         const SizedBox(height: 12),
                         ElevatedButton.icon(
                           icon: const Icon(Icons.refresh),
-                          label: const Text('Tentar Novamente'),
+                          label: Text(context.l10n.commonTryAgain),
                           onPressed: _loadDashboard,
                         ),
                       ],
@@ -273,11 +273,11 @@ class _DashboardViewState extends State<DashboardView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Data selecionada: ${AppFormatters.formatDate(_selectedDate)}'),
+                  Text(context.l10n.dashboardSelectedDate(AppFormatters.formatDate(_selectedDate))),
                   const SizedBox(width: 8),
                   TextButton.icon(
                     icon: const Icon(Icons.calendar_today, size: 16),
-                    label: const Text('Alterar'),
+                    label: Text(context.l10n.commonChange),
                     onPressed: () async {
                       final picked = await showDatePicker(
                         context: context,
@@ -298,11 +298,14 @@ class _DashboardViewState extends State<DashboardView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Período: ${AppFormatters.formatDate(_selectedRange.start)} até ${AppFormatters.formatDate(_selectedRange.end)}'),
+                  Text(context.l10n.commonPeriodLabel(
+                    AppFormatters.formatDate(_selectedRange.start),
+                    AppFormatters.formatDate(_selectedRange.end),
+                  )),
                   const SizedBox(width: 8),
                   TextButton.icon(
                     icon: const Icon(Icons.date_range, size: 16),
-                    label: const Text('Alterar'),
+                    label: Text(context.l10n.commonChange),
                     onPressed: () async {
                       final picked = await showDateRangePicker(
                         context: context,
@@ -326,7 +329,7 @@ class _DashboardViewState extends State<DashboardView> {
                   DropdownButton<int>(
                     value: _selectedMonth,
                     items: List.generate(12, (i) => i + 1).map((m) {
-                      return DropdownMenuItem(value: m, child: Text('Mês $m'));
+                      return DropdownMenuItem(value: m, child: Text(context.l10n.commonMonthNumber(m)));
                     }).toList(),
                     onChanged: (val) {
                       if (val != null) {
@@ -355,7 +358,7 @@ class _DashboardViewState extends State<DashboardView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Ano: '),
+                  Text(context.l10n.commonYearLabel),
                   const SizedBox(width: 8),
                   DropdownButton<int>(
                     value: _selectedYear,
@@ -435,7 +438,7 @@ class _DashboardViewState extends State<DashboardView> {
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.list_alt, size: 18),
-                  label: Text('Lotes (${prod.batches.length})'),
+                  label: Text(context.l10n.dashboardBatchesCount(prod.batches.length)),
                   onPressed: () => _showProductionBatchesDrilldown(prod.batches),
                 ),
               ],
@@ -532,7 +535,7 @@ class _DashboardViewState extends State<DashboardView> {
                   const Divider(),
                   Expanded(
                     child: batches.isEmpty
-                        ? const Center(child: Text('Nenhum lote montado no período.'))
+                        ? Center(child: Text(context.l10n.dashboardNoBatches))
                         : ListView.separated(
                             itemCount: batches.length,
                             separatorBuilder: (_, __) => const Divider(height: 1),
@@ -611,7 +614,7 @@ class _DashboardViewState extends State<DashboardView> {
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.list_alt, size: 18),
-                  label: Text('Vendas (${sales.sales.length})'),
+                  label: Text(context.l10n.dashboardSalesCount(sales.sales.length)),
                   onPressed: () => _showSalesDrilldown(sales.sales),
                 ),
               ],
@@ -740,7 +743,7 @@ class _DashboardViewState extends State<DashboardView> {
                   const Divider(),
                   Expanded(
                     child: sales.isEmpty
-                        ? const Center(child: Text('Nenhuma venda registrada no período.'))
+                        ? Center(child: Text(context.l10n.dashboardNoSales))
                         : ListView.separated(
                             itemCount: sales.length,
                             separatorBuilder: (_, __) => const Divider(height: 1),
@@ -819,7 +822,7 @@ class _DashboardViewState extends State<DashboardView> {
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.list_alt, size: 18),
-                  label: Text('Saídas (${disp.dispatches.length})'),
+                  label: Text(context.l10n.dashboardDispatchesCount(disp.dispatches.length)),
                   onPressed: () => _showDispatchesDrilldown(disp.dispatches),
                 ),
               ],
@@ -932,7 +935,10 @@ class _DashboardViewState extends State<DashboardView> {
                 alignment: Alignment.centerRight,
                 child: TextButton.icon(
                   icon: const Icon(Icons.warning, color: Colors.red, size: 16),
-                  label: Text('Examinar Divergências Pendentes (${disp.pendingDivergencesCount})', style: const TextStyle(color: Colors.red)),
+                  label: Text(
+                    context.l10n.dashboardExaminePendingDivergences(disp.pendingDivergencesCount),
+                    style: const TextStyle(color: Colors.red),
+                  ),
                   onPressed: () => _showDivergencesDrilldown(disp.pendingDivergences),
                 ),
               ),
@@ -972,7 +978,7 @@ class _DashboardViewState extends State<DashboardView> {
                   const Divider(),
                   Expanded(
                     child: dispatches.isEmpty
-                        ? const Center(child: Text('Nenhuma saída registrada no período.'))
+                        ? Center(child: Text(context.l10n.dashboardNoDispatches))
                         : ListView.separated(
                             itemCount: dispatches.length,
                             separatorBuilder: (_, __) => const Divider(height: 1),
@@ -984,7 +990,10 @@ class _DashboardViewState extends State<DashboardView> {
                                   child: Text('#${d.dispatchNumber}', style: TextStyle(color: Colors.blue.shade900, fontSize: 12)),
                                 ),
                                 title: Text(d.responsiblePersonName, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                subtitle: Text('Data: ${AppFormatters.formatDateTime(d.dispatchDate)} | Cestas: ${d.totalBaskets} un.'),
+                                subtitle: Text(context.l10n.dashboardDispatchItemSubtitle(
+                                  AppFormatters.formatDateTime(d.dispatchDate),
+                                  d.totalBaskets,
+                                )),
                                 trailing: Chip(
                                   label: Text(d.status, style: const TextStyle(fontSize: 11)),
                                   backgroundColor: d.status == 'SETTLED' ? Colors.green.shade100 : Colors.blue.shade100,
@@ -1031,7 +1040,7 @@ class _DashboardViewState extends State<DashboardView> {
                   const Divider(),
                   Expanded(
                     child: items.isEmpty
-                        ? const Center(child: Text('Nenhum valor retido por responsável no momento.'))
+                        ? Center(child: Text(context.l10n.dashboardNoRetainedValues))
                         : ListView.separated(
                             itemCount: items.length,
                             separatorBuilder: (_, __) => const Divider(height: 1),
@@ -1049,8 +1058,8 @@ class _DashboardViewState extends State<DashboardView> {
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    if (item.phone != null) Text('Tel: ${item.phone}'),
-                                    Text('Data: ${AppFormatters.formatDateTime(item.dispatchDate)}'),
+                                    if (item.phone != null) Text(context.l10n.dashboardResponsiblePhone(item.phone!)),
+                                    Text(context.l10n.dashboardResponsibleDate(AppFormatters.formatDateTime(item.dispatchDate))),
                                     Text(
                                       'Vendas Rota: ${AppFormatters.formatCurrency(item.cashSalesCents)} | Despesas: ${AppFormatters.formatCurrency(item.routeExpensesCents)} | Repassado: ${AppFormatters.formatCurrency(item.repaidCashCents)}',
                                       style: const TextStyle(fontSize: 11),
@@ -1117,7 +1126,7 @@ class _DashboardViewState extends State<DashboardView> {
                   const Divider(),
                   Expanded(
                     child: divergences.isEmpty
-                        ? const Center(child: Text('Nenhuma divergência pendente.'))
+                        ? Center(child: Text(context.l10n.dashboardNoDivergences))
                         : ListView.separated(
                             itemCount: divergences.length,
                             separatorBuilder: (_, __) => const Divider(height: 1),
@@ -1135,13 +1144,13 @@ class _DashboardViewState extends State<DashboardView> {
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Acerto em: ${AppFormatters.formatDateTime(div.settledAt)}'),
+                                    Text(context.l10n.dashboardSettledAt(AppFormatters.formatDateTime(div.settledAt))),
                                     Text(
                                       'Falta Cestas: ${div.basketDiscrepancyQty} un. | Falta Dinheiro: ${AppFormatters.formatCurrency(div.cashDiscrepancyCents)}',
                                       style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
                                     ),
                                     if (div.notes != null && div.notes!.isNotEmpty)
-                                      Text('Obs: ${div.notes}', style: const TextStyle(fontStyle: FontStyle.italic)),
+                                      Text(context.l10n.commonNotesPrefix(div.notes!), style: const TextStyle(fontStyle: FontStyle.italic)),
                                   ],
                                 ),
                                 trailing: Chip(
@@ -1287,11 +1296,11 @@ class _DashboardViewState extends State<DashboardView> {
                 children: [
                   TableRow(
                     decoration: BoxDecoration(color: Colors.grey.shade100),
-                    children: const [
-                      Padding(padding: EdgeInsets.all(8), child: Text('Cesta', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
-                      Padding(padding: EdgeInsets.all(8), child: Text('Loja', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
-                      Padding(padding: EdgeInsets.all(8), child: Text('Trânsito', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
-                      Padding(padding: EdgeInsets.all(8), child: Text('Total', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                    children: [
+                      Padding(padding: const EdgeInsets.all(8), child: Text(context.l10n.dashboardStockColBasket, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                      Padding(padding: const EdgeInsets.all(8), child: Text(context.l10n.dashboardStockColStore, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                      Padding(padding: const EdgeInsets.all(8), child: Text(context.l10n.dashboardStockColTransit, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                      Padding(padding: const EdgeInsets.all(8), child: Text(context.l10n.dashboardStockColTotal, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
                     ],
                   ),
                   ...inv.basketStock.map((b) {
@@ -1342,7 +1351,7 @@ class _DashboardViewState extends State<DashboardView> {
                   const Divider(),
                   Expanded(
                     child: items.isEmpty
-                        ? const Center(child: Text('Todos os itens estão acima do estoque mínimo.'))
+                        ? Center(child: Text(context.l10n.dashboardAllAboveMinStock))
                         : ListView.separated(
                             itemCount: items.length,
                             separatorBuilder: (_, __) => const Divider(height: 1),
@@ -1354,7 +1363,7 @@ class _DashboardViewState extends State<DashboardView> {
                                   child: const Icon(Icons.priority_high, color: Colors.red),
                                 ),
                                 title: Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                subtitle: Text('SKU: ${item.sku ?? '-'} | Un: ${item.baseUnit}'),
+                                subtitle: Text('${context.l10n.dashboardItemSku(item.sku ?? "-")} | Un: ${item.baseUnit}'),
                                 trailing: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.end,
@@ -1412,7 +1421,7 @@ class _DashboardViewState extends State<DashboardView> {
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.receipt_long, size: 18),
-                  label: Text('Caixa (${fin.cashRecords.length})'),
+                  label: Text(context.l10n.dashboardCashRecordsCount(fin.cashRecords.length)),
                   onPressed: () => _showCashDrilldown(fin.cashRecords),
                 ),
               ],
@@ -1608,8 +1617,14 @@ class _DashboardViewState extends State<DashboardView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Entradas Previstas: ${AppFormatters.formatCurrency(fin.projectedInflowCents)}', style: const TextStyle(fontSize: 12)),
-                      Text('Saídas Previstas: ${AppFormatters.formatCurrency(fin.projectedOutflowCents)}', style: const TextStyle(fontSize: 12)),
+                      Text(
+                        context.l10n.dashboardProjectedInflow(AppFormatters.formatCurrency(fin.projectedInflowCents)),
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      Text(
+                        context.l10n.dashboardProjectedOutflow(AppFormatters.formatCurrency(fin.projectedOutflowCents)),
+                        style: const TextStyle(fontSize: 12),
+                      ),
                       Text(
                         'Saldo Projetado: ${AppFormatters.formatCurrency(fin.projectedTreasuryBalanceCents)}',
                         style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.amber.shade900),
@@ -1654,7 +1669,7 @@ class _DashboardViewState extends State<DashboardView> {
                   const Divider(),
                   Expanded(
                     child: records.isEmpty
-                        ? const Center(child: Text('Nenhum lançamento no período.'))
+                        ? Center(child: Text(context.l10n.dashboardNoCashRecords))
                         : ListView.separated(
                             itemCount: records.length,
                             separatorBuilder: (_, __) => const Divider(height: 1),
@@ -1721,7 +1736,7 @@ class _DashboardViewState extends State<DashboardView> {
                   const Divider(),
                   Expanded(
                     child: records.isEmpty
-                        ? const Center(child: Text('Nenhum título a receber em aberto.'))
+                        ? Center(child: Text(context.l10n.dashboardNoOpenReceivables))
                         : ListView.separated(
                             itemCount: records.length,
                             separatorBuilder: (_, __) => const Divider(height: 1),
@@ -1800,7 +1815,7 @@ class _DashboardViewState extends State<DashboardView> {
                   const Divider(),
                   Expanded(
                     child: records.isEmpty
-                        ? const Center(child: Text('Nenhuma conta a pagar em aberto.'))
+                        ? Center(child: Text(context.l10n.dashboardNoOpenPayables))
                         : ListView.separated(
                             itemCount: records.length,
                             separatorBuilder: (_, __) => const Divider(height: 1),

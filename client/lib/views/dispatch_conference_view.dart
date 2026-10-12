@@ -236,7 +236,7 @@ class _DispatchConferenceViewState extends State<DispatchConferenceView> {
                       maxLines: 2,
                       decoration: InputDecoration(
                         labelText: '${l10n.dialogLossReason} *',
-                        hintText: 'Ex: Caixa molhou na chuva durante entrega',
+                        hintText: l10n.conferenceLossReasonHint,
                         border: const OutlineInputBorder(),
                       ),
                       validator: (v) {
@@ -492,10 +492,10 @@ class _DispatchConferenceViewState extends State<DispatchConferenceView> {
                         labelText: l10n.dialogRepaymentMethod,
                         border: const OutlineInputBorder(),
                       ),
-                      items: const [
-                        DropdownMenuItem(value: 'CASH', child: Text('Dinheiro em Mãos')),
-                        DropdownMenuItem(value: 'PIX', child: Text('PIX Repassado')),
-                        DropdownMenuItem(value: 'TRANSFER', child: Text('Transferência Bancária')),
+                      items: [
+                        DropdownMenuItem(value: 'CASH', child: Text(context.l10n.conferenceMethodCashHand)),
+                        DropdownMenuItem(value: 'PIX', child: Text(context.l10n.conferenceMethodPixSettled)),
+                        DropdownMenuItem(value: 'TRANSFER', child: Text(context.l10n.conferenceMethodBankTransfer)),
                       ],
                       onChanged: (val) {
                         if (val != null) setDialogState(() => method = val);
@@ -506,7 +506,7 @@ class _DispatchConferenceViewState extends State<DispatchConferenceView> {
                       controller: recByCtrl,
                       decoration: InputDecoration(
                         labelText: l10n.dialogRepaymentReceivedBy,
-                        hintText: 'Colaborador que conferiu e recebeu',
+                        hintText: l10n.conferenceReceivedByHint,
                         border: const OutlineInputBorder(),
                       ),
                     ),
@@ -618,7 +618,7 @@ class _DispatchConferenceViewState extends State<DispatchConferenceView> {
                       controller: auditByCtrl,
                       decoration: InputDecoration(
                         labelText: '${l10n.dialogSettleAuditedBy} *',
-                        hintText: 'Nome do conferente / auditor',
+                        hintText: l10n.conferenceAuditorNameHint,
                         border: const OutlineInputBorder(),
                       ),
                       validator: (v) {
@@ -642,7 +642,7 @@ class _DispatchConferenceViewState extends State<DispatchConferenceView> {
                         maxLines: 2,
                         decoration: InputDecoration(
                           labelText: l10n.dialogSettleInvestigationNotes,
-                          hintText: 'Justificativa inicial das divergências',
+                          hintText: l10n.conferenceInitialJustificationHint,
                           border: const OutlineInputBorder(),
                         ),
                       ),
@@ -734,7 +734,7 @@ class _DispatchConferenceViewState extends State<DispatchConferenceView> {
                       maxLines: 4,
                       decoration: InputDecoration(
                         labelText: '${l10n.dialogInvestigationNotes} *',
-                        hintText: 'Descreva a apuração, se foi justificado, perdas aceitas ou ressarcimento',
+                        hintText: l10n.conferenceInvestigationHint,
                         border: const OutlineInputBorder(),
                       ),
                       validator: (v) {
@@ -841,14 +841,14 @@ class _DispatchConferenceViewState extends State<DispatchConferenceView> {
 
     if (_isLoading) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Conferência de Saída')),
+        appBar: AppBar(title: Text(l10n.conferenceScreenTitle)),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     if (_errorMessage != null || _reconciliation == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Conferência de Saída')),
+        appBar: AppBar(title: Text(l10n.conferenceScreenTitle)),
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -1340,7 +1340,7 @@ class _DispatchConferenceViewState extends State<DispatchConferenceView> {
                         ),
                         if (rec.latestSettlement!.notes != null) ...[
                           const SizedBox(height: 4),
-                          Text('Observações: ${rec.latestSettlement!.notes}', style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                          Text(context.l10n.commonObservationsPrefix(rec.latestSettlement!.notes!), style: const TextStyle(fontSize: 12, color: Colors.black54)),
                         ],
                         if (rec.latestSettlement!.investigationNotes != null) ...[
                           const SizedBox(height: 6),

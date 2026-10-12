@@ -382,7 +382,7 @@ class _DispatchFormViewState extends State<DispatchFormView> {
                       controller: _notesController,
                       decoration: InputDecoration(
                         labelText: l10n.commonNotes,
-                        hintText: 'Observações da saída física (opcional)',
+                        hintText: l10n.dispatchPhysicalNotesHint,
                         border: const OutlineInputBorder(),
                         isDense: true,
                       ),
@@ -573,7 +573,7 @@ class _DispatchFormViewState extends State<DispatchFormView> {
                         controller: row.notesController,
                         decoration: InputDecoration(
                           labelText: l10n.dispatchItemNotes,
-                          hintText: 'Ex: Cesta personalizada, lote específico',
+                          hintText: l10n.dispatchCustomizationHint,
                           border: const OutlineInputBorder(),
                           isDense: true,
                         ),

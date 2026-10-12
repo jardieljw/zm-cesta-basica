@@ -1,7 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import '../core/secure_storage.dart';
 import '../services/auth_service.dart';
+import '../services/connectivity_service.dart';
+import '../models/connection_status.dart';
 import '../l10n/l10n_extension.dart';
+import 'pairing_view.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -13,6 +19,7 @@ class SettingsView extends StatefulWidget {
 class _SettingsViewState extends State<SettingsView> {
   final SecureStorageService _storage = SecureStorageService();
   final AuthService _auth = AuthService();
+  final ConnectivityService _connectivity = ConnectivityService();
 
   final TextEditingController _urlCtrl = TextEditingController();
   final TextEditingController _fpCtrl = TextEditingController();
@@ -21,6 +28,9 @@ class _SettingsViewState extends State<SettingsView> {
   String? _deviceName;
   bool _hasToken = false;
   bool _isSaving = false;
+  bool _isCheckingConnection = false;
+  bool _isGeneratingQr = false;
+  ServerStatus? _serverStatus;
 
   @override
   void initState() {
@@ -34,6 +44,7 @@ class _SettingsViewState extends State<SettingsView> {
     final id = await _storage.getDevicePublicId();
     final name = await _storage.getDeviceName();
     final token = await _storage.getDeviceToken();
+    final status = await _connectivity.checkConnection();
 
     setState(() {
       _urlCtrl.text = url;
@@ -41,7 +52,176 @@ class _SettingsViewState extends State<SettingsView> {
       _deviceId = id ?? '-';
       _deviceName = name ?? '-';
       _hasToken = token != null && token.isNotEmpty;
+      _serverStatus = status;
     });
+  }
+
+  Future<void> _checkConnection() async {
+    setState(() => _isCheckingConnection = true);
+    final status = await _connectivity.checkConnection();
+    setState(() {
+      _serverStatus = status;
+      _isCheckingConnection = false;
+    });
+  }
+
+  Future<void> _generatePairingQr() async {
+    final l10n = context.l10n;
+    setState(() => _isGeneratingQr = true);
+    try {
+      final pairingData = await _auth.initiatePairing();
+      if (!mounted) return;
+
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text(l10n.settingsQrDialogTitle),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  l10n.settingsQrDialogInstructions,
+                  style: const TextStyle(fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: QrImageView(
+                    data: pairingData.qrPayload,
+                    version: QrVersions.auto,
+                    size: 240.0,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.amber.shade400),
+                  ),
+                  child: SelectableText(
+                    l10n.settingsPinExpiresLabel(pairingData.pinCode),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.amber.shade900,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const Divider(),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    l10n.settingsQrManualTitle,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                _buildCopyableRow(
+                  label: l10n.settingsQrServerUrlLabel,
+                  value: pairingData.serverUrl,
+                ),
+                const SizedBox(height: 8),
+                _buildCopyableRow(
+                  label: l10n.settingsQrFingerprintLabel,
+                  value: pairingData.tlsFingerprintSha256,
+                  isMonospace: true,
+                ),
+                const SizedBox(height: 8),
+                _buildCopyableRow(
+                  label: l10n.settingsQrPinLabel,
+                  value: pairingData.pinCode,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(l10n.settingsQrClose),
+            ),
+          ],
+        ),
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Colors.red.shade700,
+            content: Text(e.toString()),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isGeneratingQr = false);
+      }
+    }
+  }
+
+  Widget _buildCopyableRow({
+    required String label,
+    required String value,
+    bool isMonospace = false,
+  }) {
+    final l10n = context.l10n;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade100,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.black54),
+                ),
+                const SizedBox(height: 2),
+                SelectableText(
+                  value,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: isMonospace ? 'monospace' : null,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.copy, size: 18),
+            tooltip: 'Copiar',
+            onPressed: () {
+              Clipboard.setData(ClipboardData(text: value));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  duration: const Duration(seconds: 2),
+                  content: Text(l10n.settingsCopiedToClipboard),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _saveSettings() async {
@@ -89,7 +269,30 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final l10n = context.l10n;
+    final isOnline = _serverStatus?.isOnline ?? false;
+
+    Color badgeColor;
+    String statusText;
+    IconData statusIcon;
+
+    if (!isOnline) {
+      badgeColor = Colors.red.shade700;
+      statusText = l10n.settingsStatusDisconnected;
+      statusIcon = Icons.cloud_off;
+    } else if (!_hasToken) {
+      badgeColor = Colors.amber.shade800;
+      statusText = l10n.settingsStatusConnectedWaiting;
+      statusIcon = Icons.link_off;
+    } else {
+      badgeColor = Colors.green.shade700;
+      statusText = l10n.settingsStatusConnectedPaired;
+      statusIcon = Icons.cloud_done;
+    }
+
+    final isAndroidDevice = Platform.isAndroid;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.settingsHeaderTitle),
@@ -99,6 +302,164 @@ class _SettingsViewState extends State<SettingsView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Banner de Status da Conexão
+            Card(
+              elevation: 2,
+              color: badgeColor.withValues(alpha: 0.12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+                side: BorderSide(color: badgeColor, width: 1.5),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  children: [
+                    Icon(statusIcon, color: badgeColor, size: 36),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            statusText,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: badgeColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            _hasToken
+                                ? l10n.settingsStatusPairedSubtitle
+                                : l10n.settingsStatusWaitingSubtitle,
+                            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.black87),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Botão Verificar Conexão
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size.fromHeight(48),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              ),
+              onPressed: _isCheckingConnection ? null : _checkConnection,
+              icon: _isCheckingConnection
+                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                  : const Icon(Icons.refresh),
+              label: Text(l10n.homeCheckConnection),
+            ),
+            const SizedBox(height: 24),
+
+            // SEÇÃO DIFERENCIADA POR PLATAFORMA:
+            // No Android: Opção de Parear Dispositivo (Escanear QR Code com Câmera ou digitar PIN)
+            if (isAndroidDevice)
+              Card(
+                elevation: 1,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.qr_code_scanner, color: theme.colorScheme.primary),
+                          const SizedBox(width: 10),
+                          Text(
+                            l10n.settingsPairDeviceSection,
+                            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        l10n.settingsPairDeviceDesc,
+                        style: const TextStyle(color: Colors.black87, fontSize: 13),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue.shade700,
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size.fromHeight(48),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => const PairingView()),
+                          );
+                          _loadSettings();
+                        },
+                        icon: const Icon(Icons.camera_alt),
+                        label: Text(l10n.settingsPairDeviceButton),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            // No Windows (Computador Servidor): Opção de Gerar QR Code para Celular
+            else
+              Card(
+                elevation: 1,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.qr_code, color: theme.colorScheme.primary),
+                          const SizedBox(width: 10),
+                          Text(
+                            l10n.settingsGenerateQrTitle,
+                            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        l10n.settingsGenerateQrDesc,
+                        style: const TextStyle(color: Colors.black87, fontSize: 13),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.teal.shade700,
+                          foregroundColor: Colors.white,
+                          minimumSize: const Size.fromHeight(48),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        onPressed: _isGeneratingQr ? null : _generatePairingQr,
+                        icon: _isGeneratingQr
+                            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                            : const Icon(Icons.qr_code_2),
+                        label: Text(l10n.settingsGenerateQrButton),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            const SizedBox(height: 24),
+
+            // Configurações de Rede / URL do Servidor
+            Text(l10n.settingsServerNetworkSection, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            Text(
+              isAndroidDevice
+                  ? l10n.settingsNetworkSectionDescAndroid
+                  : l10n.settingsNetworkSectionDescWindows,
+              style: const TextStyle(fontSize: 13, color: Colors.black54),
+            ),
+            const SizedBox(height: 12),
             TextField(
               controller: _urlCtrl,
               decoration: InputDecoration(
@@ -118,13 +479,37 @@ class _SettingsViewState extends State<SettingsView> {
                 prefixIcon: const Icon(Icons.security),
               ),
             ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.blue.shade200),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.info_outline, size: 20, color: Colors.blue.shade800),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      l10n.settingsFingerprintExplanation,
+                      style: TextStyle(fontSize: 12, color: Colors.blue.shade900),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _isSaving ? null : _saveSettings,
               child: Text(l10n.settingsSaveButton),
             ),
             const Divider(height: 40),
-            Text(l10n.settingsDeviceInfoSection, style: Theme.of(context).textTheme.titleMedium),
+
+            // Informações do Dispositivo
+            Text(l10n.settingsDeviceInfoSection, style: theme.textTheme.titleMedium),
             const SizedBox(height: 12),
             ListTile(
               contentPadding: EdgeInsets.zero,

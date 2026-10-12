@@ -203,17 +203,17 @@ class _PayablesViewState extends State<PayablesView> {
                                 labelText: l10n.payableCategory,
                                 border: const OutlineInputBorder(),
                               ),
-                              items: const [
-                                DropdownMenuItem(value: 'FORNECEDOR', child: Text('Fornecedor')),
-                                DropdownMenuItem(value: 'ENERGIA', child: Text('Energia Elétrica')),
-                                DropdownMenuItem(value: 'ALUGUEL', child: Text('Aluguel')),
-                                DropdownMenuItem(value: 'FRETE', child: Text('Frete / Logística')),
-                                DropdownMenuItem(value: 'MANUTENCAO', child: Text('Manutenção')),
-                                DropdownMenuItem(value: 'EMPRESTIMO', child: Text('Empréstimo')),
-                                DropdownMenuItem(value: 'CARTAO_CREDITO', child: Text('Cartão de Crédito')),
-                                DropdownMenuItem(value: 'RETIRADA_SOCIO', child: Text('Retirada Sócios')),
-                                DropdownMenuItem(value: 'IMPOSTO', child: Text('Impostos / Taxas')),
-                                DropdownMenuItem(value: 'OUTROS', child: Text('Outros')),
+                              items: [
+                                DropdownMenuItem(value: 'FORNECEDOR', child: Text(l10n.payableCategorySupplier)),
+                                DropdownMenuItem(value: 'ENERGIA', child: Text(l10n.payableCategoryElectricity)),
+                                DropdownMenuItem(value: 'ALUGUEL', child: Text(l10n.payableCategoryRent)),
+                                DropdownMenuItem(value: 'FRETE', child: Text(l10n.payableCategoryFreight)),
+                                DropdownMenuItem(value: 'MANUTENCAO', child: Text(l10n.payableCategoryMaintenance)),
+                                DropdownMenuItem(value: 'EMPRESTIMO', child: Text(l10n.payableCategoryLoan)),
+                                DropdownMenuItem(value: 'CARTAO_CREDITO', child: Text(l10n.payableCategoryCreditCard)),
+                                DropdownMenuItem(value: 'RETIRADA_SOCIO', child: Text(l10n.payableCategoryPartnerWithdrawal)),
+                                DropdownMenuItem(value: 'IMPOSTO', child: Text(l10n.payableCategoryTaxes)),
+                                DropdownMenuItem(value: 'OUTROS', child: Text(l10n.payableCategoryOthers)),
                               ],
                               onChanged: (val) {
                                 if (val != null) setDialogState(() => category = val);
@@ -261,14 +261,14 @@ class _PayablesViewState extends State<PayablesView> {
                                 labelText: l10n.payablePaymentMethod,
                                 border: const OutlineInputBorder(),
                               ),
-                              items: const [
-                                DropdownMenuItem(value: 'BOLETO', child: Text('Boleto')),
-                                DropdownMenuItem(value: 'PIX', child: Text('PIX')),
-                                DropdownMenuItem(value: 'TRANSFERENCIA', child: Text('Transferência')),
-                                DropdownMenuItem(value: 'CHEQUE', child: Text('Cheque')),
-                                DropdownMenuItem(value: 'CARTAO_CREDITO', child: Text('Cartão de Crédito')),
-                                DropdownMenuItem(value: 'DINHEIRO', child: Text('Dinheiro')),
-                                DropdownMenuItem(value: 'OUTRO', child: Text('Outro')),
+                              items: [
+                                DropdownMenuItem(value: 'BOLETO', child: Text(l10n.payablePaymentMethodBoleto)),
+                                DropdownMenuItem(value: 'PIX', child: Text(l10n.payablePaymentMethodPix)),
+                                DropdownMenuItem(value: 'TRANSFERENCIA', child: Text(l10n.payablePaymentMethodTransfer)),
+                                DropdownMenuItem(value: 'CHEQUE', child: Text(l10n.payablePaymentMethodCheck)),
+                                DropdownMenuItem(value: 'CARTAO_CREDITO', child: Text(l10n.payablePaymentMethodCard)),
+                                DropdownMenuItem(value: 'DINHEIRO', child: Text(l10n.payablePaymentMethodCash)),
+                                DropdownMenuItem(value: 'OUTRO', child: Text(l10n.payablePaymentMethodOther)),
                               ],
                               onChanged: (val) {
                                 if (val != null) setDialogState(() => paymentMethod = val);
@@ -306,7 +306,7 @@ class _PayablesViewState extends State<PayablesView> {
                               keyboardType: TextInputType.number,
                               decoration: InputDecoration(
                                 labelText: l10n.payableTotalInstallments,
-                                helperText: 'Dividir em N parcelas mensais',
+                                helperText: l10n.payableInstallmentsHelper,
                                 border: const OutlineInputBorder(),
                               ),
                             ),
@@ -325,9 +325,9 @@ class _PayablesViewState extends State<PayablesView> {
                       if (isRecurrent) ...[
                         DropdownButtonFormField<String>(
                           initialValue: recurrencePeriod,
-                          decoration: const InputDecoration(
-                            labelText: 'Periodicidade',
-                            border: OutlineInputBorder(),
+                          decoration: InputDecoration(
+                            labelText: l10n.payableRecurrenceFrequency,
+                            border: const OutlineInputBorder(),
                           ),
                           items: [
                             DropdownMenuItem(value: 'MONTHLY', child: Text(l10n.payableRecurrenceMonthly)),
@@ -524,14 +524,14 @@ class _PayablesViewState extends State<PayablesView> {
                         labelText: l10n.payablePaymentMethod,
                         border: const OutlineInputBorder(),
                       ),
-                      items: const [
-                        DropdownMenuItem(value: 'BOLETO', child: Text('Boleto')),
-                        DropdownMenuItem(value: 'PIX', child: Text('PIX')),
-                        DropdownMenuItem(value: 'TRANSFERENCIA', child: Text('Transferência')),
-                        DropdownMenuItem(value: 'CHEQUE', child: Text('Cheque')),
-                        DropdownMenuItem(value: 'CARTAO_CREDITO', child: Text('Cartão de Crédito')),
-                        DropdownMenuItem(value: 'DINHEIRO', child: Text('Dinheiro')),
-                        DropdownMenuItem(value: 'OUTRO', child: Text('Outro')),
+                      items: [
+                        DropdownMenuItem(value: 'BOLETO', child: Text(l10n.payablePaymentMethodBoleto)),
+                        DropdownMenuItem(value: 'PIX', child: Text(l10n.payablePaymentMethodPix)),
+                        DropdownMenuItem(value: 'TRANSFERENCIA', child: Text(l10n.payablePaymentMethodTransfer)),
+                        DropdownMenuItem(value: 'CHEQUE', child: Text(l10n.payablePaymentMethodCheck)),
+                        DropdownMenuItem(value: 'CARTAO_CREDITO', child: Text(l10n.payablePaymentMethodCard)),
+                        DropdownMenuItem(value: 'DINHEIRO', child: Text(l10n.payablePaymentMethodCash)),
+                        DropdownMenuItem(value: 'OUTRO', child: Text(l10n.payablePaymentMethodOther)),
                       ],
                       onChanged: (val) {
                         if (val != null) setDialogState(() => paymentMethod = val);
@@ -647,9 +647,9 @@ class _PayablesViewState extends State<PayablesView> {
                 content: SizedBox(
                   width: 520,
                   child: detail.payments.isEmpty
-                      ? const Padding(
-                          padding: EdgeInsets.all(24.0),
-                          child: Center(child: Text('Nenhum pagamento efetuado até o momento.')),
+                      ? Padding(
+                          padding: const EdgeInsets.all(24.0),
+                          child: Center(child: Text(l10n.payableNoPaymentsYet)),
                         )
                       : ListView.separated(
                           shrinkWrap: true,
@@ -685,24 +685,24 @@ class _PayablesViewState extends State<PayablesView> {
                                       style: const TextStyle(fontSize: 12, color: Colors.red),
                                     ),
                                   if (p.notes != null)
-                                    Text('Obs: ${p.notes}', style: const TextStyle(fontSize: 11, color: Colors.black54)),
+                                    Text(context.l10n.commonNotesPrefix(p.notes!), style: const TextStyle(fontSize: 11, color: Colors.black54)),
                                 ],
                               ),
                               trailing: isConfirmed
                                   ? IconButton(
                                       icon: const Icon(Icons.undo, color: Colors.orange),
-                                      tooltip: 'Estornar este pagamento',
+                                      tooltip: l10n.payableRevertPaymentTooltip,
                                       onPressed: () async {
                                         final reasonController = TextEditingController();
                                         final confirmed = await showDialog<bool>(
                                           context: context,
                                           builder: (dCtx) => AlertDialog(
-                                            title: const Text('Estornar Pagamento'),
+                                            title: Text(l10n.payableRevertPaymentTitle),
                                             content: TextField(
                                               controller: reasonController,
-                                              decoration: const InputDecoration(
-                                                labelText: 'Justificativa do Estorno',
-                                                border: OutlineInputBorder(),
+                                              decoration: InputDecoration(
+                                                labelText: l10n.payableRevertPaymentReason,
+                                                border: const OutlineInputBorder(),
                                               ),
                                             ),
                                             actions: [
@@ -767,7 +767,7 @@ class _PayablesViewState extends State<PayablesView> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Tem certeza que deseja cancelar a obrigação "${payable.description}"?'),
+            Text(context.l10n.payableConfirmCancelObligationNamed(payable.description)),
             const SizedBox(height: 12),
             TextField(
               controller: reasonController,
@@ -927,16 +927,16 @@ class _PayablesViewState extends State<PayablesView> {
               ),
               items: [
                 DropdownMenuItem(value: null, child: Text(l10n.categoryAll)),
-                const DropdownMenuItem(value: 'FORNECEDOR', child: Text('Fornecedor')),
-                const DropdownMenuItem(value: 'ENERGIA', child: Text('Energia Elétrica')),
-                const DropdownMenuItem(value: 'ALUGUEL', child: Text('Aluguel')),
-                const DropdownMenuItem(value: 'FRETE', child: Text('Frete')),
-                const DropdownMenuItem(value: 'MANUTENCAO', child: Text('Manutenção')),
-                const DropdownMenuItem(value: 'EMPRESTIMO', child: Text('Empréstimo')),
-                const DropdownMenuItem(value: 'CARTAO_CREDITO', child: Text('Cartão de Crédito')),
-                const DropdownMenuItem(value: 'RETIRADA_SOCIO', child: Text('Retirada Sócios')),
-                const DropdownMenuItem(value: 'IMPOSTO', child: Text('Impostos')),
-                const DropdownMenuItem(value: 'OUTROS', child: Text('Outros')),
+                DropdownMenuItem(value: 'FORNECEDOR', child: Text(l10n.payableCategorySupplier)),
+                DropdownMenuItem(value: 'ENERGIA', child: Text(l10n.payableCategoryElectricity)),
+                DropdownMenuItem(value: 'ALUGUEL', child: Text(l10n.payableCategoryRent)),
+                DropdownMenuItem(value: 'FRETE', child: Text(l10n.payableCategoryFreightShort)),
+                DropdownMenuItem(value: 'MANUTENCAO', child: Text(l10n.payableCategoryMaintenance)),
+                DropdownMenuItem(value: 'EMPRESTIMO', child: Text(l10n.payableCategoryLoan)),
+                DropdownMenuItem(value: 'CARTAO_CREDITO', child: Text(l10n.payableCategoryCreditCard)),
+                DropdownMenuItem(value: 'RETIRADA_SOCIO', child: Text(l10n.payableCategoryPartnerWithdrawal)),
+                DropdownMenuItem(value: 'IMPOSTO', child: Text(l10n.payableCategoryTaxesShort)),
+                DropdownMenuItem(value: 'OUTROS', child: Text(l10n.payableCategoryOthers)),
               ],
               onChanged: (val) {
                 setState(() => _categoryFilter = val);
@@ -989,20 +989,20 @@ class _PayablesViewState extends State<PayablesView> {
                 isDense: true,
                 border: const OutlineInputBorder(),
               ),
-              items: const [
-                DropdownMenuItem(value: null, child: Text('Todos')),
-                DropdownMenuItem(value: 1, child: Text('Jan')),
-                DropdownMenuItem(value: 2, child: Text('Fev')),
-                DropdownMenuItem(value: 3, child: Text('Mar')),
-                DropdownMenuItem(value: 4, child: Text('Abr')),
-                DropdownMenuItem(value: 5, child: Text('Mai')),
-                DropdownMenuItem(value: 6, child: Text('Jun')),
-                DropdownMenuItem(value: 7, child: Text('Jul')),
-                DropdownMenuItem(value: 8, child: Text('Ago')),
-                DropdownMenuItem(value: 9, child: Text('Set')),
-                DropdownMenuItem(value: 10, child: Text('Out')),
-                DropdownMenuItem(value: 11, child: Text('Nov')),
-                DropdownMenuItem(value: 12, child: Text('Dez')),
+              items: [
+                DropdownMenuItem(value: null, child: Text(l10n.filterAllOption)),
+                DropdownMenuItem(value: 1, child: Text(l10n.monthJan)),
+                DropdownMenuItem(value: 2, child: Text(l10n.monthFeb)),
+                DropdownMenuItem(value: 3, child: Text(l10n.monthMar)),
+                DropdownMenuItem(value: 4, child: Text(l10n.monthApr)),
+                DropdownMenuItem(value: 5, child: Text(l10n.monthMay)),
+                DropdownMenuItem(value: 6, child: Text(l10n.monthJun)),
+                DropdownMenuItem(value: 7, child: Text(l10n.monthJul)),
+                DropdownMenuItem(value: 8, child: Text(l10n.monthAug)),
+                DropdownMenuItem(value: 9, child: Text(l10n.monthSep)),
+                DropdownMenuItem(value: 10, child: Text(l10n.monthOct)),
+                DropdownMenuItem(value: 11, child: Text(l10n.monthNov)),
+                DropdownMenuItem(value: 12, child: Text(l10n.monthDec)),
               ],
               onChanged: (val) {
                 setState(() => _monthFilter = val);
@@ -1019,15 +1019,15 @@ class _PayablesViewState extends State<PayablesView> {
                 isDense: true,
                 border: const OutlineInputBorder(),
               ),
-              items: const [
-                DropdownMenuItem(value: null, child: Text('Todos')),
-                DropdownMenuItem(value: 2024, child: Text('2024')),
-                DropdownMenuItem(value: 2025, child: Text('2025')),
-                DropdownMenuItem(value: 2026, child: Text('2026')),
-                DropdownMenuItem(value: 2027, child: Text('2027')),
-                DropdownMenuItem(value: 2028, child: Text('2028')),
-                DropdownMenuItem(value: 2029, child: Text('2029')),
-                DropdownMenuItem(value: 2030, child: Text('2030')),
+              items: [
+                DropdownMenuItem(value: null, child: Text(l10n.filterAllOption)),
+                const DropdownMenuItem(value: 2024, child: Text('2024')),
+                const DropdownMenuItem(value: 2025, child: Text('2025')),
+                const DropdownMenuItem(value: 2026, child: Text('2026')),
+                const DropdownMenuItem(value: 2027, child: Text('2027')),
+                const DropdownMenuItem(value: 2028, child: Text('2028')),
+                const DropdownMenuItem(value: 2029, child: Text('2029')),
+                const DropdownMenuItem(value: 2030, child: Text('2030')),
               ],
               onChanged: (val) {
                 setState(() => _yearFilter = val);

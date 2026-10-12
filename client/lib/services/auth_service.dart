@@ -24,6 +24,23 @@ class AuthService {
     return id;
   }
 
+  Future<PairingInitData> initiatePairing() async {
+    final res = await _apiClient.post(
+      ApiConstants.pairingInitiatePath,
+      body: {},
+      isMutation: false,
+    );
+
+    if (res is Map) {
+      return PairingInitData.fromJson(Map<String, dynamic>.from(res));
+    }
+
+    throw ApiException(
+      statusCode: 500,
+      message: 'Falha ao iniciar sessão de pareamento no servidor',
+    );
+  }
+
   Future<DeviceAuthCredentials> pairWithPin({
     required String pinCode,
     required String serverUrl,

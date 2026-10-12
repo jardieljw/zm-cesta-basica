@@ -20,8 +20,8 @@ No início de qualquer sessão de trabalho, o agente DEVE consultar as seguintes
 Antes de produzir código ou aplicar qualquer alteração em arquivos existentes:
 
 1. **Checagem de Saúde do Projeto:**
-   - Execute a suíte de testes do backend com `& ".\backend\.venv\Scripts\python.exe" -m pytest backend/tests -q`. O projeto deve estar com **100% dos testes aprovados** (atualmente 179 testes).
-   - Execute a suíte de testes do Flutter com `& "C:\dev\flutter\bin\flutter.bat" test` (atualmente 91 testes).
+   - Execute a suíte de testes do backend com `& ".\backend\.venv\Scripts\python.exe" -m pytest backend/tests -q`. O projeto deve estar com **100% dos testes aprovados** (atualmente 180 testes).
+   - Execute a suíte de testes do Flutter com `& "C:\dev\flutter\bin\flutter.bat" test` (atualmente 93 testes).
    - Verifique o status do Git com `git status` para garantir que o ambiente está consistente.
 2. **Mapeamento de Impacto e Limites Modulares:**
    - Respeite rigorosamente a divisão modular: `estoque`, `produtos`, `receitas`, `compras`, `produção`, `vendas`, `expedição`, `financeiro`, `relatorios_e_impressao` e `core`.
@@ -142,15 +142,17 @@ A Fase 6 atende à rotina real de uma pequena empresa de cestas básicas e rege 
 
 ---
 
-## 8. Próxima Etapa do Projeto
+## 8. Status de Conclusão e Entrega Final do Projeto
 
-O projeto concluiu e homologou as **Fases 1, 2, 3, 4 e 5** (139 testes backend ativos, 38 testes Flutter aprovados, compilações nativas Windows e Android validadas, internacionalização completa com `context.l10n`).
+O projeto concluiu e homologou **100% de todas as 9 Fases planejadas**:
+- **Fase 1:** Fundação Arquitetural, TLS autoassinado com fingerprint SHA-256, Pareamento PIN, SQLite WAL, idempotência.
+- **Fase 2:** Produtos, Embalagens com Conversão de Unidades e Versionamento Imutável de Receitas.
+- **Fase 3:** Livro-Razão *append-only*, Compras com Conversão, CMPM em Microcentavos e Estornos Condicionados a Saldo.
+- **Fase 4:** Motor de Produção, Lotes Padrão e Personalizados, Triagem de Desmontagem e Congelamento de Custo Unitário.
+- **Fase 5:** Vendas de Balcão e Rotas, Cadastro de Clientes, Contas a Receber (Fiado) e Montagem Simultânea sob Demanda.
+- **Fase 6:** Saídas Físicas (`STORE` -> `TRANSIT`), Responsáveis por Rotas, Baixa Exclusiva de Trânsito, Equação Canônica de 4 Termos e Acerto Segregado.
+- **Fase 7:** Gestão Financeira Completa, Tesouraria, Contas a Pagar (`BUSINESS` vs `PERSONAL_WITHDRAWAL`) e Livro-Caixa Imutável.
+- **Fase 8:** Dashboard Consolidado, DRE Gerencial, Exportação Digital (CSV e XLSX), Formulários A4 em Branco para Prancheta e Módulo de Impressão Direta (Windows e Android Spoolers, compatibilidade Epson Wi-Fi).
+- **Fase 9:** Auditoria Final, Teste Ponta a Ponta (180 testes backend e 93 testes Flutter 100% aprovados), CLI e Agendamento de Backup Quente com Verificação de Integridade, Scripts de Inicialização Automática e Firewall, Compilações Nativas de Produção (Windows Release `.exe` e Android Release APK de 74.1 MB) e 4 Manuais Operacionais e Técnicos (`docs/`).
 
-A próxima fase planejada é a **Fase 6: Saídas Físicas, Responsáveis por Cestas e Conferência Operacional (Simplificada)**:
-- Cadastro simples de pessoas responsáveis por entregas (`responsible_persons`).
-- Registro de saídas físicas de cestas do galpão (`stock_dispatches` e `dispatch_items`).
-- Extensão mínima de `inventory_movements` com `location_type` e `responsible_person_id` para baixar cestas vendidas em rota de `TRANSIT`, sem duplo desconto em `STORE`.
-- Conferência física de retorno (vendidas, devolvidas intactas ao armazém `STORE`, avariadas com justificativa `DISPATCH_LOSS` e itens pendentes sob custódia).
-- Acerto financeiro segregado (dinheiro físico a repassar vs. pagamentos recebidos diretamente na conta da empresa) e fechamento auditável (`dispatch_settlements`).
-
-**REGRA DE OURO:** Não inicie a implementação da Fase 6 sem a autorização prévia e expressa do usuário.
+**ESTADO FINAL:** Sistema pronto para implantação em produção. Qualquer manutenção futura deve respeitar estritamente as regras de imutabilidade contábil, atomicidade sob `BEGIN IMMEDIATE`, tipagem monetária em centavos/microcentavos e testes automatizados contínuos.

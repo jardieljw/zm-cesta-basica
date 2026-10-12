@@ -31,7 +31,32 @@ class ConnectivityService {
   }
 
   Future<bool> isPaired() async {
-    final token = await _storage.getDeviceToken();
-    return token != null && token.isNotEmpty;
+    var token = await _storage.getDeviceToken();
+    if (token != null && token.isNotEmpty) {
+      return true;
+    }
+
+    // No Windows rodando com localhost, auto-autentica como terminal master do caixa
+    try {
+      final serverUrl = await _storage.getServerUrl() ?? 'https://127.0.0.1:8000';
+      if (serverUrl.contains('127.0.0.1') || serverUrl.contains('localhost')) {
+        final res = await _apiClient.post(
+          ApiConstants.pairingLocalMasterPath,
+          body: {},
+          isMutation: false,
+        );
+        if (res is Map && res['device_token'] != null) {
+          final newToken = res['device_token'] as String;
+          await _storage.saveDeviceToken(newToken);
+          await _storage.saveDeviceIdentity(
+            devicePublicId: res['device_public_id'] as String? ?? 'windows-local-master',
+            deviceName: res['device_name'] as String? ?? 'Terminal Caixa Windows (Local)',
+          );
+          return true;
+        }
+      }
+    } catch (_) {}
+
+    return false;
   }
 }

@@ -6,6 +6,7 @@ class ApiConstants {
   static const String pingPath = '$apiPrefix/ping';
   static const String pairingInitiatePath = '$apiPrefix/pairing/initiate';
   static const String pairingConfirmPath = '$apiPrefix/pairing/confirm';
+  static const String pairingLocalMasterPath = '$apiPrefix/pairing/local-master';
   static const String devicesListPath = '$apiPrefix/devices';
   static const String devicesRevokePath = '$apiPrefix/devices/revoke';
   static const String backupPath = '$apiPrefix/backup';

@@ -103,7 +103,7 @@ class _BlankFormsViewState extends State<BlankFormsView> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Planilha XLSX baixada com sucesso: $filename'),
+            content: Text(context.l10n.formXlsxDownloadSuccess(filename)),
             backgroundColor: Colors.green.shade700,
           ),
         );
@@ -112,7 +112,7 @@ class _BlankFormsViewState extends State<BlankFormsView> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Erro ao baixar planilha: $e'),
+            content: Text(context.l10n.formXlsxDownloadError(e.toString())),
             backgroundColor: Colors.red.shade700,
           ),
         );
@@ -169,7 +169,7 @@ class _BlankFormsViewState extends State<BlankFormsView> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            tooltip: 'Atualizar Dados',
+            tooltip: l10n.commonRefresh,
             onPressed: _loadFormData,
           ),
         ],

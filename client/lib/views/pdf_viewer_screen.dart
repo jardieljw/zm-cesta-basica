@@ -84,13 +84,13 @@ class PdfViewerScreen extends StatelessWidget {
                       future: Printing.listPrinters(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(
+                          return Center(
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                CircularProgressIndicator(),
-                                SizedBox(height: 12),
-                                Text('Localizando impressoras instaladas...', style: TextStyle(fontSize: 12)),
+                                const CircularProgressIndicator(),
+                                const SizedBox(height: 12),
+                                Text(context.l10n.printerLocating, style: const TextStyle(fontSize: 12)),
                               ],
                             ),
                           );
@@ -178,14 +178,14 @@ class PdfViewerScreen extends StatelessWidget {
                               subtitle: Text(
                                 [
                                   if (p.model != null && p.model!.isNotEmpty) p.model,
-                                  if (p.isDefault) 'Padrão do Sistema',
-                                  if (p.isAvailable) 'Disponível',
+                                  if (p.isDefault) context.l10n.printerSystemDefault,
+                                  if (p.isAvailable) context.l10n.printerAvailable,
                                 ].join(' • '),
                                 style: const TextStyle(fontSize: 11),
                               ),
                               trailing: ElevatedButton.icon(
                                 icon: const Icon(Icons.send, size: 14),
-                                label: const Text('Imprimir', style: TextStyle(fontSize: 12)),
+                                label: Text(context.l10n.printerActionPrint, style: const TextStyle(fontSize: 12)),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: isEpson ? Colors.blue.shade700 : null,
                                   foregroundColor: isEpson ? Colors.white : null,
@@ -224,12 +224,12 @@ class PdfViewerScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.print),
-            tooltip: 'Imprimir / Selecionar Impressora (Epson Wi-Fi)',
+            tooltip: l10n.tooltipPrintSelectPrinter,
             onPressed: () => _showPrinterSelectionDialog(context),
           ),
           IconButton(
             icon: const Icon(Icons.share),
-            tooltip: 'Compartilhar / Salvar PDF',
+            tooltip: l10n.tooltipShareSavePdf,
             onPressed: () async {
               final bytes = await buildPdf(PdfPageFormat.a4);
               await Printing.sharePdf(bytes: bytes, filename: fileName);
@@ -257,12 +257,12 @@ class PdfViewerScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.devices),
-            tooltip: 'Dispositivos de Impressão (Epson Wi-Fi)',
+            tooltip: l10n.tooltipPrintSelectPrinter,
             onPressed: () => _showPrinterSelectionDialog(context),
           ),
           IconButton(
             icon: const Icon(Icons.share),
-            tooltip: 'Compartilhar / Salvar PDF',
+            tooltip: l10n.tooltipShareSavePdf,
             onPressed: () async {
               final bytes = await buildPdf(PdfPageFormat.a4);
               await Printing.sharePdf(bytes: bytes, filename: fileName);

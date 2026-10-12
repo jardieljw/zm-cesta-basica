@@ -1527,6 +1527,34 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settingsPairNewButton => 'Novo Pareamento';
 
   @override
+  String get settingsGenerateQrTitle => 'Pareamento de Celulares / Tablets';
+
+  @override
+  String get settingsGenerateQrButton => 'Gerar QR Code para Celular';
+
+  @override
+  String get settingsQrDialogTitle => 'Conectar Celular / Tablet';
+
+  @override
+  String get settingsQrDialogInstructions =>
+      'No celular Android, abra o aplicativo, toque em \'Parear Dispositivo\' > aba \'Escanear QR\' e aponte a câmera para a imagem abaixo:';
+
+  @override
+  String settingsPinExpiresLabel(String pin) {
+    return 'PIN válido por 5 minutos: $pin';
+  }
+
+  @override
+  String get settingsQrClose => 'Fechar';
+
+  @override
+  String get cameraPermissionDenied =>
+      'Câmera aguardando permissão ou reinicialização.';
+
+  @override
+  String get cameraPermissionRequest => 'Ativar Câmera';
+
+  @override
   String purchaseDetailUnitCost(String cost) {
     return 'Unit.: $cost';
   }
@@ -2130,6 +2158,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String conferenceTitle(int number) {
     return 'Conferência da Saída #$number';
   }
+
+  @override
+  String get conferenceScreenTitle => 'Conferência de Saída';
 
   @override
   String conferenceStatusLabel(String status) {
@@ -2930,4 +2961,513 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get formBlankNotice =>
       'Modelos formatados com linhas amplas (mínimo de 8 a 10 mm) para escrita manual confortável em prancheta.';
+
+  @override
+  String formXlsxDownloadSuccess(String filename) {
+    return 'Planilha XLSX baixada com sucesso: $filename';
+  }
+
+  @override
+  String formXlsxDownloadError(String error) {
+    return 'Erro ao baixar planilha: $error';
+  }
+
+  @override
+  String get printerLocating => 'Localizando impressoras instaladas...';
+
+  @override
+  String get printerSystemDefault => 'Padrão do Sistema';
+
+  @override
+  String get printerAvailable => 'Disponível';
+
+  @override
+  String get printerActionPrint => 'Imprimir';
+
+  @override
+  String reportExportSuccess(String format) {
+    return 'Planilha $format exportada com sucesso!';
+  }
+
+  @override
+  String reportExportError(String format, String error) {
+    return 'Erro ao exportar $format: $error';
+  }
+
+  @override
+  String commonSelectedDateLabel(String date) {
+    return 'Data: $date';
+  }
+
+  @override
+  String get commonChange => 'Alterar';
+
+  @override
+  String commonPeriodLabel(String start, String end) {
+    return 'Período: $start até $end';
+  }
+
+  @override
+  String commonMonthNumber(int month) {
+    return 'Mês $month';
+  }
+
+  @override
+  String get commonYearLabel => 'Ano:';
+
+  @override
+  String get reportPhysicalBelowMinOnly =>
+      'Exibir apenas itens abaixo do estoque mínimo';
+
+  @override
+  String dashboardSelectedDate(String date) {
+    return 'Data selecionada: $date';
+  }
+
+  @override
+  String dashboardBatchesCount(int count) {
+    return 'Lotes ($count)';
+  }
+
+  @override
+  String get dashboardNoBatches => 'Nenhum lote montado no período.';
+
+  @override
+  String dashboardSalesCount(int count) {
+    return 'Vendas ($count)';
+  }
+
+  @override
+  String get dashboardNoSales => 'Nenhuma venda registrada no período.';
+
+  @override
+  String dashboardDispatchesCount(int count) {
+    return 'Saídas ($count)';
+  }
+
+  @override
+  String dashboardExaminePendingDivergences(int count) {
+    return 'Examinar Divergências Pendentes ($count)';
+  }
+
+  @override
+  String get dashboardNoDispatches => 'Nenhuma saída registrada no período.';
+
+  @override
+  String dashboardDispatchItemSubtitle(String date, int baskets) {
+    return 'Data: $date | Cestas: $baskets un.';
+  }
+
+  @override
+  String get dashboardNoRetainedValues =>
+      'Nenhum valor retido por responsável no momento.';
+
+  @override
+  String dashboardResponsiblePhone(String phone) {
+    return 'Tel: $phone';
+  }
+
+  @override
+  String dashboardResponsibleDate(String date) {
+    return 'Data: $date';
+  }
+
+  @override
+  String get dashboardNoDivergences => 'Nenhuma divergência pendente.';
+
+  @override
+  String dashboardSettledAt(String date) {
+    return 'Acerto em: $date';
+  }
+
+  @override
+  String commonNotesPrefix(String notes) {
+    return 'Obs: $notes';
+  }
+
+  @override
+  String get dashboardStockColBasket => 'Cesta';
+
+  @override
+  String get dashboardStockColStore => 'Loja';
+
+  @override
+  String get dashboardStockColTransit => 'Trânsito';
+
+  @override
+  String get dashboardStockColTotal => 'Total';
+
+  @override
+  String get dashboardAllAboveMinStock =>
+      'Todos os itens estão acima do estoque mínimo.';
+
+  @override
+  String dashboardItemSku(String sku) {
+    return 'SKU: $sku';
+  }
+
+  @override
+  String dashboardCashRecordsCount(int count) {
+    return 'Caixa ($count)';
+  }
+
+  @override
+  String dashboardProjectedInflow(String amount) {
+    return 'Entradas Previstas: $amount';
+  }
+
+  @override
+  String dashboardProjectedOutflow(String amount) {
+    return 'Saídas Previstas: $amount';
+  }
+
+  @override
+  String get dashboardNoCashRecords => 'Nenhum lançamento no período.';
+
+  @override
+  String get dashboardNoOpenReceivables => 'Nenhum título a receber em aberto.';
+
+  @override
+  String get dashboardNoOpenPayables => 'Nenhuma conta a pagar em aberto.';
+
+  @override
+  String get conferenceMethodCashHand => 'Dinheiro em Mãos';
+
+  @override
+  String get conferenceMethodPixSettled => 'PIX Repassado';
+
+  @override
+  String get conferenceMethodBankTransfer => 'Transferência Bancária';
+
+  @override
+  String commonObservationsPrefix(String notes) {
+    return 'Observações: $notes';
+  }
+
+  @override
+  String get payableCategorySupplier => 'Fornecedor';
+
+  @override
+  String get payableCategoryElectricity => 'Energia Elétrica';
+
+  @override
+  String get payableCategoryRent => 'Aluguel';
+
+  @override
+  String get payableCategoryFreight => 'Frete / Logística';
+
+  @override
+  String get payableCategoryFreightShort => 'Frete';
+
+  @override
+  String get payableCategoryMaintenance => 'Manutenção';
+
+  @override
+  String get payableCategoryLoan => 'Empréstimo';
+
+  @override
+  String get payableCategoryCreditCard => 'Cartão de Crédito';
+
+  @override
+  String get payableCategoryPartnerWithdrawal => 'Retirada Sócios';
+
+  @override
+  String get payableCategoryTaxes => 'Impostos / Taxas';
+
+  @override
+  String get payableCategoryTaxesShort => 'Impostos';
+
+  @override
+  String get payableCategoryOthers => 'Outros';
+
+  @override
+  String get payablePaymentMethodBoleto => 'Boleto';
+
+  @override
+  String get payablePaymentMethodPix => 'PIX';
+
+  @override
+  String get payablePaymentMethodTransfer => 'Transferência';
+
+  @override
+  String get payablePaymentMethodCheck => 'Cheque';
+
+  @override
+  String get payablePaymentMethodCard => 'Cartão de Crédito';
+
+  @override
+  String get payablePaymentMethodCash => 'Dinheiro';
+
+  @override
+  String get payablePaymentMethodOther => 'Outro';
+
+  @override
+  String get payableRecurrenceFrequency => 'Periodicidade';
+
+  @override
+  String get payableNoPaymentsYet => 'Nenhum pagamento efetuado até o momento.';
+
+  @override
+  String get payableRevertPaymentTitle => 'Estornar Pagamento';
+
+  @override
+  String get payableRevertPaymentReason => 'Justificativa do Estorno';
+
+  @override
+  String get payableConfirmCancelObligation =>
+      'Tem certeza que deseja cancelar a obrigação?';
+
+  @override
+  String get monthJan => 'Jan';
+
+  @override
+  String get monthFeb => 'Fev';
+
+  @override
+  String get monthMar => 'Mar';
+
+  @override
+  String get monthApr => 'Abr';
+
+  @override
+  String get monthMay => 'Mai';
+
+  @override
+  String get monthJun => 'Jun';
+
+  @override
+  String get monthJul => 'Jul';
+
+  @override
+  String get monthAug => 'Ago';
+
+  @override
+  String get monthSep => 'Set';
+
+  @override
+  String get monthOct => 'Out';
+
+  @override
+  String get monthNov => 'Nov';
+
+  @override
+  String get monthDec => 'Dez';
+
+  @override
+  String get filterAllOption => 'Todos';
+
+  @override
+  String get treasuryNeedTwoAccountsForTransfer =>
+      'São necessárias ao menos 2 contas para realizar transferências.';
+
+  @override
+  String get treasuryAccountLabel => 'Conta Financeira';
+
+  @override
+  String get treasuryAccountFilterLabel => 'Conta';
+
+  @override
+  String get treasuryLaunchEntry => 'Lançamento';
+
+  @override
+  String get treasuryConsolidatedPosition => 'Posição Consolidada da Empresa';
+
+  @override
+  String treasuryCashPhysicalLabel(String amount) {
+    return 'Caixa Físico: $amount';
+  }
+
+  @override
+  String treasuryBankLabel(String amount) {
+    return 'Bancos: $amount';
+  }
+
+  @override
+  String get treasuryFormulaExplanation =>
+      'Fórmula: Disponível + A Receber - A Pagar';
+
+  @override
+  String get treasuryFutureCommitmentsTitle => 'Compromissos Futuros & Fiados';
+
+  @override
+  String get treasuryCustodyCouriers => 'Em custódia de entregadores';
+
+  @override
+  String get treasuryExpenseSegregationTitle => 'Segregação de Despesas (Mês)';
+
+  @override
+  String get treasuryBusinessExpensesDesc => 'Gastos operacionais da atividade';
+
+  @override
+  String get treasuryPersonalWithdrawalsDesc =>
+      'Não misturar com contas da empresa';
+
+  @override
+  String get treasuryCatCapitalContribution => 'Aporte de Capital';
+
+  @override
+  String get treasuryCatSalesRevenue => 'Receita de Vendas';
+
+  @override
+  String get treasuryCatCustomerReceipt => 'Recebimento de Cliente';
+
+  @override
+  String get treasuryCatOtherCredits => 'Outros Créditos';
+
+  @override
+  String get treasuryCatPartnerWithdrawal => 'Retirada de Sócios / Pró-labore';
+
+  @override
+  String get treasuryCatSupplierPayment => 'Pagamento Fornecedor';
+
+  @override
+  String get treasuryCatElectricity => 'Energia Elétrica';
+
+  @override
+  String get treasuryCatRent => 'Aluguel';
+
+  @override
+  String get treasuryCatFreightFuel => 'Frete / Combustível';
+
+  @override
+  String get treasuryCatMaintenance => 'Manutenção';
+
+  @override
+  String get treasuryCatOtherExpenses => 'Outras Despesas';
+
+  @override
+  String get treasuryMethodPix => 'PIX';
+
+  @override
+  String get treasuryMethodCash => 'Dinheiro';
+
+  @override
+  String get treasuryMethodTransfer => 'Transferência';
+
+  @override
+  String get treasuryMethodCard => 'Cartão';
+
+  @override
+  String get treasuryMethodOther => 'Outro';
+
+  @override
+  String receivablesBasketsPrefix(String summary) {
+    return 'Cestas: $summary';
+  }
+
+  @override
+  String payableConfirmCancelObligationNamed(String description) {
+    return 'Tem certeza que deseja cancelar a obrigação \"$description\"?';
+  }
+
+  @override
+  String get tooltipPrintSelectPrinter =>
+      'Imprimir / Selecionar Impressora (Epson Wi-Fi)';
+
+  @override
+  String get tooltipShareSavePdf => 'Compartilhar / Salvar PDF';
+
+  @override
+  String get payableInstallmentsHelper => 'Dividir em N parcelas mensais';
+
+  @override
+  String get payableRevertPaymentTooltip => 'Estornar este pagamento';
+
+  @override
+  String get dispatchPhysicalNotesHint =>
+      'Observações da saída física (opcional)';
+
+  @override
+  String get dispatchCustomizationHint =>
+      'Ex: Cesta personalizada, lote específico';
+
+  @override
+  String get conferenceLossReasonHint =>
+      'Ex: Caixa molhou na chuva durante entrega';
+
+  @override
+  String get conferenceReceivedByHint => 'Colaborador que conferiu e recebeu';
+
+  @override
+  String get conferenceAuditorNameHint => 'Nome do conferente / auditor';
+
+  @override
+  String get conferenceInitialJustificationHint =>
+      'Justificativa inicial das divergências';
+
+  @override
+  String get conferenceInvestigationHint =>
+      'Descreva a apuração, se foi justificado, perdas aceitas ou ressarcimento';
+
+  @override
+  String get cameraStarting => 'Iniciando leitor de câmera...';
+
+  @override
+  String get settingsPairDeviceSection => 'Conexão com o Servidor Local';
+
+  @override
+  String get settingsPairDeviceDesc =>
+      'Escaneie o QR Code gerado na tela de Configurações do computador ou informe o PIN manualmente para conectar este celular.';
+
+  @override
+  String get settingsPairDeviceButton =>
+      'Parear Dispositivo (Escanear QR / PIN)';
+
+  @override
+  String get settingsServerNetworkSection => 'Rede e Conexão';
+
+  @override
+  String get settingsGenerateQrDesc =>
+      'Gere um QR Code neste computador para que celulares Android possam escanear e parear automaticamente sem digitar IP, PIN ou Fingerprint.';
+
+  @override
+  String get settingsStatusConnectedPaired => 'Conectado e Pareado com Sucesso';
+
+  @override
+  String get settingsStatusConnectedWaiting =>
+      'Conectado (Aguardando Pareamento)';
+
+  @override
+  String get settingsStatusDisconnected => 'Servidor Local Desconectado';
+
+  @override
+  String get settingsStatusPairedSubtitle =>
+      'Operações comerciais autenticadas ativas.';
+
+  @override
+  String get settingsStatusWaitingSubtitle =>
+      'Pareie este dispositivo com o servidor para habilitar operações.';
+
+  @override
+  String get settingsQrManualTitle => 'Ou conecte manualmente no celular:';
+
+  @override
+  String get settingsQrServerUrlLabel => 'URL do Servidor:';
+
+  @override
+  String get settingsQrFingerprintLabel =>
+      'Fingerprint TLS (Impressão Digital):';
+
+  @override
+  String get settingsQrPinLabel => 'PIN de Pareamento:';
+
+  @override
+  String get settingsCopiedToClipboard =>
+      'Copiado para a área de transferência!';
+
+  @override
+  String get settingsFingerprintExplanation =>
+      'O Fingerprint TLS é o código de segurança criptográfico gerado pelo servidor para garantir que seu celular está conectando diretamente no seu computador com HTTPS confiável.';
+
+  @override
+  String get settingsNetworkSectionDescWindows =>
+      'Endereço local onde o servidor está operando neste computador.';
+
+  @override
+  String get settingsNetworkSectionDescAndroid =>
+      'Endereço do servidor e certificado seguro para comunicação em rede local.';
+
+  @override
+  String get pairingCameraInitializeHint =>
+      'Toque no botão abaixo para inicializar a captura da câmera:';
 }

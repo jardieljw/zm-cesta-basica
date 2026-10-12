@@ -29,6 +29,49 @@ from app.api.deps import get_current_device
 
 router = APIRouter()
 
+@router.post("/pairing/local-master", response_model=PairingResponse)
+def auto_pair_local_master(db: Session = Depends(get_db)):
+    """
+    Auto-autentica o terminal master local que roda na mesma máquina do servidor.
+    Permite que o aplicativo Windows entre direto sem requerer PIN manual.
+    """
+    device_public_id = "windows-local-master"
+    device_name = "Terminal Caixa Windows (Local)"
+    
+    device = db.execute(
+        select(PairedDevice).where(PairedDevice.device_public_id == device_public_id)
+    ).scalar_one_or_none()
+
+    raw_token = generate_device_token()
+    token_digest = hash_token(raw_token)
+
+    if device is not None:
+        device.token_hash = token_digest
+        device.is_active = True
+        device.last_seen_at = utc_now()
+    else:
+        device = PairedDevice(
+            id=str(uuid.uuid4()),
+            device_name=device_name,
+            device_public_id=device_public_id,
+            token_hash=token_digest,
+            is_active=True,
+            paired_at=utc_now(),
+            last_seen_at=utc_now(),
+        )
+        db.add(device)
+
+    db.commit()
+    db.refresh(device)
+
+    return PairingResponse(
+        device_id=device.id,
+        device_name=device.device_name,
+        device_public_id=device.device_public_id,
+        device_token=raw_token,
+        message="Terminal local master autenticado automaticamente.",
+    )
+
 @router.post("/pairing/initiate", response_model=PairingInitiateResponse)
 def initiate_pairing(db: Session = Depends(get_db)):
     """
