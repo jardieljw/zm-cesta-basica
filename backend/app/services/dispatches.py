@@ -490,6 +490,11 @@ def record_dispatch_return(db: Session, dispatch_id: str, data: DispatchReturnCr
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Saida #{dispatch.dispatch_number} esta cancelada.",
         )
+    if dispatch.status == "CONCLUDED":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Saida #{dispatch.dispatch_number} ja esta concluida e nao permite novas devolucoes.",
+        )
 
     bt = db.get(BasketType, data.basket_type_id)
     if not bt:
@@ -586,6 +591,11 @@ def record_dispatch_loss(db: Session, dispatch_id: str, data: DispatchLossCreate
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Saida #{dispatch.dispatch_number} esta cancelada.",
         )
+    if dispatch.status == "CONCLUDED":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Saida #{dispatch.dispatch_number} ja esta concluida e nao permite novos registros de perda.",
+        )
 
     bt = db.get(BasketType, data.basket_type_id)
     if not bt:
@@ -668,6 +678,11 @@ def record_dispatch_expense(db: Session, dispatch_id: str, data: DispatchExpense
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Saida #{dispatch.dispatch_number} esta cancelada.",
         )
+    if dispatch.status == "CONCLUDED":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Saida #{dispatch.dispatch_number} ja esta concluida e nao permite novas despesas.",
+        )
 
     expense = DispatchExpense(
         id=str(uuid.uuid4()),
@@ -691,6 +706,11 @@ def record_dispatch_repayment(db: Session, dispatch_id: str, data: DispatchRepay
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Saida #{dispatch.dispatch_number} esta cancelada.",
+        )
+    if dispatch.status == "CONCLUDED":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Saida #{dispatch.dispatch_number} ja esta concluida e nao permite novos repasses.",
         )
 
     repayment = DispatchRepayment(
@@ -949,6 +969,11 @@ def execute_dispatch_settlement(db: Session, dispatch_id: str, data: DispatchSet
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Saida #{dispatch.dispatch_number} esta cancelada e nao pode ser conferida.",
         )
+    if dispatch.status == "CONCLUDED":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Saida #{dispatch.dispatch_number} ja esta concluida e nao pode ser conferida novamente.",
+        )
 
     recon = calculate_dispatch_reconciliation(db, dispatch.id)
 
@@ -962,7 +987,7 @@ def execute_dispatch_settlement(db: Session, dispatch_id: str, data: DispatchSet
             dispatch.status = "CONCLUDED"
     else:
         settlement_status = "PENDING_INVESTIGATION"
-        # Dispatch remains OPEN when pending investigation
+        dispatch.status = "PENDING_INVESTIGATION"
 
     settled_at = data.settled_at or utc_now()
     settlement = DispatchSettlement(

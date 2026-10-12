@@ -540,6 +540,9 @@ void main() {
       expect(l10n.conferenceFinancialBalanced, contains('Repasse integral'));
       expect(l10n.conferenceFinancialDivergent, contains('Divergência Financeira'));
       expect(l10n.conferenceDirectNotice, contains('NÃO são devidos pelo motorista'));
+      expect(l10n.conferenceExpenseExceedsNotice, contains('despesas autorizadas superaram as vendas em dinheiro'));
+      expect(l10n.dispatchDuplicateBasketConsolidatedNotice, contains('consolidada automaticamente'));
+      expect(l10n.dispatchStatusResolved, 'Resolvido');
     });
 
     test('Phase 6 parameterized labels format correctly', () {

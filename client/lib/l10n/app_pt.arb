@@ -1298,6 +1298,7 @@
   "dispatchStatusConcluded": "Concluída",
   "dispatchStatusPendingInvestigation": "Sob Investigação",
   "dispatchStatusCanceled": "Cancelada",
+  "dispatchStatusResolved": "Resolvido",
   "dispatchesEmpty": "Nenhuma saída física registrada.",
   "dispatchCancel": "Cancelar Saída",
   "dispatchCancelConfirm": "Deseja realmente cancelar a saída #{number}?",
@@ -1343,6 +1344,7 @@
       }
     }
   },
+  "dispatchDuplicateBasketConsolidatedNotice": "Cesta repetida: será consolidada automaticamente no despacho.",
   "dispatchSubmit": "Confirmar Saída Física",
 
   "conferenceTitle": "Conferência da Saída #{number}",
@@ -1480,6 +1482,7 @@
   "conferenceFinancialDivergent": "Divergência Financeira Detectada!",
   "conferenceFinancialBalanced": "Financeiro Bateu (Repasse integral)",
   "conferenceDirectNotice": "* Pix e cartões recebidos diretamente na conta da empresa NÃO são devidos pelo motorista/entregador.",
+  "conferenceExpenseExceedsNotice": "As despesas autorizadas superaram as vendas em dinheiro da rota. Saldo credor ao entregador / ressarcimento pela empresa.",
   "conferenceActionReturn": "Devolução Intacta",
   "conferenceActionLoss": "Avaria / Perda",
   "conferenceActionExpense": "Despesa Autorizada",

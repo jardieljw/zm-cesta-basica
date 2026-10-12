@@ -477,7 +477,7 @@ class _DispatchFormViewState extends State<DispatchFormView> {
                               Icon(Icons.info_outline, size: 14, color: Colors.amber.shade900),
                               const SizedBox(width: 4),
                               Text(
-                                'Cesta repetida: será consolidada automaticamente no despacho.',
+                                l10n.dispatchDuplicateBasketConsolidatedNotice,
                                 style: TextStyle(fontSize: 11, color: Colors.amber.shade900),
                               ),
                             ],

@@ -2059,6 +2059,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get dispatchStatusCanceled => 'Cancelada';
 
   @override
+  String get dispatchStatusResolved => 'Resolvido';
+
+  @override
   String get dispatchesEmpty => 'Nenhuma saída física registrada.';
 
   @override
@@ -2115,6 +2118,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String dispatchInsufficientStoreStock(String name, int stock, int qty) {
     return 'Estoque insuficiente na loja para \"$name\". Disponível: $stock, Solicitado: $qty.';
   }
+
+  @override
+  String get dispatchDuplicateBasketConsolidatedNotice =>
+      'Cesta repetida: será consolidada automaticamente no despacho.';
 
   @override
   String get dispatchSubmit => 'Confirmar Saída Física';
@@ -2226,6 +2233,10 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get conferenceDirectNotice =>
       '* Pix e cartões recebidos diretamente na conta da empresa NÃO são devidos pelo motorista/entregador.';
+
+  @override
+  String get conferenceExpenseExceedsNotice =>
+      'As despesas autorizadas superaram as vendas em dinheiro da rota. Saldo credor ao entregador / ressarcimento pela empresa.';
 
   @override
   String get conferenceActionReturn => 'Devolução Intacta';

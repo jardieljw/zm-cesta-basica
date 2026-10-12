@@ -447,6 +447,29 @@ class _DispatchConferenceViewState extends State<DispatchConferenceView> {
                       Text(dialogError!, style: TextStyle(color: Colors.red.shade800, fontSize: 13)),
                       const SizedBox(height: 10),
                     ],
+                    if (_reconciliation != null && _reconciliation!.expectedCashCents < 0) ...[
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.amber.shade50,
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: Colors.amber.shade300),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.info_outline, size: 16, color: Colors.amber.shade900),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(
+                                l10n.conferenceExpenseExceedsNotice,
+                                style: TextStyle(fontSize: 12, color: Colors.amber.shade900),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                     TextFormField(
                       controller: amountCtrl,
                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -806,7 +829,7 @@ class _DispatchConferenceViewState extends State<DispatchConferenceView> {
       case 'CANCELED':
         return l10n.dispatchStatusCanceled;
       case 'RESOLVED':
-        return 'Resolvido';
+        return l10n.dispatchStatusResolved;
       default:
         return status;
     }
@@ -1178,7 +1201,7 @@ class _DispatchConferenceViewState extends State<DispatchConferenceView> {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  'As despesas autorizadas superaram as vendas em dinheiro da rota. Saldo credor ao entregador / ressarcimento pela empresa.',
+                                  l10n.conferenceExpenseExceedsNotice,
                                   style: TextStyle(fontSize: 12, color: Colors.amber.shade900, fontWeight: FontWeight.w500),
                                 ),
                               ),

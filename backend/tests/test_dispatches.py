@@ -650,9 +650,13 @@ def test_reconciliation_4_terms_and_settlement_with_discrepancy(client: TestClie
     assert settle_disc.status_code == 201
     assert settle_disc.json()["status"] == "PENDING_INVESTIGATION"
 
-    # Dispatch remains OPEN
+    # Dispatch transitions to PENDING_INVESTIGATION
     disp2_check = client.get(f"/api/v1/dispatches/{disp2_id}", headers=headers).json()
-    assert disp2_check["status"] == "OPEN"
+    assert disp2_check["status"] == "PENDING_INVESTIGATION"
+
+    # Query with status filter returns this dispatch
+    filter_pending = client.get("/api/v1/dispatches?status=PENDING_INVESTIGATION", headers=headers).json()
+    assert any(d["id"] == disp2_id for d in filter_pending)
 
     # Document investigation and resolve
     invest_res = client.put(
@@ -799,9 +803,17 @@ def test_route_expense_exceeding_cash_sales_and_investigation_resolution(client:
     settle = settle_res.json()
     assert settle["status"] == "PENDING_INVESTIGATION"
 
-    # Dispatch remains OPEN
+    # Dispatch transitions to PENDING_INVESTIGATION
     disp_check = client.get(f"/api/v1/dispatches/{dispatch_id}", headers=headers).json()
-    assert disp_check["status"] == "OPEN"
+    assert disp_check["status"] == "PENDING_INVESTIGATION"
+
+    # Attempt to cancel while under investigation -> rejected with HTTP 400
+    cancel_fail = client.post(
+        f"/api/v1/dispatches/{dispatch_id}/cancel",
+        json={"reason": "Tentativa indevida de cancelamento"},
+        headers=headers,
+    )
+    assert cancel_fail.status_code == 400
 
     # 5. Resolve investigation formally
     invest_res = client.put(
@@ -820,6 +832,21 @@ def test_route_expense_exceeding_cash_sales_and_investigation_resolution(client:
     # Dispatch transitions to CONCLUDED
     disp_concluded = client.get(f"/api/v1/dispatches/{dispatch_id}", headers=headers).json()
     assert disp_concluded["status"] == "CONCLUDED"
+
+    # Subsequent return/repayment on concluded dispatch -> rejected with HTTP 400
+    post_ret_fail = client.post(
+        f"/api/v1/dispatches/{dispatch_id}/returns",
+        json={"basket_type_id": basket_id, "quantity": 1},
+        headers=headers,
+    )
+    assert post_ret_fail.status_code == 400
+
+    post_rep_fail = client.post(
+        f"/api/v1/dispatches/{dispatch_id}/repayments",
+        json={"amount_cents": 1000},
+        headers=headers,
+    )
+    assert post_rep_fail.status_code == 400
 
 
 def test_multiple_consecutive_partial_returns_and_route_sales(client: TestClient, authenticated_device):

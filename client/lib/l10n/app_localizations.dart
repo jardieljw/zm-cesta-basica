@@ -3682,6 +3682,12 @@ abstract class AppLocalizations {
   /// **'Cancelada'**
   String get dispatchStatusCanceled;
 
+  /// No description provided for @dispatchStatusResolved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resolvido'**
+  String get dispatchStatusResolved;
+
   /// No description provided for @dispatchesEmpty.
   ///
   /// In pt, this message translates to:
@@ -3783,6 +3789,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Estoque insuficiente na loja para \"{name}\". Disponível: {stock}, Solicitado: {qty}.'**
   String dispatchInsufficientStoreStock(String name, int stock, int qty);
+
+  /// No description provided for @dispatchDuplicateBasketConsolidatedNotice.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cesta repetida: será consolidada automaticamente no despacho.'**
+  String get dispatchDuplicateBasketConsolidatedNotice;
 
   /// No description provided for @dispatchSubmit.
   ///
@@ -3927,6 +3939,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'* Pix e cartões recebidos diretamente na conta da empresa NÃO são devidos pelo motorista/entregador.'**
   String get conferenceDirectNotice;
+
+  /// No description provided for @conferenceExpenseExceedsNotice.
+  ///
+  /// In pt, this message translates to:
+  /// **'As despesas autorizadas superaram as vendas em dinheiro da rota. Saldo credor ao entregador / ressarcimento pela empresa.'**
+  String get conferenceExpenseExceedsNotice;
 
   /// No description provided for @conferenceActionReturn.
   ///
