@@ -8,15 +8,10 @@ import 'basket_types_view.dart';
 import 'purchases_view.dart';
 import 'inventory_summary_view.dart';
 import 'inventory_movements_view.dart';
-import 'production_batches_view.dart';
-import 'production_assembly_view.dart';
 import 'customers_view.dart';
 import 'sales_view.dart';
 import 'receivables_view.dart';
-import 'dispatches_view.dart';
-import 'responsible_persons_view.dart';
 import 'payables_view.dart';
-import 'treasury_view.dart';
 import 'dashboard_view.dart';
 import 'reports_view.dart';
 import 'blank_forms_view.dart';
@@ -302,93 +297,7 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
         const SizedBox(height: 24),
-        Text(
-          l10n.homePhase4Header,
-          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(16),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const ProductionBatchesView()),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.indigo.shade100,
-                          radius: 24,
-                          child: Icon(Icons.precision_manufacturing, color: Colors.indigo.shade800, size: 28),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          l10n.moduleProduction,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          l10n.homeProductionBatchesDescription,
-                          style: const TextStyle(color: Colors.black54, fontSize: 13),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(16),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const ProductionAssemblyView()),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.orange.shade100,
-                          radius: 24,
-                          child: Icon(Icons.handyman, color: Colors.orange.shade900, size: 28),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          l10n.moduleAssembly,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          l10n.homeProductionAssemblyDescription,
-                          style: const TextStyle(color: Colors.black54, fontSize: 13),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 24),
+
         Text(
           l10n.homePhase5Header,
           style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
@@ -521,122 +430,35 @@ class _HomeViewState extends State<HomeView> {
         ),
         const SizedBox(height: 24),
         Text(
-          l10n.homePhase6Header,
-          style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(16),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const DispatchesView()),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.blue.shade100,
-                          radius: 24,
-                          child: Icon(Icons.local_shipping, color: Colors.blue.shade800, size: 28),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          l10n.moduleDispatches,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          l10n.homeDispatchesDescription,
-                          style: const TextStyle(color: Colors.black54, fontSize: 13),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(16),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const ResponsiblePersonsView()),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.purple.shade100,
-                          radius: 24,
-                          child: Icon(Icons.badge, color: Colors.purple.shade800, size: 28),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          l10n.moduleResponsiblePersons,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          l10n.homeResponsiblePersonsDescription,
-                          style: const TextStyle(color: Colors.black54, fontSize: 13),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 24),
-        Text(
           l10n.homePhase7Header,
           style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(16),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const PayablesView()),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
+        Card(
+          elevation: 2,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const PayablesView()),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.red.shade100,
+                    radius: 24,
+                    child: Icon(Icons.request_quote, color: Colors.red.shade800, size: 28),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.red.shade100,
-                          radius: 24,
-                          child: Icon(Icons.request_quote, color: Colors.red.shade800, size: 28),
-                        ),
-                        const SizedBox(height: 16),
                         Text(
                           l10n.modulePayables,
                           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
@@ -649,49 +471,11 @@ class _HomeViewState extends State<HomeView> {
                       ],
                     ),
                   ),
-                ),
+                  const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.black45),
+                ],
               ),
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(16),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const TreasuryView()),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: Colors.teal.shade100,
-                          radius: 24,
-                          child: Icon(Icons.account_balance, color: Colors.teal.shade800, size: 28),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          l10n.moduleTreasury,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          l10n.homeTreasuryDescription,
-                          style: const TextStyle(color: Colors.black54, fontSize: 13),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
         const SizedBox(height: 24),
         Text(
