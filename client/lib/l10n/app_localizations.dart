@@ -4887,6 +4887,384 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Aplicar Filtros'**
   String get receivableFilterApply;
+
+  /// No description provided for @homePhase8Header.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fase 8: Dashboard, Relatórios, Planilhas e Impressão'**
+  String get homePhase8Header;
+
+  /// No description provided for @moduleDashboard.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dashboard Geral'**
+  String get moduleDashboard;
+
+  /// No description provided for @homeDashboardDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Visão consolidada operacional, faturamento e livro-caixa'**
+  String get homeDashboardDescription;
+
+  /// No description provided for @moduleReports.
+  ///
+  /// In pt, this message translates to:
+  /// **'Relatórios & Planilhas'**
+  String get moduleReports;
+
+  /// No description provided for @homeReportsDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Consultas analíticas, exportação CSV/XLSX e impressão PDF'**
+  String get homeReportsDescription;
+
+  /// No description provided for @moduleBlankForms.
+  ///
+  /// In pt, this message translates to:
+  /// **'Formulários A4 & Impressão'**
+  String get moduleBlankForms;
+
+  /// No description provided for @homeBlankFormsDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Modelos em branco para prancheta e folhas preenchidas para auditoria'**
+  String get homeBlankFormsDescription;
+
+  /// No description provided for @dashboardTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dashboard Operacional e Financeiro'**
+  String get dashboardTitle;
+
+  /// No description provided for @dashboardFilterToday.
+  ///
+  /// In pt, this message translates to:
+  /// **'Hoje'**
+  String get dashboardFilterToday;
+
+  /// No description provided for @dashboardFilterDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Data Específica'**
+  String get dashboardFilterDate;
+
+  /// No description provided for @dashboardFilterRange.
+  ///
+  /// In pt, this message translates to:
+  /// **'Intervalo'**
+  String get dashboardFilterRange;
+
+  /// No description provided for @dashboardFilterMonth.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mês'**
+  String get dashboardFilterMonth;
+
+  /// No description provided for @dashboardFilterYear.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ano'**
+  String get dashboardFilterYear;
+
+  /// No description provided for @dashboardFilterAll.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todos'**
+  String get dashboardFilterAll;
+
+  /// No description provided for @dashboardSectionProduction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Produção & Montagem'**
+  String get dashboardSectionProduction;
+
+  /// No description provided for @dashboardAssembledBaskets.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cestas Montadas'**
+  String get dashboardAssembledBaskets;
+
+  /// No description provided for @dashboardSectionSales.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vendas & Faturamento'**
+  String get dashboardSectionSales;
+
+  /// No description provided for @dashboardSoldBaskets.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cestas Vendidas'**
+  String get dashboardSoldBaskets;
+
+  /// No description provided for @dashboardTotalSold.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor Total Vendido'**
+  String get dashboardTotalSold;
+
+  /// No description provided for @dashboardSectionDispatches.
+  ///
+  /// In pt, this message translates to:
+  /// **'Expedição & Rotas'**
+  String get dashboardSectionDispatches;
+
+  /// No description provided for @dashboardDispatchedBaskets.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cestas em Saída'**
+  String get dashboardDispatchedBaskets;
+
+  /// No description provided for @dashboardUnremittedCash.
+  ///
+  /// In pt, this message translates to:
+  /// **'Repasses de Rota Pendentes'**
+  String get dashboardUnremittedCash;
+
+  /// No description provided for @dashboardPendingDivergences.
+  ///
+  /// In pt, this message translates to:
+  /// **'Divergências Pendentes'**
+  String get dashboardPendingDivergences;
+
+  /// No description provided for @dashboardSectionInventory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estoque & Alertas'**
+  String get dashboardSectionInventory;
+
+  /// No description provided for @dashboardLowStockAlert.
+  ///
+  /// In pt, this message translates to:
+  /// **'Itens Abaixo do Mínimo'**
+  String get dashboardLowStockAlert;
+
+  /// No description provided for @dashboardStockNormal.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estoque em Nível Regular'**
+  String get dashboardStockNormal;
+
+  /// No description provided for @dashboardSectionFinancial.
+  ///
+  /// In pt, this message translates to:
+  /// **'Financeiro & Tesouraria'**
+  String get dashboardSectionFinancial;
+
+  /// No description provided for @dashboardOpenReceivables.
+  ///
+  /// In pt, this message translates to:
+  /// **'A Receber (Em Aberto)'**
+  String get dashboardOpenReceivables;
+
+  /// No description provided for @dashboardOverdueReceivables.
+  ///
+  /// In pt, this message translates to:
+  /// **'A Receber Vencidos'**
+  String get dashboardOverdueReceivables;
+
+  /// No description provided for @dashboardEffectiveReceived.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recebimentos Efetivos'**
+  String get dashboardEffectiveReceived;
+
+  /// No description provided for @dashboardOpenPayables.
+  ///
+  /// In pt, this message translates to:
+  /// **'A Pagar (Em Aberto)'**
+  String get dashboardOpenPayables;
+
+  /// No description provided for @dashboardOverduePayables.
+  ///
+  /// In pt, this message translates to:
+  /// **'A Pagar Vencidos'**
+  String get dashboardOverduePayables;
+
+  /// No description provided for @dashboardEffectivePaid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamentos Efetuados'**
+  String get dashboardEffectivePaid;
+
+  /// No description provided for @dashboardCashInflow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entradas de Caixa'**
+  String get dashboardCashInflow;
+
+  /// No description provided for @dashboardCashOutflow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saídas de Caixa'**
+  String get dashboardCashOutflow;
+
+  /// No description provided for @dashboardTreasuryBalance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo Disponível (Tesouraria)'**
+  String get dashboardTreasuryBalance;
+
+  /// No description provided for @dashboardProjectedCash.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo de Caixa Projetado'**
+  String get dashboardProjectedCash;
+
+  /// No description provided for @dashboardProjectionNotice.
+  ///
+  /// In pt, this message translates to:
+  /// **'Atenção: Valores projetados são estimativas futuras e NÃO constituem dinheiro disponível em caixa.'**
+  String get dashboardProjectionNotice;
+
+  /// No description provided for @reportsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Relatórios Gerenciais e Planilhas'**
+  String get reportsTitle;
+
+  /// No description provided for @reportSalesDispatches.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vendas e Saídas de Cestas'**
+  String get reportSalesDispatches;
+
+  /// No description provided for @reportAssembly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Montagem e Produção de Cestas'**
+  String get reportAssembly;
+
+  /// No description provided for @reportPurchasesMovements.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compras e Movimentações do Razão'**
+  String get reportPurchasesMovements;
+
+  /// No description provided for @reportReceivables.
+  ///
+  /// In pt, this message translates to:
+  /// **'Contas a Receber, Pagamentos e Quitações'**
+  String get reportReceivables;
+
+  /// No description provided for @reportPayables.
+  ///
+  /// In pt, this message translates to:
+  /// **'Contas a Pagar, Vencimentos e Pagamentos'**
+  String get reportPayables;
+
+  /// No description provided for @reportDispatchSettlements.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferência de Saídas e Repasses de Rota'**
+  String get reportDispatchSettlements;
+
+  /// No description provided for @reportPhysicalInventory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estoque Atual e Contagem Física'**
+  String get reportPhysicalInventory;
+
+  /// No description provided for @reportFinancialSummary.
+  ///
+  /// In pt, this message translates to:
+  /// **'DRE Gerencial e Demonstrativo Financeiro'**
+  String get reportFinancialSummary;
+
+  /// No description provided for @reportExportCsv.
+  ///
+  /// In pt, this message translates to:
+  /// **'Exportar CSV'**
+  String get reportExportCsv;
+
+  /// No description provided for @reportExportXlsx.
+  ///
+  /// In pt, this message translates to:
+  /// **'Exportar XLSX'**
+  String get reportExportXlsx;
+
+  /// No description provided for @reportPrintPdf.
+  ///
+  /// In pt, this message translates to:
+  /// **'Imprimir / PDF A4'**
+  String get reportPrintPdf;
+
+  /// No description provided for @reportEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum registro encontrado para os filtros selecionados.'**
+  String get reportEmpty;
+
+  /// No description provided for @reportTotals.
+  ///
+  /// In pt, this message translates to:
+  /// **'Totais Consolidados'**
+  String get reportTotals;
+
+  /// No description provided for @blankFormsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Formulários A4 para Impressão'**
+  String get blankFormsTitle;
+
+  /// No description provided for @blankFormsSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Modelos em branco para preenchimento manual à caneta e folhas para auditoria física'**
+  String get blankFormsSubtitle;
+
+  /// No description provided for @formTypePayments.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tabela de Pagamentos de Cestas (Fiados / Quitações)'**
+  String get formTypePayments;
+
+  /// No description provided for @formTypePayables.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tabela de Contas a Pagar e Vencimentos'**
+  String get formTypePayables;
+
+  /// No description provided for @formTypeDispatch.
+  ///
+  /// In pt, this message translates to:
+  /// **'Folha de Conferência de Saídas e Custódia'**
+  String get formTypeDispatch;
+
+  /// No description provided for @formTypeInventory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Folha de Contagem Física (Auditoria / Balanço)'**
+  String get formTypeInventory;
+
+  /// No description provided for @formModeBlank.
+  ///
+  /// In pt, this message translates to:
+  /// **'Formulário em Branco (Para Caneta)'**
+  String get formModeBlank;
+
+  /// No description provided for @formModeFilled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Documento Preenchido (Auditoria Física)'**
+  String get formModeFilled;
+
+  /// No description provided for @formActionPrint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Visualizar e Imprimir A4'**
+  String get formActionPrint;
+
+  /// No description provided for @formActionDownloadXlsx.
+  ///
+  /// In pt, this message translates to:
+  /// **'Baixar Modelo XLSX Vazio'**
+  String get formActionDownloadXlsx;
+
+  /// No description provided for @formBlankNotice.
+  ///
+  /// In pt, this message translates to:
+  /// **'Modelos formatados com linhas amplas (mínimo de 8 a 10 mm) para escrita manual confortável em prancheta.'**
+  String get formBlankNotice;
 }
 
 class _AppLocalizationsDelegate

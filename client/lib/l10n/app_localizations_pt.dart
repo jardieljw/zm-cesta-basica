@@ -2729,4 +2729,205 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get receivableFilterApply => 'Aplicar Filtros';
+
+  @override
+  String get homePhase8Header =>
+      'Fase 8: Dashboard, Relatórios, Planilhas e Impressão';
+
+  @override
+  String get moduleDashboard => 'Dashboard Geral';
+
+  @override
+  String get homeDashboardDescription =>
+      'Visão consolidada operacional, faturamento e livro-caixa';
+
+  @override
+  String get moduleReports => 'Relatórios & Planilhas';
+
+  @override
+  String get homeReportsDescription =>
+      'Consultas analíticas, exportação CSV/XLSX e impressão PDF';
+
+  @override
+  String get moduleBlankForms => 'Formulários A4 & Impressão';
+
+  @override
+  String get homeBlankFormsDescription =>
+      'Modelos em branco para prancheta e folhas preenchidas para auditoria';
+
+  @override
+  String get dashboardTitle => 'Dashboard Operacional e Financeiro';
+
+  @override
+  String get dashboardFilterToday => 'Hoje';
+
+  @override
+  String get dashboardFilterDate => 'Data Específica';
+
+  @override
+  String get dashboardFilterRange => 'Intervalo';
+
+  @override
+  String get dashboardFilterMonth => 'Mês';
+
+  @override
+  String get dashboardFilterYear => 'Ano';
+
+  @override
+  String get dashboardFilterAll => 'Todos';
+
+  @override
+  String get dashboardSectionProduction => 'Produção & Montagem';
+
+  @override
+  String get dashboardAssembledBaskets => 'Cestas Montadas';
+
+  @override
+  String get dashboardSectionSales => 'Vendas & Faturamento';
+
+  @override
+  String get dashboardSoldBaskets => 'Cestas Vendidas';
+
+  @override
+  String get dashboardTotalSold => 'Valor Total Vendido';
+
+  @override
+  String get dashboardSectionDispatches => 'Expedição & Rotas';
+
+  @override
+  String get dashboardDispatchedBaskets => 'Cestas em Saída';
+
+  @override
+  String get dashboardUnremittedCash => 'Repasses de Rota Pendentes';
+
+  @override
+  String get dashboardPendingDivergences => 'Divergências Pendentes';
+
+  @override
+  String get dashboardSectionInventory => 'Estoque & Alertas';
+
+  @override
+  String get dashboardLowStockAlert => 'Itens Abaixo do Mínimo';
+
+  @override
+  String get dashboardStockNormal => 'Estoque em Nível Regular';
+
+  @override
+  String get dashboardSectionFinancial => 'Financeiro & Tesouraria';
+
+  @override
+  String get dashboardOpenReceivables => 'A Receber (Em Aberto)';
+
+  @override
+  String get dashboardOverdueReceivables => 'A Receber Vencidos';
+
+  @override
+  String get dashboardEffectiveReceived => 'Recebimentos Efetivos';
+
+  @override
+  String get dashboardOpenPayables => 'A Pagar (Em Aberto)';
+
+  @override
+  String get dashboardOverduePayables => 'A Pagar Vencidos';
+
+  @override
+  String get dashboardEffectivePaid => 'Pagamentos Efetuados';
+
+  @override
+  String get dashboardCashInflow => 'Entradas de Caixa';
+
+  @override
+  String get dashboardCashOutflow => 'Saídas de Caixa';
+
+  @override
+  String get dashboardTreasuryBalance => 'Saldo Disponível (Tesouraria)';
+
+  @override
+  String get dashboardProjectedCash => 'Saldo de Caixa Projetado';
+
+  @override
+  String get dashboardProjectionNotice =>
+      'Atenção: Valores projetados são estimativas futuras e NÃO constituem dinheiro disponível em caixa.';
+
+  @override
+  String get reportsTitle => 'Relatórios Gerenciais e Planilhas';
+
+  @override
+  String get reportSalesDispatches => 'Vendas e Saídas de Cestas';
+
+  @override
+  String get reportAssembly => 'Montagem e Produção de Cestas';
+
+  @override
+  String get reportPurchasesMovements => 'Compras e Movimentações do Razão';
+
+  @override
+  String get reportReceivables => 'Contas a Receber, Pagamentos e Quitações';
+
+  @override
+  String get reportPayables => 'Contas a Pagar, Vencimentos e Pagamentos';
+
+  @override
+  String get reportDispatchSettlements =>
+      'Conferência de Saídas e Repasses de Rota';
+
+  @override
+  String get reportPhysicalInventory => 'Estoque Atual e Contagem Física';
+
+  @override
+  String get reportFinancialSummary =>
+      'DRE Gerencial e Demonstrativo Financeiro';
+
+  @override
+  String get reportExportCsv => 'Exportar CSV';
+
+  @override
+  String get reportExportXlsx => 'Exportar XLSX';
+
+  @override
+  String get reportPrintPdf => 'Imprimir / PDF A4';
+
+  @override
+  String get reportEmpty =>
+      'Nenhum registro encontrado para os filtros selecionados.';
+
+  @override
+  String get reportTotals => 'Totais Consolidados';
+
+  @override
+  String get blankFormsTitle => 'Formulários A4 para Impressão';
+
+  @override
+  String get blankFormsSubtitle =>
+      'Modelos em branco para preenchimento manual à caneta e folhas para auditoria física';
+
+  @override
+  String get formTypePayments =>
+      'Tabela de Pagamentos de Cestas (Fiados / Quitações)';
+
+  @override
+  String get formTypePayables => 'Tabela de Contas a Pagar e Vencimentos';
+
+  @override
+  String get formTypeDispatch => 'Folha de Conferência de Saídas e Custódia';
+
+  @override
+  String get formTypeInventory =>
+      'Folha de Contagem Física (Auditoria / Balanço)';
+
+  @override
+  String get formModeBlank => 'Formulário em Branco (Para Caneta)';
+
+  @override
+  String get formModeFilled => 'Documento Preenchido (Auditoria Física)';
+
+  @override
+  String get formActionPrint => 'Visualizar e Imprimir A4';
+
+  @override
+  String get formActionDownloadXlsx => 'Baixar Modelo XLSX Vazio';
+
+  @override
+  String get formBlankNotice =>
+      'Modelos formatados com linhas amplas (mínimo de 8 a 10 mm) para escrita manual confortável em prancheta.';
 }

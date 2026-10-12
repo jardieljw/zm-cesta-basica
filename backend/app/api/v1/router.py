@@ -14,6 +14,8 @@ from app.api.v1.receivables import router as receivables_router
 from app.api.v1.dispatches import router as dispatches_router
 from app.api.v1.treasury import router as treasury_router
 from app.api.v1.payables import router as payables_router
+from app.api.v1.dashboard import router as dashboard_router
+from app.api.v1.reports import router as reports_router
 
 api_v1_router = APIRouter()
 
@@ -32,3 +34,5 @@ api_v1_router.include_router(receivables_router, tags=["Receivables & Payments"]
 api_v1_router.include_router(dispatches_router, tags=["Expedição / Custódia"])
 api_v1_router.include_router(treasury_router, tags=["Tesouraria / Livro-Caixa"])
 api_v1_router.include_router(payables_router, tags=["Contas a Pagar"])
+api_v1_router.include_router(dashboard_router, tags=["Dashboard Operacional & Financeiro"])
+api_v1_router.include_router(reports_router, tags=["Relatórios & Planilhas"])

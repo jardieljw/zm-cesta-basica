@@ -105,6 +105,29 @@ class ApiClient {
     }
   }
 
+  Future<List<int>> getBytes(String path) async {
+    final client = await _getClient();
+    final baseUrl = await _getBaseUrl();
+    final uri = Uri.parse('$baseUrl$path');
+    final headers = await _buildHeaders(isMutation: false);
+
+    try {
+      final response = await client.get(uri, headers: headers);
+      if (response.statusCode >= 200 && response.statusCode < 300) {
+        return response.bodyBytes;
+      }
+      throw ApiException(
+        statusCode: response.statusCode,
+        message: 'Falha ao baixar arquivo (${response.statusCode})',
+      );
+    } on SocketException catch (e) {
+      throw ApiException(
+        statusCode: 0,
+        message: 'Falha de conexao com o servidor local: ${e.message}',
+      );
+    }
+  }
+
   Future<dynamic> post(
     String path, {
     dynamic body,

@@ -20,8 +20,8 @@ No início de qualquer sessão de trabalho, o agente DEVE consultar as seguintes
 Antes de produzir código ou aplicar qualquer alteração em arquivos existentes:
 
 1. **Checagem de Saúde do Projeto:**
-   - Execute a suíte de testes do backend com `& ".\backend\.venv\Scripts\python.exe" -m pytest backend/tests -q`. O projeto deve estar com **100% dos testes aprovados** (atualmente 167 testes).
-   - Execute a suíte de testes do Flutter com `& "C:\dev\flutter\bin\flutter.bat" test` (atualmente 71 testes).
+   - Execute a suíte de testes do backend com `& ".\backend\.venv\Scripts\python.exe" -m pytest backend/tests -q`. O projeto deve estar com **100% dos testes aprovados** (atualmente 175 testes).
+   - Execute a suíte de testes do Flutter com `& "C:\dev\flutter\bin\flutter.bat" test` (atualmente 88 testes).
    - Verifique o status do Git com `git status` para garantir que o ambiente está consistente.
 2. **Mapeamento de Impacto e Limites Modulares:**
    - Respeite rigorosamente a divisão modular: `estoque`, `produtos`, `receitas`, `compras`, `produção`, `vendas`, `expedição`, `financeiro`, `relatorios_e_impressao` e `core`.

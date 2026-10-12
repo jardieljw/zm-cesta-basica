@@ -1,0 +1,690 @@
+import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:printing/printing.dart';
+import '../models/report.dart';
+import '../services/reports_service.dart';
+import '../utils/report_pdf_builder.dart';
+import '../utils/formatters.dart';
+import '../utils/api_error_mapper.dart';
+import '../l10n/l10n_extension.dart';
+import 'pdf_viewer_screen.dart';
+
+class ReportsView extends StatefulWidget {
+  const ReportsView({super.key});
+
+  @override
+  State<ReportsView> createState() => _ReportsViewState();
+}
+
+class _ReportsViewState extends State<ReportsView> {
+  final ReportsService _reportsService = ReportsService();
+
+  String _selectedReportType = 'sales-dispatches';
+  bool _isLoading = false;
+  bool _isExporting = false;
+  String? _errorMessage;
+  ReportResponse? _report;
+
+  // Filter state
+  String _selectedFilterType = 'today';
+  DateTime _selectedDate = DateTime.now();
+  DateTimeRange _selectedRange = DateTimeRange(
+    start: DateTime.now().subtract(const Duration(days: 7)),
+    end: DateTime.now(),
+  );
+  int _selectedMonth = DateTime.now().month;
+  int _selectedYear = DateTime.now().year;
+  bool _onlyBelowMin = false;
+
+  final List<Map<String, String>> _availableReports = [
+    {'type': 'sales-dispatches', 'title': 'Vendas e Saídas de Cestas'},
+    {'type': 'assembly', 'title': 'Montagem e Produção de Cestas'},
+    {'type': 'purchases-movements', 'title': 'Compras e Movimentações do Razão'},
+    {'type': 'receivables', 'title': 'Contas a Receber, Pagamentos e Quitações'},
+    {'type': 'payables', 'title': 'Contas a Pagar, Vencimentos e Pagamentos'},
+    {'type': 'dispatch-settlements', 'title': 'Conferência de Saídas e Repasses de Rota'},
+    {'type': 'physical-inventory', 'title': 'Estoque Atual e Contagem Física'},
+    {'type': 'financial-summary', 'title': 'DRE Gerencial e Demonstrativo Financeiro'},
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadReport();
+  }
+
+  String _formatDateParam(DateTime dt) {
+    final y = dt.year.toString().padLeft(4, '0');
+    final m = dt.month.toString().padLeft(2, '0');
+    final d = dt.day.toString().padLeft(2, '0');
+    return '$y-$m-$d';
+  }
+
+  Map<String, String> _buildFilterMap() {
+    final map = <String, String>{'filter_type': _selectedFilterType};
+    if (_selectedFilterType == 'date') {
+      map['date'] = _formatDateParam(_selectedDate);
+    } else if (_selectedFilterType == 'range') {
+      map['start_date'] = _formatDateParam(_selectedRange.start);
+      map['end_date'] = _formatDateParam(_selectedRange.end);
+    } else if (_selectedFilterType == 'month') {
+      map['month'] = _selectedMonth.toString();
+      map['year'] = _selectedYear.toString();
+    } else if (_selectedFilterType == 'year') {
+      map['year'] = _selectedYear.toString();
+    }
+    if (_selectedReportType == 'physical-inventory' && _onlyBelowMin) {
+      map['only_below_min'] = 'true';
+    }
+    return map;
+  }
+
+  Future<void> _loadReport() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final filters = _buildFilterMap();
+      final response = await _reportsService.getReport(
+        _selectedReportType,
+        filterType: filters['filter_type'] ?? 'today',
+        date: filters['date'],
+        startDate: filters['start_date'],
+        endDate: filters['end_date'],
+        month: filters['month'] != null ? int.tryParse(filters['month']!) : null,
+        year: filters['year'] != null ? int.tryParse(filters['year']!) : null,
+        onlyBelowMin: _onlyBelowMin,
+      );
+
+      setState(() {
+        _report = response;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = ApiErrorMapper.toLocalizedMessage(e, context.l10n);
+        _isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _exportFile(String format) async {
+    setState(() => _isExporting = true);
+    try {
+      final filters = _buildFilterMap();
+      final bytes = await _reportsService.downloadReportFile(
+        _selectedReportType,
+        format,
+        filters: filters,
+      );
+
+      final extension = format.toLowerCase();
+      final fileName = 'relatorio_${_selectedReportType}_${DateTime.now().millisecondsSinceEpoch}.$extension';
+
+      await Printing.sharePdf(
+        bytes: Uint8List.fromList(bytes),
+        filename: fileName,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Planilha $format exportada com sucesso!'),
+            backgroundColor: Colors.green.shade700,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erro ao exportar $format: $e'),
+            backgroundColor: Colors.red.shade700,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isExporting = false);
+    }
+  }
+
+  void _openPrintPreview() {
+    if (_report == null) return;
+    final rep = _report!;
+    final isLandscape = rep.columns.length > 5;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PdfViewerScreen(
+          title: rep.metadata.title,
+          fileName: 'relatorio_$_selectedReportType.pdf',
+          buildPdf: (format) => ReportPdfBuilder.buildReportPdf(rep, isLandscape: isLandscape),
+        ),
+      ),
+    );
+  }
+
+  String _formatCellValue(dynamic value, String col) {
+    if (value == null) return '';
+    if (col.endsWith('_cents') || col.contains('valor') || col.contains('preco') || col.contains('total')) {
+      if (value is int) {
+        return AppFormatters.formatCurrency(value);
+      } else if (value is double) {
+        return AppFormatters.formatCurrency((value * 100).round());
+      }
+    }
+    return value.toString();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = context.l10n;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.reportsTitle),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            tooltip: 'Recarregar Relatório',
+            onPressed: _loadReport,
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildReportSelectorCard(theme),
+            const SizedBox(height: 16),
+            _buildFilterCard(theme),
+            const SizedBox(height: 16),
+            _buildActionButtons(theme),
+            const SizedBox(height: 16),
+            if (_isLoading)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 48.0),
+                child: Center(child: CircularProgressIndicator()),
+              )
+            else if (_errorMessage != null)
+              Card(
+                color: Colors.red.shade50,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.error_outline, color: Colors.red),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          _errorMessage!,
+                          style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else if (_report != null) ...[
+              _buildReportMetadataBadge(theme, _report!.metadata),
+              const SizedBox(height: 12),
+              _buildReportDataTable(theme, _report!),
+              if (_report!.totals.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                _buildTotalsCard(theme, _report!.totals),
+              ],
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReportSelectorCard(ThemeData theme) {
+    return Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Selecione o Relatório Gerencial:',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            ),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<String>(
+              initialValue: _selectedReportType,
+              isExpanded: true,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              items: _availableReports.map((r) {
+                return DropdownMenuItem(
+                  value: r['type']!,
+                  child: Text(r['title']!, overflow: TextOverflow.ellipsis),
+                );
+              }).toList(),
+              onChanged: (val) {
+                if (val != null && val != _selectedReportType) {
+                  setState(() => _selectedReportType = val);
+                  _loadReport();
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildFilterCard(ThemeData theme) {
+    final l10n = context.l10n;
+
+    return Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              alignment: WrapAlignment.center,
+              children: [
+                ChoiceChip(
+                  label: Text(l10n.dashboardFilterToday),
+                  selected: _selectedFilterType == 'today',
+                  onSelected: (selected) {
+                    if (selected) {
+                      setState(() => _selectedFilterType = 'today');
+                      _loadReport();
+                    }
+                  },
+                ),
+                ChoiceChip(
+                  label: Text(l10n.dashboardFilterDate),
+                  selected: _selectedFilterType == 'date',
+                  onSelected: (selected) async {
+                    if (selected) {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: _selectedDate,
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime(2035),
+                      );
+                      if (picked != null) {
+                        setState(() {
+                          _selectedDate = picked;
+                          _selectedFilterType = 'date';
+                        });
+                        _loadReport();
+                      }
+                    }
+                  },
+                ),
+                ChoiceChip(
+                  label: Text(l10n.dashboardFilterRange),
+                  selected: _selectedFilterType == 'range',
+                  onSelected: (selected) async {
+                    if (selected) {
+                      final picked = await showDateRangePicker(
+                        context: context,
+                        initialDateRange: _selectedRange,
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime(2035),
+                      );
+                      if (picked != null) {
+                        setState(() {
+                          _selectedRange = picked;
+                          _selectedFilterType = 'range';
+                        });
+                        _loadReport();
+                      }
+                    }
+                  },
+                ),
+                ChoiceChip(
+                  label: Text(l10n.dashboardFilterMonth),
+                  selected: _selectedFilterType == 'month',
+                  onSelected: (selected) {
+                    if (selected) {
+                      setState(() => _selectedFilterType = 'month');
+                      _loadReport();
+                    }
+                  },
+                ),
+                ChoiceChip(
+                  label: Text(l10n.dashboardFilterYear),
+                  selected: _selectedFilterType == 'year',
+                  onSelected: (selected) {
+                    if (selected) {
+                      setState(() => _selectedFilterType = 'year');
+                      _loadReport();
+                    }
+                  },
+                ),
+                ChoiceChip(
+                  label: Text(l10n.dashboardFilterAll),
+                  selected: _selectedFilterType == 'all',
+                  onSelected: (selected) {
+                    if (selected) {
+                      setState(() => _selectedFilterType = 'all');
+                      _loadReport();
+                    }
+                  },
+                ),
+              ],
+            ),
+            if (_selectedFilterType == 'date') ...[
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Data: ${AppFormatters.formatDate(_selectedDate)}'),
+                  const SizedBox(width: 8),
+                  TextButton.icon(
+                    icon: const Icon(Icons.calendar_today, size: 16),
+                    label: const Text('Alterar'),
+                    onPressed: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: _selectedDate,
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime(2035),
+                      );
+                      if (picked != null) {
+                        setState(() => _selectedDate = picked);
+                        _loadReport();
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ] else if (_selectedFilterType == 'range') ...[
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Período: ${AppFormatters.formatDate(_selectedRange.start)} até ${AppFormatters.formatDate(_selectedRange.end)}'),
+                  const SizedBox(width: 8),
+                  TextButton.icon(
+                    icon: const Icon(Icons.date_range, size: 16),
+                    label: const Text('Alterar'),
+                    onPressed: () async {
+                      final picked = await showDateRangePicker(
+                        context: context,
+                        initialDateRange: _selectedRange,
+                        firstDate: DateTime(2020),
+                        lastDate: DateTime(2035),
+                      );
+                      if (picked != null) {
+                        setState(() => _selectedRange = picked);
+                        _loadReport();
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ] else if (_selectedFilterType == 'month') ...[
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  DropdownButton<int>(
+                    value: _selectedMonth,
+                    items: List.generate(12, (i) => i + 1).map((m) {
+                      return DropdownMenuItem(value: m, child: Text('Mês $m'));
+                    }).toList(),
+                    onChanged: (val) {
+                      if (val != null) {
+                        setState(() => _selectedMonth = val);
+                        _loadReport();
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 16),
+                  DropdownButton<int>(
+                    value: _selectedYear,
+                    items: [2024, 2025, 2026, 2027].map((y) {
+                      return DropdownMenuItem(value: y, child: Text('$y'));
+                    }).toList(),
+                    onChanged: (val) {
+                      if (val != null) {
+                        setState(() => _selectedYear = val);
+                        _loadReport();
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ] else if (_selectedFilterType == 'year') ...[
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Ano: '),
+                  const SizedBox(width: 8),
+                  DropdownButton<int>(
+                    value: _selectedYear,
+                    items: [2024, 2025, 2026, 2027].map((y) {
+                      return DropdownMenuItem(value: y, child: Text('$y'));
+                    }).toList(),
+                    onChanged: (val) {
+                      if (val != null) {
+                        setState(() => _selectedYear = val);
+                        _loadReport();
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
+            if (_selectedReportType == 'physical-inventory') ...[
+              const Divider(height: 16),
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                title: const Text('Exibir apenas itens abaixo do estoque mínimo'),
+                value: _onlyBelowMin,
+                onChanged: (val) {
+                  setState(() => _onlyBelowMin = val ?? false);
+                  _loadReport();
+                },
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButtons(ThemeData theme) {
+    final l10n = context.l10n;
+
+    return Wrap(
+      spacing: 12,
+      runSpacing: 8,
+      alignment: WrapAlignment.center,
+      children: [
+        ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.teal.shade700,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          ),
+          icon: const Icon(Icons.print),
+          label: Text(l10n.reportPrintPdf),
+          onPressed: _report == null || _isLoading ? null : _openPrintPreview,
+        ),
+        OutlinedButton.icon(
+          style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          ),
+          icon: const Icon(Icons.table_chart, color: Colors.green),
+          label: Text(_isExporting ? 'Exportando...' : l10n.reportExportXlsx),
+          onPressed: _report == null || _isLoading || _isExporting ? null : () => _exportFile('xlsx'),
+        ),
+        OutlinedButton.icon(
+          style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          ),
+          icon: const Icon(Icons.file_present, color: Colors.blueGrey),
+          label: Text(_isExporting ? 'Exportando...' : l10n.reportExportCsv),
+          onPressed: _report == null || _isLoading || _isExporting ? null : () => _exportFile('csv'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReportMetadataBadge(ThemeData theme, ReportMetadata meta) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      decoration: BoxDecoration(
+        color: Colors.blue.shade50,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.blue.shade200),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  meta.title,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.blue.shade900),
+                ),
+                Text(
+                  'Filtro: ${meta.filterInfo.label} | Total: ${meta.totalRows} registro(s)',
+                  style: const TextStyle(fontSize: 12, color: Colors.black87),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            AppFormatters.formatDateTime(meta.generatedAt),
+            style: const TextStyle(fontSize: 11, color: Colors.black54),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReportDataTable(ThemeData theme, ReportResponse report) {
+    final l10n = context.l10n;
+
+    if (report.rows.isEmpty) {
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 16.0),
+          child: Center(
+            child: Column(
+              children: [
+                Icon(Icons.inbox, size: 48, color: Colors.grey.shade400),
+                const SizedBox(height: 12),
+                Text(
+                  l10n.reportEmpty,
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+            headingRowColor: WidgetStateProperty.all(Colors.grey.shade100),
+            columns: report.headers.map((h) {
+              return DataColumn(
+                label: Text(
+                  h,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                ),
+              );
+            }).toList(),
+            rows: report.rows.map((row) {
+              return DataRow(
+                cells: report.columns.map((col) {
+                  final rawVal = row[col];
+                  final displayVal = _formatCellValue(rawVal, col);
+                  return DataCell(
+                    Text(displayVal, style: const TextStyle(fontSize: 12)),
+                  );
+                }).toList(),
+              );
+            }).toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTotalsCard(ThemeData theme, Map<String, dynamic> totals) {
+    final l10n = context.l10n;
+
+    return Card(
+      elevation: 2,
+      color: Colors.blueGrey.shade50,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(Icons.calculate, color: Colors.blueGrey.shade800, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  l10n.reportTotals,
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.blueGrey.shade900),
+                ),
+              ],
+            ),
+            const Divider(height: 16),
+            Wrap(
+              spacing: 24,
+              runSpacing: 8,
+              children: totals.entries.map((entry) {
+                final valStr = _formatCellValue(entry.value, entry.key);
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '${entry.key}: ',
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                    ),
+                    Text(
+                      valStr,
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.blueGrey.shade900),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
