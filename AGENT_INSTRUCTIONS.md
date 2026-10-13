@@ -9,9 +9,9 @@ Este documento estabelece as **diretrizes e o protocolo operacional obrigatório
 
 No início de qualquer sessão de trabalho, o agente DEVE consultar as seguintes fontes na seguinte ordem de prioridade:
 
-1. **[ARCHITECTURE.md](file:///c:/Users/jardi/Desktop/ZM%20CESTA%20B%C3%81SICA/ARCHITECTURE.md):** Fonte canônica da verdade sobre decisões arquiteturais, governança modular, princípios de engenharia permanentes, preparação de IA futura, simplificação da Fase 6, consistência de vendas/custódia e especificações de relatórios/impressão da Fase 8.
-2. **[Especificacao_Sistema_Estoque_Cestas.md](file:///c:/Users/jardi/Desktop/ZM%20CESTA%20B%C3%81SICA/Especificacao_Sistema_Estoque_Cestas.md):** Especificação original aprovada do produto e regras de domínio da empresa.
-3. **[backend/README.md](file:///c:/Users/jardi/Desktop/ZM%20CESTA%20B%C3%81SICA/backend/README.md) e [client/README.md](file:///c:/Users/jardi/Desktop/ZM%20CESTA%20B%C3%81SICA/client/README.md):** Estrutura física de diretórios, convenções de código e comandos de execução.
+1. **[ARCHITECTURE.md](./ARCHITECTURE.md):** Fonte canônica da verdade sobre decisões arquiteturais, governança modular, princípios de engenharia permanentes, preparação de IA futura, simplificação da Fase 6, consistência de vendas/custódia e especificações de relatórios/impressão da Fase 8.
+2. **[Especificacao_Sistema_Estoque_Cestas.md](./Especificacao_Sistema_Estoque_Cestas.md):** Especificação original aprovada do produto e regras de domínio da empresa.
+3. **[backend/README.md](./backend/README.md) e [client/README.md](./client/README.md):** Estrutura física de diretórios, convenções de código e comandos de execução.
 
 ---
 
@@ -21,7 +21,7 @@ Antes de produzir código ou aplicar qualquer alteração em arquivos existentes
 
 1. **Checagem de Saúde do Projeto:**
    - Execute a suíte de testes do backend com `& ".\backend\.venv\Scripts\python.exe" -m pytest backend/tests -q`. O projeto deve estar com **100% dos testes aprovados** (atualmente 180 testes).
-   - Execute a suíte de testes do Flutter com `& "C:\dev\flutter\bin\flutter.bat" test` (atualmente 93 testes).
+   - Execute a suíte de testes do Flutter com `flutter test` (ou `& "C:\dev\flutter\bin\flutter.bat" test` caso o Flutter não esteja no PATH global) (atualmente 93 testes).
    - Verifique o status do Git com `git status` para garantir que o ambiente está consistente.
 2. **Mapeamento de Impacto e Limites Modulares:**
    - Respeite rigorosamente a divisão modular: `estoque`, `produtos`, `receitas`, `compras`, `produção`, `vendas`, `expedição`, `financeiro`, `relatorios_e_impressao` e `core`.

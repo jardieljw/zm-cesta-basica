@@ -1,5 +1,6 @@
 @echo off
 setlocal
+chcp 65001 >nul
 title Servidor Local - ZM Cesta Basica
 
 rem ============================================================================
@@ -7,14 +8,24 @@ rem ZM CESTA BASICA - INICIALIZADOR DO SERVIDOR LOCAL (FASTAPI + HTTPS + SQLite)
 rem Cria a pasta .venv e instala as dependencias automaticamente se faltarem.
 rem ============================================================================
 
-set "ROOT_DIR=%~dp0"
-set "BACKEND_DIR=%ROOT_DIR%backend"
+rem 1. Localiza a pasta backend de forma dinamica (na raiz ou dentro de scripts/)
+if exist "%~dp0backend" (
+    set "BACKEND_DIR=%~dp0backend"
+) else if exist "%~dp0..\backend" (
+    pushd "%~dp0.."
+    set "BACKEND_DIR=%CD%\backend"
+    popd
+) else (
+    echo [ERRO] Pasta backend nao encontrada!
+    goto :fim
+)
+
 set "VENV_DIR=%BACKEND_DIR%\.venv"
 set "PYTHON_EXE=%VENV_DIR%\Scripts\python.exe"
 
 cd /d "%BACKEND_DIR%"
 if errorlevel 1 (
-    echo [ERRO] Pasta backend nao encontrada: %BACKEND_DIR%
+    echo [ERRO] Nao foi possivel aceder a pasta backend: %BACKEND_DIR%
     goto :fim
 )
 
@@ -55,7 +66,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [2/3] Verificando certificados criptograficos TLS locais...
+echo [2/2] Verificando certificados criptograficos TLS locais...
 "%PYTHON_EXE%" -c "from app.core.config import settings; from app.core.security import generate_self_signed_cert; settings.ensure_directories(); generate_self_signed_cert(settings.CERTS_DIR / 'server.crt', settings.CERTS_DIR / 'server.key')"
 if errorlevel 1 (
     echo [ERRO] Falha ao inicializar certificados TLS!
@@ -65,7 +76,7 @@ if errorlevel 1 (
 echo.
 echo [3/3] Servidor online em HTTPS!
 echo       Endereco local:  https://127.0.0.1:8000
-echo       Porta de rede:   8000 ^(disponivel para celulares^)
+echo       Porta de rede:   8000 ^(disponivel para telemoveis/celulares^)
 echo.
 echo ============================================================
 echo Mantenha esta janela aberta enquanto estiver utilizando o sistema.

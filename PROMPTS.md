@@ -1,126 +1,192 @@
-**1. Comandos para o BACK-END (Python / FastAPI)**
+# Guia Oficial de Execução e Compilação — ZM Cesta Básica
 
+---
 
+## ⚠️ 0. Como Abrir o Terminal na Pasta Certa (Passo Obrigatório)
 
-O backend em Python não precisa de compilação em executável binário; ele roda a partir do ambiente virtual e das migrações do banco de dados SQLite.
+Todos os comandos deste guia **devem ser executados na raiz do projeto** (`ZM CESTA BÁSICA`). Para não errar o caminho:
 
+1. Abra a pasta do projeto `ZM CESTA BÁSICA` no seu **Explorador de Arquivos** do Windows.
+2. Clique na **barra de endereço** no topo da janela (onde mostra o caminho das pastas).
+3. Digite **`cmd`** (para abrir o Prompt de Comando) ou **`powershell`** (para abrir o PowerShell) e pressione **Enter**.
+4. A janela preta/azul já abrirá exatamente dentro da pasta do projeto, pronta para receber os comandos abaixo!
 
+---
 
-Para preparar e testar se tudo está 100% pronto na raiz:
+## 📋 1. Pré-requisitos de Programas Instalados
 
-\# 1. Executa a suíte completa de testes do backend para garantir que não há erros
+Antes de rodar os comandos, confirme se o seu computador tem os programas necessários:
 
-.\\backend\\.venv\\Scripts\\python.exe -m pytest backend/tests -q
+1. **Python 3.11+ no PATH:** Verifique digitando `python --version`. Se não reconhecer, reinstale marcando a caixa *"Add python.exe to PATH"*.
+2. **Flutter SDK no PATH:** Verifique digitando `flutter --version`. O comando deve responder normalmente.
+3. **Para compilar o Windows Desktop (`flutter build windows`):** Visual Studio 2022 Community instalado com a carga de trabalho *"Desenvolvimento para desktop com C++"*.
+4. **Para compilar o APK Android (`flutter build apk`):** Android Studio com Android SDK, JDK (Java) instalados e licenças aceitas via `flutter doctor --android-licenses`.
 
+---
 
+## 🚀 2. Configuração Inicial (Primeira Execução ou Nova Máquina)
 
-\# 2. Executar o servidor backend (porta padrão com HTTPS/TLS local):
+Quando você clona o projeto em um computador novo ou precisa recriar a `.venv`, execute os passos abaixo a partir da raiz:
 
-.\\backend\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port 8000
+### Passo 1: Criar o ambiente virtual `.venv` no backend
+- **No PowerShell:**
+```powershell
+python -m venv backend\.venv
+```
+- **No CMD:**
+```cmd
+python -m venv backend\.venv
+```
 
+### Passo 2: Instalar as dependências do Python (`requirements.txt`)
+- **No PowerShell:**
+```powershell
+.\backend\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
+```
+- **No CMD:**
+```cmd
+backend\.venv\Scripts\python.exe -m pip install -r backend\requirements.txt
+```
 
+### Passo 3: Inicializar as tabelas do SQLite (Alembic)
+- **No PowerShell:**
+```powershell
+.\backend\.venv\Scripts\python.exe -m alembic -c backend\alembic.ini upgrade head
+```
+- **No CMD:**
+```cmd
+backend\.venv\Scripts\python.exe -m alembic -c backend\alembic.ini upgrade head
+```
+*(Você também pode dar dois cliques no `iniciar_servidor.bat`, que ele já cria/atualiza o banco SQLite e os certificados TLS automaticamente)*.
 
-*(Você também pode dar dois cliques no arquivo iniciar\_servidor.bat que já criamos na raiz).*
+### Passo 4: Baixar as dependências do Flutter no client
+- **No PowerShell:**
+```powershell
+cd client; flutter pub get; cd ..
+```
+- **No CMD:**
+```cmd
+cd client && flutter pub get && cd ..
+```
 
+---
 
+## ⚙️ 3. Comandos para o BACK-END (Python / FastAPI)
 
+O backend em Python roda direto da pasta virtual e não precisa ser compilado em arquivo `.exe`.
 
+### Passo 1: Executar a suíte de testes (garantia de não-regressão)
+- **No PowerShell:**
+```powershell
+.\backend\.venv\Scripts\python.exe -m pytest backend/tests -q
+```
+- **No CMD:**
+```cmd
+backend\.venv\Scripts\python.exe -m pytest backend/tests -q
+```
 
-**2. Comandos para COMPILAR O FRONT-END (Flutter)**
+### Passo 2: Executar o servidor backend manualmente (HTTPS / Porta 8000)
+- **No PowerShell:**
+```powershell
+.\backend\.venv\Scripts\python.exe -m uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port 8000
+```
+- **No CMD:**
+```cmd
+backend\.venv\Scripts\python.exe -m uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port 8000
+```
+*(Você também pode dar dois cliques no arquivo `iniciar_servidor.bat` que já criamos na raiz)*.
 
+---
 
+## 📱 4. Comandos para COMPILAR O FRONT-END (Flutter)
 
-Abra o terminal PowerShell na raiz (ZM CESTA BÁSICA) e execute:
+Abra o terminal na raiz (`ZM CESTA BÁSICA`) e execute:
 
+---
 
+### A) Gerar Executável para WINDOWS Desktop
 
-**A) Gerar Executável para WINDOWS Desktop:**
+#### 1. Versão Debug (Desenvolvimento / Testes Rápidos):
+- **No PowerShell:**
+```powershell
+cd client; flutter build windows --debug; cd ..
+```
+- **No CMD:**
+```cmd
+cd client && flutter build windows --debug && cd ..
+```
 
-cd client
+#### 2. Versão Release (Produção Final Otimizada):
+- **No PowerShell:**
+```powershell
+cd client; flutter build windows --release; cd ..
+```
+- **No CMD:**
+```cmd
+cd client && flutter build windows --release && cd ..
+```
 
-\& "C:\\dev\\flutter\\bin\\flutter.bat" build windows --debug
+* **O que foi gerado:** A pasta completa em `client\build\windows\x64\runner\Debug\` (ou `Release\`).
+* **O que você envia para o usuário de Windows:** Envie a pasta inteira compactada em `.zip` (ela contém o `zm_cesta_basica_client.exe` junto com as DLLs e a pasta `data`). Não envie apenas o `.exe` solto, pois ele precisa das DLLs irmãs para inicializar.
 
-cd ..
+---
 
+### B) Gerar Aplicativo para ANDROID (APK)
 
+#### 1. Versão Debug:
+- **No PowerShell:**
+```powershell
+cd client; flutter build apk --debug; cd ..
+```
+- **No CMD:**
+```cmd
+cd client && flutter build apk --debug && cd ..
+```
 
-O que foi gerado: A pasta completa em: client\\build\\windows\\x64\\runner\\Debug\\
+#### 2. Versão Release (Produção):
+- **No PowerShell:**
+```powershell
+cd client; flutter build apk --release; cd ..
+```
+- **No CMD (Prompt de Comando):**
+```cmd
+cd client && flutter build apk --release && cd ..
+```
 
-O que você envia para o usuário de Windows: Envie a pasta inteira Debug compactada em .zip (ela contém o zm\_cesta\_basica\_client.exe junto com as DLLs e a pasta data necessárias para abrir o app). Não envie apenas o arquivo .exe solto, pois ele precisa das DLLs irmãs para inicializar.
+> **Dica técnica para o APK Release no Windows:**
+> Caso o Gradle do Android acuse erro de limite de tamanho de caminho ou espaço no nome da pasta (`ZM CESTA BÁSICA`), use este comando seguro que cria um drive virtual temporário sem expor caminhos de usuário:
+> - **No CMD:**
+> ```cmd
+> set "ORIGIN=%CD%" && subst X: "%CD%\client" && cd /d X:\ && flutter build apk --release && cd /d "%ORIGIN%" && subst X: /d
+> ```
+> - **No PowerShell:**
+> ```powershell
+> $orig =$PWD.Path; cmd /c "subst X: `"$orig\client`" && cd /d X:\ && flutter build apk --release && cd /d `"$orig`" && subst X: /d"
+> ```
 
+* **O que foi gerado:** O arquivo APK em `client\build\app\outputs\flutter-apk\app-release.apk` (ou `app-debug.apk`).
+* **O que você envia para o usuário de celular Android:** Basta enviar apenas esse arquivo APK único (por WhatsApp, Google Drive, cabo USB ou Telegram). O usuário clica nele no celular e instala.
 
+---
 
-**B) Gerar Aplicativo para ANDROID (APK):**
-
-cd client
-
-\& "C:\\dev\\flutter\\bin\\flutter.bat" build apk --debug
-
-cd ..
-
-
-
-O APK Release é gerado pelo comando flutter build apk --release (estou gerando ele agora para você).
-
-cmd /c "subst X: C:\\Users\\jardi\\Desktop\\ZMCEST\~1\\client \&\& cd /d X:\\ \&\& C:\\dev\\flutter\\bin\\flutter.bat build apk --release \&\& subst X: /d"
-
-
-
-O que foi gerado: O arquivo APK em: client\\build\\app\\outputs\\flutter-apk\\app-debug.apk
-
-O que você envia para o usuário de celular Android: Basta enviar apenas esse arquivo único app-debug.apk (pelo WhatsApp, Google Drive, cabo USB ou Telegram). O usuário clica nele no celular e instala.
-
-
-
-**3. Comando Único (Tudo de Uma Vez)**
+## 📦 5. Comando Único (Compilar Tudo de Uma Vez)
 
 Se quiser rodar um único comando na raiz que compila o Flutter para Windows e Android sequencialmente:
 
-cd client; \& "C:\\dev\\flutter\\bin\\flutter.bat" build windows --debug; \& "C:\\dev\\flutter\\bin\\flutter.bat" build apk --debug; cd ..
+- **No PowerShell:**
+```powershell
+cd client; flutter build windows --release; flutter build apk --release; cd ..
+```
 
+- **No CMD:**
+```cmd
+cd client && flutter build windows --release && flutter build apk --release && cd ..
+```
 
+---
 
-Resumo do que entregar:
+## 🚚 6. Resumo do que Entregar
 
-No computador que atuará como Servidor: A pasta do projeto rodando o backend via iniciar\_servidor.bat.
-
-Nos computadores Windows clientes: A pasta client\\build\\windows\\x64\\runner\\Debug\\ (compactada em zip).
-
-Nos celulares/tablets Android: O arquivo client\\build\\app\\outputs\\flutter-apk\\app-debug.apk.
-
-
-
-**Quando você clona o projeto em um computador novo ou precisa recriar a .venv, você só precisa rodar 2 comandos simples no terminal a partir da raiz do projeto:**
-
-
-
-\# 1. Cria a pasta .venv dentro de backend usando o Python instalado no computador
-
-python -m venv backend\\.venv
-
-
-
-\# 2. Instala todas as dependências do projeto listadas no requirements.txt
-
-.\\backend\\.venv\\Scripts\\python.exe -m pip install -r backend\\requirements.txt
-
-
-
-
-
-**E o banco de dados?**
-
-
-
-Depois que a .venv for criada e as dependências instaladas, ao rodar o comando:
-
-.\\backend\\.venv\\Scripts\\python.exe -m alembic -c backend/alembic.ini upgrade head
-
-
-
-ou simplesmente dar dois cliques no iniciar\_servidor.bat, ele já cria/atualiza as tabelas do banco SQLite (backend/data/estoque.db) e os certificados TLS automaticamente.
-
-
-
-
-
+* **No computador que atuará como Servidor:** A pasta do projeto rodando o backend via `iniciar_servidor.bat` (ou via tarefa agendada do Windows).
+* **Nos computadores Windows clientes:** A pasta `client\build\windows\x64\runner\Release\` (ou `Debug\`) compactada em `.zip`.
+* **Nos celulares/tablets Android:** O arquivo `client\build\app\outputs\flutter-apk\app-release.apk` (ou `app-debug.apk`).

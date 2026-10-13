@@ -8,10 +8,10 @@ Sistema de alta confiabilidade para controle de estoque, compras com conversão 
 
 Para entender a arquitetura, regras de engenharia, especificações de negócio e diretrizes para agentes de desenvolvimento:
 
-1. **[ARCHITECTURE.md](file:///c:/Users/jardi/Desktop/ZM%20CESTA%20B%C3%81SICA/ARCHITECTURE.md):** Documento canônico de arquitetura, princípios permanentes de engenharia, governança técnica, backlog futuro (financeiro, fiado, expedição) e mapa de fases.
-2. **[Especificacao_Sistema_Estoque_Cestas.md](file:///c:/Users/jardi/Desktop/ZM%20CESTA%20B%C3%81SICA/Especificacao_Sistema_Estoque_Cestas.md):** Especificação original completa do negócio aprovada pela empresa.
-3. **[backend/README.md](file:///c:/Users/jardi/Desktop/ZM%20CESTA%20B%C3%81SICA/backend/README.md):** Guia detalhado do backend FastAPI, banco de dados SQLite WAL, migrações e endpoints.
-4. **[client/README.md](file:///c:/Users/jardi/Desktop/ZM%20CESTA%20B%C3%81SICA/client/README.md):** Guia da aplicação cliente Flutter (Windows e Android), pinning TLS e componentes de interface.
+1. **[ARCHITECTURE.md](./ARCHITECTURE.md):** Documento canônico de arquitetura, princípios permanentes de engenharia, governança técnica, backlog futuro (financeiro, fiado, expedição) e mapa de fases.
+2. **[Especificacao_Sistema_Estoque_Cestas.md](./Especificacao_Sistema_Estoque_Cestas.md):** Especificação original completa do negócio aprovada pela empresa.
+3. **[backend/README.md](./backend/README.md):** Guia detalhado do backend FastAPI, banco de dados SQLite WAL, migrações e endpoints.
+4. **[client/README.md](./client/README.md):** Guia da aplicação cliente Flutter (Windows e Android), pinning TLS e componentes de interface.
 
 ---
 
