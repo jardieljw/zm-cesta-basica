@@ -24,7 +24,9 @@ from app.services.financial import (
 )
 
 def _process_purchase_financial_impact(db: Session, purchase: Purchase) -> None:
-    """Handles financial impact for confirmed purchases: open payable for CREDIT_TERM or cash debit for CASH_IMMEDIATE."""
+    """Handles financial impact for confirmed purchases: open payable for CREDIT_TERM or immediate cash debit for CASH_IMMEDIATE."""
+    pay_method = (purchase.payment_method or ("BOLETO" if purchase.payment_mode == "CREDIT_TERM" else "DINHEIRO")).upper()
+
     if purchase.payment_mode == "CREDIT_TERM":
         p_num = generate_next_payable_number(db)
         due = purchase.due_date or (purchase.purchase_date + datetime.timedelta(days=30))
@@ -39,7 +41,7 @@ def _process_purchase_financial_impact(db: Session, purchase: Purchase) -> None:
             paid_amount_cents=0,
             balance_cents=purchase.total_amount_cents,
             due_date=due,
-            payment_method="BOLETO",
+            payment_method=pay_method,
             status="OPEN",
             purchase_id=purchase.id,
             installment_number=1,
@@ -49,7 +51,7 @@ def _process_purchase_financial_impact(db: Session, purchase: Purchase) -> None:
         )
         db.add(payable)
     else:  # CASH_IMMEDIATE
-        target_acc = db.get(FinancialAccount, purchase.account_id) if purchase.account_id else get_default_financial_account(db, "CASH")
+        target_acc = db.get(FinancialAccount, purchase.account_id) if purchase.account_id else get_default_financial_account(db, "CASH" if pay_method == "DINHEIRO" else "BANK")
         if target_acc and purchase.total_amount_cents > 0:
             p_num = generate_next_payable_number(db)
             payable = AccountPayable(
@@ -63,7 +65,7 @@ def _process_purchase_financial_impact(db: Session, purchase: Purchase) -> None:
                 paid_amount_cents=purchase.total_amount_cents,
                 balance_cents=0,
                 due_date=purchase.purchase_date,
-                payment_method="DINHEIRO",
+                payment_method=pay_method,
                 status="PAID",
                 purchase_id=purchase.id,
                 installment_number=1,
@@ -78,9 +80,9 @@ def _process_purchase_financial_impact(db: Session, purchase: Purchase) -> None:
                 account_id=target_acc.id,
                 payment_date=purchase.purchase_date,
                 amount_cents=purchase.total_amount_cents,
-                payment_method="DINHEIRO",
+                payment_method=pay_method,
                 status="CONFIRMED",
-                notes=f"Pagamento a vista na Compra #{purchase.purchase_number}",
+                notes=f"Pagamento a vista ({pay_method}) na Compra #{purchase.purchase_number}",
                 created_at=utc_now(),
             )
             db.add(payment)
@@ -94,7 +96,7 @@ def _process_purchase_financial_impact(db: Session, purchase: Purchase) -> None:
                 nature="BUSINESS",
                 source_type="PURCHASE",
                 source_id=purchase.id,
-                payment_method="CASH",
+                payment_method=pay_method,
                 occurred_at=purchase.purchase_date,
             )
 
@@ -183,6 +185,7 @@ def create_purchase_entity(db: Session, data: PurchaseCreate) -> Purchase:
         status=status_str,
         purchase_date=purchase_date,
         payment_mode=data.payment_mode.upper() if data.payment_mode else "CASH_IMMEDIATE",
+        payment_method=data.payment_method.upper() if data.payment_method else "DINHEIRO",
         due_date=data.due_date,
         account_id=data.account_id,
         supplier_name=data.supplier_name.strip() if data.supplier_name else None,

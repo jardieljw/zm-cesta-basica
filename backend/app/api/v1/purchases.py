@@ -49,6 +49,11 @@ def serialize_purchase(p: Purchase) -> PurchaseResponse:
         purchase_number=p.purchase_number,
         status=p.status,
         purchase_date=p.purchase_date,
+        payment_mode=p.payment_mode or "CASH_IMMEDIATE",
+        payment_method=p.payment_method or "DINHEIRO",
+        due_date=p.due_date,
+        account_id=p.account_id,
+        payable_id=p.payable.id if p.payable else None,
         supplier_name=p.supplier_name,
         total_amount_cents=p.total_amount_cents,
         notes=p.notes,
@@ -71,6 +76,7 @@ def list_purchases(
     base_stmt = select(Purchase).options(
         selectinload(Purchase.items).selectinload(PurchaseItem.product),
         selectinload(Purchase.items).selectinload(PurchaseItem.packaging),
+        selectinload(Purchase.payable),
     )
     count_stmt = select(func.count(Purchase.id))
 
@@ -129,6 +135,7 @@ def get_purchase(
         .options(
             selectinload(Purchase.items).selectinload(PurchaseItem.product),
             selectinload(Purchase.items).selectinload(PurchaseItem.packaging),
+            selectinload(Purchase.payable),
         )
         .where(Purchase.id == purchase_id)
     )

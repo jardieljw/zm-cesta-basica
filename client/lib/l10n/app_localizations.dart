@@ -6183,6 +6183,186 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Toque no botão abaixo para inicializar a captura da câmera:'**
   String get pairingCameraInitializeHint;
+
+  /// No description provided for @purchasePaymentConditionsHeader.
+  ///
+  /// In pt, this message translates to:
+  /// **'Condições de Pagamento'**
+  String get purchasePaymentConditionsHeader;
+
+  /// No description provided for @purchasePaymentStatusLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Situação do Pagamento'**
+  String get purchasePaymentStatusLabel;
+
+  /// No description provided for @purchasePaymentStatusPaid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pago / Liquidado'**
+  String get purchasePaymentStatusPaid;
+
+  /// No description provided for @purchasePaymentStatusPending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pendente / Em Aberto'**
+  String get purchasePaymentStatusPending;
+
+  /// No description provided for @purchasePaymentMethodLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Forma de Pagamento'**
+  String get purchasePaymentMethodLabel;
+
+  /// No description provided for @purchasePaymentAmountDueLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor Devido / Total Financeiro'**
+  String get purchasePaymentAmountDueLabel;
+
+  /// No description provided for @purchasePaymentDueDateLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Data de Vencimento'**
+  String get purchasePaymentDueDateLabel;
+
+  /// No description provided for @purchasePaymentDueDateRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'A data de vencimento é obrigatória para compras pendentes.'**
+  String get purchasePaymentDueDateRequired;
+
+  /// No description provided for @purchasePaymentFinancialAccountLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta Financeira de Liquidação'**
+  String get purchasePaymentFinancialAccountLabel;
+
+  /// No description provided for @purchasePaymentPendingNotice.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta compra gerará uma obrigação em aberto no módulo de Contas a Pagar com vencimento em {date}.'**
+  String purchasePaymentPendingNotice(String date);
+
+  /// No description provided for @purchasePaymentPaidNotice.
+  ///
+  /// In pt, this message translates to:
+  /// **'O valor da compra será baixado imediatamente no livro-caixa da empresa.'**
+  String get purchasePaymentPaidNotice;
+
+  /// No description provided for @purchasePaymentDetailMethod.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamento: {method} ({status})'**
+  String purchasePaymentDetailMethod(String method, String status);
+
+  /// No description provided for @purchasePaymentDetailDueDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vencimento: {date}'**
+  String purchasePaymentDetailDueDate(String date);
+
+  /// Texto genérico de botão para selecionar
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecionar'**
+  String get commonSelect;
+
+  /// No description provided for @backupSectionTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Backup e Segurança do Banco de Dados'**
+  String get backupSectionTitle;
+
+  /// No description provided for @backupSectionDesc.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gere cópias de segurança consistentes e verificadas do banco de dados (SQLite) para prevenir perdas de dados comerciais.'**
+  String get backupSectionDesc;
+
+  /// No description provided for @backupCreateButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerar Backup Agora'**
+  String get backupCreateButton;
+
+  /// No description provided for @backupCreating.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerando e verificando backup...'**
+  String get backupCreating;
+
+  /// No description provided for @backupSuccessMsg.
+  ///
+  /// In pt, this message translates to:
+  /// **'Backup gerado com sucesso: {filename}'**
+  String backupSuccessMsg(String filename);
+
+  /// No description provided for @backupErrorMsg.
+  ///
+  /// In pt, this message translates to:
+  /// **'Falha ao gerar backup: {error}'**
+  String backupErrorMsg(String error);
+
+  /// No description provided for @backupListTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Backups Disponíveis no Servidor'**
+  String get backupListTitle;
+
+  /// No description provided for @backupEmptyList.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum backup encontrado no servidor.'**
+  String get backupEmptyList;
+
+  /// No description provided for @backupIntegrityOk.
+  ///
+  /// In pt, this message translates to:
+  /// **'Integridade Verificada'**
+  String get backupIntegrityOk;
+
+  /// No description provided for @backupRestoreButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Restaurar'**
+  String get backupRestoreButton;
+
+  /// No description provided for @backupRestoreConfirmTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Restaurar este backup?'**
+  String get backupRestoreConfirmTitle;
+
+  /// No description provided for @backupRestoreConfirmBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'O banco de dados atual será substituído por {filename}. Tudo o que foi lançado depois deste backup será perdido. Um backup de segurança do estado atual será criado automaticamente antes da restauração.'**
+  String backupRestoreConfirmBody(String filename);
+
+  /// No description provided for @backupRestoreConfirmAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Sim, restaurar'**
+  String get backupRestoreConfirmAction;
+
+  /// No description provided for @backupRestoreCancel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cancelar'**
+  String get backupRestoreCancel;
+
+  /// No description provided for @backupRestoreSuccessMsg.
+  ///
+  /// In pt, this message translates to:
+  /// **'Backup restaurado. Backup de segurança criado: {safety}. Reinicie o aplicativo para recarregar os dados.'**
+  String backupRestoreSuccessMsg(String safety);
+
+  /// No description provided for @backupRestoreErrorMsg.
+  ///
+  /// In pt, this message translates to:
+  /// **'Falha ao restaurar backup: {error}'**
+  String backupRestoreErrorMsg(String error);
 }
 
 class _AppLocalizationsDelegate

@@ -1,41 +1,57 @@
 @echo off
 setlocal
 title Servidor Local - ZM Cesta Basica
-chcp 65001 >nul
 
 rem ============================================================================
 rem ZM CESTA BASICA - INICIALIZADOR DO SERVIDOR LOCAL (FASTAPI + HTTPS + SQLite)
+rem Cria a pasta .venv e instala as dependencias automaticamente se faltarem.
 rem ============================================================================
 
 set "ROOT_DIR=%~dp0"
 set "BACKEND_DIR=%ROOT_DIR%backend"
-set "PYTHON_EXE=%BACKEND_DIR%\.venv\Scripts\python.exe"
+set "VENV_DIR=%BACKEND_DIR%\.venv"
+set "PYTHON_EXE=%VENV_DIR%\Scripts\python.exe"
 
 cd /d "%BACKEND_DIR%"
+if errorlevel 1 (
+    echo [ERRO] Pasta backend nao encontrada: %BACKEND_DIR%
+    goto :fim
+)
 
-cls
 echo ============================================================
 echo           INICIANDO SERVIDOR LOCAL - ZM CESTA BASICA
 echo ============================================================
 echo Diretorio do Backend: %BACKEND_DIR%
 echo.
 
-if not exist "%PYTHON_EXE%" (
-    echo [ERRO] Ambiente virtual nao encontrado em:
-    echo        %PYTHON_EXE%
-    echo.
-    echo Pressione qualquer tecla para fechar...
-    pause >nul
-    exit /b 1
+if exist "%PYTHON_EXE%" goto :venv_ok
+
+echo [0/3] Ambiente virtual nao encontrado. Criando em %VENV_DIR% ...
+where python >nul 2>&1
+if errorlevel 1 (
+    echo [ERRO] Python nao foi encontrado no PATH.
+    echo        Instale o Python 3 em https://www.python.org/downloads/
+    echo        e marque a opcao "Add Python to PATH" na instalacao.
+    goto :fim
+)
+python -m venv "%VENV_DIR%"
+if errorlevel 1 (
+    echo [ERRO] Falha ao criar o ambiente virtual.
+    goto :fim
+)
+echo Instalando dependencias ^(pode demorar alguns minutos^)...
+"%PYTHON_EXE%" -m pip install -r "%BACKEND_DIR%\requirements.txt"
+if errorlevel 1 (
+    echo [ERRO] Falha ao instalar dependencias.
+    goto :fim
 )
 
+:venv_ok
 echo [1/3] Verificando e aplicando migracoes no banco SQLite...
 "%PYTHON_EXE%" -m alembic upgrade head
 if errorlevel 1 (
     echo [ERRO] Falha ao migrar banco de dados!
-    echo.
-    pause
-    exit /b 1
+    goto :fim
 )
 
 echo.
@@ -43,15 +59,13 @@ echo [2/3] Verificando certificados criptograficos TLS locais...
 "%PYTHON_EXE%" -c "from app.core.config import settings; from app.core.security import generate_self_signed_cert; settings.ensure_directories(); generate_self_signed_cert(settings.CERTS_DIR / 'server.crt', settings.CERTS_DIR / 'server.key')"
 if errorlevel 1 (
     echo [ERRO] Falha ao inicializar certificados TLS!
-    echo.
-    pause
-    exit /b 1
+    goto :fim
 )
 
 echo.
 echo [3/3] Servidor online em HTTPS!
-echo       Endereço local:  https://127.0.0.1:8000
-echo       Porta de rede:   8000 (disponivel para celulares)
+echo       Endereco local:  https://127.0.0.1:8000
+echo       Porta de rede:   8000 ^(disponivel para celulares^)
 echo.
 echo ============================================================
 echo Mantenha esta janela aberta enquanto estiver utilizando o sistema.
@@ -63,4 +77,9 @@ echo.
 
 echo.
 echo Servidor encerrado.
-pause
+
+:fim
+echo.
+echo Pressione qualquer tecla para fechar...
+pause >nul
+endlocal

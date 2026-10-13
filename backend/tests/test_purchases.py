@@ -452,3 +452,115 @@ def test_cancel_purchase_idempotency(client, authenticated_device):
     stk = client.get(f"/api/v1/inventory/products/{prod['id']}/stock", headers=headers).json()
     assert stk["current_stock"] == 0
 
+
+def test_create_purchase_with_credit_term_generates_open_payable(client, authenticated_device):
+    _, _, headers = authenticated_device
+
+    # 1. Cria produto
+    prod = client.post("/api/v1/products", json={
+        "name": "Cafe Torrado 500g",
+        "category": "ALIMENTACAO",
+        "base_unit": "UNIT",
+        "cost_price_cents": 1200,
+        "sale_price_cents": 1600,
+    }, headers=headers).json()
+    prod_id = prod["id"]
+
+    # 2. Registra compra a prazo (CREDIT_TERM) com boleto
+    payload = {
+        "supplier_name": "Distribuidora de Cafe Brasil",
+        "notes": "NF-e 5544",
+        "status": "CONFIRMED",
+        "payment_mode": "CREDIT_TERM",
+        "payment_method": "BOLETO",
+        "due_date": "2026-11-20T00:00:00Z",
+        "items": [
+            {
+                "product_id": prod_id,
+                "packaging_id": None,
+                "packages_count": 20,
+                "unit_price_cents": 1150,
+            }
+        ]
+    }
+    r = client.post("/api/v1/purchases", json=payload, headers=headers)
+    assert r.status_code == status.HTTP_201_CREATED
+    data = r.json()
+    assert data["status"] == "CONFIRMED"
+    assert data["payment_mode"] == "CREDIT_TERM"
+    assert data["payment_method"] == "BOLETO"
+    assert data["total_amount_cents"] == 20 * 1150 # 23.000 centavos
+    assert data["due_date"] is not None
+
+    # 3. Verifica se o estoque foi creditado normalmente
+    stk = client.get(f"/api/v1/inventory/products/{prod_id}/stock", headers=headers).json()
+    assert stk["current_stock"] == 20
+
+    # 4. Verifica se a obrigacao foi criada em Contas a Pagar (OPEN)
+    payables_res = client.get("/api/v1/payables?category=FORNECEDOR", headers=headers)
+    assert payables_res.status_code == status.HTTP_200_OK
+    payables = payables_res.json()
+    matched = [p for p in payables if p["purchase_id"] == data["id"]]
+    assert len(matched) == 1
+    payable = matched[0]
+    assert payable["status"] == "OPEN"
+    assert payable["payment_method"] == "BOLETO"
+    assert payable["original_amount_cents"] == 23000
+    assert payable["balance_cents"] == 23000
+    assert payable["paid_amount_cents"] == 0
+    assert payable["beneficiary"] == "Distribuidora de Cafe Brasil"
+
+
+def test_create_purchase_cash_immediate_with_pix_and_treasury_debit(client, authenticated_device):
+    _, _, headers = authenticated_device
+
+    # 1. Cria produto
+    prod = client.post("/api/v1/products", json={
+        "name": "Farinha de Trigo 1kg",
+        "category": "ALIMENTACAO",
+        "base_unit": "UNIT",
+        "cost_price_cents": 400,
+        "sale_price_cents": 550,
+    }, headers=headers).json()
+    prod_id = prod["id"]
+
+    # 2. Registra compra a vista via PIX
+    payload = {
+        "supplier_name": "Moinho Central",
+        "notes": "Compra com comprovante Pix",
+        "status": "CONFIRMED",
+        "payment_mode": "CASH_IMMEDIATE",
+        "payment_method": "PIX",
+        "items": [
+            {
+                "product_id": prod_id,
+                "packaging_id": None,
+                "packages_count": 10,
+                "unit_price_cents": 350,
+            }
+        ]
+    }
+    r = client.post("/api/v1/purchases", json=payload, headers=headers)
+    assert r.status_code == status.HTTP_201_CREATED
+    data = r.json()
+    assert data["payment_mode"] == "CASH_IMMEDIATE"
+    assert data["payment_method"] == "PIX"
+    assert data["total_amount_cents"] == 3500
+
+    # 3. Verifica se o estoque aumentou
+    stk = client.get(f"/api/v1/inventory/products/{prod_id}/stock", headers=headers).json()
+    assert stk["current_stock"] == 10
+
+    # 4. Verifica se a conta a pagar foi criada como quitada (PAID)
+    payables_res = client.get("/api/v1/payables?status=PAID", headers=headers)
+    assert payables_res.status_code == status.HTTP_200_OK
+    payables = payables_res.json()
+    matched = [p for p in payables if p["purchase_id"] == data["id"]]
+    assert len(matched) == 1
+    payable = matched[0]
+    assert payable["status"] == "PAID"
+    assert payable["payment_method"] == "PIX"
+    assert payable["balance_cents"] == 0
+    assert payable["paid_amount_cents"] == 3500
+
+

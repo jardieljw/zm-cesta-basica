@@ -2449,5 +2449,97 @@
   "pairingCameraInitializeHint": "Toque no botão abaixo para inicializar a captura da câmera:",
   "@pairingCameraInitializeHint": {
     "description": "Dica de inicialização da câmera"
+  },
+  "purchasePaymentConditionsHeader": "Condições de Pagamento",
+  "purchasePaymentStatusLabel": "Situação do Pagamento",
+  "purchasePaymentStatusPaid": "Pago / Liquidado",
+  "purchasePaymentStatusPending": "Pendente / Em Aberto",
+  "purchasePaymentMethodLabel": "Forma de Pagamento",
+  "purchasePaymentAmountDueLabel": "Valor Devido / Total Financeiro",
+  "purchasePaymentDueDateLabel": "Data de Vencimento",
+  "purchasePaymentDueDateRequired": "A data de vencimento é obrigatória para compras pendentes.",
+  "purchasePaymentFinancialAccountLabel": "Conta Financeira de Liquidação",
+  "purchasePaymentPendingNotice": "Esta compra gerará uma obrigação em aberto no módulo de Contas a Pagar com vencimento em {date}.",
+  "@purchasePaymentPendingNotice": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "purchasePaymentPaidNotice": "O valor da compra será baixado imediatamente no livro-caixa da empresa.",
+  "purchasePaymentDetailMethod": "Pagamento: {method} ({status})",
+  "@purchasePaymentDetailMethod": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "purchasePaymentDetailDueDate": "Vencimento: {date}",
+  "@purchasePaymentDetailDueDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "commonSelect": "Selecionar",
+  "@commonSelect": {
+    "description": "Texto genérico de botão para selecionar"
+  },
+  "backupSectionTitle": "Backup e Segurança do Banco de Dados",
+  "backupSectionDesc": "Gere cópias de segurança consistentes e verificadas do banco de dados (SQLite) para prevenir perdas de dados comerciais.",
+  "backupCreateButton": "Gerar Backup Agora",
+  "backupCreating": "Gerando e verificando backup...",
+  "backupSuccessMsg": "Backup gerado com sucesso: {filename}",
+  "@backupSuccessMsg": {
+    "placeholders": {
+      "filename": {
+        "type": "String"
+      }
+    }
+  },
+  "backupErrorMsg": "Falha ao gerar backup: {error}",
+  "@backupErrorMsg": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "backupListTitle": "Backups Disponíveis no Servidor",
+  "backupEmptyList": "Nenhum backup encontrado no servidor.",
+  "backupIntegrityOk": "Integridade Verificada",
+  "backupRestoreButton": "Restaurar",
+  "backupRestoreConfirmTitle": "Restaurar este backup?",
+  "backupRestoreConfirmBody": "O banco de dados atual será substituído por {filename}. Tudo o que foi lançado depois deste backup será perdido. Um backup de segurança do estado atual será criado automaticamente antes da restauração.",
+  "@backupRestoreConfirmBody": {
+    "placeholders": {
+      "filename": {
+        "type": "String"
+      }
+    }
+  },
+  "backupRestoreConfirmAction": "Sim, restaurar",
+  "backupRestoreCancel": "Cancelar",
+  "backupRestoreSuccessMsg": "Backup restaurado. Backup de segurança criado: {safety}. Reinicie o aplicativo para recarregar os dados.",
+  "@backupRestoreSuccessMsg": {
+    "placeholders": {
+      "safety": {
+        "type": "String"
+      }
+    }
+  },
+  "backupRestoreErrorMsg": "Falha ao restaurar backup: {error}",
+  "@backupRestoreErrorMsg": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
   }
 }

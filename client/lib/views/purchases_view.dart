@@ -77,6 +77,37 @@ class _PurchasesViewState extends State<PurchasesView> {
     }
   }
 
+  String _formatPaymentMode(BuildContext context, String mode) {
+    final l10n = context.l10n;
+    switch (mode) {
+      case 'CREDIT_TERM':
+        return l10n.purchasePaymentStatusPending;
+      case 'CASH_IMMEDIATE':
+      default:
+        return l10n.purchasePaymentStatusPaid;
+    }
+  }
+
+  String _formatPaymentMethod(BuildContext context, String method) {
+    final l10n = context.l10n;
+    switch (method.toUpperCase()) {
+      case 'BOLETO':
+        return l10n.payablePaymentMethodBoleto;
+      case 'PIX':
+        return l10n.payablePaymentMethodPix;
+      case 'TRANSFERENCIA':
+        return l10n.payablePaymentMethodTransfer;
+      case 'CHEQUE':
+        return l10n.payablePaymentMethodCheck;
+      case 'CARTAO_CREDITO':
+        return l10n.payablePaymentMethodCard;
+      case 'DINHEIRO':
+        return l10n.payablePaymentMethodCash;
+      default:
+        return l10n.payablePaymentMethodOther;
+    }
+  }
+
   Future<void> _showCancelDialog(Purchase purchase) async {
     final l10n = context.l10n;
     final reasonController = TextEditingController();
@@ -213,6 +244,35 @@ class _PurchasesViewState extends State<PurchasesView> {
                   const SizedBox(height: 12),
                   Text(l10n.purchaseDetailSupplier(purchase.supplierName ?? '-'), style: const TextStyle(fontSize: 15)),
                   Text(l10n.purchaseDetailDate(AppFormatters.formatDateTime(purchase.purchaseDate.toLocal())), style: const TextStyle(fontSize: 13, color: Colors.black54)),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      Icon(
+                        purchase.paymentMode == 'CREDIT_TERM' ? Icons.schedule : Icons.check_circle_outline,
+                        size: 16,
+                        color: purchase.paymentMode == 'CREDIT_TERM' ? Colors.orange.shade800 : Colors.green.shade800,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        l10n.purchasePaymentDetailMethod(
+                          _formatPaymentMethod(context, purchase.paymentMethod),
+                          _formatPaymentMode(context, purchase.paymentMode),
+                        ),
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: purchase.paymentMode == 'CREDIT_TERM' ? Colors.orange.shade900 : Colors.green.shade900,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (purchase.paymentMode == 'CREDIT_TERM' && purchase.dueDate != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.purchasePaymentDetailDueDate(AppFormatters.formatDate(purchase.dueDate!)),
+                      style: const TextStyle(fontSize: 13, color: Colors.black87, fontWeight: FontWeight.w500),
+                    ),
+                  ],
                   if (purchase.notes != null) ...[
                     const SizedBox(height: 8),
                     Text('${l10n.commonNotes}: ${purchase.notes!}', style: const TextStyle(fontSize: 13, fontStyle: FontStyle.italic)),
@@ -412,6 +472,17 @@ class _PurchasesViewState extends State<PurchasesView> {
                                         children: [
                                           Text(AppFormatters.formatDate(p.purchaseDate.toLocal())),
                                           Text(l10n.purchaseDetailItems(p.items.length)),
+                                          Text(
+                                            l10n.purchasePaymentDetailMethod(
+                                              _formatPaymentMethod(context, p.paymentMethod),
+                                              _formatPaymentMode(context, p.paymentMode),
+                                            ),
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              color: p.paymentMode == 'CREDIT_TERM' ? Colors.orange.shade800 : Colors.green.shade800,
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),

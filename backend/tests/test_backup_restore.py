@@ -103,3 +103,24 @@ def test_backup_api_endpoints(client: TestClient, authenticated_device, tmp_path
     data_restore = res_restore.json()
     assert data_restore["status"] == "success"
     assert data_restore["integrity_ok"] is True
+
+
+def test_restore_api_creates_safety_backup_and_rejects_bad_names(client: TestClient, authenticated_device):
+    _, _, headers = authenticated_device
+
+    filename = client.post("/api/v1/backup/create", headers=headers).json()["backup_filename"]
+
+    res = client.post("/api/v1/backup/restore", headers=headers, json={"backup_filename": filename})
+    assert res.status_code == 200
+    safety = res.json()["safety_backup_filename"]
+    assert safety and "pre_restore" in safety
+
+    listed = [b["filename"] for b in client.get("/api/v1/backup/list", headers=headers).json()]
+    assert safety in listed
+
+    for bad in ["../estoque.db", "sub\\x.db", "arquivo.txt"]:
+        r = client.post("/api/v1/backup/restore", headers=headers, json={"backup_filename": bad})
+        assert r.status_code == 400
+
+    r = client.post("/api/v1/backup/restore", headers=headers, json={"backup_filename": "nao_existe.db"})
+    assert r.status_code == 404

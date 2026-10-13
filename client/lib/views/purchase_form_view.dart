@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
+import '../models/financial_account.dart';
 import '../services/product_service.dart';
 import '../services/purchase_service.dart';
+import '../services/treasury_service.dart';
 import '../l10n/l10n_extension.dart';
 import '../utils/formatters.dart';
 
@@ -35,21 +37,29 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
   final _formKey = GlobalKey<FormState>();
   final ProductService _productService = ProductService();
   final PurchaseService _purchaseService = PurchaseService();
+  final TreasuryService _treasuryService = TreasuryService();
   final _supplierController = TextEditingController();
   final _notesController = TextEditingController();
   final DateTime _purchaseDate = DateTime.now();
   String _status = 'CONFIRMED';
 
+  // Condicoes de Pagamento
+  String _paymentMode = 'CASH_IMMEDIATE'; // CASH_IMMEDIATE, CREDIT_TERM
+  String _paymentMethod = 'DINHEIRO'; // DINHEIRO, PIX, BOLETO, CARTAO_CREDITO, TRANSFERENCIA, CHEQUE, OUTRO
+  DateTime _dueDate = DateTime.now().add(const Duration(days: 30));
+  String? _selectedAccountId;
+  List<FinancialAccount> _financialAccounts = [];
+
   List<Product> _products = [];
   final List<_PurchaseItemDraft> _items = [];
-  bool _isLoadingProducts = true;
+  bool _isLoadingInitial = true;
   bool _isSaving = false;
   String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    _loadProducts();
+    _loadInitialData();
   }
 
   @override
@@ -59,12 +69,27 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
     super.dispose();
   }
 
-  Future<void> _loadProducts() async {
+  Future<void> _loadInitialData() async {
     try {
-      final list = await _productService.getProducts(isActive: true);
+      final results = await Future.wait([
+        _productService.getProducts(isActive: true),
+        _treasuryService.getAccounts(isActive: true),
+      ]);
+
+      final prods = results[0] as List<Product>;
+      final accs = results[1] as List<FinancialAccount>;
+
       setState(() {
-        _products = list;
-        _isLoadingProducts = false;
+        _products = prods;
+        _financialAccounts = accs;
+        if (_financialAccounts.isNotEmpty) {
+          final defaultAcc = _financialAccounts.firstWhere(
+            (a) => a.isDefault,
+            orElse: () => _financialAccounts.first,
+          );
+          _selectedAccountId = defaultAcc.id;
+        }
+        _isLoadingInitial = false;
         if (_items.isEmpty && _products.isNotEmpty) {
           _addItem();
         }
@@ -72,7 +97,7 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
     } catch (e) {
       setState(() {
         _errorMessage = e.toString().replaceAll('Exception: ', '');
-        _isLoadingProducts = false;
+        _isLoadingInitial = false;
       });
     }
   }
@@ -105,6 +130,18 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
     return _items.fold(0.0, (acc, item) => acc + item.totalPriceReais);
   }
 
+  Future<void> _pickDueDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: _dueDate,
+      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
+    );
+    if (picked != null) {
+      setState(() => _dueDate = picked);
+    }
+  }
+
   Future<void> _save() async {
     final l10n = context.l10n;
     if (!_formKey.currentState!.validate()) return;
@@ -121,6 +158,10 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
     final payload = {
       'supplier_name': _supplierController.text.trim().isNotEmpty ? _supplierController.text.trim() : null,
       'purchase_date': _purchaseDate.toUtc().toIso8601String(),
+      'payment_mode': _paymentMode,
+      'payment_method': _paymentMethod,
+      'due_date': _paymentMode == 'CREDIT_TERM' ? _dueDate.toUtc().toIso8601String() : null,
+      'account_id': _paymentMode == 'CASH_IMMEDIATE' ? _selectedAccountId : null,
       'notes': _notesController.text.trim().isNotEmpty ? _notesController.text.trim() : null,
       'status': _status,
       'items': _items.map((it) {
@@ -154,7 +195,7 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    if (_isLoadingProducts) {
+    if (_isLoadingInitial) {
       return Scaffold(
         appBar: AppBar(title: Text(l10n.purchaseFormTitle)),
         body: const Center(child: CircularProgressIndicator()),
@@ -240,6 +281,146 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                           border: const OutlineInputBorder(),
                         ),
                       ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Condições de Pagamento
+              Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.payment, color: Colors.blue.shade700),
+                          const SizedBox(width: 8),
+                          Text(
+                            l10n.purchasePaymentConditionsHeader,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final isNarrow = constraints.maxWidth < 600;
+                          final statusDropdown = DropdownButtonFormField<String>(
+                            initialValue: _paymentMode,
+                            decoration: InputDecoration(
+                              labelText: '${l10n.purchasePaymentStatusLabel} *',
+                              border: const OutlineInputBorder(),
+                            ),
+                            items: [
+                              DropdownMenuItem(
+                                value: 'CASH_IMMEDIATE',
+                                child: Text(l10n.purchasePaymentStatusPaid),
+                              ),
+                              DropdownMenuItem(
+                                value: 'CREDIT_TERM',
+                                child: Text(l10n.purchasePaymentStatusPending),
+                              ),
+                            ],
+                            onChanged: (val) {
+                              if (val != null) {
+                                setState(() {
+                                  _paymentMode = val;
+                                  if (_paymentMode == 'CREDIT_TERM' && _paymentMethod == 'DINHEIRO') {
+                                    _paymentMethod = 'BOLETO';
+                                  } else if (_paymentMode == 'CASH_IMMEDIATE' && _paymentMethod == 'BOLETO') {
+                                    _paymentMethod = 'DINHEIRO';
+                                  }
+                                });
+                              }
+                            },
+                          );
+
+                          final methodDropdown = DropdownButtonFormField<String>(
+                            initialValue: _paymentMethod,
+                            decoration: InputDecoration(
+                              labelText: '${l10n.purchasePaymentMethodLabel} *',
+                              border: const OutlineInputBorder(),
+                            ),
+                            items: [
+                              DropdownMenuItem(value: 'DINHEIRO', child: Text(l10n.payablePaymentMethodCash)),
+                              DropdownMenuItem(value: 'PIX', child: Text(l10n.payablePaymentMethodPix)),
+                              DropdownMenuItem(value: 'BOLETO', child: Text(l10n.payablePaymentMethodBoleto)),
+                              DropdownMenuItem(value: 'CARTAO_CREDITO', child: Text(l10n.payablePaymentMethodCard)),
+                              DropdownMenuItem(value: 'TRANSFERENCIA', child: Text(l10n.payablePaymentMethodTransfer)),
+                              DropdownMenuItem(value: 'CHEQUE', child: Text(l10n.payablePaymentMethodCheck)),
+                              DropdownMenuItem(value: 'OUTRO', child: Text(l10n.payablePaymentMethodOther)),
+                            ],
+                            onChanged: (val) {
+                              if (val != null) setState(() => _paymentMethod = val);
+                            },
+                          );
+
+                          if (isNarrow) {
+                            return Column(
+                              children: [
+                                statusDropdown,
+                                const SizedBox(height: 16),
+                                methodDropdown,
+                              ],
+                            );
+                          } else {
+                            return Row(
+                              children: [
+                                Expanded(child: statusDropdown),
+                                const SizedBox(width: 16),
+                                Expanded(child: methodDropdown),
+                              ],
+                            );
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Valor Devido e Vencimento / Conta
+                      if (_paymentMode == 'CREDIT_TERM') ...[
+                        ListTile(
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.grey.shade400),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          leading: const Icon(Icons.calendar_today, color: Colors.orange),
+                          title: Text(
+                            '${l10n.purchasePaymentDueDateLabel}: ${AppFormatters.formatDate(_dueDate)}',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text(
+                            l10n.purchasePaymentPendingNotice(AppFormatters.formatDate(_dueDate)),
+                            style: TextStyle(fontSize: 12, color: Colors.orange.shade900),
+                          ),
+                          trailing: OutlinedButton(
+                            onPressed: _pickDueDate,
+                            child: Text(l10n.commonSelect),
+                          ),
+                        ),
+                      ] else ...[
+                        if (_financialAccounts.isNotEmpty)
+                          DropdownButtonFormField<String>(
+                            initialValue: _selectedAccountId,
+                            decoration: InputDecoration(
+                              labelText: '${l10n.purchasePaymentFinancialAccountLabel} *',
+                              border: const OutlineInputBorder(),
+                            ),
+                            items: _financialAccounts.map((a) {
+                              return DropdownMenuItem(
+                                value: a.id,
+                                child: Text('${a.name} (${AppFormatters.formatCurrency(a.currentBalanceCents)})'),
+                              );
+                            }).toList(),
+                            onChanged: (val) {
+                              if (val != null) setState(() => _selectedAccountId = val);
+                            },
+                          ),
+                      ],
                     ],
                   ),
                 ),

@@ -6,6 +6,8 @@ import '../core/secure_storage.dart';
 import '../services/auth_service.dart';
 import '../services/connectivity_service.dart';
 import '../models/connection_status.dart';
+import '../models/backup.dart';
+import '../services/backup_service.dart';
 import '../l10n/l10n_extension.dart';
 import 'pairing_view.dart';
 
@@ -32,10 +34,88 @@ class _SettingsViewState extends State<SettingsView> {
   bool _isGeneratingQr = false;
   ServerStatus? _serverStatus;
 
+  final BackupService _backupService = BackupService();
+  List<BackupItemModel> _backups = [];
+  bool _isCreatingBackup = false;
+  bool _isRestoringBackup = false;
+
   @override
   void initState() {
     super.initState();
     _loadSettings();
+  }
+
+  Future<void> _confirmRestore(BackupItemModel backup) async {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.backupRestoreConfirmTitle),
+        content: Text(l10n.backupRestoreConfirmBody(backup.filename)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(l10n.backupRestoreCancel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Colors.red.shade700),
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(l10n.backupRestoreConfirmAction),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    setState(() => _isRestoringBackup = true);
+    try {
+      final res = await _backupService.restoreBackup(backup.filename);
+      await _loadBackups();
+      messenger.showSnackBar(SnackBar(
+        content: Text(l10n.backupRestoreSuccessMsg(res.safetyBackupFilename ?? '-')),
+        backgroundColor: Colors.green.shade700,
+        duration: const Duration(seconds: 8),
+      ));
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(
+        content: Text(l10n.backupRestoreErrorMsg(e.toString())),
+        backgroundColor: Colors.red.shade700,
+      ));
+    } finally {
+      if (mounted) setState(() => _isRestoringBackup = false);
+    }
+  }
+
+  Future<void> _loadBackups() async {
+    try {
+      final list = await _backupService.listBackups();
+      if (!mounted) return;
+      setState(() => _backups = list);
+    } catch (_) {
+      // Lista indisponível (sem pareamento/servidor offline): mantém vazia.
+    }
+  }
+
+  Future<void> _createBackup() async {
+    final l10n = context.l10n;
+    final messenger = ScaffoldMessenger.of(context);
+    setState(() => _isCreatingBackup = true);
+    try {
+      final res = await _backupService.createBackup();
+      await _loadBackups();
+      messenger.showSnackBar(SnackBar(
+        content: Text(l10n.backupSuccessMsg(res.backupFilename)),
+        backgroundColor: Colors.green.shade700,
+      ));
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(
+        content: Text(l10n.backupErrorMsg(e.toString())),
+        backgroundColor: Colors.red.shade700,
+      ));
+    } finally {
+      if (mounted) setState(() => _isCreatingBackup = false);
+    }
   }
 
   Future<void> _loadSettings() async {
@@ -54,7 +134,11 @@ class _SettingsViewState extends State<SettingsView> {
       _hasToken = token != null && token.isNotEmpty;
       _serverStatus = status;
     });
+    if (_hasToken) {
+      _loadBackups();
+    }
   }
+
 
   Future<void> _checkConnection() async {
     setState(() => _isCheckingConnection = true);
@@ -449,6 +533,76 @@ class _SettingsViewState extends State<SettingsView> {
                 ),
               ),
             const SizedBox(height: 24),
+
+            // Backup e Segurança do Banco de Dados (requer dispositivo pareado)
+            if (_hasToken) ...[
+              Card(
+                elevation: 1,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(Icons.backup, color: theme.colorScheme.primary),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              l10n.backupSectionTitle,
+                              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        l10n.backupSectionDesc,
+                        style: const TextStyle(color: Colors.black87, fontSize: 13),
+                      ),
+                      const SizedBox(height: 16),
+                      ElevatedButton.icon(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size.fromHeight(48),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        ),
+                        onPressed: _isCreatingBackup ? null : _createBackup,
+                        icon: _isCreatingBackup
+                            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                            : const Icon(Icons.save_alt),
+                        label: Text(_isCreatingBackup ? l10n.backupCreating : l10n.backupCreateButton),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        l10n.backupListTitle,
+                        style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      if (_backups.isEmpty)
+                        Text(l10n.backupEmptyList, style: const TextStyle(color: Colors.black54, fontSize: 13))
+                      else
+                        ..._backups.take(10).map(
+                              (b) => ListTile(
+                                dense: true,
+                                contentPadding: EdgeInsets.zero,
+                                leading: const Icon(Icons.storage, color: Colors.teal),
+                                title: Text(b.filename, style: const TextStyle(fontSize: 13), overflow: TextOverflow.ellipsis),
+                                subtitle: Text('${b.formattedSize} • ${b.modifiedAt.split('.').first.replaceFirst('T', ' ')}'),
+                                trailing: TextButton.icon(
+                                  onPressed: (_isCreatingBackup || _isRestoringBackup) ? null : () => _confirmRestore(b),
+                                  icon: const Icon(Icons.restore, size: 18),
+                                  label: Text(l10n.backupRestoreButton),
+                                ),
+                              ),
+                            ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+            ],
+
 
             // Configurações de Rede / URL do Servidor
             Text(l10n.settingsServerNetworkSection, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),

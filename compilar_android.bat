@@ -1,34 +1,50 @@
 @echo off
-chcp 65001 >nul
+setlocal
+title Compilar Android - ZM Cesta Basica
 echo ========================================================
 echo       COMPILANDO APLICATIVO ANDROID (APK RELEASE)
 echo ========================================================
 echo.
 
-:: 1. Garante uma unidade virtual limpa para evitar problemas com acentos (Á)
+set "FLUTTER_BAT=C:\dev\flutter\bin\flutter.bat"
+if not exist "%FLUTTER_BAT%" (
+    where flutter.bat >nul 2>&1
+    if errorlevel 1 (
+        echo [ERRO] Flutter nao encontrado em C:\dev\flutter nem no PATH.
+        goto :fim
+    )
+    set "FLUTTER_BAT=flutter.bat"
+)
+
+rem Unidade virtual evita problemas com acentos no caminho da pasta
 subst Z: /d >nul 2>&1
 subst Z: "%~dp0." >nul 2>&1
+if errorlevel 1 (
+    echo [ERRO] Nao foi possivel mapear a unidade virtual Z:
+    goto :fim
+)
 
-:: 2. Executa a compilação do Flutter a partir da unidade Z:
 pushd Z:\client
-call "C:\dev\flutter\bin\flutter.bat" build apk --release
+call "%FLUTTER_BAT%" build apk --release
 set BUILD_STATUS=%ERRORLEVEL%
 popd
 
-:: 3. Remove a unidade temporária
 subst Z: /d >nul 2>&1
 
 echo.
-if %BUILD_STATUS% equ 0 (
+if "%BUILD_STATUS%"=="0" (
     echo ========================================================
     echo   [SUCESSO] APK GERADO COM SUCESSO!
     echo   Local: client\build\app\outputs\flutter-apk\app-release.apk
     echo ========================================================
 ) else (
     echo ========================================================
-    echo   [ERRO] Falha na compilação do APK. Verifique os logs.
+    echo   [ERRO] Falha na compilacao do APK. Verifique os logs acima.
     echo ========================================================
 )
 
+:fim
 echo.
-pause
+echo Pressione qualquer tecla para fechar...
+pause >nul
+endlocal

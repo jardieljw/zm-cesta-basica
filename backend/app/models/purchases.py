@@ -14,6 +14,7 @@ class Purchase(Base):
     supplier_name: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
     total_amount_cents: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
     payment_mode: Mapped[str] = mapped_column(String(30), nullable=False, default="CASH_IMMEDIATE") # CASH_IMMEDIATE, CREDIT_TERM
+    payment_method: Mapped[str] = mapped_column(String(50), nullable=False, default="DINHEIRO") # DINHEIRO, PIX, BOLETO, CARTAO_CREDITO, TRANSFERENCIA, CHEQUE, OUTRO
     due_date: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime, nullable=True)
     account_id: Mapped[Optional[str]] = mapped_column(String(36), ForeignKey("financial_accounts.id"), nullable=True, index=True)
     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)

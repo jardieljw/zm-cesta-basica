@@ -66,6 +66,11 @@ class Purchase {
   final int purchaseNumber;
   final String status;
   final DateTime purchaseDate;
+  final String paymentMode;
+  final String paymentMethod;
+  final DateTime? dueDate;
+  final String? accountId;
+  final String? payableId;
   final String? supplierName;
   final int totalAmountCents;
   final String? notes;
@@ -77,6 +82,11 @@ class Purchase {
     required this.purchaseNumber,
     required this.status,
     required this.purchaseDate,
+    this.paymentMode = 'CASH_IMMEDIATE',
+    this.paymentMethod = 'DINHEIRO',
+    this.dueDate,
+    this.accountId,
+    this.payableId,
     this.supplierName,
     required this.totalAmountCents,
     this.notes,
@@ -97,6 +107,11 @@ class Purchase {
       purchaseNumber: json['purchase_number'] as int,
       status: json['status'] as String,
       purchaseDate: DateTime.parse(json['purchase_date'] as String),
+      paymentMode: json['payment_mode'] as String? ?? 'CASH_IMMEDIATE',
+      paymentMethod: json['payment_method'] as String? ?? 'DINHEIRO',
+      dueDate: json['due_date'] != null ? DateTime.parse(json['due_date'] as String) : null,
+      accountId: json['account_id'] as String?,
+      payableId: json['payable_id'] as String?,
       supplierName: json['supplier_name'] as String?,
       totalAmountCents: json['total_amount_cents'] as int? ?? 0,
       notes: json['notes'] as String?,
@@ -111,6 +126,11 @@ class Purchase {
       'purchase_number': purchaseNumber,
       'status': status,
       'purchase_date': purchaseDate.toIso8601String(),
+      'payment_mode': paymentMode,
+      'payment_method': paymentMethod,
+      'due_date': dueDate?.toIso8601String(),
+      'account_id': accountId,
+      'payable_id': payableId,
       'supplier_name': supplierName,
       'total_amount_cents': totalAmountCents,
       'notes': notes,

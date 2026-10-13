@@ -3470,4 +3470,114 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get pairingCameraInitializeHint =>
       'Toque no botão abaixo para inicializar a captura da câmera:';
+
+  @override
+  String get purchasePaymentConditionsHeader => 'Condições de Pagamento';
+
+  @override
+  String get purchasePaymentStatusLabel => 'Situação do Pagamento';
+
+  @override
+  String get purchasePaymentStatusPaid => 'Pago / Liquidado';
+
+  @override
+  String get purchasePaymentStatusPending => 'Pendente / Em Aberto';
+
+  @override
+  String get purchasePaymentMethodLabel => 'Forma de Pagamento';
+
+  @override
+  String get purchasePaymentAmountDueLabel => 'Valor Devido / Total Financeiro';
+
+  @override
+  String get purchasePaymentDueDateLabel => 'Data de Vencimento';
+
+  @override
+  String get purchasePaymentDueDateRequired =>
+      'A data de vencimento é obrigatória para compras pendentes.';
+
+  @override
+  String get purchasePaymentFinancialAccountLabel =>
+      'Conta Financeira de Liquidação';
+
+  @override
+  String purchasePaymentPendingNotice(String date) {
+    return 'Esta compra gerará uma obrigação em aberto no módulo de Contas a Pagar com vencimento em $date.';
+  }
+
+  @override
+  String get purchasePaymentPaidNotice =>
+      'O valor da compra será baixado imediatamente no livro-caixa da empresa.';
+
+  @override
+  String purchasePaymentDetailMethod(String method, String status) {
+    return 'Pagamento: $method ($status)';
+  }
+
+  @override
+  String purchasePaymentDetailDueDate(String date) {
+    return 'Vencimento: $date';
+  }
+
+  @override
+  String get commonSelect => 'Selecionar';
+
+  @override
+  String get backupSectionTitle => 'Backup e Segurança do Banco de Dados';
+
+  @override
+  String get backupSectionDesc =>
+      'Gere cópias de segurança consistentes e verificadas do banco de dados (SQLite) para prevenir perdas de dados comerciais.';
+
+  @override
+  String get backupCreateButton => 'Gerar Backup Agora';
+
+  @override
+  String get backupCreating => 'Gerando e verificando backup...';
+
+  @override
+  String backupSuccessMsg(String filename) {
+    return 'Backup gerado com sucesso: $filename';
+  }
+
+  @override
+  String backupErrorMsg(String error) {
+    return 'Falha ao gerar backup: $error';
+  }
+
+  @override
+  String get backupListTitle => 'Backups Disponíveis no Servidor';
+
+  @override
+  String get backupEmptyList => 'Nenhum backup encontrado no servidor.';
+
+  @override
+  String get backupIntegrityOk => 'Integridade Verificada';
+
+  @override
+  String get backupRestoreButton => 'Restaurar';
+
+  @override
+  String get backupRestoreConfirmTitle => 'Restaurar este backup?';
+
+  @override
+  String backupRestoreConfirmBody(String filename) {
+    return 'O banco de dados atual será substituído por $filename. Tudo o que foi lançado depois deste backup será perdido. Um backup de segurança do estado atual será criado automaticamente antes da restauração.';
+  }
+
+  @override
+  String get backupRestoreConfirmAction => 'Sim, restaurar';
+
+  @override
+  String get backupRestoreCancel => 'Cancelar';
+
+  @override
+  String backupRestoreSuccessMsg(String safety) {
+    return 'Backup restaurado. Backup de segurança criado: $safety. Reinicie o aplicativo para recarregar os dados.';
+  }
+
+  @override
+  String backupRestoreErrorMsg(String error) {
+    return 'Falha ao restaurar backup: $error';
+  }
 }

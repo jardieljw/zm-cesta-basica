@@ -57,8 +57,19 @@ def trigger_restore(
     req: BackupRestoreRequest,
     current_device: PairedDevice = Depends(get_current_device),
 ):
-    """Restores database from an existing backup after verifying integrity."""
-    backup_file = settings.BACKUP_DIR / req.backup_filename
+    """Restores database from an existing backup after verifying integrity.
+
+    Antes de sobrescrever o banco, gera automaticamente um backup de segurança
+    (tag 'pre_restore') do estado atual, permitindo desfazer a restauração.
+    """
+    safe_name = os.path.basename(req.backup_filename)
+    if safe_name != req.backup_filename or not safe_name.lower().endswith(".db"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Nome de arquivo de backup invalido.",
+        )
+
+    backup_file = settings.BACKUP_DIR / safe_name
     if not backup_file.exists():
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -66,6 +77,7 @@ def trigger_restore(
         )
 
     try:
+        safety = create_backup(tag="pre_restore")
         res = restore_backup(backup_file)
         from app.core.database import engine
         engine.dispose()
@@ -75,6 +87,7 @@ def trigger_restore(
             target_path=res["target_path"],
             integrity_ok=res["integrity_ok"],
             restored_at=res["restored_at"],
+            safety_backup_filename=safety["backup_filename"],
         )
     except BackupError as e:
         raise HTTPException(

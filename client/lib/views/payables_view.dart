@@ -895,8 +895,9 @@ class _PayablesViewState extends State<PayablesView> {
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           SizedBox(
-            width: 170,
+            width: 200,
             child: DropdownButtonFormField<String?>(
+              isExpanded: true,
               initialValue: _statusFilter,
               decoration: InputDecoration(
                 labelText: l10n.payableStatus,
@@ -917,8 +918,9 @@ class _PayablesViewState extends State<PayablesView> {
             ),
           ),
           SizedBox(
-            width: 170,
+            width: 200,
             child: DropdownButtonFormField<String?>(
+              isExpanded: true,
               initialValue: _categoryFilter,
               decoration: InputDecoration(
                 labelText: l10n.payableCategory,
@@ -945,8 +947,9 @@ class _PayablesViewState extends State<PayablesView> {
             ),
           ),
           SizedBox(
-            width: 170,
+            width: 200,
             child: DropdownButtonFormField<String?>(
+              isExpanded: true,
               initialValue: _natureFilter,
               decoration: InputDecoration(
                 labelText: l10n.payableNature,
@@ -981,8 +984,9 @@ class _PayablesViewState extends State<PayablesView> {
             ),
           ),
           SizedBox(
-            width: 120,
+            width: 140,
             child: DropdownButtonFormField<int?>(
+              isExpanded: true,
               initialValue: _monthFilter,
               decoration: InputDecoration(
                 labelText: l10n.payableFilterMonth,
@@ -1011,8 +1015,9 @@ class _PayablesViewState extends State<PayablesView> {
             ),
           ),
           SizedBox(
-            width: 120,
+            width: 140,
             child: DropdownButtonFormField<int?>(
+              isExpanded: true,
               initialValue: _yearFilter,
               decoration: InputDecoration(
                 labelText: l10n.payableFilterYear,
