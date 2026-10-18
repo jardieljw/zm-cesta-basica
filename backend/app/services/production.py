@@ -1,4 +1,5 @@
 import uuid
+from app.services.basket_stock_policy import require_finished_stock, require_customization
 import datetime
 from decimal import Decimal, ROUND_HALF_EVEN
 from typing import Optional, List, Tuple, Dict, Union, Any
@@ -84,6 +85,12 @@ def preview_production(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Tipo de cesta '{basket_type.name}' esta inativo e nao pode ser montado.",
         )
+
+    if not data.is_direct_sale:
+        require_finished_stock(basket_type)
+
+    if data.is_custom:
+        require_customization(basket_type)
 
     preview_items: List[ProductionPreviewItemResponse] = []
     missing_items: List[ProductionPreviewItemResponse] = []
@@ -226,9 +233,17 @@ def create_production_batch(db: Session, data: ProductionBatchCreate) -> Product
             detail=f"Tipo de cesta '{basket_type.name}' esta inativo e nao pode ser montado.",
         )
 
+    if not data.is_direct_sale:
+        require_finished_stock(basket_type)
+
+    if data.is_custom:
+        require_customization(basket_type)
+
     batch_id = str(uuid.uuid4())
     batch_num = generate_next_batch_number(db)
     occurred = data.occurred_at or utc_now()
+    occurred = (occurred.replace(tzinfo=datetime.timezone.utc) if occurred.tzinfo is None
+                else occurred.astimezone(datetime.timezone.utc))
 
     if not data.is_custom:
         # 1. Standard Basket Assembly
@@ -248,6 +263,13 @@ def create_production_batch(db: Session, data: ProductionBatchCreate) -> Product
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Cesta '{basket_type.name}' nao possui receita ativa cadastrada com ingredientes.",
             )
+
+        if (data.expected_recipe_version_number is not None
+                and data.expected_recipe_version_number != recipe.version_number):
+            raise HTTPException(status_code=409, detail={
+                "error_code": "RECIPE_CHANGED",
+                "message": "A receita mudou desde a previa. Revise a composicao novamente.",
+            })
 
         # Atomic pre-validation of all ingredients
         missing_items = []

@@ -1,0 +1,23 @@
+--- a/client/lib/views/blank_forms_view.dart
++++ b/client/lib/views/blank_forms_view.dart
+@@ -32,19 +32,13 @@
+       'id': 'payments',
+       'title': 'Tabela de Pagamentos de Cestas (Fiados / Quitações)',
+       'filledReportType': 'receivables',
+-      'description': 'Controle de pagamentos na rota ou balcão, identificação do cliente e valores recebidos à vista ou a prazo.',
++      'description': 'Controle de pagamentos de vendas, identificação do cliente e valores recebidos à vista ou a prazo.',
+     },
+     {
+       'id': 'payables',
+       'title': 'Tabela de Contas a Pagar e Vencimentos',
+       'filledReportType': 'payables',
+       'description': 'Conferência física de despesas, boletos, fornecedores e controle manual de baixas.',
+-    },
+-    {
+-      'id': 'dispatch_conference',
+-      'title': 'Folha de Conferência de Saídas e Custódia',
+-      'filledReportType': 'dispatch-settlements',
+-      'description': 'Conferência de carregamento, saída do galpão, termo de custódia e prestação de contas do responsável.',
+     },
+     {
+       'id': 'physical_inventory',

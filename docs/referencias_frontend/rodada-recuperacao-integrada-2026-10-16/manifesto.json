@@ -1,0 +1,109 @@
+{
+  "consolidado_em": "2026-10-16",
+  "rodada": "FE-046 — Recuperação integrada",
+  "situacao": "Verificada localmente; retorno do usuário pendente; sem implementação no aplicativo",
+  "arquivos": [
+    {
+      "arquivo": "mapa-integrado-recuperado-zm.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\mapa-integrado-recuperado-zm.html",
+      "bytes": 65318,
+      "sha256": "e3c688890506c3cf37a83793d811d9eb26f3c6b4b8b6aaa92a2f8fe597b57375"
+    },
+    {
+      "arquivo": "mapa-integrado-recuperado-zm-preview.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\mapa-integrado-recuperado-zm-preview.html",
+      "bytes": 163452,
+      "sha256": "ccd141d09bbe0dc1788ffb81c34988988ddba92474c9945369ccd9fa27ac6a2e"
+    },
+    {
+      "arquivo": "check-mapa-integrado-recuperado.cjs",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\check-mapa-integrado-recuperado.cjs",
+      "bytes": 17979,
+      "sha256": "be302312739dab012546c76e10476086a42fcc9363231076f3914353bf7d4ee8"
+    },
+    {
+      "arquivo": "mapa-integrado-recuperado-verificacao.json",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\mapa-integrado-recuperado-verificacao.json",
+      "bytes": 27390,
+      "sha256": "c7c036e13fdd1e7a93391b3d5e6346221a4d252c365b0f4aef5b727c97c85874"
+    },
+    {
+      "arquivo": "recuperado-edge-inicio-celular.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\recuperado-edge-inicio-celular.png",
+      "bytes": 69149,
+      "sha256": "215ad47abae2057ccd8387ccefb7d327c6313f059ecb22b5a75509613bc25ada"
+    },
+    {
+      "arquivo": "recuperado-edge-inicio-computador.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\recuperado-edge-inicio-computador.png",
+      "bytes": 97365,
+      "sha256": "ff5ff719589b332be38df8649455099072a87318570afc88fd24481ad500bc40"
+    },
+    {
+      "arquivo": "recuperado-edge-inicio-escuro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\recuperado-edge-inicio-escuro.png",
+      "bytes": 69128,
+      "sha256": "fba3bebc92aa341bd536f2369c039fa18c7401fa2c0d734a775cdef35160e0c2"
+    },
+    {
+      "arquivo": "recuperado-edge-formulario.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\recuperado-edge-formulario.png",
+      "bytes": 55978,
+      "sha256": "9fb57006c1c707e5c356dc677784ae059072928cc642a41d755ea09b225b576a"
+    },
+    {
+      "arquivo": "recuperado-edge-barra-original.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\recuperado-edge-barra-original.png",
+      "bytes": 6247,
+      "sha256": "52a99cad37dcda73402271d6977a05a82862f415f326392adfe012893ecedc2d"
+    },
+    {
+      "arquivo": "recuperado-edge-barra-recuperada.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\recuperado-edge-barra-recuperada.png",
+      "bytes": 6247,
+      "sha256": "52a99cad37dcda73402271d6977a05a82862f415f326392adfe012893ecedc2d"
+    },
+    {
+      "arquivo": "recuperado-webkit-inicio-celular.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\recuperado-webkit-inicio-celular.png",
+      "bytes": 46979,
+      "sha256": "95b2b66568db6ff2d6efb154e36fbdb339e98b2af41e52623fff671f62cfc419"
+    },
+    {
+      "arquivo": "recuperado-webkit-inicio-computador.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\recuperado-webkit-inicio-computador.png",
+      "bytes": 55090,
+      "sha256": "4498a60e3415fea78af4f7c0cdaae451b169af248c8bc60bf3d95f3cb155a337"
+    },
+    {
+      "arquivo": "recuperado-webkit-inicio-escuro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\recuperado-webkit-inicio-escuro.png",
+      "bytes": 47821,
+      "sha256": "69eeb741ae906d8db511d557b9a7408e1eafd4b902c89a72b92ae0598d80a095"
+    },
+    {
+      "arquivo": "recuperado-webkit-formulario.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\recuperado-webkit-formulario.png",
+      "bytes": 50303,
+      "sha256": "166f3c15c93eb7a678f06db6802b28c3c9fb20d2affdf74041939b150c894970"
+    },
+    {
+      "arquivo": "recuperado-webkit-barra-original.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\recuperado-webkit-barra-original.png",
+      "bytes": 7051,
+      "sha256": "4e6479c1a5569a64a4229cfadf9380522d812669636a573635308537d056ebfb"
+    },
+    {
+      "arquivo": "recuperado-webkit-barra-recuperada.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\recuperado-webkit-barra-recuperada.png",
+      "bytes": 7051,
+      "sha256": "4e6479c1a5569a64a4229cfadf9380522d812669636a573635308537d056ebfb"
+    },
+    {
+      "arquivo": "origem-e-alteracoes.json",
+      "origem": "Gerado nesta rodada a partir das fontes e capturas verificadas",
+      "bytes": 1453,
+      "sha256": "2866dd9419ab97cbdd12d31ea1b86a3af404c5c65463bcd6fbbef487de7ed495"
+    }
+  ]
+}

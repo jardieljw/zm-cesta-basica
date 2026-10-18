@@ -1,7 +1,7 @@
 import datetime
 import calendar
 from typing import Optional, List, Dict, Any, Tuple
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from sqlalchemy import func, and_, or_
 
 from app.models.products import Product, BasketType
@@ -628,6 +628,7 @@ def get_report_sales_dispatches(
     customer_id: Optional[str] = None,
     responsible_id: Optional[str] = None,
     sale_mode: Optional[str] = None,
+    include_dispatches: bool = True,
 ) -> ReportResponse:
     start_dt, end_dt, filter_info = resolve_date_filter(
         filter_type, date_str, start_date_str, end_date_str, month, year
@@ -646,7 +647,7 @@ def get_report_sales_dispatches(
     sales = sales_q.order_by(Sale.sale_date.desc()).all()
 
     # 2. Dispatches (only when not filtering specifically by customer or sale_mode)
-    if customer_id or sale_mode:
+    if not include_dispatches or customer_id or sale_mode:
         dispatches = []
     else:
         disp_q = db.query(StockDispatch).filter(StockDispatch.status != "CANCELED")
@@ -744,7 +745,7 @@ def get_report_sales_dispatches(
 
     metadata = ReportMetadata(
         report_type="sales-dispatches",
-        title="Relatório de Vendas e Saídas de Cestas",
+        title="Relatório de Vendas e Saídas de Cestas" if include_dispatches else "Relatório de Vendas de Cestas",
         generated_at=datetime.datetime.now(datetime.timezone.utc),
         filter_info=filter_info,
         total_rows=len(rows),
@@ -1387,7 +1388,7 @@ def get_blank_form_data(
     if form_type == "payments":
         headers = [
             "Data Venda", "Cliente / Identificação", "Tipo de Cesta", "Qtd",
-            "Valor Total (R$)", "Data Prevista", "Data Pagamento", "Valor Recebido (R$)",
+            "Valor Total (R$)", "Data Prevista", "Data do pagamento", "Total Recebido (R$)",
             "Saldo Restante (R$)", "Quitação / Visto", "Observações"
         ]
         columns = [
@@ -1403,7 +1404,12 @@ def get_blank_form_data(
 
         rows = []
         if filled and db:
-            receivables = db.query(SalesReceivable).order_by(SalesReceivable.due_date.asc()).all()
+            receivables = db.query(SalesReceivable).options(
+                selectinload(SalesReceivable.customer),
+                selectinload(SalesReceivable.sale).selectinload(Sale.items).selectinload(SaleItem.basket_type),
+            ).filter(SalesReceivable.status != 'CANCELED').order_by(SalesReceivable.due_date.asc()).all()
+            latest_payments = dict(db.query(ReceivablePayment.receivable_id, func.max(ReceivablePayment.payment_date))
+                .filter(ReceivablePayment.status == 'CONFIRMED').group_by(ReceivablePayment.receivable_id).all())
             tot_val = 0
             tot_rec = 0
             tot_bal = 0
@@ -1413,11 +1419,7 @@ def get_blank_form_data(
                 basket_names = ", ".join(it.basket_type.name for it in s.items if it.basket_type) if (s and s.items) else "Cesta Padrão"
                 qty = sum(it.quantity for it in s.items) if (s and s.items) else 1
 
-                latest_pay = db.query(ReceivablePayment).filter(
-                    ReceivablePayment.receivable_id == r.id,
-                    ReceivablePayment.status == "CONFIRMED"
-                ).order_by(ReceivablePayment.payment_date.desc()).first()
-                pay_date = latest_pay.payment_date if latest_pay else ""
+                pay_date = latest_payments.get(r.id) or ''
 
                 status_label = "QUITADO" if r.status == "PAID" else ("PARCIAL" if r.status == "PARTIAL" else "[   ] ABERTO")
                 tot_val += r.original_amount_cents
@@ -1435,7 +1437,7 @@ def get_blank_form_data(
                     "received_cents": r.paid_amount_cents,
                     "balance_cents": r.balance_cents,
                     "signature": status_label,
-                    "notes": s.payment_mode if s else "",
+                    "notes": "Venda a prazo" if s and s.payment_mode == 'CREDIT_TERM' else "",
                 })
             totals = {
                 "total_cents": tot_val,
@@ -1446,11 +1448,11 @@ def get_blank_form_data(
     elif form_type == "payables":
         headers = [
             "Descrição da Obrigação", "Beneficiário / Fornecedor", "Categoria", "Valor (R$)",
-            "Data Vencimento", "Data Pagamento", "Forma Pagamento", "Quitação / Visto", "Observações / NF"
+            "Data Vencimento", "Data do pagamento", "Valor Pago (R$)", "Saldo Restante (R$)", "Forma Pagamento", "Quitação / Visto", "Observações / NF"
         ]
         columns = [
             "description", "beneficiary", "category", "amount_cents",
-            "due_date", "payment_date", "payment_method", "signature", "notes"
+            "due_date", "payment_date", "paid_amount_cents", "balance_cents", "payment_method", "signature", "notes"
         ]
         title = (
             "Tabela de Contas a Pagar (Auditoria e Conferência Física)"
@@ -1460,16 +1462,18 @@ def get_blank_form_data(
 
         rows = []
         if filled and db:
-            payables = db.query(AccountPayable).order_by(AccountPayable.due_date.asc()).all()
+            payables = db.query(AccountPayable).filter(AccountPayable.status != 'CANCELED').order_by(AccountPayable.due_date.asc()).all()
+            latest_payments = dict(db.query(PayablePayment.payable_id, func.max(PayablePayment.payment_date))
+                .filter(PayablePayment.status == 'CONFIRMED').group_by(PayablePayment.payable_id).all())
             tot_amount = 0
+            tot_paid = 0
+            tot_balance = 0
             for p in payables:
-                latest_pay = db.query(PayablePayment).filter(
-                    PayablePayment.payable_id == p.id,
-                    PayablePayment.status == "CONFIRMED"
-                ).order_by(PayablePayment.payment_date.desc()).first()
-                pay_date = latest_pay.payment_date if latest_pay else ""
+                pay_date = latest_payments.get(p.id) or ''
                 status_label = "QUITADO" if p.status == "PAID" else ("PARCIAL" if p.status == "PARTIAL" else "[   ] ABERTO")
                 tot_amount += p.original_amount_cents
+                tot_paid += p.paid_amount_cents
+                tot_balance += p.balance_cents
 
                 rows.append({
                     "description": p.description,
@@ -1478,12 +1482,16 @@ def get_blank_form_data(
                     "amount_cents": p.original_amount_cents,
                     "due_date": p.due_date,
                     "payment_date": pay_date,
+                    "paid_amount_cents": p.paid_amount_cents,
+                    "balance_cents": p.balance_cents,
                     "payment_method": p.payment_method,
                     "signature": status_label,
-                    "notes": f"Saldo: R$ {p.balance_cents / 100:.2f}" if p.balance_cents > 0 else "Liquidado",
+                    "notes": p.notes or "",
                 })
             totals = {
                 "amount_cents": tot_amount,
+                "paid_amount_cents": tot_paid,
+                "balance_cents": tot_balance,
             }
 
     elif form_type == "dispatch_conference":
@@ -1571,11 +1579,12 @@ def get_blank_form_data(
         rows = []
         if filled and db:
             products = db.query(Product).filter(Product.is_active == True).order_by(Product.name.asc()).all()
+            product_stocks = dict(db.query(InventoryMovement.product_id, func.sum(InventoryMovement.quantity_delta))
+                .filter(InventoryMovement.location_type == 'STORE').group_by(InventoryMovement.product_id).all())
+            basket_stocks = dict(db.query(InventoryMovement.basket_type_id, func.sum(InventoryMovement.quantity_delta))
+                .filter(InventoryMovement.location_type == 'STORE').group_by(InventoryMovement.basket_type_id).all())
             for p in products:
-                stock_sum = db.query(func.coalesce(func.sum(InventoryMovement.quantity_delta), 0)).filter(
-                    InventoryMovement.product_id == p.id,
-                    InventoryMovement.location_type == "STORE"
-                ).scalar() or 0
+                stock_sum = product_stocks.get(p.id) or 0
                 rows.append({
                     "item_name": p.name,
                     "unit": p.base_unit,
@@ -1588,10 +1597,7 @@ def get_blank_form_data(
 
             basket_types = db.query(BasketType).filter(BasketType.is_active == True).order_by(BasketType.name.asc()).all()
             for bt in basket_types:
-                b_stock = db.query(func.coalesce(func.sum(InventoryMovement.quantity_delta), 0)).filter(
-                    InventoryMovement.basket_type_id == bt.id,
-                    InventoryMovement.location_type == "STORE"
-                ).scalar() or 0
+                b_stock = basket_stocks.get(bt.id) or 0
                 rows.append({
                     "item_name": f"Cesta: {bt.name}",
                     "unit": "un",
@@ -1605,8 +1611,8 @@ def get_blank_form_data(
     else:
         raise ValueError(f"Formulário desconhecido: {form_type}")
 
-    # If blank mode or filled mode with empty DB, provide 15 spacious empty rows
-    if not rows:
+    # An empty audit must remain empty; handwriting lines are presentation only.
+    if not rows and not filled:
         rows = [
             {col: "" for col in columns}
             for _ in range(15)

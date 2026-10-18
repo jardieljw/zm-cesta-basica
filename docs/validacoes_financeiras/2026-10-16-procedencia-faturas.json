@@ -1,0 +1,29 @@
+{
+  "status": "PASS",
+  "scope": "manual_header_provenance_and_pending_coverage",
+  "samples": [
+    {
+      "alias": "card_a",
+      "reading_ready": true,
+      "header_verified": true,
+      "coverage_verified": false,
+      "assessment_status": "REVIEW_REQUIRED",
+      "evidence_count": 2,
+      "confirmation_blocked": true,
+      "can_generate_obligations": false
+    },
+    {
+      "alias": "card_b",
+      "reading_ready": true,
+      "header_verified": true,
+      "coverage_verified": false,
+      "assessment_status": "REVIEW_REQUIRED",
+      "evidence_count": 2,
+      "confirmation_blocked": true,
+      "can_generate_obligations": false
+    }
+  ],
+  "production_writes": false,
+  "financial_effects": false,
+  "books_unchanged": true
+}

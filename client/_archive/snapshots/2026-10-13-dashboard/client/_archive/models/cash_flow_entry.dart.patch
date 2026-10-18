@@ -1,0 +1,8 @@
+--- a/client/_archive/models/cash_flow_entry.dart
++++ b/client/_archive/models/cash_flow_entry.dart
+@@ -1,4 +1,4 @@
+-import '../../lib/models/financial_account.dart';
++import 'financial_account.dart';
+ 
+ class CashFlowEntry {
+   final String id;

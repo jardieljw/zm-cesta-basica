@@ -1,6 +1,28 @@
 # ZM Cesta Básica — Cliente Multiplataforma (Flutter para Windows e Android)
 
+**FE-055 — 17/10/2026:** a entrada real usa Início, Financeiro, Negócio, Estoque e
+Mais, com serviços existentes e aparência compartilhada. [Guia](../docs/INTEGRACAO_INTERFACE_APROVADA.md)
+e [evidência](../docs/validacoes_frontend/fe-055-integracao-2026-10-17/README.md):
+334 testes Flutter, análise sem pendências e Windows Release compilado.
+Executar a pasta completa `build/windows/x64/runner/Release/`. O build não
+substitui uma instalação externa nem certifica fidelidade integral/dispositivos.
+
+**Receber revisado — 17/10/2026:** o [guia do incremento](../docs/PILOTO_RECEBER_REVISADO.md)
+descreve saldo/dia civil/capacidade, preservação da venda e recuperação comum
+com Pagar. Cliente e servidor correspondentes são necessários; sem migração
+nova ou substituição automática da instalação.
+
+Para localizar uma função na interface e seguir seu fluxo até o backend e o banco,
+consulte o [índice das mecânicas do app](../docs/README.md).
+
 Aplicativo cliente unificado para tablets/smartphones Android e computadores Windows Desktop, conectando-se exclusivamente ao servidor FastAPI local na rede privada da loja.
+
+Para compilar, usar Flutter **3.44 ou superior** e Dart **3.12 ou superior**,
+conforme `pubspec.yaml`. O salvamento de documentos usa `file_saver`, com seletor
+nativo de destino e formatos próprios para PDF e XLSX. Não requer permissão
+ampla de acesso ao armazenamento no Android ao usar o seletor de documentos.
+Consultar [Formulários e impressão](../docs/RELATORIOS_E_IMPRESSAO.md) para as
+opções de colunas, margens e paginação.
 
 Consulte o documento canônico de diretrizes de engenharia em **[ARCHITECTURE.md](../ARCHITECTURE.md)**.
 
@@ -85,3 +107,12 @@ flutter run -d android
 # Gerar pacote release APK para Android
 flutter build apk --release
 ```
+## Piloto de pagamento revisado — 16/10/2026
+
+Contas a Pagar possui o primeiro fluxo incremental com detalhe, Integral/Parcial,
+data/forma, revisão, confirmação e retomada persistida. Consulte o
+[guia do piloto](../docs/PILOTO_PAGAR_REVISADO.md), incluindo a capacidade exigida
+do servidor e os limites de instalação. O restante deste README conserva a
+estrutura do cliente. A limitação histórica de navegação/tema global foi
+superada pela entrega FE-055 descrita no início deste README.
+

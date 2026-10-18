@@ -1,0 +1,612 @@
+<style>
+#zm-finance-trust {width:100%;}
+#zm-finance-trust .stage {padding:16px 0;min-height:1190px;display:flex;justify-content:center;align-items:flex-start;}
+#zm-finance-trust .app {--page:light-dark(#f6f7f9,#141518);--surface:light-dark(#ffffff,#24262b);--ink:light-dark(#222730,#eef0f5);--sub:light-dark(#5c6472,#b6becb);--line:light-dark(#e0e4eb,#454b57);--accent:light-dark(#2866ae,#a7caff);--accent-ink:light-dark(#ffffff,#142947);--soft:light-dark(#edf4fd,#2b3e57);--warn:light-dark(#80501a,#f2c78d);--warn-fill:light-dark(#fff2df,#4b3b29);--shadow:light-dark(#16243e18,#00000055);--radius:18px; width:100%;max-width:420px;position:relative;overflow:clip;background:var(--page);color:var(--ink);border:1px solid var(--line);border-radius:26px;box-shadow:0 15px 45px var(--shadow);font:15px/1.45 'Segoe UI',system-ui,sans-serif;}
+#zm-finance-trust .app * {box-sizing:border-box;}
+#zm-finance-trust button {font:inherit;color:inherit;min-height:44px;border:0;background:transparent;border-radius:12px;transition:background 160ms ease,transform 160ms ease;}
+#zm-finance-trust button:hover {background:var(--soft);}
+#zm-finance-trust button:active {transform:scale(.985);}
+#zm-finance-trust .app h2,#zm-finance-trust .app h3,#zm-finance-trust .app p {margin:0;}
+#zm-finance-trust .app h2 {font-size:23px;font-weight:500;letter-spacing:-.6px;}
+#zm-finance-trust .app h3 {font-size:16px;font-weight:500;}
+#zm-finance-trust .demo-label {padding:13px 96px 13px 18px;font-size:11px;color:var(--sub);border-bottom:1px solid var(--line);background:var(--surface);}
+#zm-finance-trust .frame {display:grid;grid-template-areas:'header' 'content' 'nav';grid-template-columns:minmax(0,1fr);}
+#zm-finance-trust .app-header {grid-area:header;display:flex;align-items:center;gap:10px;padding:20px 18px 12px;}
+#zm-finance-trust .app-header > div {min-width:0;}
+#zm-finance-trust .brand {color:var(--sub);font-size:12px;margin-bottom:3px;}
+#zm-finance-trust .back {width:44px;flex-shrink:0;background:var(--surface);box-shadow:0 2px 8px var(--shadow);}
+#zm-finance-trust .back svg {width:18px;height:18px;}
+#zm-finance-trust .content {grid-area:content;padding:0 18px 24px;min-height:650px;min-width:0;}
+#zm-finance-trust .content-inner {display:grid;gap:20px;}
+#zm-finance-trust .context {font-size:12px;color:var(--sub);padding-bottom:2px;}
+#zm-finance-trust .hero {padding:22px;border-radius:var(--radius);background:var(--surface);box-shadow:0 5px 20px var(--shadow);}
+#zm-finance-trust .hero.finance {background:linear-gradient(135deg,var(--surface),var(--soft));}
+#zm-finance-trust .two {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:18px 0;}
+#zm-finance-trust .label {font-size:12px;color:var(--sub);display:block;}
+#zm-finance-trust .amount {font-size:23px;display:block;margin-top:4px;font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:-.5px;overflow-wrap:anywhere;}
+#zm-finance-trust .number {font-size:26px;font-weight:500;display:block;margin-top:4px;}
+#zm-finance-trust .primary {background:var(--accent);color:var(--accent-ink);padding:12px 16px;display:flex;gap:10px;align-items:center;justify-content:center;font-weight:500;width:100%;border-radius:14px;}
+#zm-finance-trust .primary:hover {background:var(--accent);box-shadow:0 4px 14px var(--shadow);}
+#zm-finance-trust .primary svg {width:17px;height:17px;}
+#zm-finance-trust .section-header {display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px;}
+#zm-finance-trust .section-header small {font-size:12px;color:var(--sub);}
+#zm-finance-trust .tile {padding:16px;background:var(--surface);border-radius:var(--radius);box-shadow:0 3px 14px var(--shadow);}
+#zm-finance-trust .tile-pair {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+#zm-finance-trust .row {display:flex;align-items:center;gap:12px;padding:16px 12px;min-height:76px;text-align:left;width:100%;background:var(--surface);border-radius:14px;}
+#zm-finance-trust .row > .copy {flex:1;min-width:0;}
+#zm-finance-trust .row .title {display:block;font-weight:500;overflow-wrap:anywhere;}
+#zm-finance-trust .row .subtitle {display:block;font-size:12px;color:var(--sub);margin-top:4px;overflow-wrap:anywhere;}
+#zm-finance-trust .row .value {font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap;}
+#zm-finance-trust .row .arrow {color:var(--sub);width:16px;height:16px;flex-shrink:0;}
+#zm-finance-trust .row-icon {width:40px;height:40px;background:var(--soft);color:var(--accent);border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+#zm-finance-trust .row-icon svg {width:19px;height:19px;}
+#zm-finance-trust .rows {display:grid;gap:8px;}
+#zm-finance-trust .tag {display:inline-block;background:var(--warn-fill);color:var(--warn);border-radius:20px;font-size:11px;padding:3px 8px;margin-top:6px;}
+#zm-finance-trust .neutral-tag {background:var(--soft);color:var(--sub);}
+#zm-finance-trust .tabs {display:flex;gap:5px;padding:5px;background:var(--surface);border-radius:16px;}
+#zm-finance-trust .tabs button {flex:1;padding:8px 6px;}
+#zm-finance-trust .tabs button[aria-pressed=true] {background:var(--accent);color:var(--accent-ink);box-shadow:0 2px 6px var(--shadow);}
+#zm-finance-trust .navigation {grid-area:nav;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:8px 6px 12px;background:var(--surface);border-top:1px solid var(--line);}
+#zm-finance-trust .navigation button {display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:11px;min-height:60px;padding:6px 2px;color:var(--sub);}
+#zm-finance-trust .navigation button svg {width:20px;height:20px;}
+#zm-finance-trust .navigation button[aria-current=page] {background:var(--soft);color:var(--accent);font-weight:500;}
+#zm-finance-trust .details {background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:0 4px 14px var(--shadow);}
+#zm-finance-trust .detail-line {display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);}
+#zm-finance-trust .detail-line:last-child {border-bottom:0;}
+#zm-finance-trust .detail-line span:first-child {color:var(--sub);}
+#zm-finance-trust .detail-line span:last-child {text-align:right;}
+#zm-finance-trust .detail-amount {font-size:32px;font-weight:500;font-variant-numeric:tabular-nums;margin:8px 0 4px;}
+#zm-finance-trust .note {font-size:12px;color:var(--sub);}
+#zm-finance-trust .result-message {padding:18px;background:var(--soft);border-radius:var(--radius);}
+#zm-finance-trust .result-message p {margin-top:6px;color:var(--sub);}
+#zm-finance-trust .app {--ok:light-dark(#267052,#a6ddc3);--ok-fill:light-dark(#eaf5ef,#253d33);--bad:light-dark(#a43136,#ffb5b7);--bad-fill:light-dark(#fff0ef,#472c30);}
+#zm-finance-trust button:disabled {opacity:.58;transform:none;}
+#zm-finance-trust .demo-label {display:flex;align-items:center;gap:8px;min-height:58px;padding-top:6px;padding-bottom:6px;}
+#zm-finance-trust .restart {width:44px;min-width:44px;display:grid;place-items:center;margin-left:auto;}
+#zm-finance-trust .restart svg {width:17px;height:17px;}
+#zm-finance-trust .content {position:relative;min-height:840px;}
+#zm-finance-trust .detail-workspace {display:grid;gap:18px;min-width:0;}
+#zm-finance-trust .account-context {display:grid;gap:8px;align-content:start;}
+#zm-finance-trust .context-account {background:var(--surface);text-align:left;padding:14px;border-radius:14px;display:grid;gap:6px;border:1px solid var(--line);}
+#zm-finance-trust .context-account[aria-current=true] {background:var(--soft);border-color:var(--accent);}
+#zm-finance-trust .context-account span {font-size:12px;color:var(--sub);}
+#zm-finance-trust .account-main {display:grid;gap:18px;min-width:0;padding-bottom:96px;align-content:start;}
+#zm-finance-trust .account-heading {display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+#zm-finance-trust .account-heading .tag {margin:0;flex-shrink:0;}
+#zm-finance-trust .summary-pair {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding-top:16px;margin-top:16px;border-top:1px solid var(--line);}
+#zm-finance-trust .summary-pair strong {display:block;margin-top:4px;font-size:17px;font-weight:500;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;}
+#zm-finance-trust .detail-line {font-size:14px;}
+#zm-finance-trust .floating-action {position:absolute;bottom:24px;right:18px;width:auto;max-width:calc(100% - 36px);box-shadow:0 8px 22px var(--shadow);min-height:52px;border-radius:18px;z-index:2;}
+#zm-finance-trust .paid-tag {background:var(--ok-fill);color:var(--ok);}
+#zm-finance-trust .form-panel {display:grid;gap:22px;padding:20px;background:var(--surface);border-radius:var(--radius);box-shadow:0 4px 18px var(--shadow);}
+#zm-finance-trust .field {display:grid;gap:8px;min-width:0;}
+#zm-finance-trust .field label {font-weight:500;font-size:14px;}
+#zm-finance-trust .field input,#zm-finance-trust .field select,#zm-finance-trust .field textarea {width:100%;min-width:0;min-height:48px;border:1px solid var(--line);border-radius:12px;background:var(--page);color:var(--ink);padding:12px;font:16px/1.4 'Segoe UI',system-ui,sans-serif;}
+#zm-finance-trust .field textarea {resize:vertical;}
+#zm-finance-trust .money-entry {display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:12px;background:var(--page);padding-left:13px;}
+#zm-finance-trust .money-entry > span {color:var(--sub);}
+#zm-finance-trust .money-entry input {border:0;background:transparent;font-size:24px;padding-left:0;font-variant-numeric:tabular-nums;}
+#zm-finance-trust .field [aria-invalid=true] {border-color:var(--bad);}
+#zm-finance-trust .field .money-entry:has([aria-invalid=true]) {border-color:var(--bad);}
+#zm-finance-trust .helper {font-size:12px;color:var(--sub);}
+#zm-finance-trust .field-error {font-size:12px;color:var(--bad);}
+#zm-finance-trust .form-pair {display:grid;grid-template-columns:minmax(0,1fr);gap:22px;}
+#zm-finance-trust .review-list {margin:0;}
+#zm-finance-trust .review-line {display:flex;gap:12px;align-items:center;border-bottom:1px solid var(--line);padding:13px 0;}
+#zm-finance-trust .review-line:last-child {border:0;}
+#zm-finance-trust .review-line > div {min-width:0;flex:1;}
+#zm-finance-trust .review-line dt {font-size:12px;color:var(--sub);}
+#zm-finance-trust .review-line dd {margin:5px 0 0;overflow-wrap:anywhere;white-space:pre-wrap;}
+#zm-finance-trust .edit-value {font-size:12px;color:var(--accent);padding:8px;flex-shrink:0;}
+#zm-finance-trust .secondary {width:100%;padding:10px 12px;color:var(--accent);}
+#zm-finance-trust .entry-summary {display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:var(--soft);border-radius:14px;font-size:13px;}
+#zm-finance-trust .entry-summary strong {font-size:18px;font-weight:500;white-space:nowrap;font-variant-numeric:tabular-nums;}
+#zm-finance-trust .error-box {padding:16px;background:var(--bad-fill);color:var(--bad);border-radius:14px;}
+#zm-finance-trust .error-box h3 {font-size:15px;}
+#zm-finance-trust .error-box ul {padding-left:18px;margin:8px 0 0;}
+#zm-finance-trust .error-box button {text-align:left;min-height:36px;font-size:13px;padding:4px;color:inherit;}
+#zm-finance-trust .error-box p {font-size:13px;margin-top:6px;}
+#zm-finance-trust .history {display:grid;gap:14px;}
+#zm-finance-trust .history-entry {padding-left:16px;border-left:2px solid var(--line);display:grid;gap:5px;}
+#zm-finance-trust .history-entry > div {display:flex;justify-content:space-between;gap:12px;font-size:14px;}
+#zm-finance-trust .history-entry strong {font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap;}
+#zm-finance-trust .history-entry p {font-size:12px;color:var(--sub);white-space:pre-wrap;overflow-wrap:anywhere;}
+#zm-finance-trust .success-mark {display:grid;place-items:center;width:48px;height:48px;border-radius:16px;background:var(--ok-fill);color:var(--ok);margin-bottom:16px;}
+#zm-finance-trust .success-mark svg {width:24px;height:24px;}
+#zm-finance-trust .success-panel {background:var(--surface);padding:24px;border-radius:var(--radius);box-shadow:0 5px 20px var(--shadow);display:grid;gap:14px;}
+#zm-finance-trust .success-panel .success-mark {margin:0;}
+#zm-finance-trust .success-panel h3 {font-size:20px;}
+#zm-finance-trust .success-panel .note {font-size:14px;}
+#zm-finance-trust .busy-icon {animation:zm-trust-spin 1s linear infinite;}
+#zm-finance-trust .list-filter {display:flex;justify-content:space-between;gap:12px;align-items:center;font-size:13px;}
+#zm-finance-trust .list-filter select {max-width:160px;font:inherit;padding:10px 12px;min-height:44px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);}
+#zm-finance-trust .list-total {padding:18px;background:var(--surface);border-radius:var(--radius);box-shadow:0 4px 15px var(--shadow);}
+#zm-finance-trust .list-total .amount {font-size:29px;}
+#zm-finance-trust .account-context {display:none;}
+@keyframes zm-trust-spin {to {transform:rotate(360deg);}}
+#zm-finance-trust .desktop {max-width:none;border-radius:20px;}
+#zm-finance-trust .desktop .frame {grid-template-areas:'nav header' 'nav content';grid-template-columns:140px minmax(0,1fr);}
+#zm-finance-trust .desktop .navigation {display:flex;flex-direction:column;justify-content:flex-start;border-top:0;border-right:1px solid var(--line);padding:18px 10px;gap:8px;}
+#zm-finance-trust .desktop .navigation button {flex-direction:row;justify-content:flex-start;min-height:48px;gap:10px;font-size:13px;padding:10px;}
+#zm-finance-trust .desktop .navigation button svg {flex-shrink:0;}
+#zm-finance-trust .desktop .content {min-height:760px;}
+#zm-finance-trust .desktop .demo-label {padding-right:100px;}
+#zm-finance-trust .desktop .app-header {padding:24px 22px 12px;}
+#zm-finance-trust .desktop .content {padding:0 22px 28px;}
+#zm-finance-trust .product[data-motion=false] button {transition:none;transform:none;}
+#zm-finance-trust [hidden] {display:none!important;}
+@media(max-width:550px) {
+ #zm-finance-trust .stage {padding:10px 0;min-height:1260px;}
+ #zm-finance-trust .desktop .frame {grid-template-areas:'header' 'content' 'nav';grid-template-columns:minmax(0,1fr);}
+ #zm-finance-trust .desktop .navigation {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border:0;border-top:1px solid var(--line);padding:8px 6px 12px;gap:2px;}
+ #zm-finance-trust .desktop .navigation button {flex-direction:column;justify-content:center;gap:6px;font-size:11px;padding:6px 2px;min-height:60px;}
+ #zm-finance-trust .desktop .content {min-height:650px;padding:0 16px 24px;}
+ #zm-finance-trust .desktop .app-header {padding:20px 16px 12px;}
+ #zm-finance-trust .desktop .demo-label {padding-right:90px;}
+ #zm-finance-trust .two {gap:12px;}
+ #zm-finance-trust .amount {font-size:21px;}
+ #zm-finance-trust .row {padding:14px 10px;gap:9px;}
+}
+@media(min-width:680px) {
+ #zm-finance-trust .desktop .frame {grid-template-columns:112px minmax(0,1fr);}
+ #zm-finance-trust .desktop .navigation {padding:18px 6px;}
+ #zm-finance-trust .desktop .navigation button {font-size:12px;gap:8px;padding:9px;}
+ #zm-finance-trust .desktop .content {padding-left:18px;padding-right:18px;}
+ #zm-finance-trust .desktop .detail-workspace {grid-template-columns:minmax(130px,.7fr) minmax(0,1.5fr);gap:14px;}
+ #zm-finance-trust .desktop .account-context {display:grid;}
+ #zm-finance-trust .desktop .form-panel {padding:18px;}
+}
+@media(prefers-reduced-motion:reduce) {#zm-finance-trust button {transition:none!important;transform:none!important;}}
+@media(prefers-reduced-motion:reduce) {#zm-finance-trust .busy-icon {animation:none;}}
+#zm-finance-trust .app {--radius:32px;--field-radius:28px;border-radius:34px;}
+#zm-finance-trust .desktop {border-radius:30px;}
+#zm-finance-trust .hero,#zm-finance-trust .details,#zm-finance-trust .form-panel,#zm-finance-trust .success-panel {border-radius:var(--radius);}
+#zm-finance-trust .form-panel {gap:24px;padding:22px;}
+#zm-finance-trust .field input,#zm-finance-trust .field select {min-height:56px;border-radius:var(--field-radius);padding:14px 18px;}
+#zm-finance-trust .field textarea {border-radius:var(--field-radius);padding:16px 18px;min-height:102px;}
+#zm-finance-trust .field input[type=date]::-webkit-date-and-time-value {text-align:left;}
+#zm-finance-trust .money-entry {border-radius:var(--field-radius);padding-left:18px;}
+#zm-finance-trust .money-entry input {padding-left:0;}
+#zm-finance-trust .primary {min-height:52px;border-radius:999px;}
+#zm-finance-trust .secondary,#zm-finance-trust .tabs,#zm-finance-trust .tabs button,#zm-finance-trust .list-filter select {border-radius:999px;}
+#zm-finance-trust .entry-summary,#zm-finance-trust .error-box,#zm-finance-trust .context-account,#zm-finance-trust .row {border-radius:24px;}
+#zm-finance-trust .back,#zm-finance-trust .row-icon {border-radius:50%;}
+#zm-finance-trust .payment-choice {display:grid;gap:0;min-width:0;}
+#zm-finance-trust .payment-kind {border:0;padding:0;margin:0;min-width:0;}
+#zm-finance-trust .payment-kind legend {font-size:14px;font-weight:500;margin-bottom:12px;padding:0;}
+#zm-finance-trust .kind-options {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;background:var(--page);padding:5px;border-radius:999px;border:1px solid var(--line);}
+#zm-finance-trust .kind-option {display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;border-radius:999px;font-size:14px;color:var(--sub);padding:8px 9px;transition:background 180ms ease,color 180ms ease,box-shadow 180ms ease;}
+#zm-finance-trust .kind-option:has(input:checked) {background:var(--soft);color:var(--accent);box-shadow:0 2px 8px var(--shadow);font-weight:500;}
+#zm-finance-trust .kind-option input {accent-color:var(--accent);width:16px;height:16px;min-width:16px;margin:0;}
+#zm-finance-trust .mode-caption {font-size:12px;color:var(--sub);margin-top:12px;min-height:18px;}
+#zm-finance-trust .partial-reveal {display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows 260ms cubic-bezier(.2,0,0,1),opacity 180ms ease;}
+#zm-finance-trust .partial-reveal[data-open=true] {grid-template-rows:1fr;opacity:1;}
+#zm-finance-trust .partial-content {overflow:hidden;min-height:0;}
+#zm-finance-trust .partial-content > .field {padding-top:22px;}
+#zm-finance-trust .select-wrap {position:relative;min-width:0;}
+#zm-finance-trust .select-wrap select {appearance:none;padding-right:44px;}
+#zm-finance-trust .select-wrap svg {position:absolute;right:18px;top:19px;width:18px;height:18px;pointer-events:none;color:var(--sub);}
+#zm-finance-trust .field {grid-template-columns:minmax(0,1fr);}
+#zm-finance-trust .date-control {display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;max-width:100%;min-width:0;min-height:56px;border:1px solid var(--line);border-radius:var(--field-radius);background:var(--page);padding:14px 18px;text-align:left;font-size:16px;line-height:1.4;}
+#zm-finance-trust .date-value {display:block;min-width:0;overflow-wrap:anywhere;}
+#zm-finance-trust .date-control svg {width:20px;height:20px;flex-shrink:0;color:var(--sub);}
+#zm-finance-trust .date-control[aria-invalid=true] {border-color:var(--bad);}
+#zm-finance-trust .date-dialog {width:360px;max-width:calc(100% - 24px);padding:18px;margin:auto;border:1px solid var(--line);border-radius:28px;background:var(--surface);color:var(--ink);box-shadow:0 18px 60px var(--shadow);font:16px/1.4 'Segoe UI',system-ui,sans-serif;}
+#zm-finance-trust .date-dialog::backdrop {background:light-dark(#18243b55,#00000088);}
+#zm-finance-trust .calendar-heading {display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;}
+#zm-finance-trust .calendar-heading h3 {font-size:18px;}
+#zm-finance-trust .calendar-close {width:44px;flex-shrink:0;display:grid;place-items:center;}
+#zm-finance-trust .calendar-period {display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:6px;margin-bottom:10px;}
+#zm-finance-trust .calendar-period strong {font-size:15px;font-weight:500;text-align:center;}
+#zm-finance-trust .calendar-period button {display:grid;place-items:center;}
+#zm-finance-trust .calendar-period svg {width:18px;height:18px;}
+#zm-finance-trust .calendar-week,#zm-finance-trust .calendar-days {display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;}
+#zm-finance-trust .calendar-week {color:var(--sub);font-size:12px;text-align:center;margin-bottom:6px;}
+#zm-finance-trust .calendar-days button {min-width:0;min-height:44px;padding:4px 0;border-radius:50%;font-size:15px;}
+#zm-finance-trust .calendar-days button[aria-pressed=true] {background:var(--accent);color:var(--accent-ink);}
+#zm-finance-trust .calendar-days button[aria-current=date]:not([aria-pressed=true]) {color:var(--accent);background:var(--soft);}
+#zm-finance-trust .calendar-footer {display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);margin-top:12px;padding-top:8px;}
+#zm-finance-trust .calendar-footer button {color:var(--accent);padding:8px 12px;}
+#zm-finance-trust .due-card {display:grid;width:100%;gap:12px;min-width:0;padding:24px;background:var(--soft);border-radius:var(--radius);text-align:left;box-shadow:0 5px 18px var(--shadow);}
+#zm-finance-trust .due-top,#zm-finance-trust .due-bottom {display:flex;justify-content:space-between;align-items:center;gap:12px;}
+#zm-finance-trust .due-top {font-weight:500;}
+#zm-finance-trust .due-top svg,#zm-finance-trust .due-bottom svg {width:19px;height:19px;flex-shrink:0;}
+#zm-finance-trust .due-card .amount {font-size:34px;margin:0;}
+#zm-finance-trust .due-bottom {font-size:13px;}
+#zm-finance-trust .criteria {color:var(--sub);font-size:13px;padding:0 4px;}
+#zm-finance-trust .criteria summary {min-height:44px;align-content:center;color:var(--accent);}
+#zm-finance-trust .criteria p {padding:4px 0 12px;}
+#zm-finance-trust .query-state {display:grid;gap:14px;padding:24px;border-radius:var(--radius);background:var(--surface);box-shadow:0 5px 18px var(--shadow);}
+#zm-finance-trust .query-state p {color:var(--sub);}
+#zm-finance-trust .query-state .primary {margin-top:4px;}
+#zm-finance-trust .range-label {display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--sub);}
+#zm-finance-trust .range-label button {color:var(--accent);font-size:13px;padding:8px;}
+#zm-finance-trust .source-details summary {font-weight:500;min-height:44px;align-content:center;}
+#zm-finance-trust .source-details .helper {padding-top:8px;}
+#zm-finance-trust .account-table {width:100%;table-layout:fixed;border-collapse:collapse;font-size:13px;}
+#zm-finance-trust .account-table th {font-weight:500;color:var(--sub);text-align:left;}
+#zm-finance-trust .account-table th,#zm-finance-trust .account-table td {padding:12px 7px;vertical-align:top;overflow-wrap:anywhere;border-bottom:1px solid var(--line);}
+#zm-finance-trust .account-table th:first-child {width:40%;}
+#zm-finance-trust .account-table td:last-child,#zm-finance-trust .account-table th:last-child {text-align:right;font-variant-numeric:tabular-nums;}
+#zm-finance-trust .table-open {padding:0;text-align:left;min-width:0;font-size:14px;color:var(--accent);}
+#zm-finance-trust .desktop .finance-content {max-width:780px;}
+@media(max-width:350px) {#zm-finance-trust .form-panel {padding:18px;}#zm-finance-trust .kind-option {padding-left:6px;padding-right:6px;gap:6px;}}
+@media(prefers-reduced-motion:reduce) {#zm-finance-trust .partial-reveal,#zm-finance-trust .kind-option {transition:none;}}
+</style>
+<div id="zm-finance-trust" class="viz-carousel viz-dotted-background" aria-label="Data e resumo do Financeiro" data-previous-label="Anterior" data-next-label="Próxima">
+ <section data-variant="Conferir a data" aria-label="Registro de pagamento"><div class="stage"><div class="app product mobile" data-device="payment" aria-label="Data e registro de pagamento"></div></div></section>
+ <section data-variant="Financeiro no celular" aria-label="Resumo financeiro no celular" hidden><div class="stage"><div class="app product mobile" data-device="mobile" aria-label="Financeiro no celular"></div></div></section>
+ <section data-variant="Financeiro no Windows" aria-label="Resumo financeiro no Windows" hidden><div class="stage"><div class="app product desktop" data-device="desktop" aria-label="Financeiro no Windows"></div></div></section>
+</div>
+<template id="zm-trust-shell">
+ <div class="demo-label"><span>Prévia · Dados fictícios</span><button type="button" class="restart cursor-interaction" data-action="restart" aria-label="Recomeçar exemplo"><i data-lucide="rotate-ccw" aria-hidden="true"></i></button></div>
+ <div class="frame">
+  <header class="app-header"><button class="back cursor-interaction" type="button" aria-label="Voltar" hidden><i data-lucide="arrow-left" aria-hidden="true"></i></button><div><div class="brand">ZM Cesta Básica</div><h2 class="page-title">Visão geral</h2></div></header>
+  <main class="content"><div class="content-inner"></div></main>
+  <nav class="navigation" aria-label="Áreas do aplicativo">
+   <button class="cursor-interaction" type="button" data-area="inicio" aria-current="page"><i data-lucide="house" aria-hidden="true"></i><span>Início</span></button>
+   <button class="cursor-interaction" type="button" data-area="financeiro"><i data-lucide="wallet" aria-hidden="true"></i><span>Financeiro</span></button>
+   <button class="cursor-interaction" type="button" data-area="vendas"><i data-lucide="shopping-bag" aria-hidden="true"></i><span>Vendas</span></button>
+   <button class="cursor-interaction" type="button" data-area="estoque"><i data-lucide="package" aria-hidden="true"></i><span>Estoque</span></button>
+   <button class="cursor-interaction" type="button" data-area="mais"><i data-lucide="ellipsis" aria-hidden="true"></i><span>Mais</span></button>
+  </nav>
+ </div>
+</template>
+<template id="zm-trust-inicio">
+ <p class="context">Hoje, 16 de outubro</p>
+ <section class="hero finance"><h3>Seu financeiro nesta semana</h3><div class="two"><div><span class="label">A pagar</span><strong class="amount">R$ 1.280,00</strong></div><div><span class="label">A receber</span><strong class="amount">R$ 1.950,00</strong></div></div><button type="button" class="primary cursor-interaction" data-go="financeiro:resumo">Abrir Financeiro<i data-lucide="arrow-right" aria-hidden="true"></i></button></section>
+ <section><div class="section-header"><h3>Seu negócio hoje</h3></div><div class="tile-pair"><button class="tile cursor-interaction" type="button" data-go="vendas:resumo"><span class="label">Cestas vendidas</span><strong class="number">8</strong></button><button class="tile cursor-interaction" type="button" data-go="vendas:resumo"><span class="label">Valor das vendas</span><strong class="amount">R$ 1.240,00</strong></button></div></section>
+ <section><div class="section-header"><h3>Precisa da sua atenção</h3></div><div class="rows"><button class="row cursor-interaction" type="button" data-go="financeiro:pagar"><span class="row-icon"><i data-lucide="calendar-clock" aria-hidden="true"></i></span><span class="copy"><span class="title">2 contas a pagar</span><span class="subtitle">Vencem nesta semana</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button><button class="row cursor-interaction" type="button" data-go="estoque:produtos"><span class="row-icon"><i data-lucide="package-search" aria-hidden="true"></i></span><span class="copy"><span class="title">Arroz abaixo do mínimo</span><span class="subtitle">Conferir produtos e reposição</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button></div></section>
+</template>
+<template id="zm-trust-financeiro">
+ <p class="context">Financeiro</p>
+ <div class="tabs" aria-label="Visões do Financeiro"><button type="button" class="cursor-interaction" data-finance="resumo" aria-pressed="true">Resumo</button><button type="button" class="cursor-interaction" data-finance="pagar" aria-pressed="false">Pagar</button><button type="button" class="cursor-interaction" data-finance="receber" aria-pressed="false">Receber</button></div>
+ <div class="finance-content"></div>
+</template>
+<template id="zm-trust-financeiro-resumo">
+ <section class="hero"><span class="label">Nesta semana</span><div class="two"><div><span class="label">A pagar</span><strong class="amount">R$ 1.280,00</strong></div><div><span class="label">A receber</span><strong class="amount">R$ 1.950,00</strong></div></div></section>
+ <section><div class="section-header"><h3>Organizar seu financeiro</h3></div><div class="rows"><button type="button" class="row cursor-interaction" data-go="financeiro:contas"><span class="row-icon"><i data-lucide="landmark" aria-hidden="true"></i></span><span class="copy"><span class="title">Contas e cartões</span><span class="subtitle">Seus bancos em um só lugar</span><span class="tag neutral-tag">Proposta futura</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button><button type="button" class="row cursor-interaction" data-go="financeiro:documentos"><span class="row-icon"><i data-lucide="files" aria-hidden="true"></i></span><span class="copy"><span class="title">Extratos e faturas</span><span class="subtitle">Documentos e revisão de importações</span><span class="tag neutral-tag">Proposta futura</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button></div></section>
+</template>
+<template id="zm-trust-pagar">
+ <section><div class="section-header"><h3>A pagar nesta semana</h3><small>2 contas</small></div><div class="rows"><button class="row cursor-interaction" type="button" data-go="financeiro:conta-fornecedor"><span class="copy"><span class="title">Fornecedor de alimentos</span><span class="subtitle">Compra de produtos · 16 out.</span><span class="tag">Em aberto</span></span><span class="value">R$ 680,00</span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button><button class="row cursor-interaction" type="button" data-go="financeiro:conta-embalagens"><span class="copy"><span class="title">Fornecedor de embalagens</span><span class="subtitle">Compra de embalagens · 18 out.</span><span class="tag">Em aberto</span></span><span class="value">R$ 600,00</span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button></div></section>
+</template>
+<template id="zm-trust-receber">
+ <section><div class="section-header"><h3>A receber nesta semana</h3><small>2 contas</small></div><div class="rows"><button class="row cursor-interaction" type="button" data-go="financeiro:conta-ana"><span class="copy"><span class="title">Ana Souza</span><span class="subtitle">Venda de cestas · 17 out.</span><span class="tag">Em aberto</span></span><span class="value">R$ 1.250,00</span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button><button class="row cursor-interaction" type="button" data-go="financeiro:conta-bruno"><span class="copy"><span class="title">Bruno Lima</span><span class="subtitle">Saldo de venda · 18 out.</span><span class="tag">Parcial</span></span><span class="value">R$ 700,00</span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button></div></section>
+</template>
+<template id="zm-trust-estoque">
+ <p class="context">Produtos, compras e cestas</p><div class="rows">
+  <button class="row cursor-interaction" type="button" data-go="estoque:produtos"><span class="row-icon"><i data-lucide="package" aria-hidden="true"></i></span><span class="copy"><span class="title">Produtos</span><span class="subtitle">Cadastros e posição de estoque</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="estoque:compras"><span class="row-icon"><i data-lucide="truck" aria-hidden="true"></i></span><span class="copy"><span class="title">Compras</span><span class="subtitle">Entradas e fornecedores</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="estoque:cestas"><span class="row-icon"><i data-lucide="shopping-basket" aria-hidden="true"></i></span><span class="copy"><span class="title">Cestas e montagens</span><span class="subtitle">Tipos, composição e histórico de montagem</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="estoque:movimentacoes"><span class="row-icon"><i data-lucide="history" aria-hidden="true"></i></span><span class="copy"><span class="title">Movimentações</span><span class="subtitle">O que entrou e saiu do estoque</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+ </div>
+</template>
+<template id="zm-trust-vendas">
+ <p class="context">Hoje, 16 de outubro</p><section class="hero"><span class="label">Vendas do dia</span><strong class="detail-amount">R$ 1.240,00</strong><span class="label">8 cestas vendidas</span></section><div class="rows"><button class="row cursor-interaction" type="button" data-go="vendas:venda"><span class="copy"><span class="title">Venda de 8 cestas</span><span class="subtitle">Conferir itens, cliente e pagamento</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button><button class="row cursor-interaction" type="button" data-go="vendas:clientes"><span class="row-icon"><i data-lucide="users" aria-hidden="true"></i></span><span class="copy"><span class="title">Clientes</span><span class="subtitle">Cadastros e histórico</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button></div>
+</template>
+<template id="zm-trust-mais">
+ <p class="context">Documentos e ferramentas do aplicativo</p><div class="rows">
+  <button class="row cursor-interaction" type="button" data-go="mais:relatorios"><span class="row-icon"><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i></span><span class="copy"><span class="title">Relatórios</span><span class="subtitle">Consultar e exportar os dados</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="mais:impressao"><span class="row-icon"><i data-lucide="printer" aria-hidden="true"></i></span><span class="copy"><span class="title">Impressão e formulários</span><span class="subtitle">PDF e folhas para preencher à caneta</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="mais:configuracoes"><span class="row-icon"><i data-lucide="settings" aria-hidden="true"></i></span><span class="copy"><span class="title">Configurações e conexão</span><span class="subtitle">Aparência, servidor e pareamento</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="mais:backup"><span class="row-icon"><i data-lucide="database-backup" aria-hidden="true"></i></span><span class="copy"><span class="title">Backup</span><span class="subtitle">Cópias de segurança e recuperação</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+ </div>
+</template>
+<script>
+(() => {
+ const root=document.getElementById('zm-finance-trust');
+ const areas={inicio:'Visão geral',financeiro:'Financeiro',vendas:'Vendas',estoque:'Estoque',mais:'Mais'};
+ const children={
+  'financeiro:conta-fornecedor':{title:'Fornecedor de alimentos',label:'Valor a pagar',amount:'R$ 680,00',lines:[['Situação','Em aberto'],['Vencimento','16 de outubro'],['Origem','Compra de produtos'],['Forma prevista','Boleto']]},
+  'financeiro:conta-embalagens':{title:'Fornecedor de embalagens',label:'Valor a pagar',amount:'R$ 600,00',lines:[['Situação','Em aberto'],['Vencimento','18 de outubro'],['Origem','Compra de embalagens']]},
+  'financeiro:conta-ana':{title:'Ana Souza',label:'Saldo a receber',amount:'R$ 1.250,00',lines:[['Situação','Em aberto'],['Vencimento','17 de outubro'],['Origem','Venda de cestas']]},
+  'financeiro:conta-bruno':{title:'Bruno Lima',label:'Saldo a receber',amount:'R$ 700,00',lines:[['Situação','Parcial'],['Vencimento','18 de outubro'],['Origem','Venda de cestas']]},
+  'financeiro:contas':{title:'Contas e cartões',future:true,rows:[['Banco de exemplo','Conta da empresa · final 0821'],['Cartão de exemplo','Faturas e parcelas']]},
+  'financeiro:documentos':{title:'Extratos e faturas',future:true,rows:[['Fatura de outubro','Cartão de exemplo · Em revisão'],['Extrato de outubro','Banco de exemplo · Conferido']]},
+  'estoque:produtos':{title:'Produtos',rows:[['Arroz · pacote de 5 kg','12 pacotes disponíveis · Abaixo do mínimo'],['Óleo · frasco de 900 ml','36 frascos disponíveis'],['Café · pacote de 250 g','24 pacotes disponíveis']]},
+  'estoque:compras':{title:'Compras',rows:[['Compra de alimentos','Fornecedor de alimentos · R$ 680,00'],['Compra de embalagens','Fornecedor de embalagens · R$ 600,00']]},
+  'estoque:cestas':{title:'Cestas e montagens',rows:[['Cesta Básica Completa','Composição e montagens'],['Cesta de Carne','Composição e montagens']],basket:true},
+  'estoque:movimentacoes':{title:'Movimentações',rows:[['Entrada de produtos','Compra confirmada'],['Montagem de 8 cestas','Consumo de produtos e entrada de cestas'],['Venda de 8 cestas','Saída de cestas prontas']]},
+  'estoque:cesta-basica':{title:'Cesta Básica Completa',rows:[['Composição','Consultar produtos e quantidades'],['Registrar montagem','Padrão ou personalizada'],['Histórico de montagens','Registros anteriores']]},
+  'vendas:clientes':{title:'Clientes',rows:[['Ana Souza','Cadastro e histórico financeiro'],['Bruno Lima','Cadastro e histórico financeiro']]},
+  'vendas:venda':{title:'Detalhe da venda',label:'Total da venda',amount:'R$ 1.240,00',lines:[['Quantidade','8 cestas'],['Situação','Confirmada'],['Origem','Estoque de cestas prontas']]},
+  'mais:relatorios':{title:'Relatórios',rows:[['Vendas por período','Consultar e exportar'],['Resumo financeiro','Consultar e exportar'],['Posição de estoque','Consultar e exportar']]},
+  'mais:impressao':{title:'Impressão e formulários',rows:[['Relatório preenchido','Pré-visualizar, salvar PDF ou imprimir'],['Formulário em branco','Folha para preencher à caneta']]},
+  'mais:configuracoes':{title:'Configurações e conexão',rows:[['Aparência','Tema, cores e acessibilidade'],['Conexão com o servidor','Disponibilidade e pareamento']]},
+  'mais:backup':{title:'Backup',rows:[['Cópias de segurança','Consultar backups'],['Recuperação','Fluxo com revisão e confirmação']]}
+ };
+ const accounts=[{id:'fornecedor',name:'Fornecedor de alimentos',description:'Reposição de alimentos',origin:'Despesa cadastrada no app',amount:68000,due:'2026-10-16',planned:'Boleto'},{id:'embalagens',name:'Fornecedor de embalagens',description:'Reposição de embalagens',origin:'Despesa cadastrada no app',amount:60000,due:'2026-10-18',planned:'Boleto'}];
+ const methods={PIX:'Pix',BOLETO:'Boleto',DINHEIRO:'Dinheiro',CARTAO_CREDITO:'Cartão de crédito',TRANSFERENCIA:'Transferência',CHEQUE:'Cheque',OUTRO:'Outro'};
+ const money=cents=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(cents/100);
+ const moneyValue=cents=>new Intl.NumberFormat('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}).format(cents/100);
+ const dateLabel=value=>{const [y,m,d]=value.split('-').map(Number);return new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(Date.UTC(y,m-1,d)));};
+ const parseMoney=value=>{const clean=value.trim().replace(/^R\$\s*/, '');if(!/^(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d{1,2})?$/.test(clean))return null;const [integer,fraction='']=clean.replaceAll('.','').split(',');const cents=Number(integer)*100+Number(fraction.padEnd(2,'0'));return Number.isSafeInteger(cents)?cents:null;};
+ const validDate=value=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const [y,m,d]=value.split('-').map(Number);return y>=1900&&y<=9999&&new Date(Date.UTC(y,m-1,d)).toISOString().slice(0,10)===value;};
+ const esc=value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+ const blankDraft=()=>({mode:'full',amount:'',date:'2026-10-16',method:'',notes:''});
+ const states={};
+ const snapshot=()=>Object.fromEntries(Object.entries(states).map(([key,s])=>[key,{area:s.area,stacks:s.stacks,design:{...s.design},selected:s.selected,filter:s.filter,range:s.range,payments:s.payments,draft:s.draft,draftFor:s.draftFor,lastPayment:s.lastPayment}]));
+ const save=device=>{if(window.openai?.setWidgetState){const s=states[device];const privateContent={journeyVersion:3,devices:snapshot()};window.openai.setWidgetState({modelContent:{prototype:'Resumo, origem e data ZM',device,area:s.area,page:s.stacks[s.area].at(-1),selectedAccount:s.selected,dateRange:s.range,queryScenario:s.design.query,payments:s.payments.map(p=>({account:p.account,amountCents:p.amount,method:p.method,date:p.date})),productionImplementation:false},privateContent:JSON.stringify(privateContent).length<14000?privateContent:null}).catch(()=>{});}};
+ const icon=name=>{const el=document.createElement('i');el.dataset.lucide=name;el.setAttribute('aria-hidden','true');return el;};
+ const make=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;};
+ for(const app of root.querySelectorAll('.app')) {
+  const device=app.dataset.device;
+  app.appendChild(document.getElementById('zm-trust-shell').content.cloneNode(true));
+  const initialPages=()=>device==='payment'?['resumo','pagar','conta-fornecedor','registrar']:['resumo'];
+  const s={area:'financeiro',stacks:Object.fromEntries(Object.keys(areas).map(key=>[key,key==='financeiro'?initialPages():['resumo']])),design:{appearance:'chat',radius:32,scenario:'normal',query:'loaded'},selected:'fornecedor',filter:'all',range:'week',payments:[],draft:blankDraft(),draftFor:'fornecedor',lastPayment:null,busy:false,errors:{},serviceError:false,failedOnce:false,queryBusy:false};states[device]=s;
+  const content=app.querySelector('.content-inner'),title=app.querySelector('.page-title'),back=app.querySelector('.back');
+  const renderDesign=()=>{app.style.colorScheme=s.design.appearance==='chat'?'light dark':s.design.appearance;app.style.setProperty('--radius',s.design.radius+'px');app.style.setProperty('--field-radius',Math.max(24,s.design.radius-4)+'px');};
+  const availableAccounts=()=>s.design.query==='empty'?accounts.filter(a=>a.id!=='fornecedor'):accounts;
+  const navigate=(area,page='resumo')=>{s.area=area;if(s.stacks[area].at(-1)!==page)s.stacks[area].push(page);render();save(device);};
+  const current=()=>accounts.find(account=>account.id===s.selected)||accounts[0];
+  const paid=account=>s.payments.filter(p=>p.account===account.id).reduce((total,p)=>total+p.amount,0);
+  const balance=account=>account.amount-paid(account);
+  const paymentAmount=()=>s.draft.mode==='full'?balance(current()):parseMoney(s.draft.amount);
+  const situation=account=>balance(account)===0?'paid':paid(account)>0?'partial':'open';
+  const statusText=account=>({paid:'Paga',partial:'Parcial',open:'Em aberto'}[situation(account)]);
+  const totalBalance=()=>availableAccounts().reduce((total,a)=>total+balance(a),0);
+  const todayAccounts=()=>availableAccounts().filter(a=>a.due==='2026-10-16'&&balance(a)>0);
+  const accountPage=()=>`conta-${s.selected}`;
+  function detailBox(lines) {return `<section class="details">${lines.map(([label,value])=>`<div class="detail-line"><span>${esc(label)}</span><span>${esc(value)}</span></div>`).join('')}</section>`;}
+  function accountHero(account) {return `<section class="hero finance"><div class="account-heading"><span class="label">Saldo em aberto</span><span class="tag ${situation(account)==='paid'?'paid-tag':''}">${statusText(account)}</span></div><div class="detail-amount" data-balance>${money(balance(account))}</div><div class="summary-pair"><div><span class="label">Valor original</span><strong>${money(account.amount)}</strong></div><div><span class="label">Já pago</span><strong>${money(paid(account))}</strong></div></div></section>`;}
+  function history(account) {
+   const payments=s.payments.filter(p=>p.account===account.id);
+   return `<section class="details"><div class="section-header"><h3>Histórico</h3><small>${payments.length} ${payments.length===1?'pagamento':'pagamentos'}</small></div><div class="history">${payments.slice().reverse().map(payment=>`<div class="history-entry"><div><span>Pagamento registrado</span><strong>${money(payment.amount)}</strong></div><p>${dateLabel(payment.date)} · ${methods[payment.method]}</p>${payment.notes?`<p>${esc(payment.notes)}</p>`:''}</div>`).join('')}<div class="history-entry"><div><span>Conta criada</span><strong>${money(account.amount)}</strong></div><p>14 de outubro de 2026 · ${account.description}</p></div></div></section>`;
+  }
+  function workspace(mainHtml) {
+   content.innerHTML=`<div class="detail-workspace"><aside class="account-context" aria-label="Contas desta semana"><p class="label">Nesta semana</p>${availableAccounts().map(account=>`<button type="button" class="context-account cursor-interaction" data-go="financeiro:conta-${account.id}" aria-current="${account.id===s.selected}">${esc(account.name)}<span>${money(balance(account))} em aberto</span></button>`).join('')}</aside><div class="account-main">${mainHtml}</div></div>`;
+  }
+  function renderAccount() {
+   const account=current();title.textContent=account.name;
+   workspace(`<p class="context">Financeiro / Pagar</p>${accountHero(account)}${detailBox([['Vencimento',dateLabel(account.due)],['Descrição',account.description],['Origem',account.origin],['Forma prevista',account.planned]])}<details class="details source-details"><summary>Origem deste registro</summary><p class="helper">Obrigação cadastrada no Financeiro em 14 de outubro de 2026. Neste exemplo, não há vínculo com uma compra ou documento importado.</p></details>${history(account)}`);
+   if(balance(account)>0)content.insertAdjacentHTML('beforeend','<button type="button" class="primary floating-action cursor-interaction" data-action="register"><i data-lucide="plus" aria-hidden="true"></i>Registrar pagamento</button>');
+  }
+  function errorSummary() {
+   const errors=Object.entries(s.errors);return errors.length?`<aside class="error-box" role="alert"><h3>Confira os campos</h3><ul>${errors.map(([field,message])=>`<li><button type="button" class="cursor-interaction" data-focus="${field}">${esc(message)}</button></li>`).join('')}</ul></aside>`:'';
+  }
+  function errorField(field) {return s.errors[field]?`<span class="field-error" id="${device}-${field}-error">${esc(s.errors[field])}</span>`:'';}
+  function inputAttrs(field) {return `id="${device}-${field}" data-field="${field}" ${s.errors[field]?`aria-invalid="true" aria-describedby="${device}-${field}-error"`:''}`;}
+  function dateField() {
+   return `<div class="field"><label id="${device}-date-label" for="${device}-date">Data do pagamento</label><button type="button" class="date-control cursor-interaction" data-action="open-date" ${inputAttrs('date')} value="${esc(s.draft.date)}" aria-labelledby="${device}-date-label ${device}-date-value" aria-expanded="false" aria-controls="${device}-calendar"><span class="date-value" id="${device}-date-value">${validDate(s.draft.date)?dateLabel(s.draft.date):'Selecionar data'}</span><i data-lucide="calendar-days" aria-hidden="true"></i></button>${errorField('date')}<dialog class="date-dialog" id="${device}-calendar" aria-labelledby="${device}-calendar-heading"><div class="calendar-heading"><h3 id="${device}-calendar-heading">Data do pagamento</h3><button type="button" class="calendar-close cursor-interaction" data-calendar-action="close" aria-label="Fechar calendário"><i data-lucide="x" aria-hidden="true"></i></button></div><div class="calendar-period"><button type="button" class="cursor-interaction" data-calendar-step="-1" aria-label="Mês anterior"><i data-lucide="chevron-left" aria-hidden="true"></i></button><strong data-calendar-period aria-live="polite"></strong><button type="button" class="cursor-interaction" data-calendar-step="1" aria-label="Próximo mês"><i data-lucide="chevron-right" aria-hidden="true"></i></button></div><div class="calendar-week" aria-hidden="true">${['D','S','T','Q','Q','S','S'].map(d=>`<span>${d}</span>`).join('')}</div><div class="calendar-days" role="group" aria-label="Dias do mês"></div><div class="calendar-footer"><button type="button" class="cursor-interaction" data-calendar-action="today">Hoje</button><button type="button" class="cursor-interaction" data-calendar-action="close">Cancelar</button></div></dialog></div>`;
+  }
+  function openCalendar() {
+   const trigger=content.querySelector('[data-field=date]'),dialog=content.querySelector('.date-dialog');
+   const selected=validDate(s.draft.date)?s.draft.date:'2026-10-16';
+   dialog.dataset.month=selected.slice(0,7);trigger.setAttribute('aria-expanded','true');drawCalendar(dialog);dialog.showModal();
+   dialog.querySelector(`[data-calendar-date="${selected}"]`)?.focus();
+   dialog.addEventListener('close',()=>{trigger.setAttribute('aria-expanded','false');trigger.focus();},{once:true});
+  }
+  function drawCalendar(dialog,focusDate) {
+   const [year,month]=dialog.dataset.month.split('-').map(Number),first=new Date(Date.UTC(year,month-1,1)).getUTCDay(),days=new Date(Date.UTC(year,month,0)).getUTCDate();
+   dialog.querySelector('[data-calendar-period]').textContent=new Intl.DateTimeFormat('pt-BR',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(Date.UTC(year,month-1,1)));
+   dialog.querySelector('.calendar-days').innerHTML='<span aria-hidden="true"></span>'.repeat(first)+Array.from({length:days},(_,i)=>{const value=`${year}-${String(month).padStart(2,'0')}-${String(i+1).padStart(2,'0')}`;return `<button type="button" class="cursor-interaction" data-calendar-date="${value}" aria-label="${dateLabel(value)}" aria-pressed="${value===s.draft.date}" ${value==='2026-10-16'?'aria-current="date"':''}>${i+1}</button>`;}).join('');
+   dialog.querySelector('[data-calendar-step="-1"]').disabled=year===1900&&month===1;
+   dialog.querySelector('[data-calendar-step="1"]').disabled=year===9999&&month===12;
+   if(focusDate)dialog.querySelector(`[data-calendar-date="${focusDate}"]`)?.focus();
+  }
+  function chooseDate(value) {
+   s.draft.date=value;const trigger=content.querySelector('[data-field=date]');trigger.value=value;trigger.querySelector('.date-value').textContent=dateLabel(value);
+   refreshFieldError('date');content.querySelector('.date-dialog').close();save(device);
+  }
+  function renderForm() {
+   const account=current();title.textContent='Registrar pagamento';const cents=paymentAmount(),partial=s.draft.mode==='partial';
+   workspace(`<p class="context">${esc(account.name)}</p><div class="entry-summary"><span>Saldo em aberto</span><strong>${money(balance(account))}</strong></div>${errorSummary()}
+    <section class="form-panel" aria-label="Dados do pagamento">
+     <div class="payment-choice"><fieldset class="payment-kind" aria-describedby="${device}-mode-caption"><legend>Tipo de pagamento</legend><div class="kind-options">
+      <label class="kind-option cursor-interaction"><input type="radio" name="${device}-mode" data-payment-mode value="full" ${!partial?'checked':''}><span>Integral</span></label>
+      <label class="kind-option cursor-interaction"><input type="radio" name="${device}-mode" data-payment-mode value="partial" aria-controls="${device}-partial" ${partial?'checked':''}><span>Parcial</span></label>
+     </div></fieldset><p class="mode-caption" id="${device}-mode-caption" data-mode-caption>${partial?'Informe apenas o valor pago.':`Valor integral definido: ${money(balance(account))}.`}</p>
+     <div class="partial-reveal" id="${device}-partial" data-open="${partial}" aria-hidden="${!partial}" ${partial?'':'inert'}><div class="partial-content"><div class="field"><label for="${device}-amount">Quanto você pagou?</label><div class="money-entry"><span aria-hidden="true">R$</span><input type="text" inputmode="decimal" autocomplete="off" ${inputAttrs('amount')} value="${esc(s.draft.amount)}" placeholder="0,00" aria-label="Quanto você pagou?" ${partial?'':'disabled'}></div>${errorField('amount')}<span class="helper">Até ${money(balance(account))}.</span></div></div></div></div>
+     <div class="form-pair">${dateField()}<div class="field"><label for="${device}-method">Como você pagou?</label><div class="select-wrap"><select class="cursor-interaction" ${inputAttrs('method')}><option value="">Selecione</option>${Object.entries(methods).map(([value,label])=>`<option value="${value}" ${s.draft.method===value?'selected':''}>${label}</option>`).join('')}</select><i data-lucide="chevron-down" aria-hidden="true"></i></div>${errorField('method')}</div></div>
+     <div class="field"><label for="${device}-notes">Observação <span class="helper">(opcional)</span></label><textarea rows="2" ${inputAttrs('notes')} placeholder="Uma referência para consultar depois">${esc(s.draft.notes)}</textarea></div>
+     <div class="entry-summary"><span>Restará em aberto</span><strong data-remaining>${cents!==null&&cents>0&&cents<=balance(account)?money(balance(account)-cents):'—'}</strong></div><p class="helper" data-payment-note hidden></p>
+     <button class="primary cursor-interaction" type="button" data-action="review">Revisar pagamento<i data-lucide="arrow-right" aria-hidden="true"></i></button>
+    </section><p class="note">Registre um pagamento que você já realizou.</p>`);
+   updateRemaining();
+  }
+  function validateDraft() {
+   const errors={},cents=paymentAmount(),account=current();
+   if(cents===null)errors.amount='Informe um valor válido, como 300,00.';
+   else if(cents<=0)errors.amount='Informe um valor maior que zero.';
+   else if(cents>balance(account))errors.amount=`Informe até ${money(balance(account))}, o saldo em aberto.`;
+   if(!validDate(s.draft.date))errors.date='Selecione a data do pagamento.';
+   if(!methods[s.draft.method])errors.method='Selecione como você pagou.';
+   s.errors=errors;return Object.keys(errors).length===0;
+  }
+  function updateRemaining() {
+   const cents=paymentAmount(),remaining=content.querySelector('[data-remaining]'),note=content.querySelector('[data-payment-note]');
+   if(remaining)remaining.textContent=cents!==null&&cents>0&&cents<=balance(current())?money(balance(current())-cents):'—';
+   if(note){note.hidden=!(s.draft.mode==='partial'&&cents===balance(current()));note.textContent=note.hidden?'':'Este valor quita o saldo da conta.';}
+  }
+  function updatePaymentMode() {
+   const partial=s.draft.mode==='partial',panel=content.querySelector('.partial-reveal'),amount=content.querySelector('[data-field=amount]');
+   if(!panel||!amount)return;
+   panel.dataset.open=String(partial);panel.setAttribute('aria-hidden',String(!partial));panel.inert=!partial;amount.disabled=!partial;
+   content.querySelector('[data-mode-caption]').textContent=partial?'Informe apenas o valor pago.':`Valor integral definido: ${money(balance(current()))}.`;
+   refreshFieldError('amount');updateRemaining();
+  }
+  function refreshFieldError(field) {
+   if(!s.errors[field])return;
+   const previous={...s.errors};validateDraft();const message=s.errors[field];s.errors=previous;
+   const input=content.querySelector(`[data-field="${field}"]`),error=content.querySelector(`#${device}-${field}-error`);
+   if(message){s.errors[field]=message;if(error)error.textContent=message;}
+   else{delete s.errors[field];input?.removeAttribute('aria-invalid');input?.removeAttribute('aria-describedby');error?.remove();}
+   const summary=content.querySelector('.error-box');if(summary){const html=errorSummary();if(html)summary.outerHTML=html;else summary.remove();}
+  }
+  function renderReview() {
+   const account=current(),cents=paymentAmount();title.textContent='Conferir pagamento';
+   const rows=[['Valor pago',money(cents),s.draft.mode==='full'?'mode':'amount'],['Data do pagamento',dateLabel(s.draft.date),'date'],['Forma de pagamento',methods[s.draft.method],'method'],['Observação',s.draft.notes.trim()||'Não informada','notes']];
+   workspace(`<p class="context">${esc(account.name)}</p>${s.serviceError?'<aside class="error-box" role="alert"><h3>Não foi possível registrar</h3><p>O registro não foi salvo. Seus dados foram mantidos para tentar novamente.</p></aside>':''}<section class="form-panel"><div><h3>Confira antes de registrar</h3><p class="helper" style="margin-top:8px">O registro será salvo quando você confirmar.</p></div><dl class="review-list">${rows.map(([label,value,field])=>`<div class="review-line"><div><dt>${label}</dt><dd>${esc(value)}</dd></div><button type="button" class="edit-value cursor-interaction" data-edit="${field}" ${s.busy?'disabled':''} aria-label="Alterar ${label.toLowerCase()}">Alterar</button></div>`).join('')}</dl><div class="entry-summary"><span>Restará em aberto</span><strong>${money(balance(account)-cents)}</strong></div><button type="button" class="primary cursor-interaction" data-action="confirm" ${s.busy?'disabled':''}>${s.busy?'<i class="busy-icon" data-lucide="loader-circle" aria-hidden="true"></i>Registrando…':'Confirmar registro'}</button><button type="button" class="secondary cursor-interaction" data-action="edit" ${s.busy?'disabled':''}>Voltar aos dados</button></section><p class="note" role="status" aria-live="polite">${s.busy?'Registrando o pagamento…':'Você está registrando um pagamento já realizado.'}</p>`);
+  }
+  function renderSuccess() {
+   const account=current(),payment=s.payments.find(p=>p.id===s.lastPayment);title.textContent='Pagamento registrado';
+   if(!payment){s.stacks.financeiro=['resumo','pagar',accountPage()];renderAccount();return;}
+   workspace(`<p class="context">${esc(account.name)}</p><section class="success-panel"><div class="success-mark"><i data-lucide="check" aria-hidden="true"></i></div><h3>Pagamento registrado</h3><p class="note" role="status" aria-live="polite">${money(payment.amount)} registrados em ${dateLabel(payment.date)}, por ${methods[payment.method]}.</p><div class="entry-summary"><span>${balance(account)===0?'Conta quitada':'Restante em aberto'}</span><strong>${money(balance(account))}</strong></div><button type="button" class="primary cursor-interaction" data-action="view-account">Ver conta e histórico<i data-lucide="arrow-right" aria-hidden="true"></i></button><button type="button" class="secondary cursor-interaction" data-action="list">Voltar para Pagar</button></section>`);
+  }
+  function queryUnavailable(target) {
+   target.innerHTML=`<section class="query-state" role="${s.queryBusy?'status':'alert'}"><h3>${s.queryBusy?'Consultando as contas…':'Não foi possível consultar as contas'}</h3><p>${s.queryBusy?'Aguarde a atualização.':'Tente consultar novamente para conferir os valores.'}</p><button type="button" class="primary cursor-interaction" data-action="retry-query" ${s.queryBusy?'disabled':''}>${s.queryBusy?'Consultando…':'Tentar novamente'}</button></section>`;
+  }
+  function renderSummary(target) {
+   if(s.design.query==='unavailable'||s.queryBusy){queryUnavailable(target);return;}
+   const due=todayAccounts(),total=due.reduce((sum,a)=>sum+balance(a),0);
+   target.innerHTML=`<p class="context">Hoje, 16 de outubro de 2026</p>${due.length?`<button type="button" class="due-card cursor-interaction" data-action="today"><span class="due-top"><span>Pagar hoje</span><i data-lucide="calendar-clock" aria-hidden="true"></i></span><strong class="amount" data-today-total>${money(total)}</strong><span class="due-bottom"><span>${due.length} ${due.length===1?'conta em aberto':'contas em aberto'} · 16 out.</span><i data-lucide="arrow-right" aria-hidden="true"></i></span></button>`:`<section class="query-state"><h3>Nenhuma conta vence hoje</h3><p>Não há saldo em aberto para pagar com vencimento em 16 de outubro.</p><button type="button" class="primary cursor-interaction" data-action="week">Ver contas da semana</button></section>`}<details class="criteria"><summary>O que entra neste resumo?</summary><p>Saldo ainda em aberto das contas que vencem em 16 de outubro de 2026. Inclui pagamentos parciais e considera todos os registros dessa data. Contas quitadas e vencimentos de outros dias ficam fora.</p></details>`;
+  }
+  function renderPayables(target) {
+   if(s.design.query==='unavailable'||s.queryBusy){queryUnavailable(target);return;}
+   const rangeAccounts=availableAccounts().filter(a=>s.range==='week'||a.due==='2026-10-16');
+   const filtered=rangeAccounts.filter(a=>s.filter==='all'||(s.filter==='open'?balance(a)>0:situation(a)===s.filter));
+   const total=filtered.reduce((sum,a)=>sum+balance(a),0),range=s.range==='today'?'Vencimento em 16 de outubro de 2026':'Vencimentos de 12 a 18 de outubro de 2026';
+   const rows=filtered.map(account=>`<button class="row cursor-interaction" type="button" data-go="financeiro:conta-${account.id}"><span class="copy"><span class="title">${esc(account.name)}</span><span class="subtitle">${account.description} · ${account.due.slice(8)} out.</span><span class="tag ${situation(account)==='paid'?'paid-tag':''}">${statusText(account)}</span></span><span class="value">${balance(account)===0?'Quitada':money(balance(account))}</span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>`).join('');
+   const table=`<table class="account-table" aria-label="Contas a pagar no período"><thead><tr><th scope="col">Conta</th><th scope="col">Vence em</th><th scope="col">Situação</th><th scope="col">Em aberto</th></tr></thead><tbody>${filtered.map(a=>`<tr><td><button type="button" class="table-open cursor-interaction" data-go="financeiro:conta-${a.id}">${esc(a.name)}</button></td><td>${a.due.slice(8)}/10/2026</td><td>${statusText(a)}</td><td>${money(balance(a))}</td></tr>`).join('')}</tbody></table>`;
+   target.innerHTML=`<div class="range-label"><span>${range}</span>${s.range==='today'?'<button type="button" class="cursor-interaction" data-action="week">Ver semana</button>':''}</div><section class="list-total"><span class="label">Saldo em aberto neste recorte</span><strong class="amount" data-total>${money(total)}</strong><span class="helper">${filtered.length} ${filtered.length===1?'conta':'contas'} · Todos os registros do recorte</span></section><div class="list-filter"><label for="${device}-status">Situação</label><select class="cursor-interaction" id="${device}-status" data-filter><option value="all">Todas</option><option value="open">Em aberto</option><option value="partial">Parciais</option><option value="paid">Pagas</option></select></div><section><div class="section-header"><h3>${s.range==='today'?'Contas de hoje':'Contas da semana'}</h3></div>${filtered.length?(app.classList.contains('desktop')?table:`<div class="rows">${rows}</div>`):'<p class="result-message" role="status">Nenhuma conta neste recorte. Você pode alterar a situação ou consultar a semana.</p>'}</section>`;
+   target.querySelector('[data-filter]').value=s.filter;
+  }
+  function updateAmounts() {
+   const amounts=content.querySelectorAll('.hero.finance .amount');if(s.area==='inicio'&&amounts[0])amounts[0].textContent=money(totalBalance());
+   if(s.area==='inicio'){const pending=availableAccounts().filter(account=>balance(account)>0).length,attention=content.querySelector('[data-go="financeiro:pagar"]');if(attention){attention.querySelector('.title').textContent=pending?`${pending} ${pending===1?'conta a pagar':'contas a pagar'}`:'Contas da semana em dia';attention.querySelector('.subtitle').textContent=pending?'Vencem nesta semana':'Consultar os registros da semana';}}
+  }
+  function renderDetail(data) {
+   if(data.future){const status=make('p','context','Exemplo de uma função planejada');content.appendChild(status);}
+   if(data.amount){const hero=make('section','hero');hero.append(make('span','label',data.label),make('div','detail-amount',data.amount));content.appendChild(hero);}
+   if(data.lines){const box=make('section','details');for(const [label,value] of data.lines){const row=make('div','detail-line');row.append(make('span','',label),make('span','',value));box.appendChild(row);}content.appendChild(box);}
+   if(data.rows){const rows=make('div','rows');data.rows.forEach(([name,description],index)=>{
+    const row=make(data.basket&&index===0?'button':'div','row'+(data.basket&&index===0?' cursor-interaction':''));
+    const copy=make('span','copy');copy.append(make('span','title',name),make('span','subtitle',description));row.appendChild(copy);
+    if(data.basket&&index===0){row.type='button';row.dataset.go='estoque:cesta-basica';const arrow=icon('chevron-right');arrow.className='arrow';row.appendChild(arrow);}rows.appendChild(row);
+   });content.appendChild(rows);}
+   const note=make('p','note','Dados ilustrativos. Esta prévia mostra onde encontrar as informações.');content.appendChild(note);
+  }
+  function render() {
+   app.dataset.query=s.design.query;
+   const page=s.stacks[s.area].at(-1),key=s.area+':'+page;
+   content.replaceChildren();back.hidden=s.stacks[s.area].length<=1;
+   app.querySelectorAll('[data-area]').forEach(button=>{if(button.dataset.area===s.area)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
+   if(s.area==='financeiro'&&['conta-fornecedor','conta-embalagens','registrar','conferir','conclusao'].includes(page)){
+    if(page.startsWith('conta-')){s.selected=page.slice(6);renderAccount();}
+    else if(page==='registrar')renderForm();
+    else if(page==='conferir')renderReview();
+    else renderSuccess();
+   }
+   else if(children[key]){title.textContent=children[key].title;content.appendChild(make('p','context',areas[s.area]));renderDetail(children[key]);}
+   else if(s.area==='financeiro'){
+    title.textContent='Financeiro';content.appendChild(document.getElementById('zm-trust-financeiro').content.cloneNode(true));
+    const tab=['resumo','pagar','receber'].includes(page)?page:'resumo';
+    content.querySelectorAll('[data-finance]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.finance===tab)));
+    const target=content.querySelector('.finance-content');target.style.display='grid';target.style.gap='20px';target.appendChild(document.getElementById(tab==='resumo'?'zm-trust-financeiro-resumo':'zm-trust-'+tab).content.cloneNode(true));
+    if(tab==='pagar')renderPayables(target);
+    else if(tab==='resumo')renderSummary(target);
+   }else {title.textContent=areas[s.area];content.appendChild(document.getElementById('zm-trust-'+s.area).content.cloneNode(true));}
+   updateAmounts();
+   for(const button of app.querySelectorAll('.navigation button,.back,.restart'))button.disabled=s.busy;
+   content.setAttribute('aria-busy',String(s.busy));
+   if(globalThis.lucide)lucide.createIcons({attrs:{width:18,height:18}});
+  }
+  function openForm(field) {
+   if(s.draftFor!==s.selected){s.draft=blankDraft();s.draftFor=s.selected;}
+   s.errors={};s.serviceError=false;
+   if(s.stacks.financeiro.at(-1)==='conferir')s.stacks.financeiro.pop();
+   navigate('financeiro','registrar');
+   if(field==='mode')content.querySelector('[data-payment-mode]:checked')?.focus();
+   else if(field)content.querySelector(`[data-field="${field}"]`)?.focus();
+  }
+  function confirmPayment() {
+   if(s.busy||s.stacks.financeiro.at(-1)!=='conferir')return;
+   if(!validateDraft()){s.stacks.financeiro[s.stacks.financeiro.length-1]='registrar';render();return;}
+   s.busy=true;s.serviceError=false;render();
+   setTimeout(()=>{
+    s.busy=false;
+    if(s.design.scenario==='failure'&&!s.failedOnce){s.failedOnce=true;s.serviceError=true;render();save(device);return;}
+    const payment={id:`demo-${s.payments.length+1}`,account:s.selected,amount:paymentAmount(),date:s.draft.date,method:s.draft.method,notes:s.draft.notes.trim()};
+    s.payments.push(payment);s.lastPayment=payment.id;s.draft=blankDraft();s.draftFor=null;
+    s.stacks.financeiro=['resumo','pagar',accountPage(),'conclusao'];render();save(device);
+   },850);
+  }
+  app.addEventListener('click',event=>{
+   const button=event.target.closest('button');if(!button||!app.contains(button))return;
+   if(s.busy)return;
+   if(button.dataset.action){
+    const action=button.dataset.action;
+    if(action==='open-date')openCalendar();
+    else if(action==='today'){s.range='today';s.filter='open';s.stacks.financeiro=['resumo','pagar'];render();save(device);}
+    else if(action==='week'){s.range='week';s.filter='all';s.stacks.financeiro=['resumo','pagar'];render();save(device);}
+    else if(action==='retry-query'){
+     if(s.queryBusy)return;s.queryBusy=true;render();
+     setTimeout(()=>{s.queryBusy=false;s.design.query='loaded';render();save(device);},650);
+    }
+    else if(action==='register'||action==='edit')openForm();
+    else if(action==='review'){
+     if(validateDraft()){if(s.draft.mode==='partial')s.draft.amount=moneyValue(paymentAmount());s.serviceError=false;navigate('financeiro','conferir');}
+     else{render();content.querySelector(`[data-field="${Object.keys(s.errors)[0]}"]`)?.focus();save(device);}
+    }
+    else if(action==='confirm')confirmPayment();
+    else if(action==='view-account'){s.stacks.financeiro=['resumo','pagar',accountPage()];render();save(device);}
+    else if(action==='list'){s.stacks.financeiro=['resumo','pagar'];render();save(device);}
+    else if(action==='restart'){
+     Object.assign(s,{area:'financeiro',selected:'fornecedor',filter:'all',range:'week',payments:[],draft:blankDraft(),draftFor:'fornecedor',lastPayment:null,errors:{},serviceError:false,failedOnce:false});
+     s.design.query='loaded';s.stacks=Object.fromEntries(Object.keys(areas).map(area=>[area,area==='financeiro'?initialPages():['resumo']]));render();save(device);
+    }
+   }
+   else if(button.dataset.calendarDate)chooseDate(button.dataset.calendarDate);
+   else if(button.dataset.calendarAction){if(button.dataset.calendarAction==='today')chooseDate('2026-10-16');else content.querySelector('.date-dialog').close();}
+   else if(button.dataset.calendarStep){const dialog=content.querySelector('.date-dialog'),[y,m]=dialog.dataset.month.split('-').map(Number);dialog.dataset.month=new Date(Date.UTC(y,m-1+Number(button.dataset.calendarStep),1)).toISOString().slice(0,7);drawCalendar(dialog);}
+   else if(button.dataset.edit)openForm(button.dataset.edit);
+   else if(button.dataset.focus)content.querySelector(`[data-field="${button.dataset.focus}"]`)?.focus();
+   else if(button.dataset.area){s.area=button.dataset.area;render();save(device);}
+   else if(button.dataset.go){const [area,page]=button.dataset.go.split(':');navigate(area,page);}
+   else if(button.dataset.finance){if(button.dataset.finance==='pagar'){s.range='week';s.filter='all';}s.stacks.financeiro=[...s.stacks.financeiro.slice(0,-1),button.dataset.finance];render();save(device);}
+  });
+  app.addEventListener('input',event=>{
+   const field=event.target.dataset.field;if(!field||s.busy)return;
+   s.draft[field]=event.target.value;
+   if(field==='amount')updateRemaining();
+  });
+  app.addEventListener('change',event=>{
+   if(event.target.hasAttribute('data-payment-mode')){s.draft.mode=event.target.value;updatePaymentMode();save(device);}
+   else if(event.target.hasAttribute('data-filter')){s.filter=event.target.value;render();save(device);}
+   else if(event.target.dataset.field){s.draft[event.target.dataset.field]=event.target.value;refreshFieldError(event.target.dataset.field);save(device);}
+  });
+  app.addEventListener('focusout',event=>{
+   const field=event.target.dataset.field;if(!field||field==='date')return;
+   if(field==='amount'){const cents=parseMoney(s.draft.amount);if(cents!==null){s.draft.amount=moneyValue(cents);event.target.value=s.draft.amount;}}
+   refreshFieldError(field);
+   save(device);
+  });
+  app.addEventListener('keydown',event=>{
+   const day=event.target.dataset.calendarDate;
+   if(day&&['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(event.key)){
+    event.preventDefault();const dialog=content.querySelector('.date-dialog'),value=new Date(day+'T00:00:00Z');
+    if(event.key==='PageUp'||event.key==='PageDown'){
+     const offset=(event.key==='PageUp'?-1:1)*(event.shiftKey?12:1),month=value.getUTCMonth()+offset,year=value.getUTCFullYear();
+     const last=new Date(Date.UTC(year,month+1,0)).getUTCDate();value.setUTCDate(1);value.setUTCMonth(month);value.setUTCDate(Math.min(Number(day.slice(8)),last));
+    }else{const offset={ArrowLeft:-1,ArrowRight:1,ArrowUp:-7,ArrowDown:7,Home:-value.getUTCDay(),End:6-value.getUTCDay()}[event.key];value.setUTCDate(value.getUTCDate()+offset);}
+    if(value.getUTCFullYear()>=1900&&value.getUTCFullYear()<=9999){const next=value.toISOString().slice(0,10);dialog.dataset.month=next.slice(0,7);drawCalendar(dialog,next);}return;
+   }
+   if(event.key==='Escape'&&!s.busy&&s.stacks.financeiro.at(-1)==='conferir'){event.preventDefault();openForm();}
+   if(event.key==='Enter'&&event.target.matches('input')&&s.stacks.financeiro.at(-1)==='registrar'){event.preventDefault();content.querySelector('[data-action=review]')?.click();}
+  });
+  back.addEventListener('click',()=>{if(s.busy)return;if(s.stacks[s.area].length>1)s.stacks[s.area].pop();render();save(device);});
+  const restore=saved=>{
+   if(!saved||s.busy)return;
+   if(areas[saved.area])s.area=saved.area;
+   if(accounts.some(a=>a.id===saved.selected))s.selected=saved.selected;
+   if(['all','open','partial','paid'].includes(saved.filter))s.filter=saved.filter;
+   if(['today','week'].includes(saved.range))s.range=saved.range;
+   if(Array.isArray(saved.payments)){
+    const restored=[],used=new Set();
+    for(const payment of saved.payments){const account=accounts.find(a=>a.id===payment.account);if(!account||typeof payment.id!=='string'||used.has(payment.id)||!Number.isSafeInteger(payment.amount)||payment.amount<=0||!validDate(payment.date)||!methods[payment.method])continue;const total=restored.filter(p=>p.account===account.id).reduce((sum,p)=>sum+p.amount,0);if(total+payment.amount>account.amount)continue;used.add(payment.id);restored.push({...payment,notes:typeof payment.notes==='string'?payment.notes:''});}
+    s.payments=restored;
+   }
+   if(saved.draft&&Object.keys(blankDraft()).every(field=>typeof saved.draft[field]==='string')){Object.assign(s.draft,saved.draft);if(!['full','partial'].includes(s.draft.mode))s.draft.mode='full';}
+   if(accounts.some(a=>a.id===saved.draftFor))s.draftFor=saved.draftFor;
+   if(typeof saved.lastPayment==='string')s.lastPayment=saved.lastPayment;
+   if(saved.stacks)for(const area of Object.keys(areas)){const stack=saved.stacks[area];if(Array.isArray(stack)&&stack.length&&stack.every(page=>typeof page==='string'&&(page==='resumo'||(area==='financeiro'&&['pagar','receber','registrar','conferir','conclusao'].includes(page))||children[area+':'+page])))s.stacks[area]=[...stack];}
+   if(s.area==='financeiro'&&s.stacks.financeiro.at(-1)==='conferir'&&!validateDraft())s.stacks.financeiro[s.stacks.financeiro.length-1]='registrar';
+   if(saved.design){if(['chat','light','dark'].includes(saved.design.appearance))s.design.appearance=saved.design.appearance;if(['normal','failure'].includes(saved.design.scenario))s.design.scenario=saved.design.scenario;if(['loaded','empty','unavailable'].includes(saved.design.query))s.design.query=saved.design.query;if(Number.isFinite(saved.design.radius))s.design.radius=Math.max(28,Math.min(40,saved.design.radius));}
+   renderDesign();render();
+  };
+  s.restore=restore;const saved=window.openai?.widgetState?.privateContent;if(saved?.journeyVersion===3)restore(saved.devices?.[device]);renderDesign();render();
+  if(globalThis.Tweak){const tweak=new Tweak({container:app,onChange:()=>{renderDesign();if(app.dataset.query!==s.design.query){s.area='financeiro';s.stacks.financeiro=['resumo'];render();}}});tweak.addSelect(s.design,'appearance',{label:'Aparência',options:[{label:'Seguir o chat',value:'chat'},{label:'Claro',value:'light'},{label:'Escuro',value:'dark'}]});tweak.addSlider(s.design,'radius',{label:'Arredondamento dos painéis',min:28,max:40,step:2,unit:'px'});tweak.addSelect(s.design,'scenario',{label:'Próxima confirmação',options:[{label:'Registro normal',value:'normal'},{label:'Falha na primeira tentativa',value:'failure'}]});if(device!=='payment')tweak.addSelect(s.design,'query',{label:'Consulta financeira',options:[{label:'Com contas para hoje',value:'loaded'},{label:'Sem contas para hoje',value:'empty'},{label:'Consulta indisponível',value:'unavailable'}]});}
+ }
+ window.addEventListener('openai:set_globals',event=>{const saved=event.detail?.globals?.widgetState?.privateContent;if(saved?.journeyVersion===3)for(const [device,s] of Object.entries(states))s.restore(saved.devices?.[device]);});
+})();
+</script>

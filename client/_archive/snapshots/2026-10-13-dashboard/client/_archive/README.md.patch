@@ -1,0 +1,59 @@
+--- a/client/_archive/README.md
++++ b/client/_archive/README.md
+@@ -3,6 +3,14 @@
+ Atualizado em 13/10/2026. Esta pasta guarda funcionalidades retiradas do
+ aplicativo por decisão do usuário. Não importar seus serviços ou telas em
+ `lib/` nem recolocá-los no menu sem uma solicitação de restauração.
++
++**Atualização do dashboard:** o painel e os pagamentos foram simplificados para
++controle da empresa, sem saldos de conta, caixa ou projeção de tesouraria.
++Consulte [DASHBOARD.md](DASHBOARD.md) e `dashboard_manifest.json` para os novos
++arquivamentos e os cálculos ativos. Esta atualização substitui as referências
++abaixo à consulta de contas no aplicativo: o modelo e o serviço de contas
++financeiras também foram arquivados. O vínculo interno dos pagamentos continua
++no backend para compatibilidade, sem seleção pelo operador.
+ 
+ ## Organização
+ 
+@@ -10,10 +18,10 @@
+ | --- | --- |
+ | `views/` | As oito telas arquivadas anteriormente: produção, desmontagem, expedição, conferência, responsáveis e tesouraria. |
+ | `services/` | Clientes de API exclusivos dessas telas: produção, expedição e tesouraria completa. |
+-| `models/` | Modelos exclusivos de lotes, expedição e lançamentos de caixa. |
++| `models/` | Modelos exclusivos de lotes, expedição, lançamentos e contas financeiras, além do dashboard anterior. |
+ | `l10n/removed_app_pt.arb` | Textos e metadados de tradução retirados do catálogo ativo. |
+ | `snapshots/2026-10-13/` | Cópias anteriores dos arquivos modificados (`.snapshot`) e mudanças por arquivo (`.patch`). Incluem os trechos retirados de arquivos compartilhados. |
+-| `manifest.json` | Caminhos originais, arquivos movidos, hashes SHA-256 dos snapshots e lista de traduções arquivadas. |
++| `manifest.json` e `dashboard_manifest.json` | Registro de cada etapa: caminhos originais, arquivos movidos, hashes SHA-256 dos snapshots e patches. |
+ 
+ Os snapshots preservam arquivos inteiros para dar contexto aos trechos. Não são
+ uma segunda implementação executável nem devem substituir automaticamente os
+@@ -27,8 +35,8 @@
+ - Opções de relatórios de montagem e de conferência de saídas/repasses.
+ - Formulário de saídas/custódia e colunas Trânsito/Total na tabela de cestas do
+   dashboard. O saldo exibido é o disponível na loja; não soma mercadorias em trânsito.
+-- Serviço completo de tesouraria. A consulta compartilhada continua em
+-  `lib/services/financial_accounts_service.dart`.
++- Serviço completo de tesouraria e consulta compartilhada de contas. Pagamentos
++  usam o vínculo interno padrão no backend, sem pedir saldo ou conta ao operador.
+ - Textos ligados ao código arquivado sem referência no código ativo ou nos testes.
+ 
+ O relatório ativo de vendas usa a API existente com `include_dispatches=false`:
+@@ -43,7 +51,7 @@
+ 
+ - A montagem durante a venda permanece ativa e usa o motor de produção.
+ - Compras, pagamentos, recebimentos e DRE usam contas e livro-caixa.
+-- Modelos de vendas, recebíveis, estoque e dashboard conservam os campos históricos
++- Modelos de vendas, recebíveis e estoque conservam os campos históricos
+   de lotes e custódia para ler os registros existentes sem perda de informação.
+ - Os testes de modelos arquivados continuam executando: importam os modelos
+   de `../_archive/models/` como fixtures de compatibilidade, sem imports do aplicativo.
+@@ -81,7 +89,7 @@
+ | Produção/desmontagem | `production_batch`, `production_service`, três telas de produção; traduções e menus. O motor do backend já existe. |
+ | Expedição/responsáveis | `dispatch`, `dispatch_service`, quatro telas; cadastro de responsáveis, saídas, retorno/perdas e conferência; traduções e menus. |
+ | Venda em rota | Expedição funcional, saldo `TRANSIT`, trechos de `sale_form_view.dart`; manter a baixa exclusiva da custódia. |
+-| Tesouraria | `cash_flow_entry`, serviço completo e `treasury_view`; o modelo `financial_account` continua ativo. Reintegrar a gestão de contas sem duplicar a consulta compartilhada de contas nos pagamentos. |
++| Tesouraria | `cash_flow_entry`, `financial_account`, serviço completo e `treasury_view`; revisar os patches de seleção de contas nos pagamentos. |
+ | Relatórios/formulário de rota | Opções nos snapshots de `reports_view`, `blank_forms_view` e dashboard. A API preserva os relatórios originais e aceita `include_dispatches=true`. |
+ 
+ ## Validação

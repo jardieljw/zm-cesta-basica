@@ -34,9 +34,11 @@ class SaleCreate(BaseModel):
 
 class SaleCancelRequest(BaseModel):
     reason: str = Field(..., min_length=3, description="Justificativa obrigatoria do cancelamento/estorno")
+    unassembled_item_ids: List[str] = Field(default_factory=list, description="Itens montados na venda cuja montagem fisica nao aconteceu; devolver seus insumos")
 
 class SaleItemResponse(BaseModel):
     id: str
+    assembled_on_demand: bool = False
     basket_type_id: str
     basket_type_name: Optional[str] = None
     production_batch_id: Optional[str] = None

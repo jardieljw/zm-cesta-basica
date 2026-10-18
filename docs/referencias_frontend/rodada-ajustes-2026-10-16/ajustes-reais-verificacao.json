@@ -1,0 +1,202 @@
+{
+  "date": "2026-10-16",
+  "original": {
+    "engine": "edge",
+    "reproduced": true,
+    "before": {
+      "panel": "32px",
+      "field": "28px",
+      "gap": "24px",
+      "page": "rgb(246, 247, 249)",
+      "scheme": "light dark",
+      "latest": {
+        "appearance": "chat",
+        "page": "soft",
+        "accent": "#2866ae",
+        "spacing": 24,
+        "panelRadius": 32,
+        "fieldRadius": 28,
+        "motion": "standard"
+      }
+    },
+    "after": {
+      "panel": "32px",
+      "field": "28px",
+      "gap": "24px",
+      "page": "rgb(246, 247, 249)",
+      "scheme": "light dark",
+      "latest": {
+        "appearance": "chat",
+        "page": "soft",
+        "accent": "#2866ae",
+        "spacing": 28,
+        "panelRadius": 32,
+        "fieldRadius": 28,
+        "motion": "standard"
+      }
+    },
+    "javascriptErrors": [],
+    "reason": "Edits published by the real Tweak helper are overwritten by the same globals event restoring an older widgetState"
+  },
+  "corrected": [
+    {
+      "engine": "edge",
+      "result": "passed",
+      "before": {
+        "panel": "32px",
+        "field": "28px",
+        "gap": "20px",
+        "page": "rgb(246, 247, 249)",
+        "scheme": "light dark",
+        "latest": {
+          "appearance": "chat",
+          "page": "soft",
+          "accent": "#2866ae",
+          "spacing": 20,
+          "panelRadius": 32,
+          "fieldRadius": 28,
+          "motion": "standard"
+        }
+      },
+      "after": {
+        "panel": "24px",
+        "field": "20px",
+        "gap": "28px",
+        "page": "rgb(246, 247, 249)",
+        "scheme": "light dark",
+        "latest": {
+          "appearance": "chat",
+          "page": "soft",
+          "accent": "#2866ae",
+          "spacing": 28,
+          "panelRadius": 24,
+          "fieldRadius": 20,
+          "motion": "standard"
+        }
+      },
+      "closing": {
+        "panel": "40px",
+        "field": "32px",
+        "gap": "20px",
+        "page": "rgb(255, 255, 255)",
+        "scheme": "light",
+        "latest": {
+          "appearance": "light",
+          "page": "pure",
+          "accent": "#116b63",
+          "spacing": 20,
+          "panelRadius": 40,
+          "fieldRadius": 32,
+          "motion": "standard"
+        }
+      },
+      "externalMetrics": {
+        "panel": "36px",
+        "field": "24px",
+        "gap": "32px",
+        "page": "rgb(246, 247, 249)",
+        "scheme": "light dark",
+        "latest": {
+          "appearance": "light",
+          "page": "pure",
+          "accent": "#116b63",
+          "spacing": 20,
+          "panelRadius": 40,
+          "fieldRadius": 32,
+          "motion": "standard"
+        }
+      },
+      "javascriptErrors": [],
+      "controlsChecked": [
+        "spacing",
+        "panelRadius",
+        "fieldRadius",
+        "appearance",
+        "page",
+        "accent",
+        "motion"
+      ],
+      "limits": "Real bundled Tweak binding code with a simulated annotations provider; desktop controls UI not automated"
+    },
+    {
+      "engine": "webkit",
+      "result": "passed",
+      "before": {
+        "panel": "32px",
+        "field": "28px",
+        "gap": "20px",
+        "page": "rgb(246, 247, 249)",
+        "scheme": "light dark",
+        "latest": {
+          "appearance": "chat",
+          "page": "soft",
+          "accent": "#2866ae",
+          "spacing": 20,
+          "panelRadius": 32,
+          "fieldRadius": 28,
+          "motion": "standard"
+        }
+      },
+      "after": {
+        "panel": "24px",
+        "field": "20px",
+        "gap": "28px",
+        "page": "rgb(246, 247, 249)",
+        "scheme": "light dark",
+        "latest": {
+          "appearance": "chat",
+          "page": "soft",
+          "accent": "#2866ae",
+          "spacing": 28,
+          "panelRadius": 24,
+          "fieldRadius": 20,
+          "motion": "standard"
+        }
+      },
+      "closing": {
+        "panel": "40px",
+        "field": "32px",
+        "gap": "20px",
+        "page": "rgb(255, 255, 255)",
+        "scheme": "light",
+        "latest": {
+          "appearance": "light",
+          "page": "pure",
+          "accent": "#116b63",
+          "spacing": 20,
+          "panelRadius": 40,
+          "fieldRadius": 32,
+          "motion": "standard"
+        }
+      },
+      "externalMetrics": {
+        "panel": "36px",
+        "field": "24px",
+        "gap": "32px",
+        "page": "rgb(246, 247, 249)",
+        "scheme": "light dark",
+        "latest": {
+          "appearance": "light",
+          "page": "pure",
+          "accent": "#116b63",
+          "spacing": 20,
+          "panelRadius": 40,
+          "fieldRadius": 32,
+          "motion": "standard"
+        }
+      },
+      "javascriptErrors": [],
+      "controlsChecked": [
+        "spacing",
+        "panelRadius",
+        "fieldRadius",
+        "appearance",
+        "page",
+        "accent",
+        "motion"
+      ],
+      "limits": "Real bundled Tweak binding code with a simulated annotations provider; desktop controls UI not automated"
+    }
+  ],
+  "scope": "Local reproduction with the unmodified bundled Tweak helper; no Flutter changes"
+}

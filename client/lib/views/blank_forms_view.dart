@@ -1,474 +1,714 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
-import '../models/report.dart';
-import '../services/reports_service.dart';
-import '../utils/report_pdf_builder.dart';
-import '../utils/formatters.dart';
-import '../utils/api_error_mapper.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../l10n/l10n_extension.dart';
+import '../models/form_print_options.dart';
+import '../models/report.dart';
+import '../services/document_file_service.dart';
+import '../services/reports_service.dart';
+import '../utils/api_error_mapper.dart';
+import '../utils/form_pdf_builder.dart';
 import 'pdf_viewer_screen.dart';
 
 class BlankFormsView extends StatefulWidget {
-  const BlankFormsView({super.key});
-
+  final ReportsService? service;
+  final Future<bool> Function(Uint8List bytes, String filename)? saveFile;
+  const BlankFormsView({super.key, this.service, this.saveFile});
   @override
   State<BlankFormsView> createState() => _BlankFormsViewState();
 }
 
 class _BlankFormsViewState extends State<BlankFormsView> {
-  final ReportsService _reportsService = ReportsService();
-
-  String _selectedFormType = 'payments';
-  bool _isBlankMode = true; // true: Blank for handwriting, false: Pre-filled for audit
-  int _blankRowCount = 16;
-  bool _isLoading = false;
-  bool _isDownloading = false;
-  String? _errorMessage;
-  ReportResponse? _loadedReport;
-
-  final List<Map<String, String>> _formTypes = [
-    {
-      'id': 'payments',
-      'title': 'Tabela de Pagamentos de Cestas (Fiados / Quitações)',
-      'filledReportType': 'receivables',
-      'description': 'Controle de pagamentos na rota ou balcão, identificação do cliente e valores recebidos à vista ou a prazo.',
-    },
-    {
-      'id': 'payables',
-      'title': 'Tabela de Contas a Pagar e Vencimentos',
-      'filledReportType': 'payables',
-      'description': 'Conferência física de despesas, boletos, fornecedores e controle manual de baixas.',
-    },
-    {
-      'id': 'dispatch_conference',
-      'title': 'Folha de Conferência de Saídas e Custódia',
-      'filledReportType': 'dispatch-settlements',
-      'description': 'Conferência de carregamento, saída do galpão, termo de custódia e prestação de contas do responsável.',
-    },
-    {
-      'id': 'physical_inventory',
-      'title': 'Folha de Contagem Física (Auditoria / Balanço)',
-      'filledReportType': 'physical-inventory',
-      'description': 'Folha de inventário para contagem em prancheta, verificação de validades e auditoria física de estoque.',
-    },
-  ];
+  late final ReportsService _service = widget.service ?? ReportsService();
+  String _type = 'payments';
+  bool _blank = true, _loading = true, _exporting = false, _showPreview = false;
+  String? _error;
+  ReportResponse? _report;
+  FormPrintOptions _options = const FormPrintOptions();
+  Future<FormPdfResult>? _pdf;
+  Timer? _debounce;
+  int _request = 0;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _loadFormData();
+    _load();
   }
 
-  Map<String, String> get _currentFormConfig {
-    return _formTypes.firstWhere(
-      (f) => f['id'] == _selectedFormType,
-      orElse: () => _formTypes.first,
-    );
+  @override
+  void dispose() {
+    _request++;
+    _debounce?.cancel();
+    super.dispose();
   }
 
-  Future<void> _loadFormData() async {
+  Future<void> _load() async {
+    final request = ++_request;
+    final type = _type;
+    final blank = _blank;
+    _debounce?.cancel();
     setState(() {
-      _isLoading = true;
-      _errorMessage = null;
+      _loading = true;
+      _error = null;
+      _report = null;
+      _pdf = null;
     });
-
     try {
-      final res = await _reportsService.getBlankTemplate(_selectedFormType, filled: !_isBlankMode);
+      final report = await _service.getBlankTemplate(type, filled: !blank);
+      final prefs = await SharedPreferences.getInstance();
+      var options = const FormPrintOptions();
+      final saved = prefs.getString('form_print_v1_$type');
+      if (saved != null) {
+        try {
+          options = FormPrintOptions.fromJson(
+              jsonDecode(saved) as Map<String, dynamic>);
+        } catch (_) {/* Invalid preferences use defaults. */}
+      }
+      final columns = options.columns?.where(report.columns.contains).toList();
+      options = options.copyWith(
+          columns:
+              columns == null || columns.isEmpty ? report.columns : columns);
+      if (!mounted || request != _request) return;
       setState(() {
-        _loadedReport = res;
-        _isLoading = false;
+        _report = report;
+        _options = options;
+        _loading = false;
       });
-    } catch (e) {
+      _rebuildPdf();
+    } catch (error) {
+      if (!mounted || request != _request) return;
       setState(() {
-        _errorMessage = ApiErrorMapper.toLocalizedMessage(e, context.l10n);
-        _isLoading = false;
+        _loading = false;
+        _error = ApiErrorMapper.toLocalizedMessage(error, context.l10n);
       });
     }
   }
 
-  Future<void> _downloadXlsx() async {
-    setState(() => _isDownloading = true);
+  void _change(FormPrintOptions options) {
+    setState(() {
+      _options = options;
+      _pdf = null;
+    });
+    unawaited(_store(_type, options));
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 300), _rebuildPdf);
+  }
+
+  void _moveColumn(String column, int offset) {
+    final columns = [...?_options.columns];
+    final from = columns.indexOf(column);
+    final to = from + offset;
+    if (_exporting || from < 0 || to < 0 || to >= columns.length) return;
+    columns.removeAt(from);
+    columns.insert(to, column);
+    _change(_options.copyWith(columns: columns));
+  }
+
+  Future<void> _store(String type, FormPrintOptions options) async {
     try {
-      final bytes = await _reportsService.downloadBlankTemplateXlsx(_selectedFormType, filled: !_isBlankMode);
-      final filename = _isBlankMode
-          ? 'modelo_vazio_$_selectedFormType.xlsx'
-          : 'auditoria_preenchida_$_selectedFormType.xlsx';
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+          'form_print_v1_$type', jsonEncode(options.toJson()));
+    } catch (_) {/* Preferences must not prevent printing. */}
+  }
 
-      await Printing.sharePdf(
-        bytes: Uint8List.fromList(bytes),
-        filename: filename,
-      );
+  void _rebuildPdf() {
+    if (!mounted || _report == null) return;
+    final report = _report!;
+    final options = _options;
+    final blank = _blank;
+    setState(() {
+      _pdf = FormPdfBuilder.build(report, options, blank: blank);
+    });
+  }
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.formXlsxDownloadSuccess(filename)),
-            backgroundColor: Colors.green.shade700,
-          ),
-        );
+  String _filename(String extension) =>
+      '${_blank ? 'formulario' : 'conferencia'}_$_type.$extension';
+
+  Future<void> _export(String extension) async {
+    if (_report == null || _exporting || _loading) return;
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    final report = _report!;
+    final options = _options;
+    final type = _type;
+    final blank = _blank;
+    final filename = _filename(extension);
+    setState(() => _exporting = true);
+    try {
+      final Uint8List bytes;
+      if (extension == 'pdf') {
+        bytes = (await (_pdf ??
+                FormPdfBuilder.build(report, options, blank: blank)))
+            .bytes;
+      } else {
+        final resolved = blank && options.blankRowCount == null
+            ? options.copyWith(
+                blankRowCount: (await (_pdf ??
+                        FormPdfBuilder.build(report, options, blank: true)))
+                    .rows)
+            : options;
+        bytes = Uint8List.fromList(
+            await _service.exportConfiguredForm(type, report, resolved));
       }
-    } catch (e) {
+      final saved =
+          await (widget.saveFile ?? DocumentFileService.save)(bytes, filename);
+      if (mounted && saved) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(context.l10n.formFileSaved)));
+      }
+    } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(context.l10n.formXlsxDownloadError(e.toString())),
-            backgroundColor: Colors.red.shade700,
-          ),
-        );
+            SnackBar(content: Text(context.l10n.formExportFailure)));
       }
     } finally {
-      if (mounted) setState(() => _isDownloading = false);
+      if (mounted) setState(() => _exporting = false);
     }
   }
 
-  void _openPrintPreview() {
-    if (_loadedReport == null) return;
-    final rep = _loadedReport!;
-
-    if (_isBlankMode) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => PdfViewerScreen(
-            title: rep.metadata.title,
-            fileName: 'formulario_em_branco_$_selectedFormType.pdf',
-            buildPdf: (format) => ReportPdfBuilder.buildBlankFormPdf(
-              rep,
-              isLandscape: true,
-              blankRowCount: _blankRowCount,
-            ),
-          ),
-        ),
-      );
-    } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => PdfViewerScreen(
-            title: rep.metadata.title,
-            fileName: 'auditoria_preenchida_$_selectedFormType.pdf',
-            buildPdf: (format) => ReportPdfBuilder.buildReportPdf(
-              rep,
-              isLandscape: rep.columns.length > 5,
-            ),
-          ),
-        ),
-      );
+  Future<void> _openPreview() async {
+    if (_report == null || _exporting) return;
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    final report = _report!;
+    final options = _options;
+    final blank = _blank;
+    final filename = _filename('pdf');
+    setState(() => _exporting = true);
+    try {
+      final result =
+          await (_pdf ?? FormPdfBuilder.build(report, options, blank: blank));
+      if (!mounted) return;
+      await Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (_) => PdfViewerScreen(
+                    title: report.metadata.title,
+                    fileName: filename,
+                    buildPdf: (_) async => result.bytes,
+                    canChangeOrientation: false,
+                    initialPageFormat: options.landscape(
+                            (options.columns ?? report.columns).length)
+                        ? PdfPageFormat.a4.landscape
+                        : PdfPageFormat.a4,
+                  )));
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(context.l10n.formExportFailure)));
+      }
+    } finally {
+      if (mounted) setState(() => _exporting = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = context.l10n;
-
+    final l = context.l10n;
+    final report = _report;
+    final columns = _options.columns ?? report?.columns ?? [];
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.blankFormsTitle),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: l10n.commonRefresh,
-            onPressed: _loadFormData,
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildModeSelector(theme),
-            const SizedBox(height: 16),
-            _buildFormSelector(theme),
-            const SizedBox(height: 16),
-            if (_isBlankMode) _buildBlankConfigCard(theme),
-            const SizedBox(height: 16),
-            _buildActionButtons(theme),
-            const SizedBox(height: 16),
-            if (_isLoading)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 48.0),
-                child: Center(child: CircularProgressIndicator()),
-              )
-            else if (_errorMessage != null)
-              Card(
-                color: Colors.red.shade50,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Row(
+      appBar: AppBar(title: Text(l.blankFormsTitle), actions: [
+        IconButton(
+            tooltip: l.commonRefresh,
+            onPressed: _exporting ? null : _load,
+            icon: const Icon(Icons.refresh))
+      ]),
+      body: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Center(
+                  child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1100),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Icon(Icons.error_outline, color: Colors.red),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          _errorMessage!,
-                          style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            else if (_loadedReport != null) ...[
-              _buildFormPreviewCard(theme, _loadedReport!),
-            ],
-          ],
-        ),
-      ),
+                      DropdownButtonFormField<String>(
+                          key: const ValueKey('form-type'),
+                          initialValue: _type,
+                          isExpanded: true,
+                          decoration: InputDecoration(
+                              labelText: l.formDocumentType,
+                              border: const OutlineInputBorder()),
+                          items: [
+                            DropdownMenuItem(
+                                value: 'payments',
+                                child: Text(l.formTypePayments,
+                                    overflow: TextOverflow.ellipsis)),
+                            DropdownMenuItem(
+                                value: 'payables',
+                                child: Text(l.formTypePayables,
+                                    overflow: TextOverflow.ellipsis)),
+                            DropdownMenuItem(
+                                value: 'physical_inventory',
+                                child: Text(l.formTypeInventory,
+                                    overflow: TextOverflow.ellipsis))
+                          ],
+                          onChanged: _exporting
+                              ? null
+                              : (value) {
+                                  if (value != null && value != _type) {
+                                    setState(() => _type = value);
+                                    _load();
+                                  }
+                                }),
+                      const SizedBox(height: 12),
+                      Wrap(spacing: 8, runSpacing: 8, children: [
+                        ChoiceChip(
+                            label: Text(l.formModeBlank),
+                            selected: _blank,
+                            onSelected: _exporting
+                                ? null
+                                : (_) {
+                                    if (!_blank) {
+                                      setState(() => _blank = true);
+                                      _load();
+                                    }
+                                  }),
+                        ChoiceChip(
+                            label: Text(l.formModeFilled),
+                            selected: !_blank,
+                            onSelected: _exporting
+                                ? null
+                                : (_) {
+                                    if (_blank) {
+                                      setState(() => _blank = false);
+                                      _load();
+                                    }
+                                  }),
+                      ]),
+                      const SizedBox(height: 8),
+                      Text(_type == 'payments'
+                          ? l.formPaymentsHelp
+                          : _type == 'payables'
+                              ? l.formPayablesHelp
+                              : l.formInventoryHelp),
+                      const SizedBox(height: 8),
+                      Text(l.formPaperOnly,
+                          style: Theme.of(context).textTheme.bodySmall),
+                      if (_loading)
+                        const Padding(
+                            padding: EdgeInsets.all(32),
+                            child: Center(child: CircularProgressIndicator()))
+                      else if (_error != null)
+                        Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(children: [
+                              Text(_error!),
+                              TextButton(
+                                  onPressed: _load,
+                                  child: Text(l.commonRefresh))
+                            ]))
+                      else if (report != null) ...[
+                        const SizedBox(height: 16),
+                        _card(l.formSelectColumns, [
+                          Text(l.formColumnsHelp),
+                          Wrap(spacing: 8, runSpacing: 6, children: [
+                            for (var i = 0; i < report.columns.length; i++)
+                              FilterChip(
+                                  key: ValueKey('column-${report.columns[i]}'),
+                                  label: Text(report.headers[i]),
+                                  selected: columns.contains(report.columns[i]),
+                                  onSelected: _exporting
+                                      ? null
+                                      : (selected) {
+                                          final next = [...columns];
+                                          if (selected) {
+                                            next.add(report.columns[i]);
+                                          } else {
+                                            if (next.length == 1) return;
+                                            next.remove(report.columns[i]);
+                                          }
+                                          _change(
+                                              _options.copyWith(columns: next));
+                                        }),
+                          ]),
+                          Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton(
+                                  onPressed: _exporting
+                                      ? null
+                                      : () => _change(_options.copyWith(
+                                              columns: [
+                                                ...columns,
+                                                ...report.columns.where(
+                                                    (c) => !columns.contains(c))
+                                              ])),
+                                  child: Text(l.formAllColumns))),
+                          ExpansionTile(
+                            key: const ValueKey('form-column-order'),
+                            tilePadding: EdgeInsets.zero,
+                            title: Text(l.formColumnOrder),
+                            subtitle: Text(l.formColumnOrderHelp),
+                            children: [
+                              for (var i = 0; i < columns.length; i++)
+                                Padding(
+                                  key: ValueKey('ordered-column-${columns[i]}'),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 4),
+                                  child: Row(children: [
+                                    SizedBox(
+                                        width: 30, child: Text('${i + 1}.')),
+                                    Expanded(
+                                        child: Text(report.headers[report
+                                            .columns
+                                            .indexOf(columns[i])])),
+                                    IconButton(
+                                      key: ValueKey('column-up-${columns[i]}'),
+                                      tooltip: l.formColumnMoveUp,
+                                      onPressed: _exporting || i == 0
+                                          ? null
+                                          : () => _moveColumn(columns[i], -1),
+                                      icon: const Icon(Icons.arrow_upward),
+                                    ),
+                                    IconButton(
+                                      key:
+                                          ValueKey('column-down-${columns[i]}'),
+                                      tooltip: l.formColumnMoveDown,
+                                      onPressed: _exporting ||
+                                              i == columns.length - 1
+                                          ? null
+                                          : () => _moveColumn(columns[i], 1),
+                                      icon: const Icon(Icons.arrow_downward),
+                                    ),
+                                  ]),
+                                ),
+                              Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: TextButton(
+                                    key: const ValueKey('restore-column-order'),
+                                    onPressed: _exporting
+                                        ? null
+                                        : () => _change(_options.copyWith(
+                                            columns: report.columns
+                                                .where(columns.contains)
+                                                .toList())),
+                                    child: Text(l.formColumnOrderReset),
+                                  )),
+                            ],
+                          ),
+                        ]),
+                        const SizedBox(height: 12),
+                        _card(l.formPrintSettings, [
+                          Wrap(spacing: 12, runSpacing: 12, children: [
+                            SizedBox(
+                                width: 220,
+                                child: DropdownButtonFormField<String>(
+                                    key: ValueKey(
+                                        'orientation-${_options.orientation}'),
+                                    initialValue: _options.orientation,
+                                    isExpanded: true,
+                                    decoration: InputDecoration(
+                                        labelText: l.formOrientation,
+                                        border: const OutlineInputBorder()),
+                                    items: [
+                                      DropdownMenuItem(
+                                          value: 'auto',
+                                          child: Text(l.formOrientationAuto)),
+                                      DropdownMenuItem(
+                                          value: 'portrait',
+                                          child: Text(l.formPortrait)),
+                                      DropdownMenuItem(
+                                          value: 'landscape',
+                                          child: Text(l.formLandscape))
+                                    ],
+                                    onChanged: (v) {
+                                      if (v != null) {
+                                        _change(
+                                            _options.copyWith(orientation: v));
+                                      }
+                                    })),
+                            _number(
+                                'row-height',
+                                l.formRowHeight,
+                                _options.rowHeightMm,
+                                6,
+                                30,
+                                (v) =>
+                                    _change(_options.copyWith(rowHeightMm: v))),
+                            _number(
+                                'font-size',
+                                l.formFontSize,
+                                _options.fontSize,
+                                8,
+                                16,
+                                (v) => _change(_options.copyWith(fontSize: v))),
+                          ]),
+                          const SizedBox(height: 12),
+                          Text(l.formPageMargins),
+                          const SizedBox(height: 8),
+                          Wrap(spacing: 12, runSpacing: 12, children: [
+                            _number(
+                                'margin-top',
+                                l.formMarginTop,
+                                _options.marginTopMm,
+                                5,
+                                40,
+                                (v) =>
+                                    _change(_options.copyWith(marginTopMm: v))),
+                            _number(
+                                'margin-bottom',
+                                l.formMarginBottom,
+                                _options.marginBottomMm,
+                                5,
+                                40,
+                                (v) => _change(
+                                    _options.copyWith(marginBottomMm: v))),
+                            _number(
+                                'margin-left',
+                                l.formMarginLeft,
+                                _options.marginLeftMm,
+                                5,
+                                40,
+                                (v) => _change(
+                                    _options.copyWith(marginLeftMm: v))),
+                            _number(
+                                'margin-right',
+                                l.formMarginRight,
+                                _options.marginRightMm,
+                                5,
+                                40,
+                                (v) => _change(
+                                    _options.copyWith(marginRightMm: v))),
+                          ]),
+                          const SizedBox(height: 8),
+                          Text(l.formMarginHelp,
+                              style: Theme.of(context).textTheme.bodySmall),
+                          if (_blank) ...[
+                            SwitchListTile(
+                                contentPadding: EdgeInsets.zero,
+                                title: Text(l.formAutoRows),
+                                value: _options.blankRowCount == null,
+                                onChanged: (v) => _change(_options.copyWith(
+                                    automaticRows: v,
+                                    blankRowCount: v
+                                        ? null
+                                        : _options
+                                            .automaticRows(columns.length)))),
+                            if (_options.blankRowCount != null)
+                              _number(
+                                  'blank-rows',
+                                  l.formBlankRows,
+                                  _options.blankRowCount!.toDouble(),
+                                  1,
+                                  500,
+                                  (v) => _change(_options.copyWith(
+                                      blankRowCount: v.round()))),
+                          ],
+                          SwitchListTile(
+                              contentPadding: EdgeInsets.zero,
+                              title: Text(l.formShowSignatures),
+                              value: _options.showSignatures,
+                              onChanged: (v) => _change(
+                                  _options.copyWith(showSignatures: v))),
+                          ExpansionTile(
+                              tilePadding: EdgeInsets.zero,
+                              title: Text(l.formColumnWidths),
+                              subtitle: Text(l.formColumnWidthHelp),
+                              children: [
+                                Wrap(spacing: 12, runSpacing: 12, children: [
+                                  for (final col in columns)
+                                    _number(
+                                        'weight-$col',
+                                        report.headers[
+                                            report.columns.indexOf(col)],
+                                        _options.weight(col),
+                                        0.5,
+                                        8,
+                                        (v) => _change(_options.copyWith(
+                                                columnWeights: {
+                                                  ..._options.columnWeights,
+                                                  col: v
+                                                }))),
+                                ]),
+                                const SizedBox(height: 12),
+                              ]),
+                          Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton.icon(
+                                  icon: const Icon(Icons.restore),
+                                  label: Text(l.formResetDefaults),
+                                  onPressed: () => _change(FormPrintOptions(
+                                      columns: report.columns)))),
+                        ]),
+                        const SizedBox(height: 12),
+                        if (!_blank && report.rows.isEmpty)
+                          Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Text(l.formNoRecords)),
+                        FutureBuilder<FormPdfResult>(
+                            future: _pdf,
+                            builder: (context, snapshot) => Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 12),
+                                child: Text(snapshot.hasError
+                                    ? l.formExportFailure
+                                    : snapshot.hasData
+                                        ? l.formDocumentSummary(
+                                            columns.length,
+                                            snapshot.data!.rows,
+                                            snapshot.data!.pages)
+                                        : l.formPreparing))),
+                        Wrap(spacing: 10, runSpacing: 10, children: [
+                          FilledButton.icon(
+                              onPressed: _exporting ? null : _openPreview,
+                              icon: const Icon(Icons.print),
+                              label: Text(l.formActionPrint)),
+                          OutlinedButton.icon(
+                              onPressed:
+                                  _exporting ? null : () => _export('pdf'),
+                              icon: const Icon(Icons.picture_as_pdf),
+                              label: Text(l.formSavePdf)),
+                          OutlinedButton.icon(
+                              onPressed:
+                                  _exporting ? null : () => _export('xlsx'),
+                              icon: const Icon(Icons.table_chart),
+                              label: Text(l.formSaveXlsx)),
+                          if (_exporting)
+                            const SizedBox(
+                                width: 22,
+                                height: 22,
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2)),
+                        ]),
+                        const SizedBox(height: 12),
+                        ExpansionTile(
+                            title: Text(l.formPreview),
+                            onExpansionChanged: (v) =>
+                                setState(() => _showPreview = v),
+                            children: [
+                              if (_showPreview && _pdf != null)
+                                SizedBox(
+                                    height: 520,
+                                    child: FutureBuilder<FormPdfResult>(
+                                        future: _pdf,
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasError) {
+                                            return Center(
+                                                child:
+                                                    Text(l.formExportFailure));
+                                          }
+                                          if (!snapshot.hasData) {
+                                            return const Center(
+                                                child:
+                                                    CircularProgressIndicator());
+                                          }
+                                          final bytes = snapshot.data!.bytes;
+                                          return PdfPreview(
+                                              key: ValueKey(bytes),
+                                              build: (_) async => bytes,
+                                              canChangeOrientation: false,
+                                              canChangePageFormat: false,
+                                              allowPrinting: false,
+                                              allowSharing: false,
+                                              canDebug: false,
+                                              initialPageFormat: _options
+                                                      .landscape(columns.length)
+                                                  ? PdfPageFormat.a4.landscape
+                                                  : PdfPageFormat.a4);
+                                        })),
+                            ]),
+                      ],
+                    ]),
+              )))),
     );
   }
 
-  Widget _buildModeSelector(ThemeData theme) {
-    final l10n = context.l10n;
-
-    return SegmentedButton<bool>(
-      segments: [
-        ButtonSegment<bool>(
-          value: true,
-          icon: const Icon(Icons.edit_note),
-          label: Text(l10n.formModeBlank),
-        ),
-        ButtonSegment<bool>(
-          value: false,
-          icon: const Icon(Icons.fact_check),
-          label: Text(l10n.formModeFilled),
-        ),
-      ],
-      selected: {_isBlankMode},
-      onSelectionChanged: (set) {
-        setState(() {
-          _isBlankMode = set.first;
-        });
-        _loadFormData();
-      },
-    );
-  }
-
-  Widget _buildFormSelector(ThemeData theme) {
-    return Card(
-      elevation: 1,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  Widget _card(String title, List<Widget> children) => Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Modelo de Formulário / Tabela:',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-            ),
-            const SizedBox(height: 8),
-            DropdownButtonFormField<String>(
-              initialValue: _selectedFormType,
-              isExpanded: true,
-              decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-              items: _formTypes.map((f) {
-                return DropdownMenuItem(
-                  value: f['id']!,
-                  child: Text(f['title']!, overflow: TextOverflow.ellipsis),
-                );
-              }).toList(),
-              onChanged: (val) {
-                if (val != null && val != _selectedFormType) {
-                  setState(() => _selectedFormType = val);
-                  _loadFormData();
-                }
-              },
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _currentFormConfig['description']!,
-              style: const TextStyle(fontSize: 12, color: Colors.black54),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBlankConfigCard(ThemeData theme) {
-    final l10n = context.l10n;
-
-    return Card(
-      elevation: 1,
-      color: Colors.amber.shade50,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.edit, color: Colors.amber.shade900, size: 20),
-                const SizedBox(width: 8),
-                Text(
-                  'Ergonomia de Preenchimento Manual em Prancheta',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.amber.shade900),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Text(
-              l10n.formBlankNotice,
-              style: TextStyle(fontSize: 12, color: Colors.amber.shade900),
-            ),
+          padding: const EdgeInsets.all(16),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Text(title, style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
-            Row(
-              children: [
-                Text(
-                  'Quantidade de Linhas em Branco: $_blankRowCount',
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                ),
-                Expanded(
-                  child: Slider(
-                    value: _blankRowCount.toDouble(),
-                    min: 10,
-                    max: 25,
-                    divisions: 15,
-                    label: '$_blankRowCount linhas',
-                    onChanged: (v) {
-                      setState(() => _blankRowCount = v.round());
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+            ...children
+          ])));
+
+  Widget _number(String id, String label, double value, double min, double max,
+          ValueChanged<double> onChanged) =>
+      SizedBox(
+          width: 220,
+          child: _PrintNumberField(
+              key: ValueKey(id),
+              label: label,
+              value: value,
+              min: min,
+              max: max,
+              onChanged: onChanged));
+}
+
+class _PrintNumberField extends StatefulWidget {
+  final String label;
+  final double value, min, max;
+  final ValueChanged<double> onChanged;
+  const _PrintNumberField(
+      {super.key,
+      required this.label,
+      required this.value,
+      required this.min,
+      required this.max,
+      required this.onChanged});
+  @override
+  State<_PrintNumberField> createState() => _PrintNumberFieldState();
+}
+
+class _PrintNumberFieldState extends State<_PrintNumberField> {
+  late final TextEditingController _controller =
+      TextEditingController(text: _format(widget.value));
+  late final FocusNode _focus = FocusNode()..addListener(_onFocus);
+  String _format(double value) => value == value.roundToDouble()
+      ? value.toInt().toString()
+      : value.toStringAsFixed(1);
+  double? get _number => double.tryParse(_controller.text.replaceAll(',', '.'));
+  bool get _valid =>
+      _number != null &&
+      _number!.isFinite &&
+      _number! >= widget.min &&
+      _number! <= widget.max;
+  void _commit() {
+    if (_valid && _number != widget.value) widget.onChanged(_number!);
   }
 
-  Widget _buildActionButtons(ThemeData theme) {
-    final l10n = context.l10n;
-
-    return Wrap(
-      spacing: 12,
-      runSpacing: 8,
-      alignment: WrapAlignment.center,
-      children: [
-        ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.teal.shade700,
-            foregroundColor: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-          ),
-          icon: const Icon(Icons.print),
-          label: Text(l10n.formActionPrint),
-          onPressed: _loadedReport == null || _isLoading ? null : _openPrintPreview,
-        ),
-        OutlinedButton.icon(
-          style: OutlinedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-          ),
-          icon: const Icon(Icons.table_chart, color: Colors.green),
-          label: Text(_isDownloading ? 'Baixando...' : l10n.formActionDownloadXlsx),
-          onPressed: _loadedReport == null || _isLoading || _isDownloading ? null : _downloadXlsx,
-        ),
-      ],
-    );
+  void _onFocus() {
+    if (!_focus.hasFocus) _commit();
   }
 
-  Widget _buildFormPreviewCard(ThemeData theme, ReportResponse report) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    report.metadata.title,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ),
-                Chip(
-                  backgroundColor: _isBlankMode ? Colors.purple.shade50 : Colors.blue.shade50,
-                  label: Text(
-                    _isBlankMode ? 'Modo Caneta (Linhas Vazias)' : 'Modo Auditoria (${report.metadata.totalRows} registros)',
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: _isBlankMode ? Colors.purple.shade900 : Colors.blue.shade900,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const Divider(height: 20),
-            const Text(
-              'Colunas do Formulário A4:',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-            ),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 6,
-              runSpacing: 6,
-              children: report.headers.map((h) {
-                return Chip(
-                  label: Text(h, style: const TextStyle(fontSize: 11)),
-                  backgroundColor: Colors.grey.shade100,
-                );
-              }).toList(),
-            ),
-            if (!_isBlankMode && report.rows.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              Text(
-                'Amostra dos Dados a Serem Impressos (Primeiras 5 linhas):',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.grey.shade700),
-              ),
-              const SizedBox(height: 8),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  headingRowHeight: 36,
-                  dataRowMinHeight: 32,
-                  dataRowMaxHeight: 36,
-                  headingRowColor: WidgetStateProperty.all(Colors.grey.shade100),
-                  columns: report.headers.map((h) => DataColumn(label: Text(h, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold)))).toList(),
-                  rows: report.rows.take(5).map((r) {
-                    return DataRow(
-                      cells: report.columns.map((c) {
-                        final val = r[c];
-                        final display = _formatPreviewCell(val, c);
-                        return DataCell(Text(display, style: const TextStyle(fontSize: 11)));
-                      }).toList(),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  String _formatPreviewCell(dynamic val, String col) {
-    if (val == null) return '';
-    final colLower = col.toLowerCase();
-    if (colLower.endsWith('_cents') || colLower.contains('valor') || colLower.contains('preco')) {
-      if (val is int) return AppFormatters.formatCurrency(val);
-      if (val is double) return AppFormatters.formatCurrency((val * 100).round());
+  @override
+  void didUpdateWidget(covariant _PrintNumberField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.value != widget.value) {
+      _controller.text = _format(widget.value);
     }
-    if (val is DateTime) return AppFormatters.formatDateTime(val);
-    if (val is String && (colLower.contains('date') || colLower.contains('data') || colLower.contains('at') || colLower.contains('vencimento'))) {
-      final parsed = DateTime.tryParse(val);
-      if (parsed != null) {
-        return val.contains('T') ? AppFormatters.formatDateTime(parsed) : AppFormatters.formatDate(parsed);
-      }
-    }
-    return val.toString();
   }
+
+  @override
+  void dispose() {
+    _focus.removeListener(_onFocus);
+    _focus.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => TextFormField(
+        controller: _controller,
+        focusNode: _focus,
+        decoration: InputDecoration(
+            labelText: widget.label,
+            helperText: '${_format(widget.min)} - ${_format(widget.max)}',
+            border: const OutlineInputBorder()),
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        validator: (_) => _valid ? null : context.l10n.formInvalidNumber,
+        onFieldSubmitted: (_) => _commit(),
+        onChanged: (_) {
+          if (_valid) _commit();
+        },
+        onTapOutside: (_) => _focus.unfocus(),
+      );
 }

@@ -1,9 +1,8 @@
+import '../utils/adaptive_ui_color.dart';
 import 'package:flutter/material.dart';
 import '../models/product.dart';
-import '../models/financial_account.dart';
 import '../services/product_service.dart';
 import '../services/purchase_service.dart';
-import '../services/treasury_service.dart';
 import '../l10n/l10n_extension.dart';
 import '../utils/formatters.dart';
 
@@ -27,7 +26,13 @@ class _PurchaseItemDraft {
 }
 
 class PurchaseFormView extends StatefulWidget {
-  const PurchaseFormView({super.key});
+  final ProductService? productService;
+  final PurchaseService? purchaseService;
+  const PurchaseFormView({
+    super.key,
+    this.productService,
+    this.purchaseService,
+  });
 
   @override
   State<PurchaseFormView> createState() => _PurchaseFormViewState();
@@ -35,9 +40,8 @@ class PurchaseFormView extends StatefulWidget {
 
 class _PurchaseFormViewState extends State<PurchaseFormView> {
   final _formKey = GlobalKey<FormState>();
-  final ProductService _productService = ProductService();
-  final PurchaseService _purchaseService = PurchaseService();
-  final TreasuryService _treasuryService = TreasuryService();
+  late final ProductService _productService;
+  late final PurchaseService _purchaseService;
   final _supplierController = TextEditingController();
   final _notesController = TextEditingController();
   final DateTime _purchaseDate = DateTime.now();
@@ -45,10 +49,9 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
 
   // Condicoes de Pagamento
   String _paymentMode = 'CASH_IMMEDIATE'; // CASH_IMMEDIATE, CREDIT_TERM
-  String _paymentMethod = 'DINHEIRO'; // DINHEIRO, PIX, BOLETO, CARTAO_CREDITO, TRANSFERENCIA, CHEQUE, OUTRO
+  String _paymentMethod =
+      'DINHEIRO'; // DINHEIRO, PIX, BOLETO, CARTAO_CREDITO, TRANSFERENCIA, CHEQUE, OUTRO
   DateTime _dueDate = DateTime.now().add(const Duration(days: 30));
-  String? _selectedAccountId;
-  List<FinancialAccount> _financialAccounts = [];
 
   List<Product> _products = [];
   final List<_PurchaseItemDraft> _items = [];
@@ -59,6 +62,8 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
   @override
   void initState() {
     super.initState();
+    _productService = widget.productService ?? ProductService();
+    _purchaseService = widget.purchaseService ?? PurchaseService();
     _loadInitialData();
   }
 
@@ -71,24 +76,9 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
 
   Future<void> _loadInitialData() async {
     try {
-      final results = await Future.wait([
-        _productService.getProducts(isActive: true),
-        _treasuryService.getAccounts(isActive: true),
-      ]);
-
-      final prods = results[0] as List<Product>;
-      final accs = results[1] as List<FinancialAccount>;
-
+      final prods = await _productService.getProducts(isActive: true);
       setState(() {
         _products = prods;
-        _financialAccounts = accs;
-        if (_financialAccounts.isNotEmpty) {
-          final defaultAcc = _financialAccounts.firstWhere(
-            (a) => a.isDefault,
-            orElse: () => _financialAccounts.first,
-          );
-          _selectedAccountId = defaultAcc.id;
-        }
         _isLoadingInitial = false;
         if (_items.isEmpty && _products.isNotEmpty) {
           _addItem();
@@ -108,10 +98,13 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
       if (_products.isNotEmpty) {
         draft.productId = _products.first.id;
         draft.product = _products.first;
-        if (draft.product!.packagings.isNotEmpty) {
-          draft.packaging = draft.product!.packagings.firstWhere(
-            (p) => p.isDefault,
-            orElse: () => draft.product!.packagings.first,
+        final activePackagings = draft.product!.packagings
+            .where((pkg) => pkg.isActive)
+            .toList();
+        if (activePackagings.isNotEmpty) {
+          draft.packaging = activePackagings.firstWhere(
+            (pkg) => pkg.isDefault,
+            orElse: () => activePackagings.first,
           );
           draft.packagingId = draft.packaging?.id;
         }
@@ -156,13 +149,18 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
     });
 
     final payload = {
-      'supplier_name': _supplierController.text.trim().isNotEmpty ? _supplierController.text.trim() : null,
+      'supplier_name': _supplierController.text.trim().isNotEmpty
+          ? _supplierController.text.trim()
+          : null,
       'purchase_date': _purchaseDate.toUtc().toIso8601String(),
       'payment_mode': _paymentMode,
       'payment_method': _paymentMethod,
-      'due_date': _paymentMode == 'CREDIT_TERM' ? _dueDate.toUtc().toIso8601String() : null,
-      'account_id': _paymentMode == 'CASH_IMMEDIATE' ? _selectedAccountId : null,
-      'notes': _notesController.text.trim().isNotEmpty ? _notesController.text.trim() : null,
+      'due_date': _paymentMode == 'CREDIT_TERM'
+          ? _dueDate.toUtc().toIso8601String()
+          : null,
+      'notes': _notesController.text.trim().isNotEmpty
+          ? _notesController.text.trim()
+          : null,
       'status': _status,
       'items': _items.map((it) {
         return {
@@ -177,9 +175,9 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
     try {
       await _purchaseService.createPurchase(payload);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.purchaseFormSuccess)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.purchaseFormSuccess)));
         Navigator.of(context).pop(true);
       }
     } catch (e) {
@@ -225,23 +223,37 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                   padding: const EdgeInsets.all(12),
                   margin: const EdgeInsets.only(bottom: 16),
                   decoration: BoxDecoration(
-                    color: Colors.red.shade50,
+                    color: adaptiveUiSurface(context, Colors.red.shade50),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.red.shade200),
+                    border: Border.all(
+                      color: adaptiveUiSurface(context, Colors.red.shade200),
+                    ),
                   ),
-                  child: Text(_errorMessage!, style: TextStyle(color: Colors.red.shade800)),
+                  child: Text(
+                    _errorMessage!,
+                    style: TextStyle(
+                      color: adaptiveUiText(context, Colors.red.shade800),
+                    ),
+                  ),
                 ),
 
               // Dados Gerais da Compra
               Card(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(l10n.purchaseSupplier,
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      Text(
+                        l10n.purchaseSupplier,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _supplierController,
@@ -262,8 +274,18 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                                 border: const OutlineInputBorder(),
                               ),
                               items: [
-                                DropdownMenuItem(value: 'CONFIRMED', child: Text(l10n.purchaseStatusConfirmedWithStock)),
-                                DropdownMenuItem(value: 'DRAFT', child: Text(l10n.purchaseStatusDraftWithoutStock)),
+                                DropdownMenuItem(
+                                  value: 'CONFIRMED',
+                                  child: Text(
+                                    l10n.purchaseStatusConfirmedWithStock,
+                                  ),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'DRAFT',
+                                  child: Text(
+                                    l10n.purchaseStatusDraftWithoutStock,
+                                  ),
+                                ),
                               ],
                               onChanged: (v) {
                                 if (v != null) setState(() => _status = v);
@@ -276,7 +298,8 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                       TextFormField(
                         controller: _notesController,
                         decoration: InputDecoration(
-                          labelText: '${l10n.purchaseFormInvoiceLabel} / ${l10n.purchaseFormNotesLabel}',
+                          labelText:
+                              '${l10n.purchaseFormInvoiceLabel} / ${l10n.purchaseFormNotesLabel}',
                           hintText: l10n.purchaseFormNotesHint,
                           border: const OutlineInputBorder(),
                         ),
@@ -289,7 +312,9 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
 
               // Condições de Pagamento
               Card(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
@@ -297,11 +322,20 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.payment, color: Colors.blue.shade700),
+                          Icon(
+                            Icons.payment,
+                            color: adaptiveUiText(
+                              context,
+                              Colors.blue.shade700,
+                            ),
+                          ),
                           const SizedBox(width: 8),
                           Text(
                             l10n.purchasePaymentConditionsHeader,
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
@@ -309,55 +343,91 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                       LayoutBuilder(
                         builder: (context, constraints) {
                           final isNarrow = constraints.maxWidth < 600;
-                          final statusDropdown = DropdownButtonFormField<String>(
-                            initialValue: _paymentMode,
-                            decoration: InputDecoration(
-                              labelText: '${l10n.purchasePaymentStatusLabel} *',
-                              border: const OutlineInputBorder(),
-                            ),
-                            items: [
-                              DropdownMenuItem(
-                                value: 'CASH_IMMEDIATE',
-                                child: Text(l10n.purchasePaymentStatusPaid),
-                              ),
-                              DropdownMenuItem(
-                                value: 'CREDIT_TERM',
-                                child: Text(l10n.purchasePaymentStatusPending),
-                              ),
-                            ],
-                            onChanged: (val) {
-                              if (val != null) {
-                                setState(() {
-                                  _paymentMode = val;
-                                  if (_paymentMode == 'CREDIT_TERM' && _paymentMethod == 'DINHEIRO') {
-                                    _paymentMethod = 'BOLETO';
-                                  } else if (_paymentMode == 'CASH_IMMEDIATE' && _paymentMethod == 'BOLETO') {
-                                    _paymentMethod = 'DINHEIRO';
+                          final statusDropdown =
+                              DropdownButtonFormField<String>(
+                                initialValue: _paymentMode,
+                                decoration: InputDecoration(
+                                  labelText:
+                                      '${l10n.purchasePaymentStatusLabel} *',
+                                  border: const OutlineInputBorder(),
+                                ),
+                                items: [
+                                  DropdownMenuItem(
+                                    value: 'CASH_IMMEDIATE',
+                                    child: Text(l10n.purchasePaymentStatusPaid),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'CREDIT_TERM',
+                                    child: Text(
+                                      l10n.purchasePaymentStatusPending,
+                                    ),
+                                  ),
+                                ],
+                                onChanged: (val) {
+                                  if (val != null) {
+                                    setState(() {
+                                      _paymentMode = val;
+                                      if (_paymentMode == 'CREDIT_TERM' &&
+                                          _paymentMethod == 'DINHEIRO') {
+                                        _paymentMethod = 'BOLETO';
+                                      } else if (_paymentMode ==
+                                              'CASH_IMMEDIATE' &&
+                                          _paymentMethod == 'BOLETO') {
+                                        _paymentMethod = 'DINHEIRO';
+                                      }
+                                    });
                                   }
-                                });
-                              }
-                            },
-                          );
+                                },
+                              );
 
-                          final methodDropdown = DropdownButtonFormField<String>(
-                            initialValue: _paymentMethod,
-                            decoration: InputDecoration(
-                              labelText: '${l10n.purchasePaymentMethodLabel} *',
-                              border: const OutlineInputBorder(),
-                            ),
-                            items: [
-                              DropdownMenuItem(value: 'DINHEIRO', child: Text(l10n.payablePaymentMethodCash)),
-                              DropdownMenuItem(value: 'PIX', child: Text(l10n.payablePaymentMethodPix)),
-                              DropdownMenuItem(value: 'BOLETO', child: Text(l10n.payablePaymentMethodBoleto)),
-                              DropdownMenuItem(value: 'CARTAO_CREDITO', child: Text(l10n.payablePaymentMethodCard)),
-                              DropdownMenuItem(value: 'TRANSFERENCIA', child: Text(l10n.payablePaymentMethodTransfer)),
-                              DropdownMenuItem(value: 'CHEQUE', child: Text(l10n.payablePaymentMethodCheck)),
-                              DropdownMenuItem(value: 'OUTRO', child: Text(l10n.payablePaymentMethodOther)),
-                            ],
-                            onChanged: (val) {
-                              if (val != null) setState(() => _paymentMethod = val);
-                            },
-                          );
+                          final methodDropdown =
+                              DropdownButtonFormField<String>(
+                                initialValue: _paymentMethod,
+                                decoration: InputDecoration(
+                                  labelText:
+                                      '${l10n.purchasePaymentMethodLabel} *',
+                                  border: const OutlineInputBorder(),
+                                ),
+                                items: [
+                                  DropdownMenuItem(
+                                    value: 'DINHEIRO',
+                                    child: Text(l10n.payablePaymentMethodCash),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'PIX',
+                                    child: Text(l10n.payablePaymentMethodPix),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'BOLETO',
+                                    child: Text(
+                                      l10n.payablePaymentMethodBoleto,
+                                    ),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'CARTAO_CREDITO',
+                                    child: Text(l10n.payablePaymentMethodCard),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'TRANSFERENCIA',
+                                    child: Text(
+                                      l10n.payablePaymentMethodTransfer,
+                                    ),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'CHEQUE',
+                                    child: Text(l10n.payablePaymentMethodCheck),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'OUTRO',
+                                    child: Text(l10n.payablePaymentMethodOther),
+                                  ),
+                                ],
+                                onChanged: (val) {
+                                  if (val != null) {
+                                    setState(() => _paymentMethod = val);
+                                  }
+                                },
+                              );
 
                           if (isNarrow) {
                             return Column(
@@ -383,43 +453,39 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                       // Valor Devido e Vencimento / Conta
                       if (_paymentMode == 'CREDIT_TERM') ...[
                         ListTile(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
                           shape: RoundedRectangleBorder(
                             side: BorderSide(color: Colors.grey.shade400),
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          leading: const Icon(Icons.calendar_today, color: Colors.orange),
+                          leading: const Icon(
+                            Icons.calendar_today,
+                            color: Colors.orange,
+                          ),
                           title: Text(
                             '${l10n.purchasePaymentDueDateLabel}: ${AppFormatters.formatDate(_dueDate)}',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
-                            l10n.purchasePaymentPendingNotice(AppFormatters.formatDate(_dueDate)),
-                            style: TextStyle(fontSize: 12, color: Colors.orange.shade900),
+                            l10n.purchasePaymentPendingNotice(
+                              AppFormatters.formatDate(_dueDate),
+                            ),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: adaptiveUiText(
+                                context,
+                                Colors.orange.shade900,
+                              ),
+                            ),
                           ),
                           trailing: OutlinedButton(
                             onPressed: _pickDueDate,
                             child: Text(l10n.commonSelect),
                           ),
                         ),
-                      ] else ...[
-                        if (_financialAccounts.isNotEmpty)
-                          DropdownButtonFormField<String>(
-                            initialValue: _selectedAccountId,
-                            decoration: InputDecoration(
-                              labelText: '${l10n.purchasePaymentFinancialAccountLabel} *',
-                              border: const OutlineInputBorder(),
-                            ),
-                            items: _financialAccounts.map((a) {
-                              return DropdownMenuItem(
-                                value: a.id,
-                                child: Text('${a.name} (${AppFormatters.formatCurrency(a.currentBalanceCents)})'),
-                              );
-                            }).toList(),
-                            onChanged: (val) {
-                              if (val != null) setState(() => _selectedAccountId = val);
-                            },
-                          ),
                       ],
                     ],
                   ),
@@ -427,11 +493,25 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
               ),
               const SizedBox(height: 24),
 
+              ExpansionTile(
+                title: Text(l10n.purchasePackagingHelpTitle),
+                leading: const Icon(Icons.help_outline),
+                childrenPadding: const EdgeInsets.all(12),
+                children: [Text(l10n.purchasePackagingHelpExplanation)],
+              ),
+              const SizedBox(height: 12),
+
               // Lista Dinamica de Itens
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(l10n.purchaseFormItemsHeader, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  Text(
+                    l10n.purchaseFormItemsHeader,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   ElevatedButton.icon(
                     icon: const Icon(Icons.add),
                     label: Text(l10n.purchaseFormAddItem),
@@ -447,11 +527,18 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                 itemCount: _items.length,
                 itemBuilder: (context, index) {
                   final item = _items[index];
-                  final availablePackagings = item.product?.packagings ?? [];
+                  final availablePackagings =
+                      item.product?.packagings
+                          .where((pkg) => pkg.isActive)
+                          .toList() ??
+                      <ProductPackaging>[];
 
                   return Card(
+                    key: ObjectKey(item),
                     margin: const EdgeInsets.only(bottom: 16),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
@@ -461,16 +548,36 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                             children: [
                               CircleAvatar(
                                 radius: 14,
-                                backgroundColor: Colors.blue.shade100,
-                                child: Text('${index + 1}',
-                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.blue.shade800)),
+                                backgroundColor: adaptiveUiSurface(
+                                  context,
+                                  Colors.blue.shade100,
+                                ),
+                                child: Text(
+                                  '${index + 1}',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: adaptiveUiText(
+                                      context,
+                                      Colors.blue.shade800,
+                                    ),
+                                  ),
+                                ),
                               ),
                               const SizedBox(width: 8),
-                              Text(l10n.purchaseItemIndex(index + 1), style: const TextStyle(fontWeight: FontWeight.bold)),
+                              Text(
+                                l10n.purchaseItemIndex(index + 1),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
                               const Spacer(),
                               if (_items.length > 1)
                                 IconButton(
-                                  icon: const Icon(Icons.delete_outline, color: Colors.red),
+                                  icon: const Icon(
+                                    Icons.delete_outline,
+                                    color: Colors.red,
+                                  ),
                                   tooltip: l10n.commonDelete,
                                   onPressed: () => _removeItem(index),
                                 ),
@@ -494,11 +601,18 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                             onChanged: (val) {
                               setState(() {
                                 item.productId = val;
-                                item.product = _products.firstWhere((p) => p.id == val);
-                                if (item.product!.packagings.isNotEmpty) {
-                                  item.packaging = item.product!.packagings.firstWhere(
+                                item.product = _products.firstWhere(
+                                  (p) => p.id == val,
+                                );
+                                final activePackagings = item
+                                    .product!
+                                    .packagings
+                                    .where((pkg) => pkg.isActive)
+                                    .toList();
+                                if (activePackagings.isNotEmpty) {
+                                  item.packaging = activePackagings.firstWhere(
                                     (pkg) => pkg.isDefault,
-                                    orElse: () => item.product!.packagings.first,
+                                    orElse: () => activePackagings.first,
                                   );
                                   item.packagingId = item.packaging?.id;
                                 } else {
@@ -512,6 +626,9 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
 
                           // Selecao de Embalagem Comercial ou Unidade Base
                           DropdownButtonFormField<String?>(
+                            key: ValueKey(
+                              'purchase-packaging-$index-${item.productId}-${item.packagingId}',
+                            ),
                             initialValue: item.packagingId,
                             decoration: InputDecoration(
                               labelText: l10n.purchaseFormPackagingLabel,
@@ -520,12 +637,18 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                             items: [
                               DropdownMenuItem<String?>(
                                 value: null,
-                                child: Text(l10n.purchaseFormBaseUnitPackaging(item.product?.baseUnit ?? 'UN')),
+                                child: Text(
+                                  l10n.purchaseFormBaseUnitPackaging(
+                                    item.product?.baseUnit ?? 'UN',
+                                  ),
+                                ),
                               ),
                               ...availablePackagings.map((pkg) {
                                 return DropdownMenuItem<String?>(
                                   value: pkg.id,
-                                  child: Text('${pkg.name} (${pkg.quantityInBaseUnits} ${item.product?.baseUnit})'),
+                                  child: Text(
+                                    '${pkg.name} (${pkg.quantityInBaseUnits} ${item.product?.baseUnit})',
+                                  ),
                                 );
                               }),
                             ],
@@ -533,7 +656,8 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                               setState(() {
                                 item.packagingId = val;
                                 if (val != null) {
-                                  item.packaging = availablePackagings.firstWhere((p) => p.id == val);
+                                  item.packaging = availablePackagings
+                                      .firstWhere((p) => p.id == val);
                                 } else {
                                   item.packaging = null;
                                 }
@@ -541,6 +665,25 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                             },
                           ),
                           const SizedBox(height: 12),
+
+                          if (item.packaging != null) ...[
+                            Text(
+                              l10n.purchasePackagingContents(
+                                item.packaging!.name,
+                                AppFormatters.formatQuantity(
+                                  item.packaging!.quantityInBaseUnits,
+                                  item.product!.baseUnit,
+                                ),
+                              ),
+                              style: TextStyle(
+                                color: adaptiveUiText(
+                                  context,
+                                  Colors.blue.shade900,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                          ],
 
                           // Quantidade e Preco Unitario
                           Row(
@@ -550,19 +693,36 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                                   initialValue: '${item.packagesCount}',
                                   decoration: InputDecoration(
                                     labelText: item.packaging != null
-                                        ? l10n.purchaseFormQtyLabel
-                                        : '${l10n.purchaseFormQtyLabel} (${item.product?.baseUnit ?? "UN"})',
+                                        ? l10n.purchaseQuantityPackages
+                                        : l10n.purchaseQuantityBaseUnits(
+                                            item.product?.baseUnit ?? 'UN',
+                                          ),
+                                    helperText: item.packaging != null
+                                        ? l10n.purchasePackageCountHelp
+                                        : l10n.purchaseBaseCountHelp,
+                                    helperMaxLines: 3,
                                     border: const OutlineInputBorder(),
                                   ),
-                                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
                                   onChanged: (val) {
                                     setState(() {
-                                      item.packagesCount = double.tryParse(val) ?? 0.0;
+                                      item.packagesCount =
+                                          double.tryParse(
+                                            val.replaceAll(',', '.'),
+                                          ) ??
+                                          0.0;
                                     });
                                   },
                                   validator: (v) {
-                                    final n = double.tryParse(v ?? '');
-                                    if (n == null || n <= 0) return l10n.purchaseFormQtyRequired;
+                                    final n = double.tryParse(
+                                      (v ?? '').replaceAll(',', '.'),
+                                    );
+                                    if (n == null || n <= 0) {
+                                      return l10n.purchaseFormQtyRequired;
+                                    }
                                     return null;
                                   },
                                 ),
@@ -570,20 +730,41 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                               const SizedBox(width: 12),
                               Expanded(
                                 child: TextFormField(
-                                  initialValue: item.unitPriceReais > 0 ? '${item.unitPriceReais}' : '',
+                                  initialValue: item.unitPriceReais > 0
+                                      ? '${item.unitPriceReais}'
+                                      : '',
                                   decoration: InputDecoration(
-                                    labelText: l10n.purchaseFormUnitCostLabel,
+                                    labelText: item.packaging != null
+                                        ? l10n.purchasePricePerPackage
+                                        : l10n.purchasePricePerBaseUnit(
+                                            item.product?.baseUnit ?? 'UN',
+                                          ),
+                                    helperText: item.packaging != null
+                                        ? l10n.purchasePackagePriceHelp
+                                        : l10n.purchaseBasePriceHelp,
+                                    helperMaxLines: 3,
                                     border: const OutlineInputBorder(),
                                   ),
-                                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                  keyboardType:
+                                      const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
                                   onChanged: (val) {
                                     setState(() {
-                                      item.unitPriceReais = double.tryParse(val.replaceAll(',', '.')) ?? 0.0;
+                                      item.unitPriceReais =
+                                          double.tryParse(
+                                            val.replaceAll(',', '.'),
+                                          ) ??
+                                          0.0;
                                     });
                                   },
                                   validator: (v) {
-                                    final n = double.tryParse(v?.replaceAll(',', '.') ?? '');
-                                    if (n == null || n < 0) return l10n.purchaseFormUnitCostRequired;
+                                    final n = double.tryParse(
+                                      v?.replaceAll(',', '.') ?? '',
+                                    );
+                                    if (n == null || n < 0) {
+                                      return l10n.purchaseFormUnitCostRequired;
+                                    }
                                     return null;
                                   },
                                 ),
@@ -596,24 +777,41 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                           Container(
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Colors.blue.shade50,
+                              color: adaptiveUiSurface(
+                                context,
+                                Colors.blue.shade50,
+                              ),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            child: Wrap(
+                              spacing: 16,
+                              runSpacing: 8,
                               children: [
                                 Text(
-                                  l10n.purchaseFormConvertedStock(item.quantityInBaseUnits, item.product?.baseUnit ?? 'UN'),
+                                  l10n.purchaseFormConvertedStock(
+                                    item.quantityInBaseUnits,
+                                    item.product?.baseUnit ?? 'UN',
+                                  ),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.blue.shade900,
+                                    color: adaptiveUiText(
+                                      context,
+                                      Colors.blue.shade900,
+                                    ),
                                   ),
                                 ),
                                 Text(
-                                  l10n.purchaseFormTotalItem(AppFormatters.formatCurrency((item.totalPriceReais * 100).round())),
+                                  l10n.purchaseFormTotalItem(
+                                    AppFormatters.formatCurrency(
+                                      (item.totalPriceReais * 100).round(),
+                                    ),
+                                  ),
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.green.shade900,
+                                    color: adaptiveUiText(
+                                      context,
+                                      Colors.green.shade900,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -629,7 +827,7 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
 
               // Banner Total
               Card(
-                color: Colors.green.shade50,
+                color: adaptiveUiSurface(context, Colors.green.shade50),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                   side: BorderSide(color: Colors.green.shade300),
@@ -639,14 +837,21 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('${l10n.purchaseTotalCost}:',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                       Text(
-                        AppFormatters.formatCurrency((_totalPurchaseReais * 100).round()),
+                        '${l10n.purchaseTotalCost}:',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        AppFormatters.formatCurrency(
+                          (_totalPurchaseReais * 100).round(),
+                        ),
                         style: TextStyle(
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
-                          color: Colors.green.shade900,
+                          color: adaptiveUiText(context, Colors.green.shade900),
                         ),
                       ),
                     ],
@@ -665,9 +870,18 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                     ? const SizedBox(
                         width: 24,
                         height: 24,
-                        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
                       )
-                    : Text(l10n.purchaseFormSaveButton, style: const TextStyle(color: Colors.white, fontSize: 16)),
+                    : Text(
+                        l10n.purchaseFormSaveButton,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
               ),
             ],
           ),

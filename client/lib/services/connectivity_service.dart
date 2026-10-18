@@ -1,3 +1,4 @@
+import 'dart:io';
 import '../core/api_client.dart';
 import '../core/constants.dart';
 import '../core/secure_storage.dart';
@@ -6,10 +7,13 @@ import '../models/connection_status.dart';
 class ConnectivityService {
   final ApiClient _apiClient;
   final SecureStorageService _storage;
+  final bool _isWindows;
 
-  ConnectivityService({ApiClient? apiClient, SecureStorageService? storage})
-      : _apiClient = apiClient ?? ApiClient(),
-        _storage = storage ?? SecureStorageService();
+  ConnectivityService(
+      {ApiClient? apiClient, SecureStorageService? storage, bool? isWindows})
+      : _apiClient = apiClient ?? ApiClient(storage: storage),
+        _storage = storage ?? SecureStorageService(),
+        _isWindows = isWindows ?? Platform.isWindows;
 
   Future<ServerStatus> checkConnection() async {
     try {
@@ -30,16 +34,31 @@ class ConnectivityService {
     }
   }
 
-  Future<bool> isPaired() async {
-    var token = await _storage.getDeviceToken();
+  Future<bool> isPaired({bool allowLocalPairing = false}) async {
+    final token = await _storage.getDeviceToken();
     if (token != null && token.isNotEmpty) {
-      return true;
+      try {
+        await _apiClient.get(ApiConstants.devicesListPath);
+        return true;
+      } on ApiException catch (e) {
+        if (e.statusCode != 401 && e.statusCode != 403) return false;
+      } catch (_) {
+        return false;
+      }
     }
 
     // No Windows rodando com localhost, auto-autentica como terminal master do caixa
     try {
-      final serverUrl = await _storage.getServerUrl() ?? 'https://127.0.0.1:8000';
-      if (serverUrl.contains('127.0.0.1') || serverUrl.contains('localhost')) {
+      final serverUrl =
+          await _storage.getServerUrl() ?? 'https://127.0.0.1:8000';
+      final uri = Uri.tryParse(serverUrl);
+      final host = uri?.host.toLowerCase() ?? '';
+      final isLocal = host == 'localhost' ||
+          (InternetAddress.tryParse(host)?.isLoopback ?? false);
+      if (allowLocalPairing &&
+          _isWindows &&
+          isLocal &&
+          uri?.scheme == 'https') {
         final res = await _apiClient.post(
           ApiConstants.pairingLocalMasterPath,
           body: {},
@@ -49,9 +68,12 @@ class ConnectivityService {
           final newToken = res['device_token'] as String;
           await _storage.saveDeviceToken(newToken);
           await _storage.saveDeviceIdentity(
-            devicePublicId: res['device_public_id'] as String? ?? 'windows-local-master',
-            deviceName: res['device_name'] as String? ?? 'Terminal Caixa Windows (Local)',
+            devicePublicId:
+                res['device_public_id'] as String? ?? 'windows-local-master',
+            deviceName: res['device_name'] as String? ??
+                'Terminal Caixa Windows (Local)',
           );
+          await _apiClient.get(ApiConstants.devicesListPath);
           return true;
         }
       }

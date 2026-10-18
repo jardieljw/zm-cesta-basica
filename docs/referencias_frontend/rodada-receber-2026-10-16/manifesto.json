@@ -1,0 +1,115 @@
+{
+  "consolidado_em": "2026-10-16",
+  "rodada": "Receber e movimento",
+  "situacao": "Verificacao final concluida; previa em avaliacao",
+  "arquivos": [
+    {
+      "arquivo": "receber-e-movimento-zm.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-e-movimento-zm.html",
+      "sha256": "85e32e4a717c031f258bfea252895bcc3aca6c6d61ffa263d3d243d5f94cfee9",
+      "bytes": 78903
+    },
+    {
+      "arquivo": "receber-e-movimento-zm-preview.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-e-movimento-zm-preview.html",
+      "sha256": "ee7480416a9a93a0c68175df334a728ea5388a7a2cf6ebc3d413968f5b2ae451",
+      "bytes": 175478
+    },
+    {
+      "arquivo": "check-receber-movimento.cjs",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\check-receber-movimento.cjs",
+      "sha256": "e7d25cd82a09a6bba21c151e30e36c38face62e1790f2b9e11c30d5c24729e1d",
+      "bytes": 13859
+    },
+    {
+      "arquivo": "receber-movimento-verificacao.json",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-movimento-verificacao.json",
+      "sha256": "aef6a5bc87be4574b3f9ee654ea2afc4e0ab5f8f897b703451ad9a56b186cede",
+      "bytes": 7383
+    },
+    {
+      "arquivo": "receber-edge-conclusao.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-edge-conclusao.png",
+      "sha256": "7f96494b8c350956c7102f4385ecc8c45284d37a7bc357728bc3066e9c1f69b1",
+      "bytes": 35804
+    },
+    {
+      "arquivo": "receber-edge-detalhe.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-edge-detalhe.png",
+      "sha256": "02361fd395535303725e9ddb1603eecb8c9b5815cb23660f8c6cc01d95a5bbab",
+      "bytes": 74897
+    },
+    {
+      "arquivo": "receber-edge-falha.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-edge-falha.png",
+      "sha256": "5b581b57c223a8d14445c36b31ac1a6aaee1230236016f822f7852350246f08a",
+      "bytes": 48598
+    },
+    {
+      "arquivo": "receber-edge-integral.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-edge-integral.png",
+      "sha256": "68ba682a43102ef73f88d20b15efef2c620812bef5fa50c560c2afac846788d4",
+      "bytes": 53405
+    },
+    {
+      "arquivo": "receber-edge-lista.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-edge-lista.png",
+      "sha256": "c57f68d22c63dd1ba1f0ab2c160bdaae5bed863cb910fc6f891e1d2bbe4145ff",
+      "bytes": 42750
+    },
+    {
+      "arquivo": "receber-edge-parcial.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-edge-parcial.png",
+      "sha256": "fd1ad6bb7210ff8b64d483a5d795ee9565443695cfc273042c6845b2a8864a86",
+      "bytes": 61713
+    },
+    {
+      "arquivo": "receber-edge-windows.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-edge-windows.png",
+      "sha256": "bf340647271ab95223558b4dd4ac5f6c67d379672018a41ff595759e24d59627",
+      "bytes": 43120
+    },
+    {
+      "arquivo": "receber-webkit-conclusao.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-webkit-conclusao.png",
+      "sha256": "6b224f70a510a6fcc08a6f25d831c51989a869104aaf61ed05a169e3625d1105",
+      "bytes": 32255
+    },
+    {
+      "arquivo": "receber-webkit-detalhe.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-webkit-detalhe.png",
+      "sha256": "ad44d3656dbbebb4dbe41d1deeb60c8f077743f87e944458ff778ebcdba9cac7",
+      "bytes": 53680
+    },
+    {
+      "arquivo": "receber-webkit-falha.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-webkit-falha.png",
+      "sha256": "b8435c0f5baf67a72d3397b3b481bfd3e4abf5a67f3f38f0347d511fee6da628",
+      "bytes": 42680
+    },
+    {
+      "arquivo": "receber-webkit-integral.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-webkit-integral.png",
+      "sha256": "119cc1ac1cb37ab4a38d9bff3d5ef43c88f426969acc48c23404fd711509c101",
+      "bytes": 48389
+    },
+    {
+      "arquivo": "receber-webkit-lista.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-webkit-lista.png",
+      "sha256": "fde9a15b2ebd120e85940112336b05a75a7321e11a6cf33b6363eeba3e20a026",
+      "bytes": 36881
+    },
+    {
+      "arquivo": "receber-webkit-parcial.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-webkit-parcial.png",
+      "sha256": "90f9a6bdc97b3ad46196071eb8b76b59dde18aaed61d31fc428db7ec55f4eb76",
+      "bytes": 54138
+    },
+    {
+      "arquivo": "receber-webkit-windows.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\receber-webkit-windows.png",
+      "sha256": "ca1451d00fcca6ce8132f9e7887ca9e244fb6098e13b3e133cadecb386df9e2f",
+      "bytes": 37777
+    }
+  ]
+}

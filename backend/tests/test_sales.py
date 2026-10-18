@@ -166,6 +166,7 @@ def test_simultaneous_assembly_on_demand(client: TestClient, authenticated_devic
 def test_custom_basket_assembly_on_demand(client: TestClient, authenticated_device):
     _, _, headers = authenticated_device
     p1, p2, basket = _setup_inventory_and_basket(client, headers)
+    client.put(f"/api/v1/basket-types/{basket['id']}", json={"allows_customization": True}, headers=headers)
 
     # Sell 2 custom baskets on demand with extra feijao (3,000g each) and less arroz (2,000g each)
     custom_items = [
@@ -409,11 +410,168 @@ def test_sale_cancellation_of_assemble_on_demand_restores_finished_stock(client:
 
     # The baskets that were physically produced now remain in stock ready to be sold (+3)
     assert client.get(f"/api/v1/inventory/baskets/{basket['id']}/stock", headers=headers).json()["current_stock"] == 3
+    assert client.get(f"/api/v1/inventory/products/{p1['id']}/stock", headers=headers).json()["current_stock"] == 85000
+
+
+@pytest.mark.parametrize("custom", [False, True])
+def test_cancel_unassembled_sale_restores_original_products(client, authenticated_device, custom):
+    _, _, headers = authenticated_device
+    p1, p2, basket = _setup_inventory_and_basket(client, headers)
+    item = {"basket_type_id": basket["id"], "quantity": 3,
+            "unit_price_cents": 12000, "assemble_on_demand": True}
+    if custom:
+        client.put(f"/api/v1/basket-types/{basket['id']}", json={"allows_customization": True}, headers=headers)
+        item.update(is_custom=True, custom_description="Composicao especial", custom_items=[
+            {"product_id": p1["id"], "quantity_in_base_units": 1000}])
+    response = client.post("/api/v1/sales", json={"items": [item]}, headers=headers)
+    assert response.status_code == 201, response.text
+    sale = response.json()
+    assert sale["items"][0]["assembled_on_demand"] is True
+    # A subsequent recipe change must not affect the returned composition.
+    client.post(f"/api/v1/basket-types/{basket['id']}/recipes", json={"items": [
+        {"product_id": p2["id"], "quantity_in_base_units": 9000, "section": "ALIMENTACAO"}]}, headers=headers)
+    payload = {"reason": "Venda registrada por engano, montagem nao aconteceu",
+               "unassembled_item_ids": [sale["items"][0]["id"]]}
+    if custom:
+        payload["reason"] += " detalhe" * 80
+    import uuid
+    retry_headers = {**headers, "X-Idempotency-Key": str(uuid.uuid4())}
+    for _ in range(2):
+        cancel = client.post(f"/api/v1/sales/{sale['id']}/cancel", json=payload, headers=retry_headers)
+        assert cancel.status_code == 200, cancel.text
+    assert client.get(f"/api/v1/inventory/baskets/{basket['id']}/stock", headers=headers).json()["current_stock"] == 0
+    for product, stock in [(p1, 100000), (p2, 50000)]:
+        assert client.get(f"/api/v1/inventory/products/{product['id']}/stock", headers=headers).json()["current_stock"] == stock
+    batch = client.get(f"/api/v1/production/batches/{sale['items'][0]['production_batch_id']}", headers=headers).json()
+    assert batch["status"] == "DISASSEMBLED"
+
+
+def test_cancel_finished_stock_cannot_return_ingredients(client, authenticated_device):
+    _, _, headers = authenticated_device
+    p1, p2, basket = _setup_inventory_and_basket(client, headers)
+    client.post("/api/v1/production/batches", json={"basket_type_id": basket["id"], "quantity_produced": 2}, headers=headers)
+    sale = client.post("/api/v1/sales", json={"items": [{"basket_type_id": basket["id"], "quantity": 1, "unit_price_cents": 12000}]}, headers=headers).json()
+    assert sale["items"][0]["assembled_on_demand"] is False
+    cancel = client.post(f"/api/v1/sales/{sale['id']}/cancel", json={
+        "reason": "Tentativa indevida", "unassembled_item_ids": [sale["items"][0]["id"]]}, headers=headers)
+    assert cancel.status_code == 422
+    assert client.get(f"/api/v1/inventory/baskets/{basket['id']}/stock", headers=headers).json()["current_stock"] == 1
+    assert client.get(f"/api/v1/inventory/products/{p1['id']}/stock", headers=headers).json()["current_stock"] == 90000
+
+
+def test_cancel_mixed_sale_and_invalid_item_is_atomic(client, authenticated_device):
+    _, _, headers = authenticated_device
+    p1, p2, basket = _setup_inventory_and_basket(client, headers)
+    items = [{"basket_type_id": basket["id"], "quantity": 1,
+              "unit_price_cents": 12000, "assemble_on_demand": True} for _ in range(2)]
+    sale = client.post("/api/v1/sales", json={"items": items}, headers=headers).json()
+    bad = client.post(f"/api/v1/sales/{sale['id']}/cancel", json={
+        "reason": "Registro incorreto", "unassembled_item_ids": ["outro-item"]}, headers=headers)
+    assert bad.status_code == 422
+    assert client.get(f"/api/v1/sales/{sale['id']}", headers=headers).json()["status"] == "CONFIRMED"
+    cancel = client.post(f"/api/v1/sales/{sale['id']}/cancel", json={
+        "reason": "Uma cesta montada, outra nao", "unassembled_item_ids": [sale["items"][0]["id"]]}, headers=headers)
+    assert cancel.status_code == 200, cancel.text
+    assert client.get(f"/api/v1/inventory/baskets/{basket['id']}/stock", headers=headers).json()["current_stock"] == 1
+    assert client.get(f"/api/v1/inventory/products/{p1['id']}/stock", headers=headers).json()["current_stock"] == 95000
+
+
+def test_basket_without_ready_stock_requires_on_demand_assembly(client, authenticated_device):
+    _, _, headers = authenticated_device
+    p1, p2, basket = _setup_inventory_and_basket(client, headers)
+    update = client.put(f"/api/v1/basket-types/{basket['id']}", json={"tracks_finished_stock": False}, headers=headers)
+    assert update.status_code == 200
+    item = {"basket_type_id": basket["id"], "quantity": 2, "unit_price_cents": 12000}
+    response = client.post("/api/v1/sales", json={"items": [item]}, headers=headers)
+    assert response.status_code == 409
+    assert response.json()["detail"]["error_code"] == "BASKET_STOCK_DISABLED"
+    standalone = client.post("/api/v1/production/batches", json={"basket_type_id": basket["id"], "quantity_produced": 2}, headers=headers)
+    assert standalone.status_code == 409
+    response = client.post("/api/v1/sales", json={"items": [{**item, "assemble_on_demand": True}]}, headers=headers)
+    assert response.status_code == 201, response.text
+    assert client.get(f"/api/v1/inventory/baskets/{basket['id']}/stock", headers=headers).json()["current_stock"] == 0
+    assert client.get(f"/api/v1/inventory/products/{p1['id']}/stock", headers=headers).json()["current_stock"] == 90000
+
+
+def test_cannot_disable_ready_stock_with_existing_baskets(client, authenticated_device):
+    _, _, headers = authenticated_device
+    _, _, basket = _setup_inventory_and_basket(client, headers)
+    client.post("/api/v1/production/batches", json={"basket_type_id": basket["id"], "quantity_produced": 2}, headers=headers)
+    response = client.put(f"/api/v1/basket-types/{basket['id']}", json={"tracks_finished_stock": False}, headers=headers)
+    assert response.status_code == 409
+    assert response.json()["detail"]["error_code"] == "BASKET_STOCK_REMAINS"
+    assert client.get(f"/api/v1/basket-types/{basket['id']}", headers=headers).json()["tracks_finished_stock"] is True
+
+
+def test_standard_assembly_history_includes_advance_and_sale_with_utc_time(client, authenticated_device):
+    _, _, headers = authenticated_device
+    p1, _, basket = _setup_inventory_and_basket(client, headers)
+    preview = client.post('/api/v1/production/preview', json={
+        'basket_type_id': basket['id'], 'quantity_produced': 5}, headers=headers).json()
+    payload = {'basket_type_id': basket['id'], 'quantity_produced': 5,
+               'occurred_at': '2026-10-14T09:30:00-03:00',
+               'expected_recipe_version_number': preview['recipe_version_number']}
+    import uuid
+    retry_headers = {**headers, 'X-Idempotency-Key': str(uuid.uuid4())}
+    for _ in range(2):
+        batch = client.post('/api/v1/production/batches', json=payload, headers=retry_headers)
+        assert batch.status_code == 201, batch.text
+    when = datetime.datetime.fromisoformat(batch.json()['occurred_at'].replace('Z', '+00:00'))
+    assert when == datetime.datetime(2026, 10, 14, 12, 30, tzinfo=datetime.timezone.utc)
+    sale = client.post('/api/v1/sales', json={'items': [{
+        'basket_type_id': basket['id'], 'quantity': 2, 'unit_price_cents': 12000,
+        'assemble_on_demand': True}]}, headers=headers)
+    assert sale.status_code == 201
+    history = client.get(f"/api/v1/production/batches?basket_type_id={basket['id']}", headers=headers).json()
+    assert history['total'] == 2
+    assert sorted((b['quantity_produced'], b['is_direct_sale']) for b in history['items']) == [(2, True), (5, False)]
+    assert client.get(f"/api/v1/inventory/baskets/{basket['id']}/stock", headers=headers).json()['current_stock'] == 5
+    assert client.get(f"/api/v1/inventory/products/{p1['id']}/stock", headers=headers).json()['current_stock'] == 65000
+
+
+def test_assembly_rejects_recipe_changed_since_preview(client, authenticated_device):
+    _, _, headers = authenticated_device
+    p1, _, basket = _setup_inventory_and_basket(client, headers)
+    preview = client.post('/api/v1/production/preview', json={
+        'basket_type_id': basket['id'], 'quantity_produced': 1}, headers=headers).json()
+    client.post(f"/api/v1/basket-types/{basket['id']}/recipes", json={'items': [
+        {'product_id': p1['id'], 'quantity_in_base_units': 1000, 'section': 'ALIMENTACAO'}]}, headers=headers)
+    result = client.post('/api/v1/production/batches', json={
+        'basket_type_id': basket['id'], 'quantity_produced': 1,
+        'expected_recipe_version_number': preview['recipe_version_number']}, headers=headers)
+    assert result.status_code == 409
+    assert result.json()['detail']['error_code'] == 'RECIPE_CHANGED'
+    assert client.get(f"/api/v1/production/batches?basket_type_id={basket['id']}", headers=headers).json()['total'] == 0
+    assert client.get(f"/api/v1/inventory/products/{p1['id']}/stock", headers=headers).json()['current_stock'] == 100000
+
+
+def test_production_legacy_request_keeps_its_idempotency_hash(client, authenticated_device, test_session):
+    from sqlalchemy import select
+    from app.core.idempotency import compute_payload_hash
+    from app.models.idempotency import IdempotencyRecord
+    from app.schemas.production import ProductionBatchCreate
+    import uuid
+    _, _, headers = authenticated_device
+    _, _, basket = _setup_inventory_and_basket(client, headers)
+    payload = {'basket_type_id': basket['id'], 'quantity_produced': 1}
+    key = str(uuid.uuid4())
+    retry_headers = {**headers, 'X-Idempotency-Key': key}
+    result = client.post('/api/v1/production/batches', json=payload, headers=retry_headers)
+    assert result.status_code == 201, result.text
+    legacy = ProductionBatchCreate(**payload).model_dump(mode='json')
+    legacy.pop('expected_recipe_version_number')
+    record = test_session.scalar(select(IdempotencyRecord).where(IdempotencyRecord.idempotency_key == key))
+    assert record.request_payload_hash == compute_payload_hash(legacy)
+    test_session.rollback()  # Release BEGIN IMMEDIATE before the HTTP replay.
+    replay = client.post('/api/v1/production/batches', json=payload, headers=retry_headers)
+    assert replay.status_code == 201
+    assert replay.json()['id'] == result.json()['id']
 
 
 def test_custom_batch_sale_rejects_non_confirmed_batch(client: TestClient, authenticated_device):
     _, _, headers = authenticated_device
     p1, p2, basket = _setup_inventory_and_basket(client, headers)
+    client.put(f"/api/v1/basket-types/{basket['id']}", json={"allows_customization": True}, headers=headers)
 
     # 1. Produce a custom batch of 2 baskets
     custom_batch = client.post(

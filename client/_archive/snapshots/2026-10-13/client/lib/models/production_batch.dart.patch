@@ -1,0 +1,213 @@
+--- a/client/lib/models/production_batch.dart
++++ b/client/lib/models/production_batch.dart
+@@ -1,210 +0,0 @@
+-class ProductionBatchItem {
+-  final String id;
+-  final String productId;
+-  final String productName;
+-  final String productBaseUnit;
+-  final String section;
+-  final int quantityConsumedBaseUnits;
+-  final int unitCostMicrocents;
+-  final int totalCostCents;
+-
+-  const ProductionBatchItem({
+-    required this.id,
+-    required this.productId,
+-    required this.productName,
+-    required this.productBaseUnit,
+-    required this.section,
+-    required this.quantityConsumedBaseUnits,
+-    required this.unitCostMicrocents,
+-    required this.totalCostCents,
+-  });
+-
+-  factory ProductionBatchItem.fromJson(Map<String, dynamic> json) {
+-    return ProductionBatchItem(
+-      id: json['id'] as String? ?? '',
+-      productId: json['product_id'] as String? ?? '',
+-      productName: json['product_name'] as String? ?? '',
+-      productBaseUnit: json['product_base_unit'] as String? ?? '',
+-      section: json['section'] as String? ?? '',
+-      quantityConsumedBaseUnits: json['quantity_consumed_base_units'] as int? ?? 0,
+-      unitCostMicrocents: json['unit_cost_microcents'] as int? ?? 0,
+-      totalCostCents: json['total_cost_cents'] as int? ?? 0,
+-    );
+-  }
+-
+-  Map<String, dynamic> toJson() {
+-    return {
+-      'id': id,
+-      'product_id': productId,
+-      'product_name': productName,
+-      'product_base_unit': productBaseUnit,
+-      'section': section,
+-      'quantity_consumed_base_units': quantityConsumedBaseUnits,
+-      'unit_cost_microcents': unitCostMicrocents,
+-      'total_cost_cents': totalCostCents,
+-    };
+-  }
+-}
+-
+-class ProductionBatch {
+-  final String id;
+-  final int batchNumber;
+-  final String basketTypeId;
+-  final String basketTypeName;
+-  final String? recipeVersionId;
+-  final int? recipeVersionNumber;
+-  final int quantityProduced;
+-  final int quantityDisassembled;
+-  final int currentBatchStock;
+-  final String status;
+-  final bool isCustom;
+-  final bool isDirectSale;
+-  final String? customDescription;
+-  final DateTime occurredAt;
+-  final int unitCostCents;
+-  final int totalCostCents;
+-  final DateTime? canceledAt;
+-  final String? cancellationReason;
+-  final String? notes;
+-  final List<ProductionBatchItem> items;
+-
+-  const ProductionBatch({
+-    required this.id,
+-    required this.batchNumber,
+-    required this.basketTypeId,
+-    required this.basketTypeName,
+-    this.recipeVersionId,
+-    this.recipeVersionNumber,
+-    required this.quantityProduced,
+-    this.quantityDisassembled = 0,
+-    required this.currentBatchStock,
+-    required this.status,
+-    required this.isCustom,
+-    required this.isDirectSale,
+-    this.customDescription,
+-    required this.occurredAt,
+-    required this.unitCostCents,
+-    required this.totalCostCents,
+-    this.canceledAt,
+-    this.cancellationReason,
+-    this.notes,
+-    required this.items,
+-  });
+-
+-  factory ProductionBatch.fromJson(Map<String, dynamic> json) {
+-    return ProductionBatch(
+-      id: json['id'] as String? ?? '',
+-      batchNumber: json['batch_number'] as int? ?? 0,
+-      basketTypeId: json['basket_type_id'] as String? ?? '',
+-      basketTypeName: json['basket_type_name'] as String? ?? '',
+-      recipeVersionId: json['recipe_version_id'] as String?,
+-      recipeVersionNumber: json['recipe_version_number'] as int?,
+-      quantityProduced: json['quantity_produced'] as int? ?? 0,
+-      quantityDisassembled: json['quantity_disassembled'] as int? ?? 0,
+-      currentBatchStock: json['current_batch_stock'] as int? ?? 0,
+-      status: json['status'] as String? ?? 'CONFIRMED',
+-      isCustom: json['is_custom'] as bool? ?? false,
+-      isDirectSale: json['is_direct_sale'] as bool? ?? false,
+-      customDescription: json['custom_description'] as String?,
+-      occurredAt: json['occurred_at'] != null
+-          ? DateTime.parse(json['occurred_at'] as String)
+-          : DateTime.now(),
+-      unitCostCents: json['unit_cost_cents'] as int? ?? 0,
+-      totalCostCents: json['total_cost_cents'] as int? ?? 0,
+-      canceledAt: json['canceled_at'] != null
+-          ? DateTime.parse(json['canceled_at'] as String)
+-          : null,
+-      cancellationReason: json['cancellation_reason'] as String?,
+-      notes: json['notes'] as String?,
+-      items: (json['items'] as List<dynamic>? ?? [])
+-          .map((i) => ProductionBatchItem.fromJson(i as Map<String, dynamic>))
+-          .toList(),
+-    );
+-  }
+-}
+-
+-class ProductionPreviewItem {
+-  final String productId;
+-  final String productName;
+-  final String productBaseUnit;
+-  final String section;
+-  final int quantityPerBasket;
+-  final int quantityRequired;
+-  final int currentStock;
+-  final bool isSufficient;
+-  final int missingQuantity;
+-  final int unitCostMicrocents;
+-  final int totalCostCents;
+-
+-  const ProductionPreviewItem({
+-    required this.productId,
+-    required this.productName,
+-    required this.productBaseUnit,
+-    required this.section,
+-    required this.quantityPerBasket,
+-    required this.quantityRequired,
+-    required this.currentStock,
+-    required this.isSufficient,
+-    required this.missingQuantity,
+-    required this.unitCostMicrocents,
+-    required this.totalCostCents,
+-  });
+-
+-  factory ProductionPreviewItem.fromJson(Map<String, dynamic> json) {
+-    return ProductionPreviewItem(
+-      productId: json['product_id'] as String? ?? '',
+-      productName: json['product_name'] as String? ?? '',
+-      productBaseUnit: json['product_base_unit'] as String? ?? '',
+-      section: json['section'] as String? ?? '',
+-      quantityPerBasket: json['quantity_per_basket'] as int? ?? 0,
+-      quantityRequired: json['quantity_required'] as int? ?? 0,
+-      currentStock: json['current_stock'] as int? ?? 0,
+-      isSufficient: json['is_sufficient'] as bool? ?? false,
+-      missingQuantity: json['missing_quantity'] as int? ?? 0,
+-      unitCostMicrocents: json['unit_cost_microcents'] as int? ?? 0,
+-      totalCostCents: json['total_cost_cents'] as int? ?? 0,
+-    );
+-  }
+-}
+-
+-class ProductionPreview {
+-  final bool canProduce;
+-  final String basketTypeId;
+-  final String basketTypeName;
+-  final int? recipeVersionNumber;
+-  final int quantityProduced;
+-  final int estimatedUnitCostCents;
+-  final int estimatedTotalCostCents;
+-  final List<ProductionPreviewItem> items;
+-  final List<ProductionPreviewItem> missingItems;
+-
+-  const ProductionPreview({
+-    required this.canProduce,
+-    required this.basketTypeId,
+-    required this.basketTypeName,
+-    this.recipeVersionNumber,
+-    required this.quantityProduced,
+-    required this.estimatedUnitCostCents,
+-    required this.estimatedTotalCostCents,
+-    required this.items,
+-    required this.missingItems,
+-  });
+-
+-  factory ProductionPreview.fromJson(Map<String, dynamic> json) {
+-    return ProductionPreview(
+-      canProduce: json['can_produce'] as bool? ?? false,
+-      basketTypeId: json['basket_type_id'] as String? ?? '',
+-      basketTypeName: json['basket_type_name'] as String? ?? '',
+-      recipeVersionNumber: json['recipe_version_number'] as int?,
+-      quantityProduced: json['quantity_produced'] as int? ?? 0,
+-      estimatedUnitCostCents: json['estimated_unit_cost_cents'] as int? ?? 0,
+-      estimatedTotalCostCents: json['estimated_total_cost_cents'] as int? ?? 0,
+-      items: (json['items'] as List<dynamic>? ?? [])
+-          .map((i) => ProductionPreviewItem.fromJson(i as Map<String, dynamic>))
+-          .toList(),
+-      missingItems: (json['missing_items'] as List<dynamic>? ?? [])
+-          .map((i) => ProductionPreviewItem.fromJson(i as Map<String, dynamic>))
+-          .toList(),
+-    );
+-  }
+-}

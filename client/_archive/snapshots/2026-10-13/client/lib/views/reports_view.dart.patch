@@ -1,0 +1,27 @@
+--- a/client/lib/views/reports_view.dart
++++ b/client/lib/views/reports_view.dart
+@@ -19,7 +19,7 @@
+ class _ReportsViewState extends State<ReportsView> {
+   final ReportsService _reportsService = ReportsService();
+ 
+-  String _selectedReportType = 'sales-dispatches';
++  String _selectedReportType = 'sales';
+   bool _isLoading = false;
+   bool _isExporting = false;
+   String? _errorMessage;
+@@ -36,13 +36,11 @@
+   int _selectedYear = DateTime.now().year;
+   bool _onlyBelowMin = false;
+ 
+-  final List<Map<String, String>> _availableReports = [
+-    {'type': 'sales-dispatches', 'title': 'Vendas e Saídas de Cestas'},
+-    {'type': 'assembly', 'title': 'Montagem e Produção de Cestas'},
++  List<Map<String, String>> get _availableReports => [
++    {'type': 'sales', 'title': context.l10n.salesTitle},
+     {'type': 'purchases-movements', 'title': 'Compras e Movimentações do Razão'},
+     {'type': 'receivables', 'title': 'Contas a Receber, Pagamentos e Quitações'},
+     {'type': 'payables', 'title': 'Contas a Pagar, Vencimentos e Pagamentos'},
+-    {'type': 'dispatch-settlements', 'title': 'Conferência de Saídas e Repasses de Rota'},
+     {'type': 'physical-inventory', 'title': 'Estoque Atual e Contagem Física'},
+     {'type': 'financial-summary', 'title': 'DRE Gerencial e Demonstrativo Financeiro'},
+   ];

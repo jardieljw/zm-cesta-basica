@@ -1,0 +1,12 @@
+--- a/backend/app/services/financial.py
++++ b/backend/app/services/financial.py
+@@ -479,7 +479,8 @@
+             detail=f"Valor informado ({data.amount_cents} centavos) excede o saldo devedor restante ({payable.balance_cents} centavos).",
+         )
+ 
+-    acc = get_financial_account(db, data.account_id)
++    acc = (get_financial_account(db, data.account_id)
++           if data.account_id is not None else get_default_financial_account(db))
+     payment_id = str(uuid.uuid4())
+     now = utc_now()
+     payment_date = data.payment_date or now

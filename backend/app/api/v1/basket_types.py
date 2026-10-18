@@ -4,10 +4,15 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select, or_, func
 from sqlalchemy.orm import Session, selectinload
 from app.core.database import get_db
-from app.api.deps import get_current_device
+from app.api.deps import get_current_device, get_idempotency_key
+from app.core.idempotency import process_transactional_idempotency
+from fastapi.responses import JSONResponse
+from app.services.basket_catalog import check_basket_deletion, delete_basket_from_catalog, require_catalog_entry
+from app.schemas.recipes import BasketDeletionCheck, BasketDeletionResponse
 from app.models.auth import PairedDevice
 from app.models.products import Product, BasketType, RecipeVersion, RecipeItem
 from app.models.base import utc_now
+from app.services.basket_stock_policy import validate_disable_finished_stock
 from app.schemas.recipes import (
     BasketTypeCreate,
     BasketTypeUpdate,
@@ -52,6 +57,24 @@ def _format_recipe_version_response(recipe: RecipeVersion) -> RecipeVersionRespo
     )
 
 
+@router.get('/basket-types/{basket_type_id}/deletion-check', response_model=BasketDeletionCheck)
+def basket_deletion_check(basket_type_id: str, db: Session = Depends(get_db),
+                          current_device: PairedDevice = Depends(get_current_device)):
+    return check_basket_deletion(db, basket_type_id)
+
+
+@router.delete('/basket-types/{basket_type_id}/catalog', response_model=BasketDeletionResponse)
+def remove_basket_from_catalog(basket_type_id: str, db: Session = Depends(get_db),
+                               current_device: PairedDevice = Depends(get_current_device),
+                               idempotency_key: Optional[str] = Depends(get_idempotency_key)):
+    def callback(session):
+        response = delete_basket_from_catalog(session, basket_type_id)
+        return status.HTTP_200_OK, response.model_dump(mode='json')
+    result = process_transactional_idempotency(db, idempotency_key, 'BASKET_CATALOG_DELETE',
+                                              {'basket_type_id': basket_type_id}, callback)
+    return JSONResponse(status_code=result.status_code, content=result.to_json_dict())
+
+
 # --- TIPOS DE CESTAS ---
 
 @router.get("/basket-types", response_model=List[BasketTypeResponse])
@@ -70,6 +93,7 @@ def list_basket_types(
             .selectinload(RecipeVersion.items)
             .selectinload(RecipeItem.product)
         )
+        .where(BasketType.removed_at.is_(None))
         .order_by(BasketType.name.asc())
     )
 
@@ -103,6 +127,7 @@ def list_basket_types(
                 allows_customization=bt.allows_customization,
                 tracks_finished_stock=bt.tracks_finished_stock,
                 is_active=bt.is_active,
+                removed_at=bt.removed_at,
                 active_recipe=active_rec_resp,
             )
         )
@@ -192,6 +217,7 @@ def get_basket_type(
         allows_customization=bt.allows_customization,
         tracks_finished_stock=bt.tracks_finished_stock,
         is_active=bt.is_active,
+        removed_at=bt.removed_at,
         active_recipe=active_rec_resp,
     )
 
@@ -220,7 +246,11 @@ def update_basket_type(
             detail=f"Tipo de cesta '{basket_type_id}' nao encontrado.",
         )
 
+    require_catalog_entry(bt)
     fields_set = data.model_fields_set
+
+    if data.tracks_finished_stock is False:
+        validate_disable_finished_stock(db, bt)
 
     if "name" in fields_set and data.name is not None:
         bt.name = data.name.strip()
@@ -253,6 +283,7 @@ def update_basket_type(
         allows_customization=bt.allows_customization,
         tracks_finished_stock=bt.tracks_finished_stock,
         is_active=bt.is_active,
+        removed_at=bt.removed_at,
         active_recipe=active_rec_resp,
     )
 
@@ -277,6 +308,7 @@ def inactivate_basket_type(
             detail=f"Tipo de cesta '{basket_type_id}' nao encontrado.",
         )
 
+    require_catalog_entry(bt)
     bt.is_active = False
     db.commit()
 
@@ -410,6 +442,8 @@ def create_recipe_version(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Tipo de cesta '{basket_type_id}' nao encontrado.",
         )
+
+    require_catalog_entry(bt)
 
     if not bt.is_active:
         raise HTTPException(

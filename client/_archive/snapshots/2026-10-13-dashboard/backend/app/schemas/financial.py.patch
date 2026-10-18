@@ -1,0 +1,11 @@
+--- a/backend/app/schemas/financial.py
++++ b/backend/app/schemas/financial.py
+@@ -126,7 +126,7 @@
+ 
+ class PayablePaymentCreate(BaseModel):
+     amount_cents: int = Field(..., gt=0, description="Valor pago em centavos")
+-    account_id: str = Field(..., description="Conta financeira de onde saiu o recurso")
++    account_id: Optional[str] = Field(None, description="Vínculo interno opcional para compatibilidade contábil")
+     payment_method: str = Field(default="BOLETO", description="Meio de pagamento efetivo")
+     payment_date: Optional[datetime.datetime] = Field(None, description="Data/hora do desembolso")
+     notes: Optional[str] = Field(None, description="Comprovante / observacoes")

@@ -1,0 +1,34 @@
+--- a/backend/app/api/v1/reports.py
++++ b/backend/app/api/v1/reports.py
+@@ -39,6 +39,7 @@
+     customer_id: Optional[str] = Query(None),
+     responsible_id: Optional[str] = Query(None),
+     sale_mode: Optional[str] = Query(None),
++    include_dispatches: bool = Query(True),
+     db: Session = Depends(get_db),
+     device: PairedDevice = Depends(get_current_device),
+ ):
+@@ -54,6 +55,7 @@
+         customer_id=customer_id,
+         responsible_id=responsible_id,
+         sale_mode=sale_mode,
++        include_dispatches=include_dispatches,
+     )
+ 
+ 
+@@ -245,6 +247,7 @@
+     status: Optional[str] = Query(None),
+     nature: Optional[str] = Query(None),
+     sale_mode: Optional[str] = Query(None),
++    include_dispatches: bool = Query(True),
+     is_custom: Optional[bool] = Query(None),
+     movement_type: Optional[str] = Query(None),
+     only_below_min: bool = Query(False),
+@@ -267,6 +270,7 @@
+             db=db, filter_type=filter_type, date_str=date, start_date_str=start_date,
+             end_date_str=end_date, month=month, year=year, basket_type_id=basket_type_id,
+             customer_id=customer_id, responsible_id=responsible_id, sale_mode=sale_mode,
++            include_dispatches=include_dispatches,
+         )
+     elif report_type == "assembly":
+         report_data = get_report_assembly(

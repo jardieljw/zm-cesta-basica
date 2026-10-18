@@ -1,0 +1,802 @@
+--- a/client/lib/l10n/app_pt.arb
++++ b/client/lib/l10n/app_pt.arb
+@@ -10,7 +10,6 @@
+   "commonClose": "Fechar",
+   "commonBack": "Voltar",
+   "commonSearch": "Buscar",
+-  "commonFilter": "Filtrar",
+   "commonClear": "Limpar",
+   "commonLoading": "Carregando...",
+   "commonRefresh": "Atualizar",
+@@ -20,11 +19,9 @@
+   "commonOptional": "Opcional",
+   "commonRequired": "Obrigatório",
+   "commonYes": "Sim",
+-  "commonNo": "Não",
+   "commonSuccess": "Operação realizada com sucesso",
+   "commonError": "Ocorreu um erro",
+   "commonWarning": "Atenção",
+-  "commonUnit": "un",
+   "commonViewDetails": "Ver Detalhes",
+   "statusOnline": "Conectado",
+   "statusOffline": "Desconectado",
+@@ -47,7 +44,6 @@
+   "productName": "Nome do Produto",
+   "productCategory": "Categoria",
+   "productBaseUnit": "Unidade Base",
+-  "productCostPrice": "Preço de Custo",
+   "productMinStock": "Estoque Mínimo",
+   "productActive": "Ativo",
+   "productInactive": "Inativo",
+@@ -63,11 +59,8 @@
+   "basketTypeCode": "Código da Cesta",
+   "basketTypeName": "Nome da Cesta",
+   "basketTypeAllowsCustom": "Permite Personalização",
+-  "recipesTitle": "Ficha Técnica / Receita",
+   "recipeVersionLabel": "Versão da Receita",
+   "recipeAddIngredient": "Adicionar Insumo",
+-  "recipeQuantityPerBasket": "Quantidade por Cesta",
+-  "recipeSection": "Seção do Insumo",
+   "purchasesTitle": "Entrada de Compras",
+   "purchaseNew": "Registrar Compra",
+   "purchaseInvoiceNumber": "Número da NF",
+@@ -78,7 +71,6 @@
+   "purchaseUnitCost": "Preço Unitário",
+   "purchaseTotalCost": "Custo Total",
+   "productionBatchesTitle": "Lotes de Produção",
+-  "productionBatchNew": "Nova Montagem de Cestas",
+   "productionBatchNumber": "Lote #{number}",
+   "@productionBatchNumber": {
+     "placeholders": {
+@@ -87,14 +79,6 @@
+       }
+     }
+   },
+-  "productionQuantityProduced": "Qtd. Produzida",
+-  "productionQuantityDisassembled": "Qtd. Desmontada",
+-  "productionCurrentStock": "Saldo em Estoque",
+-  "productionUnitCost": "Custo Unitário",
+-  "productionTotalCost": "Custo Total do Lote",
+-  "productionStatusConfirmed": "Confirmado",
+-  "productionStatusDisassembled": "Desmontado",
+-  "productionStatusCanceled": "Cancelado",
+   "productionDirectSale": "Venda Direta",
+   "productionCustom": "Cesta Personalizada",
+   "productionDisassembleTitle": "Desmontar Lote #{number}",
+@@ -108,7 +92,6 @@
+   "productionDisassembleConfirm": "Confirmar Desmontagem",
+   "productionDisassembleQtyLabel": "Qtd. a Desmontar",
+   "productionDisassembleReasonLabel": "Motivo da Desmontagem",
+-  "productionDisassembleReasonHint": "Ex: Avaria em embalagem, readequação",
+   "productionDisassembleTriageTitle": "Triagem Física dos Insumos",
+   "productionDisassembleAllIntact": "100% Intacto (Sem Avarias)",
+   "productionIntactQtyLabel": "Intacto ({unit})",
+@@ -127,16 +110,7 @@
+       }
+     }
+   },
+-  "productionLossReasonLabel": "Motivo da Perda",
+-  "productionDisassembleDescription": "A desmontagem realiza triagem física: itens intactos retornam ao estoque e avarias são registradas como perda sem inflar o estoque fisicamente.",
+   "productionDisassembledSuccess": "Lote desmontado com sucesso!",
+-  "productionBatchSearchHint": "Buscar por lote (#1), tipo ou observações...",
+-  "productionBatchFilterAllStatus": "Todos os Status",
+-  "productionBatchFilterConfirmed": "Confirmados",
+-  "productionBatchFilterDisassembled": "Desmontados",
+-  "productionBatchFilterAllTypes": "Todos os Tipos",
+-  "productionBatchFilterStandard": "Cesta Padrão",
+-  "productionBatchFilterCustom": "Personalizada",
+   "productionBatchEmpty": "Nenhum lote de produção encontrado.",
+   "productionBatchMountFirst": "Montar Primeira Cesta",
+   "productionBatchCancelTitle": "Estorno Total do Lote #{number}",
+@@ -147,82 +121,8 @@
+       }
+     }
+   },
+-  "productionBatchCancelDescription": "Esta operação cancela a ordem de produção, deduz o saldo das cestas acabadas e retorna 100% dos insumos consumidos ao estoque fisicamente.\\n\\nRequer que todas as cestas acabadas estejam disponíveis em estoque.",
+-  "productionBatchCancelReasonLabel": "Motivo do Estorno",
+-  "productionBatchCancelReasonHint": "Ex: Ordem gerada em duplicidade",
+   "productionBatchCancelConfirm": "Confirmar Estorno",
+   "productionBatchCancelSuccess": "Lote estornado com sucesso!",
+-  "productionBatchSnapshotTitle": "Snapshot Imutável de Insumos Consumidos",
+-  "productionBatchSectionLabel": "Seção: {section} | Custo un: {cost}",
+-  "@productionBatchSectionLabel": {
+-    "placeholders": {
+-      "section": {
+-        "type": "String"
+-      },
+-      "cost": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "productionBatchTotalItemCost": "Total: {cost}",
+-  "@productionBatchTotalItemCost": {
+-    "placeholders": {
+-      "cost": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "productionBatchDisassembleButton": "Desmontar Lote",
+-  "productionBatchCancelButton": "Estorno Total",
+-  "productionBatchDetailProduced": "Quantidade Produzida",
+-  "productionBatchDetailStock": "Saldo Disponível",
+-  "productionBatchDetailDisassembled": "Quantidade Desmontada",
+-  "productionBatchDetailUnitCost": "Custo Unitário",
+-  "productionBatchDetailTotalCost": "Custo Total",
+-  "productionBatchDetailDate": "Data: {date}",
+-  "@productionBatchDetailDate": {
+-    "placeholders": {
+-      "date": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "productionBatchDetailNotes": "Observações: {notes}",
+-  "@productionBatchDetailNotes": {
+-    "placeholders": {
+-      "notes": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "productionBatchDetailDisassembledAt": "Desmontado em: {date} ({reason})",
+-  "@productionBatchDetailDisassembledAt": {
+-    "placeholders": {
+-      "date": {
+-        "type": "String"
+-      },
+-      "reason": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "productionBatchDescriptionLabel": "Descrição: {description}",
+-  "@productionBatchDescriptionLabel": {
+-    "placeholders": {
+-      "description": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "productionBatchConsumedTotal": "Consumido total: {quantity}",
+-  "@productionBatchConsumedTotal": {
+-    "placeholders": {
+-      "quantity": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "validationInvalid": "Inválido",
+   "validationMinChars": "Mínimo de {min} caracteres",
+   "@validationMinChars": {
+     "placeholders": {
+@@ -232,14 +132,6 @@
+     }
+   },
+   "validationMustBePositive": "A quantidade a desmontar deve ser maior que zero.",
+-  "validationInsufficientStockForDisassembly": "Saldo insuficiente para desmontagem: máximo permitido é de {max} unidade(s).",
+-  "@validationInsufficientStockForDisassembly": {
+-    "placeholders": {
+-      "max": {
+-        "type": "int"
+-      }
+-    }
+-  },
+   "commonTryAgain": "Tentar Novamente",
+   "homePhase2Header": "Cadastros e Receitas",
+   "homeProductsDescription": "Catálogo de itens, embalagens comerciais e estoque mínimo.",
+@@ -248,9 +140,6 @@
+   "homePurchasesDescription": "Entrada de notas, conversão de fardos/caixas e cancelamento seguro.",
+   "homeInventorySummaryDescription": "Posição consolidada e alerta de ruptura de estoque.",
+   "homeInventoryMovementsDescription": "Histórico auditável e imutável de todas as movimentações.",
+-  "homePhase4Header": "Produção e Desmontagem",
+-  "homeProductionBatchesDescription": "Histórico de ordens, desmontagem com triagem e estorno total.",
+-  "homeProductionAssemblyDescription": "Simulação de viabilidade com CMPM e baixa atômica.",
+   "homeServerStatusTitle": "Status do Servidor",
+   "homeCentralServer": "Servidor Central",
+   "homeCheckConnection": "Verificar Conexão",
+@@ -870,74 +759,6 @@
+   "stockAdjustmentReasonRequired": "A justificativa é obrigatória para auditoria contábil",
+   "stockAdjustmentConfirmButton": "Confirmar Ajuste",
+   "stockAdjustmentSelectProductError": "Selecione um produto.",
+-  "assemblyHeaderTitle": "Montagem de Cestas (Ordem de Produção)",
+-  "assemblyTabStandard": "Cesta Padrão",
+-  "assemblyTabCustom": "Cesta Personalizada",
+-  "assemblyStandardBasketLabel": "Tipo de Cesta *",
+-  "assemblyStandardQtyLabel": "Quantidade a Montar *",
+-  "assemblyStandardQtyValidation": "Informe uma quantidade válida maior que zero",
+-  "assemblyStandardDirectSale": "Venda Direta (Não adiciona ao estoque acabado)",
+-  "assemblyStandardDirectSaleSubtitle": "Baixa os insumos consumidos sem criar saldo da cesta montada no inventário.",
+-  "assemblyStandardNotesLabel": "Observações da Ordem",
+-  "assemblyStandardNotesHint": "Ex: Pedido especial cliente XPTO",
+-  "assemblyFeasibilityTitle": "Simulação de Viabilidade e Custo Médio (CMPM)",
+-  "assemblyFeasibleOk": "Estoque Suficiente para Montagem",
+-  "assemblyFeasibleFail": "Estoque Insuficiente para Montagem",
+-  "assemblyTotalCostPreview": "Custo Total do Lote: {cost}",
+-  "@assemblyTotalCostPreview": {
+-    "placeholders": {
+-      "cost": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "assemblyUnitCostPreview": "Custo Unitário da Cesta: {cost}",
+-  "@assemblyUnitCostPreview": {
+-    "placeholders": {
+-      "cost": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "assemblyConfirmDialogTitle": "Confirmar Montagem de Cestas",
+-  "assemblyConfirmDialogContent": "Deseja confirmar a montagem de {qty} cesta(s) \"{name}\"?\n\nOs insumos serão baixados e o lote de cestas acabadas será adicionado ao estoque imediatamente.",
+-  "@assemblyConfirmDialogContent": {
+-    "placeholders": {
+-      "qty": {
+-        "type": "int"
+-      },
+-      "name": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "assemblyConfirmSuccess": "Lote #{number} montado com sucesso! Custo unitário: {cost}",
+-  "@assemblyConfirmSuccess": {
+-    "placeholders": {
+-      "number": {
+-        "type": "int"
+-      },
+-      "cost": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "assemblySubmitStandard": "Confirmar Montagem da Cesta Padrão",
+-  "assemblySubmitCustom": "Confirmar Montagem da Cesta Personalizada",
+-  "assemblyCustomBaseBasket": "Modelo Base da Cesta",
+-  "assemblyCustomDescLabel": "Descrição da Cesta Personalizada *",
+-  "assemblyCustomDescHint": "Ex: Cesta Natalina Especial para Empresa Alpha",
+-  "assemblyCustomDescRequired": "Informe a descrição da cesta personalizada",
+-  "assemblyCustomItemsHeader": "Composição Customizada de Insumos ({count})",
+-  "@assemblyCustomItemsHeader": {
+-    "placeholders": {
+-      "count": {
+-        "type": "int"
+-      }
+-    }
+-  },
+-  "assemblyCustomAddItem": "Adicionar Insumo",
+-  "assemblyCustomQtyValidation": "Quantidade inválida",
+   "pairingViewTitle": "Pareamento do Dispositivo",
+   "pairingTabManual": "Código PIN",
+   "pairingTabQr": "Escanear QR",
+@@ -1021,7 +842,6 @@
+   "categoryFood": "Alimentação",
+   "categoryCleaning": "Limpeza",
+   "categoryMeat": "Carnes & Frios",
+-  "categoryHygiene": "Higiene",
+   "categoryOthers": "Outros",
+   "categoryInput": "Insumo",
+   "categoryAll": "Todas",
+@@ -1037,7 +857,6 @@
+     }
+   },
+   "productionBatchViewIngredients": "Ver Insumos",
+-  "productionDisassemble": "Desmontar",
+   "productionDisassembleNoIngredients": "Nenhum insumo registrado neste lote.",
+   "homeLocalConnectionInfo": "Informações da Conexão Local",
+   "homeApiVersionLabel": "Versão da API",
+@@ -1233,31 +1052,12 @@
+   "receivablePaymentAmountExceedsBalance": "Valor informado excede o saldo devedor.",
+   "homePhase6Header": "Fase 6: Expedição, Conferência e Custódia",
+   "moduleDispatches": "Saídas e Conferências",
+-  "homeDispatchesDescription": "Controle de saídas físicas, conferência e repasses",
+   "moduleResponsiblePersons": "Pessoas Responsáveis",
+   "homeResponsiblePersonsDescription": "Cadastro de entregadores, vendedores externos e motoristas",
+   "responsiblePersonsTitle": "Pessoas Responsáveis",
+-  "responsiblePersonNew": "Novo Responsável",
+-  "responsiblePersonEdit": "Editar Responsável",
+   "responsiblePersonName": "Nome",
+-  "responsiblePersonPhone": "Telefone / WhatsApp",
+-  "responsiblePersonNotes": "Observações",
+-  "responsiblePersonActive": "Ativo",
+-  "responsiblePersonInactive": "Inativo",
+-  "responsiblePersonsEmpty": "Nenhuma pessoa responsável cadastrada.",
+   "responsiblePersonCustodyTitle": "Custódia Atual de Cestas",
+-  "responsiblePersonTotalInCustody": "Total sob custódia: {qty} cestas",
+-  "@responsiblePersonTotalInCustody": {
+-    "placeholders": {
+-      "qty": {
+-        "type": "int"
+-      }
+-    }
+-  },
+-  "responsiblePersonNoCustody": "Nenhuma cesta sob custódia no momento.",
+-  "responsiblePersonSavedSuccess": "Responsável salvo com sucesso.",
+   "dispatchesTitle": "Saídas Físicas e Conferência",
+-  "dispatchNew": "Nova Saída de Cestas",
+   "dispatchNumber": "Saída #{number}",
+   "@dispatchNumber": {
+     "placeholders": {
+@@ -1266,81 +1066,9 @@
+       }
+     }
+   },
+-  "dispatchResponsible": "Responsável",
+   "dispatchDate": "Data da Saída",
+-  "dispatchTotalBaskets": "Total de Cestas",
+-  "dispatchTotalReference": "Valor de Referência",
+-  "dispatchStatusOpen": "Aberta",
+-  "dispatchStatusConcluded": "Concluída",
+-  "dispatchStatusPendingInvestigation": "Sob Investigação",
+-  "dispatchStatusCanceled": "Cancelada",
+   "dispatchStatusResolved": "Resolvido",
+-  "dispatchesEmpty": "Nenhuma saída física registrada.",
+-  "dispatchCancel": "Cancelar Saída",
+-  "dispatchCancelConfirm": "Deseja realmente cancelar a saída #{number}?",
+-  "@dispatchCancelConfirm": {
+-    "placeholders": {
+-      "number": {
+-        "type": "int"
+-      }
+-    }
+-  },
+-  "dispatchCancelReason": "Motivo do cancelamento",
+-  "dispatchCancelSuccess": "Saída cancelada com sucesso. Cestas retornadas ao estoque da loja.",
+-  "dispatchCreatedSuccess": "Saída registrada com sucesso.",
+-  "dispatchFormTitle": "Registrar Saída Física",
+-  "dispatchSelectResponsible": "Selecione o Responsável",
+-  "dispatchItemsTitle": "Cestas a Retirar",
+-  "dispatchAddItem": "Adicionar Cesta",
+-  "dispatchItemBasket": "Tipo de Cesta",
+-  "dispatchItemQuantity": "Quantidade",
+-  "dispatchItemUnitPrice": "Preço de Referência",
+-  "dispatchItemSubtotal": "Subtotal",
+-  "dispatchItemNotes": "Personalizações / Observações",
+-  "dispatchAvailableStoreStock": "Estoque loja: {qty}",
+-  "@dispatchAvailableStoreStock": {
+-    "placeholders": {
+-      "qty": {
+-        "type": "int"
+-      }
+-    }
+-  },
+-  "dispatchInsufficientStoreStock": "Estoque insuficiente na loja para \"{name}\". Disponível: {stock}, Solicitado: {qty}.",
+-  "@dispatchInsufficientStoreStock": {
+-    "placeholders": {
+-      "name": {
+-        "type": "String"
+-      },
+-      "stock": {
+-        "type": "int"
+-      },
+-      "qty": {
+-        "type": "int"
+-      }
+-    }
+-  },
+   "dispatchDuplicateBasketConsolidatedNotice": "Cesta repetida: será consolidada automaticamente no despacho.",
+-  "dispatchSubmit": "Confirmar Saída Física",
+-  "conferenceTitle": "Conferência da Saída #{number}",
+-  "@conferenceTitle": {
+-    "placeholders": {
+-      "number": {
+-        "type": "int"
+-      }
+-    }
+-  },
+-  "conferenceScreenTitle": "Conferência de Saída",
+-  "@conferenceScreenTitle": {
+-    "description": "Título genérico da tela de conferência de saída durante carregamento ou erro"
+-  },
+-  "conferenceStatusLabel": "Status da Saída: {status}",
+-  "@conferenceStatusLabel": {
+-    "placeholders": {
+-      "status": {
+-        "type": "String"
+-      }
+-    }
+-  },
+   "conferencePhysicalEquationTitle": "Equação Física de Custódia (4 Termos)",
+   "conferenceDispatchedLabel": "1. Retiradas: {qty}",
+   "@conferenceDispatchedLabel": {
+@@ -1374,83 +1102,10 @@
+       }
+     }
+   },
+-  "conferenceCustodyRemainingLabel": "Em Trânsito / Custódia: {qty}",
+-  "@conferenceCustodyRemainingLabel": {
+-    "placeholders": {
+-      "qty": {
+-        "type": "int"
+-      }
+-    }
+-  },
+-  "conferenceDiscrepancyLabel": "Divergência Física: {qty} cestas",
+-  "@conferenceDiscrepancyLabel": {
+-    "placeholders": {
+-      "qty": {
+-        "type": "int"
+-      }
+-    }
+-  },
+   "conferencePhysicalEquationBalanced": "Equação Física Bateu (Sem divergências)",
+   "conferencePhysicalEquationDivergent": "Divergência Física Detectada!",
+-  "conferenceFinancialTitle": "Controle Financeiro de Rota e Repasses",
+   "conferenceExpectedCashLabel": "Dinheiro em Mãos Esperado: {amount}",
+   "@conferenceExpectedCashLabel": {
+-    "placeholders": {
+-      "amount": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "conferenceActualRepaidLabel": "Repasses Realizados: {amount}",
+-  "@conferenceActualRepaidLabel": {
+-    "placeholders": {
+-      "amount": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "conferencePendingCashLabel": "Saldo a Repassar: {amount}",
+-  "@conferencePendingCashLabel": {
+-    "placeholders": {
+-      "amount": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "conferenceCashSalesLabel": "Vendas à Vista (Dinheiro): {amount}",
+-  "@conferenceCashSalesLabel": {
+-    "placeholders": {
+-      "amount": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "conferenceDirectCompanyLabel": "Pix / Cartão Direto à Empresa: {amount}",
+-  "@conferenceDirectCompanyLabel": {
+-    "placeholders": {
+-      "amount": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "conferenceCreditSalesLabel": "Vendas a Prazo (Fiado na rota): {amount}",
+-  "@conferenceCreditSalesLabel": {
+-    "placeholders": {
+-      "amount": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "conferenceDebtCollectedLabel": "Cobrança de Fiados em Rota: {amount}",
+-  "@conferenceDebtCollectedLabel": {
+-    "placeholders": {
+-      "amount": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "conferenceExpensesLabel": "Despesas Autorizadas Abatidas: {amount}",
+-  "@conferenceExpensesLabel": {
+     "placeholders": {
+       "amount": {
+         "type": "String"
+@@ -1461,55 +1116,6 @@
+   "conferenceFinancialBalanced": "Financeiro Bateu (Repasse integral)",
+   "conferenceDirectNotice": "* Pix e cartões recebidos diretamente na conta da empresa NÃO são devidos pelo motorista/entregador.",
+   "conferenceExpenseExceedsNotice": "As despesas autorizadas superaram as vendas em dinheiro da rota. Saldo credor ao entregador / ressarcimento pela empresa.",
+-  "conferenceActionReturn": "Devolução Intacta",
+-  "conferenceActionLoss": "Avaria / Perda",
+-  "conferenceActionExpense": "Despesa Autorizada",
+-  "conferenceActionRepayment": "Repasse de Dinheiro",
+-  "conferenceActionSettle": "Concluir Acerto / Fechamento",
+-  "conferenceActionInvestigation": "Documentar Investigação",
+-  "conferenceSettledSuccess": "Conferência registrada com sucesso.",
+-  "conferenceInvestigationUpdatedSuccess": "Notas de investigação atualizadas com sucesso.",
+-  "conferenceReturnsListTitle": "Devoluções de Cestas Intactas",
+-  "conferenceLossesListTitle": "Avarias e Perdas Físicas",
+-  "conferenceExpensesListTitle": "Despesas Autorizadas",
+-  "conferenceRepaymentsListTitle": "Repasses Financeiros Registrados",
+-  "conferenceNoReturns": "Nenhuma devolução intacta registrada.",
+-  "conferenceNoLosses": "Nenhuma avaria ou perda registrada.",
+-  "conferenceNoExpenses": "Nenhuma despesa autorizada registrada.",
+-  "conferenceNoRepayments": "Nenhum repasse de dinheiro registrado.",
+-  "dialogReturnTitle": "Registrar Devolução Intacta",
+-  "dialogReturnQty": "Quantidade Devolvida",
+-  "dialogReturnNotes": "Observações",
+-  "dialogLossTitle": "Registrar Avaria ou Perda",
+-  "dialogLossQty": "Quantidade Avariada/Perdida",
+-  "dialogLossReason": "Justificativa Obrigatória da Perda",
+-  "dialogLossReasonRequired": "A justificativa da perda é obrigatória (mínimo 3 caracteres).",
+-  "dialogExpenseTitle": "Registrar Despesa Autorizada",
+-  "dialogExpenseAmount": "Valor da Despesa",
+-  "dialogExpenseDesc": "Descrição (ex: Combustível, Borracharia)",
+-  "dialogExpenseReceipt": "Nº do Comprovante / Cupom",
+-  "dialogExpenseAuthorizedBy": "Autorizado por",
+-  "dialogRepaymentTitle": "Registrar Repasse Financeiro",
+-  "dialogRepaymentAmount": "Valor Repassado",
+-  "dialogRepaymentMethod": "Forma do Repasse",
+-  "dialogRepaymentReceivedBy": "Recebido na Empresa por",
+-  "dialogRepaymentNotes": "Observações",
+-  "dialogSettleTitle": "Fechamento Operacional / Acerto",
+-  "dialogSettleAuditedBy": "Auditor / Responsável pelo Fechamento",
+-  "dialogSettleAuditedByRequired": "Informe o nome do responsável pelo fechamento.",
+-  "dialogSettleNotes": "Observações do Fechamento",
+-  "dialogSettleWarningDivergent": "Atenção: Existem divergências físicas ou financeiras. O fechamento será registrado como SOB INVESTIGAÇÃO.",
+-  "dialogSettleInvestigationNotes": "Notas Iniciais da Investigação",
+-  "dialogInvestigationTitle": "Investigação de Divergências",
+-  "dialogInvestigationNotes": "Parecer da Investigação / Justificativas",
+-  "dialogInvestigationMarkResolved": "Marcar como Resolvido (Divergências apuradas/justificadas)",
+-  "dialogInvestigationSave": "Salvar Parecer",
+-  "saleModeLabel": "Modalidade da Venda",
+-  "saleModeDirectStore": "Balcão / Loja",
+-  "saleModeCommercialRoute": "Rota / Venda Externa",
+-  "saleRouteSelectDispatch": "Vincular à Saída / Rota Ativa",
+-  "saleRouteNoDispatches": "Nenhuma saída aberta disponível para este responsável.",
+-  "saleRouteResponsibleLabel": "Responsável pela Rota",
+   "saleCustodyStockAvailable": "Saldo sob custódia: {qty}",
+   "@saleCustodyStockAvailable": {
+     "placeholders": {
+@@ -1518,11 +1124,9 @@
+       }
+     }
+   },
+-  "homePhase7Header": "Fase 7: Gestão Financeira & Tesouraria",
++  "homePhase7Header": "Financeiro",
+   "modulePayables": "Contas a Pagar",
+   "homePayablesDescription": "Boletos, cheques, empréstimos, fornecedores e parcelamentos",
+-  "moduleTreasury": "Tesouraria & Livro-Caixa",
+-  "homeTreasuryDescription": "Caixa físico, contas bancárias, transferências e conciliação",
+   "payablesTitle": "Contas a Pagar",
+   "payablesNew": "Nova Obrigação a Pagar",
+   "payableDescription": "Descrição",
+@@ -1572,49 +1176,8 @@
+   "payableNoPayables": "Nenhuma obrigação a pagar encontrada.",
+   "payableFilterMonth": "Mês",
+   "payableFilterYear": "Ano",
+-  "treasuryTitle": "Tesouraria & Conciliação",
+-  "treasuryTabAccounts": "Saldos & Contas",
+-  "treasuryTabLedger": "Livro-Caixa (Extrato)",
+-  "treasuryTabSummary": "Visão Gerencial",
+-  "treasuryTotalAvailable": "Saldo Disponível (Caixa e Bancos)",
+-  "treasuryCashBalance": "Caixa Físico da Loja",
+-  "treasuryBankBalance": "Contas Bancárias",
+-  "treasuryRouteCashPending": "Dinheiro em Rota (em trânsito)",
+-  "treasuryProjectedNet": "Saldo Líquido Projetado",
+-  "treasuryOpenReceivables": "A Receber (Fiados Pendentes)",
+-  "treasuryOverdueReceivables": "A Receber Vencidos",
+   "treasuryOpenPayables": "A Pagar (Obrigações Abertas)",
+   "treasuryOverduePayables": "A Pagar Vencidos",
+-  "treasuryBusinessExpenses": "Despesas Operacionais (Mês)",
+-  "treasuryPersonalWithdrawals": "Retiradas de Sócios (Mês)",
+-  "treasuryNewAccount": "Nova Conta Financeira",
+-  "treasuryEditAccount": "Editar Conta Financeira",
+-  "treasuryAccountName": "Nome da Conta",
+-  "treasuryAccountType": "Tipo de Conta",
+-  "treasuryTypeCash": "Caixa Físico",
+-  "treasuryTypeBank": "Conta Bancária",
+-  "treasuryTypeOther": "Outra Conta / Cofre",
+-  "treasuryBankName": "Instituição Financeira / Banco",
+-  "treasuryAccountNumber": "Agência e Conta",
+-  "treasuryInitialBalance": "Saldo Inicial de Abertura",
+-  "treasuryIsDefault": "Conta Padrão",
+-  "treasuryTransferTitle": "Transferência entre Contas",
+-  "treasurySourceAccount": "Conta de Origem (Saída)",
+-  "treasuryDestinationAccount": "Conta de Destino (Entrada)",
+-  "treasuryTransferAmount": "Valor da Transferência",
+-  "treasuryTransferSuccess": "Transferência realizada com sucesso",
+-  "treasuryManualEntryTitle": "Lançamento no Livro-Caixa",
+-  "treasuryEntryType": "Tipo de Lançamento",
+-  "treasuryEntryCredit": "Crédito (Entrada)",
+-  "treasuryEntryDebit": "Débito (Saída)",
+-  "treasuryEntryCategory": "Categoria",
+-  "treasuryEntryDescription": "Descrição do Lançamento",
+-  "treasuryEntryAmount": "Valor",
+-  "treasuryEntrySuccess": "Lançamento registrado com sucesso",
+-  "treasuryNoEntries": "Nenhuma movimentação registrada no livro-caixa.",
+-  "treasuryNoAccounts": "Nenhuma conta financeira cadastrada.",
+-  "treasuryReversalBadge": "ESTORNO",
+-  "treasuryImmutableNote": "Livro-Caixa imutável: todas as operações são estritamente append-only.",
+   "receivableRepassDirect": "Direto na Empresa / Loja",
+   "receivableRepassPending": "Pendente de Repasse (Dinheiro em Rota)",
+   "receivableRepassDone": "Repassado e Liquidado",
+@@ -1976,27 +1539,6 @@
+   "@dashboardNoOpenPayables": {
+     "description": "Estado vazio de contas a pagar"
+   },
+-  "conferenceMethodCashHand": "Dinheiro em Mãos",
+-  "@conferenceMethodCashHand": {
+-    "description": "Forma de repasse: Dinheiro em Mãos"
+-  },
+-  "conferenceMethodPixSettled": "PIX Repassado",
+-  "@conferenceMethodPixSettled": {
+-    "description": "Forma de repasse: PIX Repassado"
+-  },
+-  "conferenceMethodBankTransfer": "Transferência Bancária",
+-  "@conferenceMethodBankTransfer": {
+-    "description": "Forma de repasse: Transferência Bancária"
+-  },
+-  "commonObservationsPrefix": "Observações: {notes}",
+-  "@commonObservationsPrefix": {
+-    "description": "Prefixo de observações completas",
+-    "placeholders": {
+-      "notes": {
+-        "type": "String"
+-      }
+-    }
+-  },
+   "payableCategorySupplier": "Fornecedor",
+   "@payableCategorySupplier": {
+     "description": "Categoria de conta: Fornecedor"
+@@ -2145,132 +1687,6 @@
+   "@filterAllOption": {
+     "description": "Opção Todos em filtros suspensos"
+   },
+-  "treasuryNeedTwoAccountsForTransfer": "São necessárias ao menos 2 contas para realizar transferências.",
+-  "@treasuryNeedTwoAccountsForTransfer": {
+-    "description": "Alerta de contas insuficientes para transferência"
+-  },
+-  "treasuryAccountLabel": "Conta Financeira",
+-  "@treasuryAccountLabel": {
+-    "description": "Rótulo do seletor de conta financeira"
+-  },
+-  "treasuryAccountFilterLabel": "Conta",
+-  "@treasuryAccountFilterLabel": {
+-    "description": "Filtro de conta"
+-  },
+-  "treasuryLaunchEntry": "Lançamento",
+-  "@treasuryLaunchEntry": {
+-    "description": "Botão de novo lançamento na tesouraria"
+-  },
+-  "treasuryConsolidatedPosition": "Posição Consolidada da Empresa",
+-  "@treasuryConsolidatedPosition": {
+-    "description": "Título do quadro consolidado da tesouraria"
+-  },
+-  "treasuryCashPhysicalLabel": "Caixa Físico: {amount}",
+-  "@treasuryCashPhysicalLabel": {
+-    "description": "Saldo em espécie/caixa físico",
+-    "placeholders": {
+-      "amount": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "treasuryBankLabel": "Bancos: {amount}",
+-  "@treasuryBankLabel": {
+-    "description": "Saldo em contas bancárias",
+-    "placeholders": {
+-      "amount": {
+-        "type": "String"
+-      }
+-    }
+-  },
+-  "treasuryFormulaExplanation": "Fórmula: Disponível + A Receber - A Pagar",
+-  "@treasuryFormulaExplanation": {
+-    "description": "Legenda explicativa do cálculo de previsão"
+-  },
+-  "treasuryFutureCommitmentsTitle": "Compromissos Futuros & Fiados",
+-  "@treasuryFutureCommitmentsTitle": {
+-    "description": "Título do quadro de compromissos futuros"
+-  },
+-  "treasuryCustodyCouriers": "Em custódia de entregadores",
+-  "@treasuryCustodyCouriers": {
+-    "description": "Subtítulo de valores em custódia externa"
+-  },
+-  "treasuryExpenseSegregationTitle": "Segregação de Despesas (Mês)",
+-  "@treasuryExpenseSegregationTitle": {
+-    "description": "Título do quadro de segregação de despesas"
+-  },
+-  "treasuryBusinessExpensesDesc": "Gastos operacionais da atividade",
+-  "@treasuryBusinessExpensesDesc": {
+-    "description": "Descrição de despesas empresariais"
+-  },
+-  "treasuryPersonalWithdrawalsDesc": "Não misturar com contas da empresa",
+-  "@treasuryPersonalWithdrawalsDesc": {
+-    "description": "Descrição de retiradas de sócios"
+-  },
+-  "treasuryCatCapitalContribution": "Aporte de Capital",
+-  "@treasuryCatCapitalContribution": {
+-    "description": "Categoria: Aporte de Capital"
+-  },
+-  "treasuryCatSalesRevenue": "Receita de Vendas",
+-  "@treasuryCatSalesRevenue": {
+-    "description": "Categoria: Receita de Vendas"
+-  },
+-  "treasuryCatCustomerReceipt": "Recebimento de Cliente",
+-  "@treasuryCatCustomerReceipt": {
+-    "description": "Categoria: Recebimento de Cliente"
+-  },
+-  "treasuryCatOtherCredits": "Outros Créditos",
+-  "@treasuryCatOtherCredits": {
+-    "description": "Categoria: Outros Créditos"
+-  },
+-  "treasuryCatPartnerWithdrawal": "Retirada de Sócios / Pró-labore",
+-  "@treasuryCatPartnerWithdrawal": {
+-    "description": "Categoria: Retirada de Sócios / Pró-labore"
+-  },
+-  "treasuryCatSupplierPayment": "Pagamento Fornecedor",
+-  "@treasuryCatSupplierPayment": {
+-    "description": "Categoria: Pagamento Fornecedor"
+-  },
+-  "treasuryCatElectricity": "Energia Elétrica",
+-  "@treasuryCatElectricity": {
+-    "description": "Categoria: Energia Elétrica"
+-  },
+-  "treasuryCatRent": "Aluguel",
+-  "@treasuryCatRent": {
+-    "description": "Categoria: Aluguel"
+-  },
+-  "treasuryCatFreightFuel": "Frete / Combustível",
+-  "@treasuryCatFreightFuel": {
+-    "description": "Categoria: Frete / Combustível"
+-  },
+-  "treasuryCatMaintenance": "Manutenção",
+-  "@treasuryCatMaintenance": {
+-    "description": "Categoria: Manutenção"
+-  },
+-  "treasuryCatOtherExpenses": "Outras Despesas",
+-  "@treasuryCatOtherExpenses": {
+-    "description": "Categoria: Outras Despesas"
+-  },
+-  "treasuryMethodPix": "PIX",
+-  "@treasuryMethodPix": {
+-    "description": "Método de pagamento: PIX"
+-  },
+-  "treasuryMethodCash": "Dinheiro",
+-  "@treasuryMethodCash": {
+-    "description": "Método de pagamento: Dinheiro"
+-  },
+-  "treasuryMethodTransfer": "Transferência",
+-  "@treasuryMethodTransfer": {
+-    "description": "Método de pagamento: Transferência"
+-  },
+-  "treasuryMethodCard": "Cartão",
+-  "@treasuryMethodCard": {
+-    "description": "Método de pagamento: Cartão"
+-  },
+-  "treasuryMethodOther": "Outro",
+-  "@treasuryMethodOther": {
+-    "description": "Método de pagamento: Outro"
+-  },
+   "receivablesBasketsPrefix": "Cestas: {summary}",
+   "@receivablesBasketsPrefix": {
+     "description": "Resumo de cestas do recebível",
+@@ -2304,34 +1720,6 @@
+   "payableRevertPaymentTooltip": "Estornar este pagamento",
+   "@payableRevertPaymentTooltip": {
+     "description": "Tooltip do botão de estorno de pagamento"
+-  },
+-  "dispatchPhysicalNotesHint": "Observações da saída física (opcional)",
+-  "@dispatchPhysicalNotesHint": {
+-    "description": "Dica de preenchimento para observações de saída física"
+-  },
+-  "dispatchCustomizationHint": "Ex: Cesta personalizada, lote específico",
+-  "@dispatchCustomizationHint": {
+-    "description": "Dica de personalização de cesta na saída"
+-  },
+-  "conferenceLossReasonHint": "Ex: Caixa molhou na chuva durante entrega",
+-  "@conferenceLossReasonHint": {
+-    "description": "Dica de justificativa para avaria ou perda na conferência"
+-  },
+-  "conferenceReceivedByHint": "Colaborador que conferiu e recebeu",
+-  "@conferenceReceivedByHint": {
+-    "description": "Dica do conferente que recebeu o repasse"
+-  },
+-  "conferenceAuditorNameHint": "Nome do conferente / auditor",
+-  "@conferenceAuditorNameHint": {
+-    "description": "Dica do nome do auditor na finalização do acerto"
+-  },
+-  "conferenceInitialJustificationHint": "Justificativa inicial das divergências",
+-  "@conferenceInitialJustificationHint": {
+-    "description": "Dica para justificativa inicial de pendências"
+-  },
+-  "conferenceInvestigationHint": "Descreva a apuração, se foi justificado, perdas aceitas ou ressarcimento",
+-  "@conferenceInvestigationHint": {
+-    "description": "Dica para investigação de divergência"
+   },
+   "settingsGenerateQrTitle": "Pareamento de Celulares / Tablets",
+   "@settingsGenerateQrTitle": {

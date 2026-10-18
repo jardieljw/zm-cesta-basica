@@ -1,3 +1,4 @@
+import '../utils/adaptive_ui_color.dart';
 import 'package:flutter/material.dart';
 import '../models/customer.dart';
 import '../services/customer_service.dart';
@@ -35,7 +36,9 @@ class _CustomerFormViewState extends State<CustomerFormView> {
     _documentController = TextEditingController(text: c?.documentCpfCnpj ?? '');
     _phoneController = TextEditingController(text: c?.phone ?? '');
     _addressController = TextEditingController(text: c?.address ?? '');
-    final initialLimit = c != null ? (c.creditLimitCents / 100.0).toStringAsFixed(2).replaceAll('.', ',') : '0,00';
+    final initialLimit = c != null
+        ? (c.creditLimitCents / 100.0).toStringAsFixed(2).replaceAll('.', ',')
+        : '0,00';
     _creditLimitController = TextEditingController(text: initialLimit);
     _notesController = TextEditingController(text: c?.notes ?? '');
   }
@@ -52,7 +55,12 @@ class _CustomerFormViewState extends State<CustomerFormView> {
   }
 
   int _parseCurrencyToCents(String text) {
-    final cleaned = text.replaceAll('R\$', '').replaceAll(' ', '').replaceAll('.', '').replaceAll(',', '.').trim();
+    final cleaned = text
+        .replaceAll('R\$', '')
+        .replaceAll(' ', '')
+        .replaceAll('.', '')
+        .replaceAll(',', '.')
+        .trim();
     final value = double.tryParse(cleaned) ?? 0.0;
     return (value * 100).round();
   }
@@ -121,16 +129,21 @@ class _CustomerFormViewState extends State<CustomerFormView> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.red.shade50,
+                    color: adaptiveUiSurface(context, Colors.red.shade50),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.red.shade200),
+                    border: Border.all(
+                      color: adaptiveUiSurface(context, Colors.red.shade200),
+                    ),
                   ),
                   child: Row(
                     children: [
                       const Icon(Icons.error_outline, color: Colors.red),
                       const SizedBox(width: 12),
                       Expanded(
-                        child: Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
+                        child: Text(
+                          _errorMessage!,
+                          style: const TextStyle(color: Colors.red),
+                        ),
                       ),
                     ],
                   ),
@@ -181,7 +194,9 @@ class _CustomerFormViewState extends State<CustomerFormView> {
                   Expanded(
                     child: TextFormField(
                       controller: _creditLimitController,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
                       decoration: InputDecoration(
                         labelText: l10n.customerCreditLimit,
                         helperText: l10n.customerCreditLimitUnlimited,
@@ -221,13 +236,18 @@ class _CustomerFormViewState extends State<CustomerFormView> {
                     ? const SizedBox(
                         width: 20,
                         height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
                       )
                     : const Icon(Icons.save),
                 label: Text(l10n.commonSave),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
             ],

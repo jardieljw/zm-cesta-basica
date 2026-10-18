@@ -1,0 +1,119 @@
+import '../../lib/core/api_client.dart';
+import '../models/production_batch.dart';
+
+class ProductionBatchListResult {
+  final List<ProductionBatch> items;
+  final int total;
+  final int page;
+  final int pageSize;
+  final int totalPages;
+
+  ProductionBatchListResult({
+    required this.items,
+    required this.total,
+    required this.page,
+    required this.pageSize,
+    required this.totalPages,
+  });
+}
+
+class ProductionService {
+  final ApiClient _client;
+
+  ProductionService({ApiClient? client}) : _client = client ?? ApiClient();
+
+  Future<ProductionBatchListResult> getBatches({
+    String? basketTypeId,
+    bool? isCustom,
+    String? status,
+    String? search,
+    DateTime? startDate,
+    DateTime? endDate,
+    int page = 1,
+    int pageSize = 50,
+  }) async {
+    final queryParams = <String>[
+      'page=$page',
+      'page_size=$pageSize',
+    ];
+
+    if (basketTypeId != null && basketTypeId.isNotEmpty) {
+      queryParams.add('basket_type_id=${Uri.encodeComponent(basketTypeId)}');
+    }
+    if (isCustom != null) {
+      queryParams.add('is_custom=$isCustom');
+    }
+    if (status != null && status.isNotEmpty) {
+      queryParams.add('status=${Uri.encodeComponent(status)}');
+    }
+    if (search != null && search.isNotEmpty) {
+      queryParams.add('search=${Uri.encodeComponent(search)}');
+    }
+    if (startDate != null) {
+      queryParams.add('start_date=${Uri.encodeComponent(startDate.toIso8601String())}');
+    }
+    if (endDate != null) {
+      queryParams.add('end_date=${Uri.encodeComponent(endDate.toIso8601String())}');
+    }
+
+    final query = '?${queryParams.join('&')}';
+    final response = await _client.get('/api/v1/production/batches$query');
+
+    final rawItems = (response['items'] as List<dynamic>? ?? []);
+    final items = rawItems
+        .map((j) => ProductionBatch.fromJson(j as Map<String, dynamic>))
+        .toList();
+
+    return ProductionBatchListResult(
+      items: items,
+      total: response['total'] as int? ?? items.length,
+      page: response['page'] as int? ?? page,
+      pageSize: response['page_size'] as int? ?? pageSize,
+      totalPages: response['total_pages'] as int? ?? 1,
+    );
+  }
+
+  Future<ProductionBatch> getBatch(String id) async {
+    final response = await _client.get('/api/v1/production/batches/$id');
+    return ProductionBatch.fromJson(response as Map<String, dynamic>);
+  }
+
+  Future<ProductionPreview> previewBatch(Map<String, dynamic> data) async {
+    final response = await _client.post(
+      '/api/v1/production/preview',
+      body: data,
+      isMutation: false,
+    );
+    return ProductionPreview.fromJson(response as Map<String, dynamic>);
+  }
+
+  Future<ProductionBatch> createBatch(Map<String, dynamic> data) async {
+    final response = await _client.post(
+      '/api/v1/production/batches',
+      body: data,
+    );
+    return ProductionBatch.fromJson(response as Map<String, dynamic>);
+  }
+
+  Future<Map<String, dynamic>> disassembleBatch(
+    String id,
+    Map<String, dynamic> data,
+  ) async {
+    final response = await _client.post(
+      '/api/v1/production/batches/$id/disassemble',
+      body: data,
+    );
+    return response as Map<String, dynamic>;
+  }
+
+  Future<Map<String, dynamic>> cancelBatch(
+    String id, {
+    required String reason,
+  }) async {
+    final response = await _client.post(
+      '/api/v1/production/batches/$id/cancel',
+      body: {'reason': reason},
+    );
+    return response as Map<String, dynamic>;
+  }
+}

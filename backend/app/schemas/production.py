@@ -25,6 +25,7 @@ class CustomItemInput(BaseModel):
 
 
 class ProductionBatchCreate(BaseModel):
+    expected_recipe_version_number: Optional[int] = Field(None, gt=0, description="Versao revisada pelo operador; impede confirmar uma composicao alterada depois da previa")
     basket_type_id: str = Field(..., description="ID do tipo de cesta a produzir")
     quantity_produced: int = Field(..., gt=0, description="Quantidade de cestas a montar (inteiro positivo)")
     is_custom: bool = Field(default=False, description="Indica se a montagem e de cesta personalizada")

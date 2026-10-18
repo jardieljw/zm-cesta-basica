@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-16",
+  "decision": "FE-052",
+  "phase": "planning_and_preview",
+  "productionImplementation": false,
+  "source": {
+    "path": "docs/referencias_frontend/rodada-organizacao-2026-10-16/organizacao-integrada-zm.html",
+    "decision": "FE-049",
+    "sha256": "613beab1e444448ba69c46dc26fbc4ab1072661915c1aa695a8f6b53314a6a6d"
+  },
+  "candidate": {
+    "path": "docs/referencias_frontend/rodada-acabamento-2026-10-16/acabamento-integrado-zm.html",
+    "rootId": "zm-finish-demo",
+    "sha256": "774f5bbce0ccbc8048818a2daa24531804619551432113795a00a6dbe4eaf53f"
+  },
+  "userRequest": "Dislikes the large filter block in the initial screenshot; asks to advance the work while respecting architecture and existing agreements.",
+  "preserved": {
+    "originalStructuralStylesheet": true,
+    "navigationMarkup": true,
+    "accountFormReviewCalendarFunctions": true
+  },
+  "intentionalChanges": [
+    "Content material: blue/warm backdrop, soft glass, opaque fields and solid alternative.",
+    "Financial statement rows retain identity, current balance, original and paid/received values.",
+    "Existing six deadline scopes disclosed in native details, collapsed by default; active scope visible.",
+    "Presentation-only material control and state restoration."
+  ],
+  "notClaimed": [
+    "New global Flutter theme or navigation.",
+    "Bank features or new financial rules.",
+    "Native reduced-transparency support homologated.",
+    "Every visual parameter accepted by user."
+  ]
+}

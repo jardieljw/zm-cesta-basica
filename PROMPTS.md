@@ -1,5 +1,19 @@
 # Guia Oficial de Execução e Compilação — ZM Cesta Básica
 
+> **Atualização de 14/10/2026:** o cliente atual inclui montagem padrão antecipada
+> e histórico em Tipos de Cesta → Montagens, por páginas novas. As telas antigas
+> de produção/desmontagem e os demais módulos arquivados continuam no arquivo.
+> Ver [Montagens e histórico](docs/MONTAGENS_E_HISTORICO.md).
+
+> **Escopo do cliente — revisão de 14/10/2026:** produção em lote, desmontagem
+> separada, responsáveis, expedição/conferência/acerto e tesouraria estão
+> arquivados na interface, junto de seus relatórios exclusivos e formulário C.
+> Seus serviços e dados históricos permanecem no backend. Montagem na venda,
+> compras, vendas, fiado, contas a pagar e relatórios simplificados continuam
+> ativos. Os comandos abaixo compilam/executam o código atual; não restauram
+> automaticamente arquivos de `client/_archive`. Ver
+> [mecânicas atuais](docs/README.md) e [funções arquivadas](docs/FUNCOES_ARQUIVADAS.md).
+
 ---
 
 ## ⚠️ 0. Como Abrir o Terminal na Pasta Certa (Passo Obrigatório)

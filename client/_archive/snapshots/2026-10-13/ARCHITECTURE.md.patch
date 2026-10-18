@@ -1,0 +1,18 @@
+--- a/ARCHITECTURE.md
++++ b/ARCHITECTURE.md
+@@ -6,6 +6,15 @@
+ **Status do Projeto:** Fases 1 a 9 Concluídas e Homologadas (180 testes backend e 93 testes Flutter aprovados; compilações nativas Windows x64 e Android release APK geradas; análise estática 100% limpa)
+ **Topologia:** Monólito Modular em Rede Local Privada (Wi-Fi/Ethernet) sem dependência de nuvem  
+ **Público-alvo:** Desenvolvedores, Engenheiros de Software e Agentes de Inteligência Artificial
++
++
++> **Escopo atual do cliente — 13/10/2026:** as telas de produção em lote,
++> desmontagem, expedição/conferência, responsáveis e tesouraria estão arquivadas.
++> As descrições dessas fases abaixo são referência histórica e de domínio.
++> O backend e os dados históricos são preservados para os fluxos compartilhados.
++> Consulte [client/_archive/README.md](client/_archive/README.md) antes de restaurar
++> funções. Não reintroduzir menus, relatórios ou serviços exclusivos arquivados
++> sem solicitação do usuário. Montagem na venda e consulta de contas seguem ativas.
+ 
+ ---
+ 

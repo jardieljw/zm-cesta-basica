@@ -1,0 +1,309 @@
+{
+  "version": "0.8",
+  "reviewedAt": "2026-10-16",
+  "status": "partially_confirmed",
+  "decision": "FE-030",
+  "confirmedDecisions": [
+    "FE-028",
+    "FE-030"
+  ],
+  "format": "ZM planning data; not a runtime theme or a claim of DTCG conformance",
+  "color": {
+    "accentSeed": "#2866ae",
+    "light": {
+      "pageSoft": "#f6f7f9",
+      "pagePure": "#ffffff",
+      "surface": "#ffffff",
+      "field": "#f6f7f9",
+      "textPrimary": "#222730",
+      "textSecondary": "#5c6472",
+      "separator": "#d9dee7",
+      "controlEdge": "#7d8796",
+      "onAccent": "#ffffff",
+      "successText": "#246a4e",
+      "successFill": "#eaf5ef",
+      "warningText": "#80501a",
+      "warningFill": "#fff2df",
+      "errorText": "#a43136",
+      "errorFill": "#fff0ef"
+    },
+    "dark": {
+      "pageSoft": "#141518",
+      "pagePure": "#000000",
+      "surfaceSoft": "#24262b",
+      "surfaceOnPure": "#1c1e23",
+      "fieldSoft": "#141518",
+      "fieldOnPure": "#08090b",
+      "textPrimary": "#eef0f5",
+      "textSecondary": "#b6becb",
+      "separator": "#505867",
+      "controlEdge": "#7a8495",
+      "onAccent": "#142032",
+      "successText": "#a6ddc3",
+      "successFill": "#253d33",
+      "warningText": "#f2c78d",
+      "warningFill": "#4b3b29",
+      "errorText": "#ffb5b7",
+      "errorFill": "#472c30"
+    },
+    "accentDerivation": {
+      "source": "fundamentos-visuais-revisados-zm.html: foundationPalette, readableTone",
+      "softFill": "sRGB seed weight 0.07 over white in light; 0.23 over #141518 in dark",
+      "foreground": "Start from seed; blend toward black in light or white in dark until specified backgrounds reach 4.5:1",
+      "onAccent": "Use paired foreground from the selected mode; include it among the tested backgrounds",
+      "limit": "Demonstration algorithm; re-evaluate rendering, all states and platform policies before Flutter integration"
+    },
+    "preference": {
+      "defaultSeed": "#2866ae",
+      "userAdjustable": true,
+      "entryPoint": "App settings",
+      "scope": "Confirmed requirement, not implemented in Flutter",
+      "persistenceScope": "To define for local device/profile before integration"
+    }
+  },
+  "space": {
+    "unit": "CSS px in the preview; logical units to review for Flutter",
+    "scale": [
+      4,
+      8,
+      12,
+      16,
+      20,
+      24,
+      32
+    ],
+    "fieldGroup": {
+      "default": 20,
+      "previewRange": [
+        16,
+        32
+      ],
+      "step": 4,
+      "status": "Confirmed by the user: 20 between field groups; actual Flutter logical units to validate"
+    },
+    "labelToControl": 9,
+    "panelInset": {
+      "default": 20,
+      "maximum": 24,
+      "narrowMaximum": 20
+    },
+    "pageInset": {
+      "default": 20,
+      "narrow": 14
+    }
+  },
+  "shape": {
+    "panelRadius": {
+      "default": 32,
+      "previewRange": [
+        24,
+        40
+      ],
+      "step": 4
+    },
+    "fieldRadius": {
+      "default": 24,
+      "previewRange": [
+        20,
+        32
+      ],
+      "step": 4
+    },
+    "singleLineActionAndChoice": "capsule",
+    "status": "Panel radius 32 and field radius 24 explicitly confirmed by the user in FE-030; planning values, not implemented in Flutter"
+  },
+  "typography": {
+    "decision": "FE-049",
+    "status": "recovered_reading_selected_as_reference_native_metrics_to_validate",
+    "source": "HIERARQUIA_E_TIPOGRAFIA_FRONTEND.md",
+    "unit": "Planning base; CSS px for future web samples, logical styles and platform text scaling to validate for Flutter",
+    "family": "Platform-appropriate sans serif proposed; exact family not selected",
+    "roles": {
+      "pageTitle": {
+        "size": 23,
+        "lineHeight": 33.35,
+        "weight": 500
+      },
+      "sectionTitle": {
+        "size": 16,
+        "lineHeight": 23.2,
+        "weight": 500
+      },
+      "itemTitle": {
+        "size": 15,
+        "lineHeight": 21.75,
+        "weight": 500
+      },
+      "body": {
+        "size": 15,
+        "lineHeight": 21.75,
+        "weight": 400
+      },
+      "fieldLabel": {
+        "size": 15,
+        "lineHeight": 21.75,
+        "weight": 500
+      },
+      "support": {
+        "size": 12,
+        "lineHeight": 17.4,
+        "weight": 400
+      },
+      "fieldHelp": {
+        "size": 13,
+        "lineHeight": 18.85,
+        "weight": 400
+      },
+      "amountMain": {
+        "size": 32,
+        "lineHeight": 46.4,
+        "weight": 500
+      },
+      "amountRow": {
+        "size": 15,
+        "lineHeight": 21.75,
+        "weight": 500
+      },
+      "action": {
+        "size": 15,
+        "lineHeight": 21.75,
+        "weight": 500
+      },
+      "amountSummary": {
+        "size": 23,
+        "lineHeight": 33.35,
+        "weight": 500,
+        "narrowSize": 21
+      },
+      "textInput": {
+        "size": 16,
+        "lineHeight": 24,
+        "weight": 400
+      }
+    },
+    "numbers": "Tabular figures where supported for comparable/changing amounts; preserve domain currency, sign and precision",
+    "scaling": "Reflow content; do not clamp system text scaling or shrink critical text to preserve a fixed layout",
+    "limit": "User selected recovered balance; these CSS measurements document that web reference, not individually approved native metrics. Preserve platform text scaling and navigation adaptation work.",
+    "previewFamily": "Segoe UI, system-ui, sans-serif retained from FE-046 solely to isolate hierarchy; no final family selection",
+    "preview": "referencias_frontend/rodada-organizacao-2026-10-16/organizacao-integrada-zm.html",
+    "historicalProposalFE048": {
+      "roles": {
+        "pageTitle": {
+          "size": 24,
+          "lineHeight": 30,
+          "weight": 500
+        },
+        "sectionTitle": {
+          "size": 18,
+          "lineHeight": 24,
+          "weight": 500
+        },
+        "itemTitle": {
+          "size": 16,
+          "lineHeight": 22,
+          "weight": 500
+        },
+        "body": {
+          "size": 16,
+          "lineHeight": 24,
+          "weight": 400
+        },
+        "fieldLabel": {
+          "size": 16,
+          "lineHeight": 22,
+          "weight": 500
+        },
+        "support": {
+          "size": 14,
+          "lineHeight": 20,
+          "weight": 400
+        },
+        "amountMain": {
+          "size": 28,
+          "lineHeight": 34,
+          "weight": 500
+        },
+        "amountRow": {
+          "size": 18,
+          "lineHeight": 24,
+          "weight": 500
+        },
+        "action": {
+          "size": 16,
+          "lineHeight": 22,
+          "weight": 500
+        },
+        "amountSummary": {
+          "size": 24,
+          "lineHeight": 30,
+          "weight": 500
+        }
+      },
+      "source": "referencias_frontend/rodada-tipografia-2026-10-16/hierarquia-integrada-zm.html",
+      "status": "rejected_as_default_by_user_for_excessive_size_and_weight"
+    }
+  },
+  "size": {
+    "touchTargetReferenceMinimum": 44,
+    "fieldReferenceMinimum": 56,
+    "textInputReference": 16,
+    "limit": "Allow wrapping and growth; do not derive Flutter native target requirements from this web sample alone"
+  },
+  "contrast": {
+    "ordinaryTextTarget": 4.5,
+    "essentialControlEdgeTarget": 3,
+    "claim": "Selected pairs checked; not a complete WCAG or native accessibility certification"
+  },
+  "motion": {
+    "source": "PADROES_DE_MOVIMENTO_FRONTEND.md",
+    "themeAndAccentChange": "Switch foreground and background together, without independent background interpolation",
+    "limit": "Other demonstrated movement values remain proposals"
+  },
+  "materialStudy": {
+    "decision": "FE-052",
+    "status": "requested_direction_demonstrated_parameters_not_individually_confirmed",
+    "source": "docs/referencias_frontend/rodada-acabamento-2026-10-16/acabamento.css",
+    "roles": {
+      "coolGlow": {
+        "light": "#b9cde480",
+        "dark": "#486b963d"
+      },
+      "warmGlow": {
+        "light": "#d9c4a66b",
+        "dark": "#ad86642e"
+      },
+      "panel": {
+        "light": "#ffffffb8",
+        "dark": "#252b35e6"
+      },
+      "field": {
+        "light": "#f9fbfff2",
+        "dark": "#191f28"
+      },
+      "panelBlurCssPx": 18
+    },
+    "scope": "Content panels/summary/statement; no navigation geometry or typography changes. Field edge retained. Solid alternative included; native behavior pending integration.",
+    "compactFilters": "Six existing deadline scopes disclosed in native details; collapsed by default with active scope visible."
+  },
+  "scopedImplementation": {
+    "decision": "FE-054",
+    "component": "client/lib/widgets/shared/financial_surface.dart",
+    "scope": "Pagar/Receber reviewed journeys, Receber list and sale-origin view",
+    "logicalUnits": {
+      "panelRadius": 32,
+      "fieldRadius": 24,
+      "fieldGroupGap": 20
+    },
+    "nativeMaterial": {
+      "lightPanelAlpha": 0.78,
+      "darkPanelAlpha": 0.9,
+      "blurSigma": 12,
+      "highContrastOrAccessibleNavigation": "solid",
+      "backdrop": "cool/warm radial glows",
+      "shadow": "subtle 8 logical-unit offset, 24 blur",
+      "theme": "scoped FinancialJourneyTheme; not global"
+    },
+    "accentDefaultLight": "#2866ae",
+    "limit": "Not a global runtime theme or a proof of native Reduce Transparency integration. HTML material study values remain a separate proposal."
+  }
+}

@@ -1,0 +1,44 @@
+--- a/backend/app/api/v1/reports.py
++++ b/backend/app/api/v1/reports.py
+@@ -7,6 +7,7 @@
+ from app.api.deps import get_current_device
+ from app.models.auth import PairedDevice
+ from app.schemas.reports import ReportResponse
++from app.services.business_dashboard import get_business_financial_report
+ from app.services.reports import (
+     get_report_sales_dispatches,
+     get_report_assembly,
+@@ -27,6 +28,21 @@
+ router = APIRouter()
+ 
+ 
++@router.get("/reports/business-financial-summary", response_model=ReportResponse)
++def business_financial_report(
++    filter_type: str = Query("today"),
++    date: Optional[str] = Query(None),
++    start_date: Optional[str] = Query(None),
++    end_date: Optional[str] = Query(None),
++    month: Optional[int] = Query(None, ge=1, le=12),
++    year: Optional[int] = Query(None, ge=2000, le=2200),
++    db: Session = Depends(get_db),
++    device: PairedDevice = Depends(get_current_device),
++):
++    return get_business_financial_report(db, filter_type=filter_type, date_str=date,
++        start_date_str=start_date, end_date_str=end_date, month=month, year=year)
++
++
+ @router.get("/reports/sales-dispatches", response_model=ReportResponse)
+ def report_sales_dispatches(
+     filter_type: str = Query("today"),
+@@ -303,6 +319,11 @@
+         report_data = get_report_physical_inventory(
+             db=db, category=category, only_below_min=only_below_min,
+         )
++    elif report_type == "business-financial-summary":
++        report_data = get_business_financial_report(
++            db, filter_type=filter_type, date_str=date, start_date_str=start_date,
++            end_date_str=end_date, month=month, year=year,
++        )
+     elif report_type == "financial-summary":
+         report_data = get_report_financial_summary(
+             db=db, filter_type=filter_type, date_str=date, start_date_str=start_date,

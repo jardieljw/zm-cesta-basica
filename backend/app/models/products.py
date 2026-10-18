@@ -48,6 +48,7 @@ class BasketType(Base):
     allows_customization: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     tracks_finished_stock: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+    removed_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime, nullable=True)
 
     recipes: Mapped[List["RecipeVersion"]] = relationship(back_populates="basket_type")
 

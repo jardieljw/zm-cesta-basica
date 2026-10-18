@@ -139,7 +139,13 @@ def cmd_verify(args):
 def cmd_cleanup(args):
     keep = args.keep
     print(f"[*] Executando limpeza de backups antigos (mantendo os {keep} mais recentes)...")
-    backups = list_backups()
+    all_backups = list_backups()
+    # Previous business databases are retained until the operator explicitly
+    # removes their archive, rather than aging out with daily snapshots.
+    backups = [b for b in all_backups if not b['filename'].startswith('estoque_backup_pre_new_')]
+    protected_count = len(all_backups) - len(backups)
+    if protected_count:
+        print(f"[+] Preservando {protected_count} backup(s) de bancos anteriores.")
     if len(backups) <= keep:
         print(f"[+] Nenhum backup para remover. Total atual: {len(backups)} (limite: {keep}).")
         return 0

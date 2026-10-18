@@ -111,3 +111,15 @@ class Product {
   double get costPriceReais => costPriceCents / 100.0;
   double get salePriceReais => salePriceCents / 100.0;
 }
+
+class ProductDeletionCheck {
+  final bool canDelete;
+  final List<String> reasons;
+  ProductDeletionCheck({required this.canDelete, required this.reasons});
+  factory ProductDeletionCheck.fromJson(Map<String, dynamic> json) =>
+      ProductDeletionCheck(
+        canDelete: json['can_delete'] as bool,
+        reasons:
+            (json['reasons'] as List<dynamic>).map((r) => r as String).toList(),
+      );
+}

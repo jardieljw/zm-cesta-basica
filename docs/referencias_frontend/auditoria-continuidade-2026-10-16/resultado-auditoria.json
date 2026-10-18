@@ -1,0 +1,1856 @@
+{
+  "date": "2026-10-16",
+  "generated_at_utc": "2026-10-16T18:40:07.738533+00:00",
+  "scope": "Local archive, available HTML revisions, recorded decisions and declared sidebar styles. No app or preview changes.",
+  "historical_manifest_count": 11,
+  "historical_copy_count": 179,
+  "intact_historical_copies": 179,
+  "historical_manifests": [
+    {
+      "path": "docs/referencias_frontend/correcao-data-2026-10-16/manifesto.json",
+      "entries": 10,
+      "intact": 10
+    },
+    {
+      "path": "docs/referencias_frontend/manifesto.json",
+      "entries": 11,
+      "intact": 11
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/manifesto.json",
+      "entries": 27,
+      "intact": 27
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/manifesto.json",
+      "entries": 20,
+      "intact": 20
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-calendario-movimento-2026-10-16/manifesto.json",
+      "entries": 9,
+      "intact": 9
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/manifesto.json",
+      "entries": 23,
+      "intact": 23
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-integral-2026-10-16/manifesto.json",
+      "entries": 15,
+      "intact": 15
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/manifesto.json",
+      "entries": 14,
+      "intact": 14
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-pagar-2026-10-15/manifesto.json",
+      "entries": 13,
+      "intact": 13
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/manifesto.json",
+      "entries": 18,
+      "intact": 18
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/manifesto.json",
+      "entries": 19,
+      "intact": 19
+    }
+  ],
+  "historical_files": [
+    {
+      "path": "docs/referencias_frontend/correcao-data-2026-10-16/jornada-pagar-data-alinhada-zm.html",
+      "expected_sha256": "44f26e432a75a9290a3fef9b15846745f3b9b3e56efc3264d347cbfa551b42d6",
+      "actual_sha256": "44f26e432a75a9290a3fef9b15846745f3b9b3e56efc3264d347cbfa551b42d6",
+      "expected_bytes": 64955,
+      "actual_bytes": 64955,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/correcao-data-2026-10-16/jornada-pagar-data-alinhada-zm-preview.html",
+      "expected_sha256": "efb76e402fcbae219bcd5951799c923bb8adce579179a25e2563d66e02df2ed9",
+      "actual_sha256": "efb76e402fcbae219bcd5951799c923bb8adce579179a25e2563d66e02df2ed9",
+      "expected_bytes": 158607,
+      "actual_bytes": 158607,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/correcao-data-2026-10-16/jornada-pagar-integral-zm-preview.html",
+      "expected_sha256": "507e8f0a5ce4b84ba2afbd513dbab7901e6f821cf3e0da1fa121bd5cbdee5ec4",
+      "actual_sha256": "507e8f0a5ce4b84ba2afbd513dbab7901e6f821cf3e0da1fa121bd5cbdee5ec4",
+      "expected_bytes": 158328,
+      "actual_bytes": 158328,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/correcao-data-2026-10-16/check-data-alinhada.cjs",
+      "expected_sha256": "8450b98d7db4f742a9da0145ddf89df83a875e3dfb2d7aae3c0b3c573d566404",
+      "actual_sha256": "8450b98d7db4f742a9da0145ddf89df83a875e3dfb2d7aae3c0b3c573d566404",
+      "expected_bytes": 8358,
+      "actual_bytes": 8358,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/correcao-data-2026-10-16/data-alinhada-verificacao.json",
+      "expected_sha256": "7004d718f33f40fb3f3588d01186b24e8bfaccb202fa511d7961dfb1e51d3c66",
+      "actual_sha256": "7004d718f33f40fb3f3588d01186b24e8bfaccb202fa511d7961dfb1e51d3c66",
+      "expected_bytes": 66163,
+      "actual_bytes": 66163,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/correcao-data-2026-10-16/data-edge-integral.png",
+      "expected_sha256": "db59a952d31a7c5db8882b6d8827edc424867605abd37cb321b0eb3aa5523866",
+      "actual_sha256": "db59a952d31a7c5db8882b6d8827edc424867605abd37cb321b0eb3aa5523866",
+      "expected_bytes": 53883,
+      "actual_bytes": 53883,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/correcao-data-2026-10-16/data-edge-parcial.png",
+      "expected_sha256": "afb7cc67824d072d553cbd856cddb27dcc385035bcae89dbd2bf2d31481c8f2b",
+      "actual_sha256": "afb7cc67824d072d553cbd856cddb27dcc385035bcae89dbd2bf2d31481c8f2b",
+      "expected_bytes": 61716,
+      "actual_bytes": 61716,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/correcao-data-2026-10-16/data-webkit-integral.png",
+      "expected_sha256": "ed48ab08157a4cb1b7a16b5ecac7ea78454fac302bebf5ddf0f6ccbf364628c6",
+      "actual_sha256": "ed48ab08157a4cb1b7a16b5ecac7ea78454fac302bebf5ddf0f6ccbf364628c6",
+      "expected_bytes": 48757,
+      "actual_bytes": 48757,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/correcao-data-2026-10-16/data-webkit-parcial.png",
+      "expected_sha256": "61383f15e83ab5e9a0e6bd98c7d56f88de4ae1bbea21983efe359597f25f5b73",
+      "actual_sha256": "61383f15e83ab5e9a0e6bd98c7d56f88de4ae1bbea21983efe359597f25f5b73",
+      "expected_bytes": 54338,
+      "actual_bytes": 54338,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/correcao-data-2026-10-16/data-excedendo-iphone.jpg",
+      "expected_sha256": "828395f25f9356dd6dc80387baeb97fc6e2593e181a6bc36e26a0122f6500fd6",
+      "actual_sha256": "828395f25f9356dd6dc80387baeb97fc6e2593e181a6bc36e26a0122f6500fd6",
+      "expected_bytes": 89383,
+      "actual_bytes": 89383,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/direcoes-design-zm-ajustavel.html",
+      "expected_sha256": "dc45605433951d7cf2575d2d8dd23fe86069def948713b246a3a6f38fc51db5c",
+      "actual_sha256": "dc45605433951d7cf2575d2d8dd23fe86069def948713b246a3a6f38fc51db5c",
+      "expected_bytes": 35203,
+      "actual_bytes": 35203,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/direcoes-design-zm-ajustavel-preview.html",
+      "expected_sha256": "dff4312fbfbe1e92599198a667d054503ab589b4b672baa1429b14f21fe55373",
+      "actual_sha256": "dff4312fbfbe1e92599198a667d054503ab589b4b672baa1429b14f21fe55373",
+      "expected_bytes": 119849,
+      "actual_bytes": 119849,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/mapa-navegavel-zm.html",
+      "expected_sha256": "79388750430b1f39a50aafedb804053526db77524b11f46cefc5c72b7ae55758",
+      "actual_sha256": "79388750430b1f39a50aafedb804053526db77524b11f46cefc5c72b7ae55758",
+      "expected_bytes": 29386,
+      "actual_bytes": 29386,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/mapa-navegavel-zm-preview.html",
+      "expected_sha256": "6e455583fff6b5381ac2bf31b63c33766bae17849d9363fdee1ecf79acab3bcf",
+      "actual_sha256": "6e455583fff6b5381ac2bf31b63c33766bae17849d9363fdee1ecf79acab3bcf",
+      "expected_bytes": 116256,
+      "actual_bytes": 116256,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/check-design-controls.cjs",
+      "expected_sha256": "c83053b6424eb9926d77d434f3f16219c4ae7be6fa50456cb07ea3abc7271ac7",
+      "actual_sha256": "c83053b6424eb9926d77d434f3f16219c4ae7be6fa50456cb07ea3abc7271ac7",
+      "expected_bytes": 5637,
+      "actual_bytes": 5637,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/check-navigation-preview.cjs",
+      "expected_sha256": "46c24047c9a86f61b020b9c7d656d77785475668a2caab622f0e7b6926716a0d",
+      "actual_sha256": "46c24047c9a86f61b020b9c7d656d77785475668a2caab622f0e7b6926716a0d",
+      "expected_bytes": 3539,
+      "actual_bytes": 3539,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/navigation-mobile.png",
+      "expected_sha256": "ca39d461cb49c352c4aa7ff489e97cc02bab30d7af51126c05f025ae8bc7e287",
+      "actual_sha256": "ca39d461cb49c352c4aa7ff489e97cc02bab30d7af51126c05f025ae8bc7e287",
+      "expected_bytes": 66686,
+      "actual_bytes": 66686,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/navigation-desktop.png",
+      "expected_sha256": "a204f7a1375e5acecc2392adbe0917faf791c938c566db26f3579054330dad06",
+      "actual_sha256": "a204f7a1375e5acecc2392adbe0917faf791c938c566db26f3579054330dad06",
+      "expected_bytes": 81133,
+      "actual_bytes": 81133,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/navigation-dark-mobile.png",
+      "expected_sha256": "410d04bc7b4002060dffc095af577083f65cf3bb90241f53714ab6b9c520a00d",
+      "actual_sha256": "410d04bc7b4002060dffc095af577083f65cf3bb90241f53714ab6b9c520a00d",
+      "expected_bytes": 60008,
+      "actual_bytes": 60008,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/controls-glass-mobile.png",
+      "expected_sha256": "0c07431ff07f0212770a606bdc7d5a7e5c8d9ebab2a76d10736a5547bfbe2367",
+      "actual_sha256": "0c07431ff07f0212770a606bdc7d5a7e5c8d9ebab2a76d10736a5547bfbe2367",
+      "expected_bytes": 244294,
+      "actual_bytes": 244294,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/briefing-inicial.txt",
+      "expected_sha256": "3d72b79a9534461052e4b55d9e6ee0f9f03b22441e21ff1b8432329e9e1660b4",
+      "actual_sha256": "3d72b79a9534461052e4b55d9e6ee0f9f03b22441e21ff1b8432329e9e1660b4",
+      "expected_bytes": 14257,
+      "actual_bytes": 14257,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-visuais-revisados-zm.html",
+      "expected_sha256": "c145b49a5c0c44495ff014af1ea424b91f9dd4a540cc9ef86861a068b1bff384",
+      "actual_sha256": "c145b49a5c0c44495ff014af1ea424b91f9dd4a540cc9ef86861a068b1bff384",
+      "expected_bytes": 49924,
+      "actual_bytes": 49924,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-visuais-revisados-zm-preview.html",
+      "expected_sha256": "1a5dda8f0b985de0b3b5fd78bc37a7deef75e936375616710ff7ee1f05fcf198",
+      "actual_sha256": "1a5dda8f0b985de0b3b5fd78bc37a7deef75e936375616710ff7ee1f05fcf198",
+      "expected_bytes": 141029,
+      "actual_bytes": 141029,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/check-ajustes-reais-zm.cjs",
+      "expected_sha256": "6046b3b12538fe93aa9d48f26a80f226ce808c880ed8422ad78c7b5dbe122a81",
+      "actual_sha256": "6046b3b12538fe93aa9d48f26a80f226ce808c880ed8422ad78c7b5dbe122a81",
+      "expected_bytes": 9287,
+      "actual_bytes": 9287,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/ajustes-reais-verificacao.json",
+      "expected_sha256": "70fbd65a20f8a32143df03404afac2e3e90102583f7150ec5b74dd72f92c2b86",
+      "actual_sha256": "70fbd65a20f8a32143df03404afac2e3e90102583f7150ec5b74dd72f92c2b86",
+      "expected_bytes": 5126,
+      "actual_bytes": 5126,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/check-fundamentos-revisados.cjs",
+      "expected_sha256": "d7adbd171eebafd79778fe99c53bfae9f8984b3098f84dd403d447552fbef069",
+      "actual_sha256": "d7adbd171eebafd79778fe99c53bfae9f8984b3098f84dd403d447552fbef069",
+      "expected_bytes": 14912,
+      "actual_bytes": 14912,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-verificacao.json",
+      "expected_sha256": "b1c041090b32dde1eca21e7740a9ddf64094aa91cfca4d493fb5ccef8cf9a5a3",
+      "actual_sha256": "b1c041090b32dde1eca21e7740a9ddf64094aa91cfca4d493fb5ccef8cf9a5a3",
+      "expected_bytes": 213869,
+      "actual_bytes": 213869,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-edge-confirmacao-pendente.png",
+      "expected_sha256": "a77191d50759d6e38f7e015789871a8e2424fcf408f63566f7030deb7ef2c41c",
+      "actual_sha256": "a77191d50759d6e38f7e015789871a8e2424fcf408f63566f7030deb7ef2c41c",
+      "expected_bytes": 35520,
+      "actual_bytes": 35520,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-edge-destaque-ametista.png",
+      "expected_sha256": "5b43ab293918ee465b55099d014061357851829018db9701a9716511a2a9ad26",
+      "actual_sha256": "5b43ab293918ee465b55099d014061357851829018db9701a9716511a2a9ad26",
+      "expected_bytes": 52328,
+      "actual_bytes": 52328,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-edge-destaque-petroleo.png",
+      "expected_sha256": "0249b1d10abff17910cc05a66b68e6a238c3656b0b575c61251ad5625a43e589",
+      "actual_sha256": "0249b1d10abff17910cc05a66b68e6a238c3656b0b575c61251ad5625a43e589",
+      "expected_bytes": 49126,
+      "actual_bytes": 49126,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-edge-formulario-claro.png",
+      "expected_sha256": "62ff54680c21321e28171f0ca898ae3e335dce381861ad812afea6b790711506",
+      "actual_sha256": "62ff54680c21321e28171f0ca898ae3e335dce381861ad812afea6b790711506",
+      "expected_bytes": 52036,
+      "actual_bytes": 52036,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-edge-formulario-escuro.png",
+      "expected_sha256": "643896284ec88822548662f8b54ccdb3949c7c4391c6996b9bfaa33726619238",
+      "actual_sha256": "643896284ec88822548662f8b54ccdb3949c7c4391c6996b9bfaa33726619238",
+      "expected_bytes": 51087,
+      "actual_bytes": 51087,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-edge-lista-ampla.png",
+      "expected_sha256": "ceab51e14f3bd0469ce3b2eb07cefc9ce8b403f195ce89a9552cf5005929851f",
+      "actual_sha256": "ceab51e14f3bd0469ce3b2eb07cefc9ce8b403f195ce89a9552cf5005929851f",
+      "expected_bytes": 34872,
+      "actual_bytes": 34872,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-edge-lista-celular-escura.png",
+      "expected_sha256": "2a588bdcf5441ffe66e5a9011e07b00ca3295c8e31252615773d176ba5eedf6b",
+      "actual_sha256": "2a588bdcf5441ffe66e5a9011e07b00ca3295c8e31252615773d176ba5eedf6b",
+      "expected_bytes": 32697,
+      "actual_bytes": 32697,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-edge-validacao.png",
+      "expected_sha256": "f5de593f2c9ed076b932448dcd509d398bdeaf92aeb3eeff0bf924215ce0b6f3",
+      "actual_sha256": "f5de593f2c9ed076b932448dcd509d398bdeaf92aeb3eeff0bf924215ce0b6f3",
+      "expected_bytes": 65777,
+      "actual_bytes": 65777,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-webkit-confirmacao-pendente.png",
+      "expected_sha256": "97463e57e85e54aa7af7b5b5b4e99eae1107ec4e8108053085b9f74dbf5736dd",
+      "actual_sha256": "97463e57e85e54aa7af7b5b5b4e99eae1107ec4e8108053085b9f74dbf5736dd",
+      "expected_bytes": 31025,
+      "actual_bytes": 31025,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-webkit-destaque-ametista.png",
+      "expected_sha256": "e20b1ddb7a5fd19ef2689cf881bfd247b2fca9f915cc1941c30a22cbe938e393",
+      "actual_sha256": "e20b1ddb7a5fd19ef2689cf881bfd247b2fca9f915cc1941c30a22cbe938e393",
+      "expected_bytes": 45711,
+      "actual_bytes": 45711,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-webkit-destaque-petroleo.png",
+      "expected_sha256": "c4556419e649f65ed729541ca1abff77b7cb8e8d677c657878b2b73f554033cf",
+      "actual_sha256": "c4556419e649f65ed729541ca1abff77b7cb8e8d677c657878b2b73f554033cf",
+      "expected_bytes": 43382,
+      "actual_bytes": 43382,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-webkit-formulario-claro.png",
+      "expected_sha256": "5e4401f2c6a2ecbb074d08bf56bb27e9b505da9c1e41e594819e9272a499e0d6",
+      "actual_sha256": "5e4401f2c6a2ecbb074d08bf56bb27e9b505da9c1e41e594819e9272a499e0d6",
+      "expected_bytes": 45730,
+      "actual_bytes": 45730,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-webkit-formulario-escuro.png",
+      "expected_sha256": "d207ccc014fe6d0578caabff8ca43b47f3cb27b5c26a91ae04f9afcfb1a624d7",
+      "actual_sha256": "d207ccc014fe6d0578caabff8ca43b47f3cb27b5c26a91ae04f9afcfb1a624d7",
+      "expected_bytes": 45675,
+      "actual_bytes": 45675,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-webkit-lista-ampla.png",
+      "expected_sha256": "13562d1f45b2c867c29941c073dcc2b66e2c30a2487f135f0d54c507da9ca052",
+      "actual_sha256": "13562d1f45b2c867c29941c073dcc2b66e2c30a2487f135f0d54c507da9ca052",
+      "expected_bytes": 29208,
+      "actual_bytes": 29208,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-webkit-lista-celular-escura.png",
+      "expected_sha256": "df957d697ec892f1e458ad15d48fe3c74da3ac80a6085b1846fa5acfc9e3d181",
+      "actual_sha256": "df957d697ec892f1e458ad15d48fe3c74da3ac80a6085b1846fa5acfc9e3d181",
+      "expected_bytes": 27979,
+      "actual_bytes": 27979,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-revisados-webkit-validacao.png",
+      "expected_sha256": "99b77c9e09e380ba09050c85319b0b6156bcabdbaaaa1711695557280603bf42",
+      "actual_sha256": "99b77c9e09e380ba09050c85319b0b6156bcabdbaaaa1711695557280603bf42",
+      "expected_bytes": 56785,
+      "actual_bytes": 56785,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/ajustes-reais-edge-claro.png",
+      "expected_sha256": "01a9efb930cd690e9f625eca43e755dc44232f15c546a94f8eed5bcfc5b0c1d6",
+      "actual_sha256": "01a9efb930cd690e9f625eca43e755dc44232f15c546a94f8eed5bcfc5b0c1d6",
+      "expected_bytes": 50187,
+      "actual_bytes": 50187,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/ajustes-reais-edge-escuro.png",
+      "expected_sha256": "34a89e92885e361274155032a5fd23f22f4ecb2294ff299a848af3b9848b9cc7",
+      "actual_sha256": "34a89e92885e361274155032a5fd23f22f4ecb2294ff299a848af3b9848b9cc7",
+      "expected_bytes": 56808,
+      "actual_bytes": 56808,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/ajustes-reais-webkit-claro.png",
+      "expected_sha256": "bc132f66bdef9289df94e4ac6822b40781213cd8b4955f2c72951c1f6549b669",
+      "actual_sha256": "bc132f66bdef9289df94e4ac6822b40781213cd8b4955f2c72951c1f6549b669",
+      "expected_bytes": 43764,
+      "actual_bytes": 43764,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/ajustes-reais-webkit-escuro.png",
+      "expected_sha256": "e1bb3df97fccbcd6d37631e0192e96edf7fb757cc7c9ec7a06a83c44b5914feb",
+      "actual_sha256": "e1bb3df97fccbcd6d37631e0192e96edf7fb757cc7c9ec7a06a83c44b5914feb",
+      "expected_bytes": 51883,
+      "actual_bytes": 51883,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-ajustes-2026-10-16/espacamento-20-enviado.png",
+      "expected_sha256": "2dfd362746f10296e43bacea597e08f53b59d78c551cc4010b257e213a0430b3",
+      "actual_sha256": "2dfd362746f10296e43bacea597e08f53b59d78c551cc4010b257e213a0430b3",
+      "expected_bytes": 3127,
+      "actual_bytes": 3127,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-visuais-zm.html",
+      "expected_sha256": "486160a8cbcf66aa502a9fcdce66ace04ca47e282451d4724970da3de5d60c0c",
+      "actual_sha256": "486160a8cbcf66aa502a9fcdce66ace04ca47e282451d4724970da3de5d60c0c",
+      "expected_bytes": 47518,
+      "actual_bytes": 47518,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-visuais-zm-preview.html",
+      "expected_sha256": "722ea0f350e738f814d5220ea68769e930e413feeea7919a61a8a8c2b352cd63",
+      "actual_sha256": "722ea0f350e738f814d5220ea68769e930e413feeea7919a61a8a8c2b352cd63",
+      "expected_bytes": 138550,
+      "actual_bytes": 138550,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/check-fundamentos-visuais.cjs",
+      "expected_sha256": "7093dae3bd05058726cd37b1280cf4c443c0c6961d8516d6cb4c8fc0b2607b7a",
+      "actual_sha256": "7093dae3bd05058726cd37b1280cf4c443c0c6961d8516d6cb4c8fc0b2607b7a",
+      "expected_bytes": 14864,
+      "actual_bytes": 14864,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-visuais-verificacao.json",
+      "expected_sha256": "b96bbf3bc08a507a086d053ec1edc7620e12085288c4d3ecc3470f8428b6e01d",
+      "actual_sha256": "b96bbf3bc08a507a086d053ec1edc7620e12085288c4d3ecc3470f8428b6e01d",
+      "expected_bytes": 213889,
+      "actual_bytes": 213889,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-edge-confirmacao-pendente.png",
+      "expected_sha256": "b71f995cb023221534170e9eee42fc68c055c47994a561984aee81bd304675c8",
+      "actual_sha256": "b71f995cb023221534170e9eee42fc68c055c47994a561984aee81bd304675c8",
+      "expected_bytes": 36089,
+      "actual_bytes": 36089,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-edge-destaque-ametista.png",
+      "expected_sha256": "d4843a5acabd949f1b96d4c6e985cd1c5c69e7655600567f557edb2b99f7c03e",
+      "actual_sha256": "d4843a5acabd949f1b96d4c6e985cd1c5c69e7655600567f557edb2b99f7c03e",
+      "expected_bytes": 52271,
+      "actual_bytes": 52271,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-edge-destaque-petroleo.png",
+      "expected_sha256": "59d8e0203ad3a9a441c529bd55210e694e86bd5d9c0707a56470dbc7cbbbb8b3",
+      "actual_sha256": "59d8e0203ad3a9a441c529bd55210e694e86bd5d9c0707a56470dbc7cbbbb8b3",
+      "expected_bytes": 49335,
+      "actual_bytes": 49335,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-edge-formulario-claro.png",
+      "expected_sha256": "47dbcf466f2572fc724c1dadc0fda2ac5fb1315d13e20bdfd4a668ca069ef0fe",
+      "actual_sha256": "47dbcf466f2572fc724c1dadc0fda2ac5fb1315d13e20bdfd4a668ca069ef0fe",
+      "expected_bytes": 52252,
+      "actual_bytes": 52252,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-edge-formulario-escuro.png",
+      "expected_sha256": "5c96b3a40c8234550524dcfb1ee7cfe073d49ed083e403b9557244aa70dd0425",
+      "actual_sha256": "5c96b3a40c8234550524dcfb1ee7cfe073d49ed083e403b9557244aa70dd0425",
+      "expected_bytes": 51254,
+      "actual_bytes": 51254,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-edge-lista-ampla.png",
+      "expected_sha256": "925216f386e8940fbe31b558a8749994ced43220641535c21ffb8a3ec4229356",
+      "actual_sha256": "925216f386e8940fbe31b558a8749994ced43220641535c21ffb8a3ec4229356",
+      "expected_bytes": 35015,
+      "actual_bytes": 35015,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-edge-lista-celular-escura.png",
+      "expected_sha256": "a67a1b71c7735db458ea7f3e98d1f56de990b5ff37bbc3c40a95cc823618226e",
+      "actual_sha256": "a67a1b71c7735db458ea7f3e98d1f56de990b5ff37bbc3c40a95cc823618226e",
+      "expected_bytes": 32801,
+      "actual_bytes": 32801,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-edge-validacao.png",
+      "expected_sha256": "314b62d8954176fb13b0b1e852e20f0917e4a75592d8a5dce3c1946708477f5e",
+      "actual_sha256": "314b62d8954176fb13b0b1e852e20f0917e4a75592d8a5dce3c1946708477f5e",
+      "expected_bytes": 66029,
+      "actual_bytes": 66029,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-webkit-confirmacao-pendente.png",
+      "expected_sha256": "3d67a4122f6b766654cf0bf06b7433e96494e65adddec43b70fb9e2631eae7bf",
+      "actual_sha256": "3d67a4122f6b766654cf0bf06b7433e96494e65adddec43b70fb9e2631eae7bf",
+      "expected_bytes": 31478,
+      "actual_bytes": 31478,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-webkit-destaque-ametista.png",
+      "expected_sha256": "77214a8c4e3f465155097ebb61fd6ae961e919a02995ef5e1d081b2d68d91a55",
+      "actual_sha256": "77214a8c4e3f465155097ebb61fd6ae961e919a02995ef5e1d081b2d68d91a55",
+      "expected_bytes": 46047,
+      "actual_bytes": 46047,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-webkit-destaque-petroleo.png",
+      "expected_sha256": "533cedb624b7e7c366e24d3545bb2abec2e84c8d457ae805b1ed00070841ac9e",
+      "actual_sha256": "533cedb624b7e7c366e24d3545bb2abec2e84c8d457ae805b1ed00070841ac9e",
+      "expected_bytes": 43670,
+      "actual_bytes": 43670,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-webkit-formulario-claro.png",
+      "expected_sha256": "6a2faed60145ee4aef7371873ac2b28640fa9a62bf8d66c3d29b7bfa65d8c30c",
+      "actual_sha256": "6a2faed60145ee4aef7371873ac2b28640fa9a62bf8d66c3d29b7bfa65d8c30c",
+      "expected_bytes": 45889,
+      "actual_bytes": 45889,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-webkit-formulario-escuro.png",
+      "expected_sha256": "afd09e9f73c42e8166dead9e53100aef17355f33e850271376f1ad6e073fee27",
+      "actual_sha256": "afd09e9f73c42e8166dead9e53100aef17355f33e850271376f1ad6e073fee27",
+      "expected_bytes": 45885,
+      "actual_bytes": 45885,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-webkit-lista-ampla.png",
+      "expected_sha256": "845e4d7a5e39b8797241b84e108199dcf2a1555f7d715f919930bc0053ccd5f2",
+      "actual_sha256": "845e4d7a5e39b8797241b84e108199dcf2a1555f7d715f919930bc0053ccd5f2",
+      "expected_bytes": 29382,
+      "actual_bytes": 29382,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-webkit-lista-celular-escura.png",
+      "expected_sha256": "da958257679015835ae219e2222b4c1700ba55a03b7ad136d1ca939f9aec11b2",
+      "actual_sha256": "da958257679015835ae219e2222b4c1700ba55a03b7ad136d1ca939f9aec11b2",
+      "expected_bytes": 28076,
+      "actual_bytes": 28076,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-webkit-validacao.png",
+      "expected_sha256": "f19cbf74cd471fce3c9175c46f4a152305f61c45873822c4a41e11877d22153f",
+      "actual_sha256": "f19cbf74cd471fce3c9175c46f4a152305f61c45873822c4a41e11877d22153f",
+      "expected_bytes": 57045,
+      "actual_bytes": 57045,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-calendario-movimento-2026-10-16/calendario-movimento-zm.html",
+      "expected_sha256": "a4647a619518c1339e8569dbf9a76228e3e9855485b4809d16b41b2c9d98bacf",
+      "actual_sha256": "a4647a619518c1339e8569dbf9a76228e3e9855485b4809d16b41b2c9d98bacf",
+      "expected_bytes": 49008,
+      "actual_bytes": 49008,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-calendario-movimento-2026-10-16/calendario-movimento-zm-preview.html",
+      "expected_sha256": "0bc6140f52d7140c8582c550a27dddd022a6e3247daa2b3e2df4f567790b81d2",
+      "actual_sha256": "0bc6140f52d7140c8582c550a27dddd022a6e3247daa2b3e2df4f567790b81d2",
+      "expected_bytes": 140136,
+      "actual_bytes": 140136,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-calendario-movimento-2026-10-16/check-calendar-motion-zm.cjs",
+      "expected_sha256": "387ebd17cc10c4d3f6d0b49f02e351fec00cde8a724cce9d677e166c30854ab9",
+      "actual_sha256": "387ebd17cc10c4d3f6d0b49f02e351fec00cde8a724cce9d677e166c30854ab9",
+      "expected_bytes": 10970,
+      "actual_bytes": 10970,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-calendario-movimento-2026-10-16/calendar-motion-before.json",
+      "expected_sha256": "014bef38922ff89a88e4bfcf84b3bc077658eaf525176b22890d42a142f9527c",
+      "actual_sha256": "014bef38922ff89a88e4bfcf84b3bc077658eaf525176b22890d42a142f9527c",
+      "expected_bytes": 11065,
+      "actual_bytes": 11065,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-calendario-movimento-2026-10-16/calendar-motion-verification.json",
+      "expected_sha256": "282cc66e3a577aa881aa9c40a39b52894d9253dad7c29db8f459cdd963b1079d",
+      "actual_sha256": "282cc66e3a577aa881aa9c40a39b52894d9253dad7c29db8f459cdd963b1079d",
+      "expected_bytes": 17165,
+      "actual_bytes": 17165,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-calendario-movimento-2026-10-16/calendar-edge-intermediate.png",
+      "expected_sha256": "041d49e5ece2fb00822da1d9ee3e71858dddb06ef0cddb9cbfa5f399dd8486b8",
+      "actual_sha256": "041d49e5ece2fb00822da1d9ee3e71858dddb06ef0cddb9cbfa5f399dd8486b8",
+      "expected_bytes": 74215,
+      "actual_bytes": 74215,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-calendario-movimento-2026-10-16/calendar-edge-complete.png",
+      "expected_sha256": "ee739a6703db0b6720431e656999a8513c7bb9c630df162a4b2edf2ae88b1b59",
+      "actual_sha256": "ee739a6703db0b6720431e656999a8513c7bb9c630df162a4b2edf2ae88b1b59",
+      "expected_bytes": 58581,
+      "actual_bytes": 58581,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-calendario-movimento-2026-10-16/calendar-webkit-intermediate.png",
+      "expected_sha256": "f1d0a8cfb771499e0f571ec626dc8f98d23102bc934436a7eb3eb058d318f15d",
+      "actual_sha256": "f1d0a8cfb771499e0f571ec626dc8f98d23102bc934436a7eb3eb058d318f15d",
+      "expected_bytes": 66440,
+      "actual_bytes": 66440,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-calendario-movimento-2026-10-16/calendar-webkit-complete.png",
+      "expected_sha256": "ea5d5a0682431de1c7423f5a6d16d4976ad8329c0dcd982cf3e9732840d93108",
+      "actual_sha256": "ea5d5a0682431de1c7423f5a6d16d4976ad8329c0dcd982cf3e9732840d93108",
+      "expected_bytes": 52165,
+      "actual_bytes": 52165,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-componentes-zm.html",
+      "expected_sha256": "42ea4ed5b760280a73f3868acdd20b536720491a5583897e5da8de5562766fa7",
+      "actual_sha256": "42ea4ed5b760280a73f3868acdd20b536720491a5583897e5da8de5562766fa7",
+      "expected_bytes": 42519,
+      "actual_bytes": 42519,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-componentes-zm-preview.html",
+      "expected_sha256": "3dfd0c30e8695a9bbf870a5a17682a48ed010c1501a66c6785aee76d9bd720f5",
+      "actual_sha256": "3dfd0c30e8695a9bbf870a5a17682a48ed010c1501a66c6785aee76d9bd720f5",
+      "expected_bytes": 129829,
+      "actual_bytes": 129829,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/check-catalogo-componentes.cjs",
+      "expected_sha256": "1a013800088396c769d1cad32a1962ff9e7277a9bf14ef68c9aa9e18dffce5f2",
+      "actual_sha256": "1a013800088396c769d1cad32a1962ff9e7277a9bf14ef68c9aa9e18dffce5f2",
+      "expected_bytes": 16497,
+      "actual_bytes": 16497,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-componentes-verificacao.json",
+      "expected_sha256": "d57b8516d9114f0b1f5ca76670968d1d823f78e09e12cd927f06f3245d8a2eee",
+      "actual_sha256": "d57b8516d9114f0b1f5ca76670968d1d823f78e09e12cd927f06f3245d8a2eee",
+      "expected_bytes": 36192,
+      "actual_bytes": 36192,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-edge-erros.png",
+      "expected_sha256": "980b601a995065fc009be9d2b5684f11d35b3a769bc623af385a33e2270e68b9",
+      "actual_sha256": "980b601a995065fc009be9d2b5684f11d35b3a769bc623af385a33e2270e68b9",
+      "expected_bytes": 69080,
+      "actual_bytes": 69080,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-edge-escuro.png",
+      "expected_sha256": "3344ff0af10c7c29b8a2ef341c071b89db2a190254b7a4d1ee43df196d2c20da",
+      "actual_sha256": "3344ff0af10c7c29b8a2ef341c071b89db2a190254b7a4d1ee43df196d2c20da",
+      "expected_bytes": 52073,
+      "actual_bytes": 52073,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-edge-indisponivel.png",
+      "expected_sha256": "c8420d883524055a5bf25dc8441f501e6b9a8d995199ccb0e3e6dedeac71d0bd",
+      "actual_sha256": "c8420d883524055a5bf25dc8441f501e6b9a8d995199ccb0e3e6dedeac71d0bd",
+      "expected_bytes": 20600,
+      "actual_bytes": 20600,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-edge-integral.png",
+      "expected_sha256": "27745cf23d5ea9b87a7946ad3932d6357840848ef886e0de063d376beca3b370",
+      "actual_sha256": "27745cf23d5ea9b87a7946ad3932d6357840848ef886e0de063d376beca3b370",
+      "expected_bytes": 52299,
+      "actual_bytes": 52299,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-edge-parcial.png",
+      "expected_sha256": "d9a5abba4f097ed510558ff54f7ca1cb95bafacc605f6e11c33229ad937c2a42",
+      "actual_sha256": "d9a5abba4f097ed510558ff54f7ca1cb95bafacc605f6e11c33229ad937c2a42",
+      "expected_bytes": 60796,
+      "actual_bytes": 60796,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-edge-recusa.png",
+      "expected_sha256": "4b7694d2d5d3a5f12fb45ccaf26d215b9f959d64bb2d502ffad18a99393709c8",
+      "actual_sha256": "4b7694d2d5d3a5f12fb45ccaf26d215b9f959d64bb2d502ffad18a99393709c8",
+      "expected_bytes": 35789,
+      "actual_bytes": 35789,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-edge-sem-confirmacao.png",
+      "expected_sha256": "42bbfb7cf1825838610d5089fb400c799fde9072c5189e51072a8966deb92318",
+      "actual_sha256": "42bbfb7cf1825838610d5089fb400c799fde9072c5189e51072a8966deb92318",
+      "expected_bytes": 35704,
+      "actual_bytes": 35704,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-edge-sucesso.png",
+      "expected_sha256": "dc64ff74b282fa99b249a81e802a74d9405591bfab1b50b441656d939fba7a53",
+      "actual_sha256": "dc64ff74b282fa99b249a81e802a74d9405591bfab1b50b441656d939fba7a53",
+      "expected_bytes": 27933,
+      "actual_bytes": 27933,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-edge-tabela.png",
+      "expected_sha256": "2fe9534a96bd6304ed54f1dbb520231ba725292664e6f57c19a26b9ad164a5d6",
+      "actual_sha256": "2fe9534a96bd6304ed54f1dbb520231ba725292664e6f57c19a26b9ad164a5d6",
+      "expected_bytes": 46989,
+      "actual_bytes": 46989,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-edge-ultima-consulta.png",
+      "expected_sha256": "2bc2ec704a85bb4a49071783a3837762accf2f303bda4d08aaf5f64b8ab1d6e7",
+      "actual_sha256": "2bc2ec704a85bb4a49071783a3837762accf2f303bda4d08aaf5f64b8ab1d6e7",
+      "expected_bytes": 32672,
+      "actual_bytes": 32672,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-webkit-erros.png",
+      "expected_sha256": "063dd109a94558919885f439913adf09d6d9eced1ecf52d3864eb7ed56b1d8aa",
+      "actual_sha256": "063dd109a94558919885f439913adf09d6d9eced1ecf52d3864eb7ed56b1d8aa",
+      "expected_bytes": 61507,
+      "actual_bytes": 61507,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-webkit-indisponivel.png",
+      "expected_sha256": "26131490f94fcae0eac04dd308eed0a42ea01ff94abc88700cb263f18a31c34e",
+      "actual_sha256": "26131490f94fcae0eac04dd308eed0a42ea01ff94abc88700cb263f18a31c34e",
+      "expected_bytes": 16255,
+      "actual_bytes": 16255,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-webkit-integral.png",
+      "expected_sha256": "d556e6f9ec80f85e160be609ed91cdec46ca60035d842b1a8e1c576410b0d300",
+      "actual_sha256": "d556e6f9ec80f85e160be609ed91cdec46ca60035d842b1a8e1c576410b0d300",
+      "expected_bytes": 45554,
+      "actual_bytes": 45554,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-webkit-parcial.png",
+      "expected_sha256": "c38860d0503b82e124dff11a7f448c8f3f60f585cfb9c8373b0ed27d4b19a885",
+      "actual_sha256": "c38860d0503b82e124dff11a7f448c8f3f60f585cfb9c8373b0ed27d4b19a885",
+      "expected_bytes": 51109,
+      "actual_bytes": 51109,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-webkit-recusa.png",
+      "expected_sha256": "398ffe7f70131cfd870d37621c2680c69d2e00b297fe309120645f0f664e31f7",
+      "actual_sha256": "398ffe7f70131cfd870d37621c2680c69d2e00b297fe309120645f0f664e31f7",
+      "expected_bytes": 30561,
+      "actual_bytes": 30561,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-webkit-sem-confirmacao.png",
+      "expected_sha256": "26001c3e2135e3c1ca7da55ad5988383df7517dd97c835f5d9aff64bd600297c",
+      "actual_sha256": "26001c3e2135e3c1ca7da55ad5988383df7517dd97c835f5d9aff64bd600297c",
+      "expected_bytes": 31060,
+      "actual_bytes": 31060,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-webkit-sucesso.png",
+      "expected_sha256": "8e1da3bf80d94ea0c75ee401e78869b137afe5b54f329ceb317c36f8f15dfe46",
+      "actual_sha256": "8e1da3bf80d94ea0c75ee401e78869b137afe5b54f329ceb317c36f8f15dfe46",
+      "expected_bytes": 23423,
+      "actual_bytes": 23423,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-webkit-tabela.png",
+      "expected_sha256": "1f5ee470d1250d3211455d3d22e9e8e8994c6fcfb50573684efd2cfbdff3ce8d",
+      "actual_sha256": "1f5ee470d1250d3211455d3d22e9e8e8994c6fcfb50573684efd2cfbdff3ce8d",
+      "expected_bytes": 30577,
+      "actual_bytes": 30577,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-webkit-ultima-consulta.png",
+      "expected_sha256": "c85c099d0c24c0a078bfa7d5654ff6f0ecc5808788314e27a7899d5042c7dfaf",
+      "actual_sha256": "c85c099d0c24c0a078bfa7d5654ff6f0ecc5808788314e27a7899d5042c7dfaf",
+      "expected_bytes": 22941,
+      "actual_bytes": 22941,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-integral-2026-10-16/jornada-pagar-integral-zm.html",
+      "expected_sha256": "8f865e718bc6d5424a472694825a583f6afea8ab50904e3252350e7b6f3f6879",
+      "actual_sha256": "8f865e718bc6d5424a472694825a583f6afea8ab50904e3252350e7b6f3f6879",
+      "expected_bytes": 64722,
+      "actual_bytes": 64722,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-integral-2026-10-16/jornada-pagar-integral-zm-preview.html",
+      "expected_sha256": "507e8f0a5ce4b84ba2afbd513dbab7901e6f821cf3e0da1fa121bd5cbdee5ec4",
+      "actual_sha256": "507e8f0a5ce4b84ba2afbd513dbab7901e6f821cf3e0da1fa121bd5cbdee5ec4",
+      "expected_bytes": 158328,
+      "actual_bytes": 158328,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-integral-2026-10-16/check-pagamento-integral.cjs",
+      "expected_sha256": "721fca8470cff8f10143e1902380d5dd3eeb3e69bd3057228dcc5cb07fa60233",
+      "actual_sha256": "721fca8470cff8f10143e1902380d5dd3eeb3e69bd3057228dcc5cb07fa60233",
+      "expected_bytes": 19612,
+      "actual_bytes": 19612,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-integral-2026-10-16/pagamento-integral-verificacao.json",
+      "expected_sha256": "79d1403ade630f403ff0f769b1456181ce550d7297f02b6dc4e48f870eb7246d",
+      "actual_sha256": "79d1403ade630f403ff0f769b1456181ce550d7297f02b6dc4e48f870eb7246d",
+      "expected_bytes": 6880,
+      "actual_bytes": 6880,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-integral-2026-10-16/integral-padrao-mobile.png",
+      "expected_sha256": "6424bb0553953e44097d380ff1dfe9ce389041a8ae276f803fc25b802647b88d",
+      "actual_sha256": "6424bb0553953e44097d380ff1dfe9ce389041a8ae276f803fc25b802647b88d",
+      "expected_bytes": 56069,
+      "actual_bytes": 56069,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-integral-2026-10-16/integral-lista-mobile.png",
+      "expected_sha256": "2bbb8944b41edcb8dcbd6a3e03ee20e49054e136ebca658f83845751078edcfd",
+      "actual_sha256": "2bbb8944b41edcb8dcbd6a3e03ee20e49054e136ebca658f83845751078edcfd",
+      "expected_bytes": 46301,
+      "actual_bytes": 46301,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-integral-2026-10-16/integral-detalhe-mobile.png",
+      "expected_sha256": "1b52db862b593de352a4550870e997d8dae916c97909cd8cefc09e758b87ab6c",
+      "actual_sha256": "1b52db862b593de352a4550870e997d8dae916c97909cd8cefc09e758b87ab6c",
+      "expected_bytes": 74089,
+      "actual_bytes": 74089,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-integral-2026-10-16/integral-formulario-mobile.png",
+      "expected_sha256": "5ce67ecc67050f476f0b9409359336850c9575ab763f58f17c524ba56b7ec7f7",
+      "actual_sha256": "5ce67ecc67050f476f0b9409359336850c9575ab763f58f17c524ba56b7ec7f7",
+      "expected_bytes": 62967,
+      "actual_bytes": 62967,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-integral-2026-10-16/integral-conferencia-mobile.png",
+      "expected_sha256": "aca9d4361a6950ea3665261e6a2be185fa096a1bc277bd4919db64a3908ad25c",
+      "actual_sha256": "aca9d4361a6950ea3665261e6a2be185fa096a1bc277bd4919db64a3908ad25c",
+      "expected_bytes": 44398,
+      "actual_bytes": 44398,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-integral-2026-10-16/integral-historico-mobile.png",
+      "expected_sha256": "364e87ff0fcdf95c3db2271b87d5486d16a310418d4ed6a69cfb9c3c769e5bfc",
+      "actual_sha256": "364e87ff0fcdf95c3db2271b87d5486d16a310418d4ed6a69cfb9c3c769e5bfc",
+      "expected_bytes": 78128,
+      "actual_bytes": 78128,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-integral-2026-10-16/integral-falha-mobile.png",
+      "expected_sha256": "13bd0915c2497114f9442d7918f5aa31fff0ba455299084e07a8afc2d4209248",
+      "actual_sha256": "13bd0915c2497114f9442d7918f5aa31fff0ba455299084e07a8afc2d4209248",
+      "expected_bytes": 50386,
+      "actual_bytes": 50386,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-integral-2026-10-16/integral-formulario-desktop.png",
+      "expected_sha256": "488dd8b470f4f581380451726c56ba0df9ee01a6cbc1ba1526890b4bcb3ac3c0",
+      "actual_sha256": "488dd8b470f4f581380451726c56ba0df9ee01a6cbc1ba1526890b4bcb3ac3c0",
+      "expected_bytes": 74282,
+      "actual_bytes": 74282,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-integral-2026-10-16/integral-historico-desktop.png",
+      "expected_sha256": "568b1fc563226cfb9e3634fec0c2e55732faca1013184302c5ea5c2e2f528ea6",
+      "actual_sha256": "568b1fc563226cfb9e3634fec0c2e55732faca1013184302c5ea5c2e2f528ea6",
+      "expected_bytes": 93942,
+      "actual_bytes": 93942,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-integral-2026-10-16/integral-historico-desktop-escuro.png",
+      "expected_sha256": "29e0476b19099dda3d6ffe1e6b20e7d65bb6afba70361f4a2f7e4a7066339d46",
+      "actual_sha256": "29e0476b19099dda3d6ffe1e6b20e7d65bb6afba70361f4a2f7e4a7066339d46",
+      "expected_bytes": 92992,
+      "actual_bytes": 92992,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-integral-2026-10-16/referencia-usuario.jpg",
+      "expected_sha256": "6af76087dd641f58056d403c9718fec66d11b226f80ee92f0c16507d50bb45a9",
+      "actual_sha256": "6af76087dd641f58056d403c9718fec66d11b226f80ee92f0c16507d50bb45a9",
+      "expected_bytes": 97312,
+      "actual_bytes": 97312,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/negocio-em-foco-zm.html",
+      "expected_sha256": "37b4ee4d1da14a45ec29996d867b9d5ce22f8ef291fdeda85aac084731d0c385",
+      "actual_sha256": "37b4ee4d1da14a45ec29996d867b9d5ce22f8ef291fdeda85aac084731d0c385",
+      "expected_bytes": 53376,
+      "actual_bytes": 53376,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/negocio-em-foco-zm-preview.html",
+      "expected_sha256": "2509f1b2d8951332230af8cd8af9615d6acd832d30add9966221ef1303217c55",
+      "actual_sha256": "2509f1b2d8951332230af8cd8af9615d6acd832d30add9966221ef1303217c55",
+      "expected_bytes": 146654,
+      "actual_bytes": 146654,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/check-negocio-em-foco.cjs",
+      "expected_sha256": "c2f0fe25550934b9cb14a799b7d85b2205d1c5b56cfa2f289bd3ef8341f799f8",
+      "actual_sha256": "c2f0fe25550934b9cb14a799b7d85b2205d1c5b56cfa2f289bd3ef8341f799f8",
+      "expected_bytes": 13865,
+      "actual_bytes": 13865,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/negocio-em-foco-verificacao.json",
+      "expected_sha256": "d92d1c80dbd285428b458751a5c2fc379fdc17ba9cc6a5c3fe26765aa9bc1978",
+      "actual_sha256": "d92d1c80dbd285428b458751a5c2fc379fdc17ba9cc6a5c3fe26765aa9bc1978",
+      "expected_bytes": 11442,
+      "actual_bytes": 11442,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/foco-edge-inicio-celular.png",
+      "expected_sha256": "75a2d30e6149166c3137c1db5d1bacc4e6a8f51f723dc294f56bcc248b907138",
+      "actual_sha256": "75a2d30e6149166c3137c1db5d1bacc4e6a8f51f723dc294f56bcc248b907138",
+      "expected_bytes": 79310,
+      "actual_bytes": 79310,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/foco-edge-inicio-escuro.png",
+      "expected_sha256": "e579eb2ff08215ed00de0c6591c65a6fef51ba216990b6bde9ec22a97ef6924d",
+      "actual_sha256": "e579eb2ff08215ed00de0c6591c65a6fef51ba216990b6bde9ec22a97ef6924d",
+      "expected_bytes": 72879,
+      "actual_bytes": 72879,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/foco-edge-inicio-windows.png",
+      "expected_sha256": "2858e644b36360d83f5ba7282435fe9064814b5aa19df5baad9457fe2ca298fa",
+      "actual_sha256": "2858e644b36360d83f5ba7282435fe9064814b5aa19df5baad9457fe2ca298fa",
+      "expected_bytes": 76155,
+      "actual_bytes": 76155,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/foco-edge-pagamento-celular.png",
+      "expected_sha256": "6b701a98885c73b1cb11a1f1c3abf61c11cb3ac9b21364ffbf4677624d646b67",
+      "actual_sha256": "6b701a98885c73b1cb11a1f1c3abf61c11cb3ac9b21364ffbf4677624d646b67",
+      "expected_bytes": 57715,
+      "actual_bytes": 57715,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/foco-edge-calendario-320.png",
+      "expected_sha256": "0bcff8272f4ece49e27cf6eb18d9cc74ec3e1f06ca384bdaf60063797a60a245",
+      "actual_sha256": "0bcff8272f4ece49e27cf6eb18d9cc74ec3e1f06ca384bdaf60063797a60a245",
+      "expected_bytes": 14819,
+      "actual_bytes": 14819,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/foco-webkit-inicio-celular.png",
+      "expected_sha256": "006029f8f064bc62ce52c371159c69839985e14ac93a8cbbd64fed648bd6edc4",
+      "actual_sha256": "006029f8f064bc62ce52c371159c69839985e14ac93a8cbbd64fed648bd6edc4",
+      "expected_bytes": 66665,
+      "actual_bytes": 66665,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/foco-webkit-inicio-escuro.png",
+      "expected_sha256": "3b933e0055634a10de9b88f93bfa09554ece9a561d98ebd45745e862ba5925fb",
+      "actual_sha256": "3b933e0055634a10de9b88f93bfa09554ece9a561d98ebd45745e862ba5925fb",
+      "expected_bytes": 62266,
+      "actual_bytes": 62266,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/foco-webkit-inicio-windows.png",
+      "expected_sha256": "bd5cec68af2c1dc803841fc4b65267a39675ba3b7e29d1302225d5a34018020b",
+      "actual_sha256": "bd5cec68af2c1dc803841fc4b65267a39675ba3b7e29d1302225d5a34018020b",
+      "expected_bytes": 64783,
+      "actual_bytes": 64783,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/foco-webkit-pagamento-celular.png",
+      "expected_sha256": "326092d2230c357c7ce8db8127838baba8a78c082c287749ade41faea82e3428",
+      "actual_sha256": "326092d2230c357c7ce8db8127838baba8a78c082c287749ade41faea82e3428",
+      "expected_bytes": 52204,
+      "actual_bytes": 52204,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/foco-webkit-calendario-320.png",
+      "expected_sha256": "ed9af8c0b070fd77b6e323f92589cc2de9d747d7f419ce4b8f580762dcf6567a",
+      "actual_sha256": "ed9af8c0b070fd77b6e323f92589cc2de9d747d7f419ce4b8f580762dcf6567a",
+      "expected_bytes": 12648,
+      "actual_bytes": 12648,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-pagar-2026-10-15/jornada-pagar-zm.html",
+      "expected_sha256": "f96b68e4be483c468fff05f829c18a3a63e9c2ee3f12ccc00d0969a36f18cd1f",
+      "actual_sha256": "f96b68e4be483c468fff05f829c18a3a63e9c2ee3f12ccc00d0969a36f18cd1f",
+      "expected_bytes": 56839,
+      "actual_bytes": 56839,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-pagar-2026-10-15/jornada-pagar-zm-preview.html",
+      "expected_sha256": "db1547ef4d3fda6a5e31ff52b9000e8341d1bd786f89b97098e5f967f8a05648",
+      "actual_sha256": "db1547ef4d3fda6a5e31ff52b9000e8341d1bd786f89b97098e5f967f8a05648",
+      "expected_bytes": 149554,
+      "actual_bytes": 149554,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-pagar-2026-10-15/check-jornada-pagar.cjs",
+      "expected_sha256": "29ed910f051e128db1ee99421ae31d156196d32a1bebd1047e0a0bff6f617153",
+      "actual_sha256": "29ed910f051e128db1ee99421ae31d156196d32a1bebd1047e0a0bff6f617153",
+      "expected_bytes": 14377,
+      "actual_bytes": 14377,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-pagar-2026-10-15/jornada-pagar-verificacao.json",
+      "expected_sha256": "3228bae484d055ffd9806ea7a72600248443e8e745a229d83e009060ccd2d906",
+      "actual_sha256": "3228bae484d055ffd9806ea7a72600248443e8e745a229d83e009060ccd2d906",
+      "expected_bytes": 5409,
+      "actual_bytes": 5409,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-pagar-2026-10-15/pagar-lista-mobile.png",
+      "expected_sha256": "d79580a9047f15cac7cb26b180dcf9b1c22bf85eb2865429d58a2ff630b5c738",
+      "actual_sha256": "d79580a9047f15cac7cb26b180dcf9b1c22bf85eb2865429d58a2ff630b5c738",
+      "expected_bytes": 42850,
+      "actual_bytes": 42850,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-pagar-2026-10-15/pagar-detalhe-mobile.png",
+      "expected_sha256": "383b333aa63f13c9ff0e4ec2dfd27912b21ca4127686e9f95a612d400ba7d3f4",
+      "actual_sha256": "383b333aa63f13c9ff0e4ec2dfd27912b21ca4127686e9f95a612d400ba7d3f4",
+      "expected_bytes": 70456,
+      "actual_bytes": 70456,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-pagar-2026-10-15/pagar-formulario-mobile.png",
+      "expected_sha256": "68e592adb40ffc175801e0c2c775ad6331490b93fe5f0f24d18a94166b011eb4",
+      "actual_sha256": "68e592adb40ffc175801e0c2c775ad6331490b93fe5f0f24d18a94166b011eb4",
+      "expected_bytes": 47715,
+      "actual_bytes": 47715,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-pagar-2026-10-15/pagar-conferencia-mobile.png",
+      "expected_sha256": "c4e36e305e9d07589476a8dc7547796e6ec5fa433a74e26b06fe46a51fd34e60",
+      "actual_sha256": "c4e36e305e9d07589476a8dc7547796e6ec5fa433a74e26b06fe46a51fd34e60",
+      "expected_bytes": 41613,
+      "actual_bytes": 41613,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-pagar-2026-10-15/pagar-historico-mobile.png",
+      "expected_sha256": "c3d340abb35893ac9f3220fd850a3d0e6a42a5519f9f1fce6f9db42909200964",
+      "actual_sha256": "c3d340abb35893ac9f3220fd850a3d0e6a42a5519f9f1fce6f9db42909200964",
+      "expected_bytes": 74381,
+      "actual_bytes": 74381,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-pagar-2026-10-15/pagar-falha-mobile.png",
+      "expected_sha256": "97e09af7acbf5934b162d640a928b7a78a94f4bd879181fc29366eabbf904315",
+      "actual_sha256": "97e09af7acbf5934b162d640a928b7a78a94f4bd879181fc29366eabbf904315",
+      "expected_bytes": 47549,
+      "actual_bytes": 47549,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-pagar-2026-10-15/pagar-formulario-desktop.png",
+      "expected_sha256": "d2bf9645c05714c78ee8374d287b9b9177d5729602fc66112e43674ac1090232",
+      "actual_sha256": "d2bf9645c05714c78ee8374d287b9b9177d5729602fc66112e43674ac1090232",
+      "expected_bytes": 58702,
+      "actual_bytes": 58702,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-pagar-2026-10-15/pagar-historico-desktop.png",
+      "expected_sha256": "815879f703091ba8304c9ad7cfd17f64d91fd09008bfe8c54215897172ccb81e",
+      "actual_sha256": "815879f703091ba8304c9ad7cfd17f64d91fd09008bfe8c54215897172ccb81e",
+      "expected_bytes": 88549,
+      "actual_bytes": 88549,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-pagar-2026-10-15/pagar-historico-desktop-escuro.png",
+      "expected_sha256": "de73fd392bf68cb550ff03c6d82c21c426c84fe4ce40981b70a676d7dc9ac2c2",
+      "actual_sha256": "de73fd392bf68cb550ff03c6d82c21c426c84fe4ce40981b70a676d7dc9ac2c2",
+      "expected_bytes": 88267,
+      "actual_bytes": 88267,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-e-movimento-zm.html",
+      "expected_sha256": "85e32e4a717c031f258bfea252895bcc3aca6c6d61ffa263d3d243d5f94cfee9",
+      "actual_sha256": "85e32e4a717c031f258bfea252895bcc3aca6c6d61ffa263d3d243d5f94cfee9",
+      "expected_bytes": 78903,
+      "actual_bytes": 78903,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-e-movimento-zm-preview.html",
+      "expected_sha256": "ee7480416a9a93a0c68175df334a728ea5388a7a2cf6ebc3d413968f5b2ae451",
+      "actual_sha256": "ee7480416a9a93a0c68175df334a728ea5388a7a2cf6ebc3d413968f5b2ae451",
+      "expected_bytes": 175478,
+      "actual_bytes": 175478,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/check-receber-movimento.cjs",
+      "expected_sha256": "e7d25cd82a09a6bba21c151e30e36c38face62e1790f2b9e11c30d5c24729e1d",
+      "actual_sha256": "e7d25cd82a09a6bba21c151e30e36c38face62e1790f2b9e11c30d5c24729e1d",
+      "expected_bytes": 13859,
+      "actual_bytes": 13859,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-movimento-verificacao.json",
+      "expected_sha256": "aef6a5bc87be4574b3f9ee654ea2afc4e0ab5f8f897b703451ad9a56b186cede",
+      "actual_sha256": "aef6a5bc87be4574b3f9ee654ea2afc4e0ab5f8f897b703451ad9a56b186cede",
+      "expected_bytes": 7383,
+      "actual_bytes": 7383,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-edge-conclusao.png",
+      "expected_sha256": "7f96494b8c350956c7102f4385ecc8c45284d37a7bc357728bc3066e9c1f69b1",
+      "actual_sha256": "7f96494b8c350956c7102f4385ecc8c45284d37a7bc357728bc3066e9c1f69b1",
+      "expected_bytes": 35804,
+      "actual_bytes": 35804,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-edge-detalhe.png",
+      "expected_sha256": "02361fd395535303725e9ddb1603eecb8c9b5815cb23660f8c6cc01d95a5bbab",
+      "actual_sha256": "02361fd395535303725e9ddb1603eecb8c9b5815cb23660f8c6cc01d95a5bbab",
+      "expected_bytes": 74897,
+      "actual_bytes": 74897,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-edge-falha.png",
+      "expected_sha256": "5b581b57c223a8d14445c36b31ac1a6aaee1230236016f822f7852350246f08a",
+      "actual_sha256": "5b581b57c223a8d14445c36b31ac1a6aaee1230236016f822f7852350246f08a",
+      "expected_bytes": 48598,
+      "actual_bytes": 48598,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-edge-integral.png",
+      "expected_sha256": "68ba682a43102ef73f88d20b15efef2c620812bef5fa50c560c2afac846788d4",
+      "actual_sha256": "68ba682a43102ef73f88d20b15efef2c620812bef5fa50c560c2afac846788d4",
+      "expected_bytes": 53405,
+      "actual_bytes": 53405,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-edge-lista.png",
+      "expected_sha256": "c57f68d22c63dd1ba1f0ab2c160bdaae5bed863cb910fc6f891e1d2bbe4145ff",
+      "actual_sha256": "c57f68d22c63dd1ba1f0ab2c160bdaae5bed863cb910fc6f891e1d2bbe4145ff",
+      "expected_bytes": 42750,
+      "actual_bytes": 42750,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-edge-parcial.png",
+      "expected_sha256": "fd1ad6bb7210ff8b64d483a5d795ee9565443695cfc273042c6845b2a8864a86",
+      "actual_sha256": "fd1ad6bb7210ff8b64d483a5d795ee9565443695cfc273042c6845b2a8864a86",
+      "expected_bytes": 61713,
+      "actual_bytes": 61713,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-edge-windows.png",
+      "expected_sha256": "bf340647271ab95223558b4dd4ac5f6c67d379672018a41ff595759e24d59627",
+      "actual_sha256": "bf340647271ab95223558b4dd4ac5f6c67d379672018a41ff595759e24d59627",
+      "expected_bytes": 43120,
+      "actual_bytes": 43120,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-webkit-conclusao.png",
+      "expected_sha256": "6b224f70a510a6fcc08a6f25d831c51989a869104aaf61ed05a169e3625d1105",
+      "actual_sha256": "6b224f70a510a6fcc08a6f25d831c51989a869104aaf61ed05a169e3625d1105",
+      "expected_bytes": 32255,
+      "actual_bytes": 32255,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-webkit-detalhe.png",
+      "expected_sha256": "ad44d3656dbbebb4dbe41d1deeb60c8f077743f87e944458ff778ebcdba9cac7",
+      "actual_sha256": "ad44d3656dbbebb4dbe41d1deeb60c8f077743f87e944458ff778ebcdba9cac7",
+      "expected_bytes": 53680,
+      "actual_bytes": 53680,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-webkit-falha.png",
+      "expected_sha256": "b8435c0f5baf67a72d3397b3b481bfd3e4abf5a67f3f38f0347d511fee6da628",
+      "actual_sha256": "b8435c0f5baf67a72d3397b3b481bfd3e4abf5a67f3f38f0347d511fee6da628",
+      "expected_bytes": 42680,
+      "actual_bytes": 42680,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-webkit-integral.png",
+      "expected_sha256": "119cc1ac1cb37ab4a38d9bff3d5ef43c88f426969acc48c23404fd711509c101",
+      "actual_sha256": "119cc1ac1cb37ab4a38d9bff3d5ef43c88f426969acc48c23404fd711509c101",
+      "expected_bytes": 48389,
+      "actual_bytes": 48389,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-webkit-lista.png",
+      "expected_sha256": "fde9a15b2ebd120e85940112336b05a75a7321e11a6cf33b6363eeba3e20a026",
+      "actual_sha256": "fde9a15b2ebd120e85940112336b05a75a7321e11a6cf33b6363eeba3e20a026",
+      "expected_bytes": 36881,
+      "actual_bytes": 36881,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-webkit-parcial.png",
+      "expected_sha256": "90f9a6bdc97b3ad46196071eb8b76b59dde18aaed61d31fc428db7ec55f4eb76",
+      "actual_sha256": "90f9a6bdc97b3ad46196071eb8b76b59dde18aaed61d31fc428db7ec55f4eb76",
+      "expected_bytes": 54138,
+      "actual_bytes": 54138,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-receber-2026-10-16/receber-webkit-windows.png",
+      "expected_sha256": "ca1451d00fcca6ce8132f9e7887ca9e244fb6098e13b3e133cadecb386df9e2f",
+      "actual_sha256": "ca1451d00fcca6ce8132f9e7887ca9e244fb6098e13b3e133cadecb386df9e2f",
+      "expected_bytes": 37777,
+      "actual_bytes": 37777,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/financeiro-origem-e-data-zm.html",
+      "expected_sha256": "7c7b10aa578f1e879e4806d9cbad9c17169a330b522a234d91349eaf90a5ff62",
+      "actual_sha256": "7c7b10aa578f1e879e4806d9cbad9c17169a330b522a234d91349eaf90a5ff62",
+      "expected_bytes": 77208,
+      "actual_bytes": 77208,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/financeiro-origem-e-data-zm-preview.html",
+      "expected_sha256": "d4eae1c47d43461deef7bf0d9e5009f74763f865b6a8401eb20dddfedfade082",
+      "actual_sha256": "d4eae1c47d43461deef7bf0d9e5009f74763f865b6a8401eb20dddfedfade082",
+      "expected_bytes": 173928,
+      "actual_bytes": 173928,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/check-financeiro-origem-data.cjs",
+      "expected_sha256": "7ef7aa2318b12dc47779a75f36cf42ddf24c1dacb043168c2a5d0aaac8736e59",
+      "actual_sha256": "7ef7aa2318b12dc47779a75f36cf42ddf24c1dacb043168c2a5d0aaac8736e59",
+      "expected_bytes": 16879,
+      "actual_bytes": 16879,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/financeiro-origem-data-verificacao.json",
+      "expected_sha256": "1014f509ef59f77cb937382facf805e7f29d7c83b9a3976e03aec3be03efb9cc",
+      "actual_sha256": "1014f509ef59f77cb937382facf805e7f29d7c83b9a3976e03aec3be03efb9cc",
+      "expected_bytes": 89949,
+      "actual_bytes": 89949,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/origem-data-edge-calendario.png",
+      "expected_sha256": "334da130899bb6937d109ee6de9347f2e9424ec6864169905b33a7acd7182e94",
+      "actual_sha256": "334da130899bb6937d109ee6de9347f2e9424ec6864169905b33a7acd7182e94",
+      "expected_bytes": 15560,
+      "actual_bytes": 15560,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/origem-data-edge-formulario.png",
+      "expected_sha256": "50182b315e0beee11a9192f6e6bad943bc7f33ff71abc7cd70e5bdca6ee76946",
+      "actual_sha256": "50182b315e0beee11a9192f6e6bad943bc7f33ff71abc7cd70e5bdca6ee76946",
+      "expected_bytes": 55571,
+      "actual_bytes": 55571,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/origem-data-edge-indisponivel.png",
+      "expected_sha256": "e07699fd3e7f592f6cb663392ef104f16a1580e236a390bfa5510d2b4379d289",
+      "actual_sha256": "e07699fd3e7f592f6cb663392ef104f16a1580e236a390bfa5510d2b4379d289",
+      "expected_bytes": 28922,
+      "actual_bytes": 28922,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/origem-data-edge-origem.png",
+      "expected_sha256": "fb0a5f56f7e85fa627ad093129c68c3788e4613b8ee34b44b493f4f63ab636bb",
+      "actual_sha256": "fb0a5f56f7e85fa627ad093129c68c3788e4613b8ee34b44b493f4f63ab636bb",
+      "expected_bytes": 79340,
+      "actual_bytes": 79340,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/origem-data-edge-resumo.png",
+      "expected_sha256": "343fc4adf0940f0c41149bf32222fbfa40968d2c0d7ec1aa106b26697c99da1c",
+      "actual_sha256": "343fc4adf0940f0c41149bf32222fbfa40968d2c0d7ec1aa106b26697c99da1c",
+      "expected_bytes": 29942,
+      "actual_bytes": 29942,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/origem-data-edge-tabela.png",
+      "expected_sha256": "75aac6054107d6bc312bca9d37e7faf746ff13182b82d109891a1086723c4a04",
+      "actual_sha256": "75aac6054107d6bc312bca9d37e7faf746ff13182b82d109891a1086723c4a04",
+      "expected_bytes": 43086,
+      "actual_bytes": 43086,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/origem-data-edge-vazio.png",
+      "expected_sha256": "af629863cf5eef22ee2f7e71eb15cf8fb97a768b66c53ae52181dbd71a948060",
+      "actual_sha256": "af629863cf5eef22ee2f7e71eb15cf8fb97a768b66c53ae52181dbd71a948060",
+      "expected_bytes": 31591,
+      "actual_bytes": 31591,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/origem-data-webkit-calendario.png",
+      "expected_sha256": "46f0958d7aefce74ee006f23a2b762b987c4b4869b0d6646b8f53219f90773fd",
+      "actual_sha256": "46f0958d7aefce74ee006f23a2b762b987c4b4869b0d6646b8f53219f90773fd",
+      "expected_bytes": 13681,
+      "actual_bytes": 13681,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/origem-data-webkit-formulario.png",
+      "expected_sha256": "361dc1c1bbefee3e35a35135126d69ad1299c6f91492325d1b62364c11d540ea",
+      "actual_sha256": "361dc1c1bbefee3e35a35135126d69ad1299c6f91492325d1b62364c11d540ea",
+      "expected_bytes": 49696,
+      "actual_bytes": 49696,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/origem-data-webkit-indisponivel.png",
+      "expected_sha256": "47e14442aceca6db0be8cb1991290606cf4e9a0d75b8e19dd01d2fdb01825422",
+      "actual_sha256": "47e14442aceca6db0be8cb1991290606cf4e9a0d75b8e19dd01d2fdb01825422",
+      "expected_bytes": 26951,
+      "actual_bytes": 26951,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/origem-data-webkit-origem.png",
+      "expected_sha256": "c318485686f25815650bce5e717fc8712f3d1d4f2b6c813f2db42dd98289136c",
+      "actual_sha256": "c318485686f25815650bce5e717fc8712f3d1d4f2b6c813f2db42dd98289136c",
+      "expected_bytes": 57127,
+      "actual_bytes": 57127,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/origem-data-webkit-resumo.png",
+      "expected_sha256": "e27b0d9f5ac265a457b76dca7c5c889bfda108ab59e75c79c5635430c14c74a0",
+      "actual_sha256": "e27b0d9f5ac265a457b76dca7c5c889bfda108ab59e75c79c5635430c14c74a0",
+      "expected_bytes": 28815,
+      "actual_bytes": 28815,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/origem-data-webkit-tabela.png",
+      "expected_sha256": "b0cc1fda1d8e26f55725578dae79de09122f3d327dec6e5a779d96ec7948c0b8",
+      "actual_sha256": "b0cc1fda1d8e26f55725578dae79de09122f3d327dec6e5a779d96ec7948c0b8",
+      "expected_bytes": 39833,
+      "actual_bytes": 39833,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/origem-data-webkit-vazio.png",
+      "expected_sha256": "a4be1de3319f6d645128bae9ff508bff434ae67b091b765fb27c4563fa4c478b",
+      "actual_sha256": "a4be1de3319f6d645128bae9ff508bff434ae67b091b765fb27c4563fa4c478b",
+      "expected_bytes": 29363,
+      "actual_bytes": 29363,
+      "matches_manifest": true
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/data-cortada-iphone.jpg",
+      "expected_sha256": "9af0ee4c10153e89e85892b119bebb27fc10ecdf1a28b3826b9ea5bafb1f32d8",
+      "actual_sha256": "9af0ee4c10153e89e85892b119bebb27fc10ecdf1a28b3826b9ea5bafb1f32d8",
+      "expected_bytes": 89171,
+      "actual_bytes": 89171,
+      "matches_manifest": true
+    }
+  ],
+  "available_html_count": 26,
+  "html_inventory": [
+    {
+      "name": "calendario-movimento-zm-preview.html",
+      "bytes": 140136,
+      "sha256": "0bc6140f52d7140c8582c550a27dddd022a6e3247daa2b3e2df4f567790b81d2",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-calendario-movimento-2026-10-16/calendario-movimento-zm-preview.html"
+      ]
+    },
+    {
+      "name": "calendario-movimento-zm.html",
+      "bytes": 49008,
+      "sha256": "a4647a619518c1339e8569dbf9a76228e3e9855485b4809d16b41b2c9d98bacf",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-calendario-movimento-2026-10-16/calendario-movimento-zm.html"
+      ]
+    },
+    {
+      "name": "catalogo-componentes-zm-preview.html",
+      "bytes": 129829,
+      "sha256": "3dfd0c30e8695a9bbf870a5a17682a48ed010c1501a66c6785aee76d9bd720f5",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-componentes-zm-preview.html"
+      ]
+    },
+    {
+      "name": "catalogo-componentes-zm.html",
+      "bytes": 42519,
+      "sha256": "42ea4ed5b760280a73f3868acdd20b536720491a5583897e5da8de5562766fa7",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-catalogo-2026-10-16/catalogo-componentes-zm.html"
+      ]
+    },
+    {
+      "name": "direcoes-design-zm-ajustavel-preview.html",
+      "bytes": 119849,
+      "sha256": "dff4312fbfbe1e92599198a667d054503ab589b4b672baa1429b14f21fe55373",
+      "historical_copies": [
+        "docs/referencias_frontend/direcoes-design-zm-ajustavel-preview.html"
+      ]
+    },
+    {
+      "name": "direcoes-design-zm-ajustavel.html",
+      "bytes": 35203,
+      "sha256": "dc45605433951d7cf2575d2d8dd23fe86069def948713b246a3a6f38fc51db5c",
+      "historical_copies": [
+        "docs/referencias_frontend/direcoes-design-zm-ajustavel.html"
+      ]
+    },
+    {
+      "name": "direcoes-design-zm-preview.html",
+      "bytes": 116287,
+      "sha256": "70dbdd34dee78520330be53db32e15877950c16b63f62eaa3f3f94ac20c0830b",
+      "historical_copies": [],
+      "recovered_copy": "docs/referencias_frontend/auditoria-continuidade-2026-10-16/fontes-recuperadas/direcoes-design-zm-preview.html",
+      "recovered_sha256_matches": true
+    },
+    {
+      "name": "direcoes-design-zm.html",
+      "bytes": 32359,
+      "sha256": "c85bad8d37f44389561bf986016265fc335eafab1e1df4fd495f2745af512348",
+      "historical_copies": [],
+      "recovered_copy": "docs/referencias_frontend/auditoria-continuidade-2026-10-16/fontes-recuperadas/direcoes-design-zm.html",
+      "recovered_sha256_matches": true
+    },
+    {
+      "name": "financeiro-origem-e-data-zm-preview.html",
+      "bytes": 173928,
+      "sha256": "d4eae1c47d43461deef7bf0d9e5009f74763f865b6a8401eb20dddfedfade082",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/financeiro-origem-e-data-zm-preview.html"
+      ]
+    },
+    {
+      "name": "financeiro-origem-e-data-zm.html",
+      "bytes": 77208,
+      "sha256": "7c7b10aa578f1e879e4806d9cbad9c17169a330b522a234d91349eaf90a5ff62",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-resumo-e-data-2026-10-16/financeiro-origem-e-data-zm.html"
+      ]
+    },
+    {
+      "name": "fundamentos-visuais-revisados-zm-preview.html",
+      "bytes": 141029,
+      "sha256": "1a5dda8f0b985de0b3b5fd78bc37a7deef75e936375616710ff7ee1f05fcf198",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-visuais-revisados-zm-preview.html"
+      ]
+    },
+    {
+      "name": "fundamentos-visuais-revisados-zm.html",
+      "bytes": 49924,
+      "sha256": "c145b49a5c0c44495ff014af1ea424b91f9dd4a540cc9ef86861a068b1bff384",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-ajustes-2026-10-16/fundamentos-visuais-revisados-zm.html"
+      ]
+    },
+    {
+      "name": "fundamentos-visuais-zm-preview.html",
+      "bytes": 138550,
+      "sha256": "722ea0f350e738f814d5220ea68769e930e413feeea7919a61a8a8c2b352cd63",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-visuais-zm-preview.html"
+      ]
+    },
+    {
+      "name": "fundamentos-visuais-zm.html",
+      "bytes": 47518,
+      "sha256": "486160a8cbcf66aa502a9fcdce66ace04ca47e282451d4724970da3de5d60c0c",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-base-visual-2026-10-16/fundamentos-visuais-zm.html"
+      ]
+    },
+    {
+      "name": "jornada-pagar-data-alinhada-zm-preview.html",
+      "bytes": 158607,
+      "sha256": "efb76e402fcbae219bcd5951799c923bb8adce579179a25e2563d66e02df2ed9",
+      "historical_copies": [
+        "docs/referencias_frontend/correcao-data-2026-10-16/jornada-pagar-data-alinhada-zm-preview.html"
+      ]
+    },
+    {
+      "name": "jornada-pagar-data-alinhada-zm.html",
+      "bytes": 64955,
+      "sha256": "44f26e432a75a9290a3fef9b15846745f3b9b3e56efc3264d347cbfa551b42d6",
+      "historical_copies": [
+        "docs/referencias_frontend/correcao-data-2026-10-16/jornada-pagar-data-alinhada-zm.html"
+      ]
+    },
+    {
+      "name": "jornada-pagar-integral-zm-preview.html",
+      "bytes": 158328,
+      "sha256": "507e8f0a5ce4b84ba2afbd513dbab7901e6f821cf3e0da1fa121bd5cbdee5ec4",
+      "historical_copies": [
+        "docs/referencias_frontend/correcao-data-2026-10-16/jornada-pagar-integral-zm-preview.html",
+        "docs/referencias_frontend/rodada-integral-2026-10-16/jornada-pagar-integral-zm-preview.html"
+      ]
+    },
+    {
+      "name": "jornada-pagar-integral-zm.html",
+      "bytes": 64722,
+      "sha256": "8f865e718bc6d5424a472694825a583f6afea8ab50904e3252350e7b6f3f6879",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-integral-2026-10-16/jornada-pagar-integral-zm.html"
+      ]
+    },
+    {
+      "name": "jornada-pagar-zm-preview.html",
+      "bytes": 149554,
+      "sha256": "db1547ef4d3fda6a5e31ff52b9000e8341d1bd786f89b97098e5f967f8a05648",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-pagar-2026-10-15/jornada-pagar-zm-preview.html"
+      ]
+    },
+    {
+      "name": "jornada-pagar-zm.html",
+      "bytes": 56839,
+      "sha256": "f96b68e4be483c468fff05f829c18a3a63e9c2ee3f12ccc00d0969a36f18cd1f",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-pagar-2026-10-15/jornada-pagar-zm.html"
+      ]
+    },
+    {
+      "name": "mapa-navegavel-zm-preview.html",
+      "bytes": 116256,
+      "sha256": "6e455583fff6b5381ac2bf31b63c33766bae17849d9363fdee1ecf79acab3bcf",
+      "historical_copies": [
+        "docs/referencias_frontend/mapa-navegavel-zm-preview.html"
+      ]
+    },
+    {
+      "name": "mapa-navegavel-zm.html",
+      "bytes": 29386,
+      "sha256": "79388750430b1f39a50aafedb804053526db77524b11f46cefc5c72b7ae55758",
+      "historical_copies": [
+        "docs/referencias_frontend/mapa-navegavel-zm.html"
+      ]
+    },
+    {
+      "name": "negocio-em-foco-zm-preview.html",
+      "bytes": 146654,
+      "sha256": "2509f1b2d8951332230af8cd8af9615d6acd832d30add9966221ef1303217c55",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/negocio-em-foco-zm-preview.html"
+      ]
+    },
+    {
+      "name": "negocio-em-foco-zm.html",
+      "bytes": 53376,
+      "sha256": "37b4ee4d1da14a45ec29996d867b9d5ce22f8ef291fdeda85aac084731d0c385",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/negocio-em-foco-zm.html"
+      ]
+    },
+    {
+      "name": "receber-e-movimento-zm-preview.html",
+      "bytes": 175478,
+      "sha256": "ee7480416a9a93a0c68175df334a728ea5388a7a2cf6ebc3d413968f5b2ae451",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-receber-2026-10-16/receber-e-movimento-zm-preview.html"
+      ]
+    },
+    {
+      "name": "receber-e-movimento-zm.html",
+      "bytes": 78903,
+      "sha256": "85e32e4a717c031f258bfea252895bcc3aca6c6d61ffa263d3d243d5f94cfee9",
+      "historical_copies": [
+        "docs/referencias_frontend/rodada-receber-2026-10-16/receber-e-movimento-zm.html"
+      ]
+    }
+  ],
+  "prior_decisions": {
+    "expected": [
+      "FE-001",
+      "FE-002",
+      "FE-003",
+      "FE-004",
+      "FE-005",
+      "FE-006",
+      "FE-007",
+      "FE-008",
+      "FE-009",
+      "FE-010",
+      "FE-011",
+      "FE-012",
+      "FE-013",
+      "FE-014",
+      "FE-015",
+      "FE-016",
+      "FE-017",
+      "FE-018",
+      "FE-019",
+      "FE-020",
+      "FE-021",
+      "FE-022",
+      "FE-023",
+      "FE-024",
+      "FE-025",
+      "FE-026",
+      "FE-027",
+      "FE-028",
+      "FE-029",
+      "FE-030",
+      "FE-031",
+      "FE-032",
+      "FE-033",
+      "FE-034",
+      "FE-035",
+      "FE-036",
+      "FE-037",
+      "FE-038",
+      "FE-039",
+      "FE-040",
+      "FE-041",
+      "FE-042",
+      "FE-043",
+      "FE-044"
+    ],
+    "missing": [],
+    "duplicates": []
+  },
+  "documents": [
+    {
+      "path": "docs/ARQUITETURA_FRONTEND.md",
+      "bytes": 41912,
+      "sha256_at_audit": "562afc74f9a2835701cc86efc7c51f25d6f5d7b4d47f511a3028e3c76bac7807",
+      "git_status": "??",
+      "unique_external_links": 7
+    },
+    {
+      "path": "docs/MEMORIA_E_PESQUISAS_FRONTEND.md",
+      "bytes": 69372,
+      "sha256_at_audit": "24312e6858d333cb7a57c777c6650aaf2eccc220df9a3416e12e32e3745e4b69",
+      "git_status": "??",
+      "unique_external_links": 42
+    },
+    {
+      "path": "docs/PLANO_ARQUITETURA_DE_DESIGN.md",
+      "bytes": 29949,
+      "sha256_at_audit": "9d64aef4f7b9d4964f6e0fca8a127593f5da4dbb396589f5b28299dbbbda2488",
+      "git_status": "??",
+      "unique_external_links": 6
+    },
+    {
+      "path": "docs/BASE_VISUAL_FRONTEND.md",
+      "bytes": 11941,
+      "sha256_at_audit": "0067f90dfad4110e24334ecf8d1d26009b488e56846764ad7af7d671a909ca3e",
+      "git_status": "??",
+      "unique_external_links": 4
+    },
+    {
+      "path": "docs/TOKENS_VISUAIS_PROPOSTOS.json",
+      "bytes": 5364,
+      "sha256_at_audit": "f032c4158e1ba419aaab8d85b21e80555687327ac4d0dcabc1e289a9a20fed73",
+      "git_status": "??",
+      "unique_external_links": 0
+    },
+    {
+      "path": "docs/CATALOGO_COMPONENTES_FRONTEND.md",
+      "bytes": 19130,
+      "sha256_at_audit": "2851f033dd17e391c657d7e930a5676e588bd862e5e677fe438dea9689e0a17f",
+      "git_status": "??",
+      "unique_external_links": 2
+    },
+    {
+      "path": "docs/PADROES_DE_MOVIMENTO_FRONTEND.md",
+      "bytes": 9419,
+      "sha256_at_audit": "53175fe2f204a5a7215bb81efe4240dced8ce06094e7647153f61e1d0cb32fe0",
+      "git_status": "??",
+      "unique_external_links": 3
+    },
+    {
+      "path": "docs/HIERARQUIA_E_TIPOGRAFIA_FRONTEND.md",
+      "bytes": 13048,
+      "sha256_at_audit": "d025ef871cb594afcdbadd1857e9f8a05954b2b727f315ebb02b269ce931d1a2",
+      "git_status": "??",
+      "unique_external_links": 5
+    },
+    {
+      "path": "docs/COMPOSICAO_DAS_PAGINAS_FRONTEND.md",
+      "bytes": 19433,
+      "sha256_at_audit": "2e793b4d0122b56b00957e535f6ee1420c1fa3da6a4be40d7b987dc9dc75fa54",
+      "git_status": "??",
+      "unique_external_links": 3
+    },
+    {
+      "path": "docs/DESIGN_INTELIGENTE_E_ORIENTACAO_AO_USUARIO.md",
+      "bytes": 26716,
+      "sha256_at_audit": "a924220f48538c4462d580ccbd404e1e155549b0fce19f02a6abffc0c5de70a5",
+      "git_status": "??",
+      "unique_external_links": 8
+    },
+    {
+      "path": "docs/REGRAS_DE_INFORMACAO_UTIL_FRONTEND.md",
+      "bytes": 19510,
+      "sha256_at_audit": "2c5f6a859efea2f809cbbe30283bc0d90bf5da74622ba0894d8da95494ac49af",
+      "git_status": "??",
+      "unique_external_links": 5
+    }
+  ],
+  "sidebar": {
+    "original_source": "docs/referencias_frontend/mapa-navegavel-zm.html",
+    "recent_source": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/negocio-em-foco-zm.html",
+    "original_declared_width_px": 140,
+    "recent_declared_width_px": 174,
+    "original_button_radius_px": 12,
+    "recent_nav_button_radius_px": 20,
+    "recent_extra_brand": true,
+    "finding": "Visual structure changed without alignment; historical archive does not ensure design continuity."
+  },
+  "limits": [
+    "Hashes establish integrity against existing local manifests, not a complete history of every edit or transient UI state.",
+    "Existing design/interaction tests did not compare sidebar appearance and destination coverage against the accepted reference.",
+    "External source URLs were inventoried, not fetched or revalidated during this audit.",
+    "Local files marked ?? are not committed in Git; no remote backup is certified."
+  ]
+}

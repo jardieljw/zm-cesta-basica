@@ -10,6 +10,7 @@ from app.models.customers import Customer
 from app.models.dispatches import StockDispatch
 from app.models.financial import FinancialAccount, CashFlowEntry
 from app.models.base import utc_now
+from app.core.business_dates import business_today, business_day_start
 from app.schemas.receivables import ReceivablePaymentCreate, ReceivablePaymentCancelRequest
 from app.services.financial import record_cash_flow_entry, get_default_financial_account
 
@@ -28,6 +29,7 @@ def list_receivables(
     max_amount_cents: Optional[int] = None,
     limit: int = 100,
     offset: int = 0,
+    open_only: bool = False,
 ) -> List[SalesReceivable]:
     """
     Lists receivables with comprehensive filtering:
@@ -49,9 +51,11 @@ def list_receivables(
         stmt = stmt.where(SalesReceivable.customer_id == customer_id)
     if status_filter:
         stmt = stmt.where(SalesReceivable.status == status_filter)
+    if open_only:
+        stmt = stmt.where(SalesReceivable.status.in_(["OPEN", "PARTIAL"]))
     if overdue_only:
         stmt = stmt.where(
-            SalesReceivable.due_date < utc_now(),
+            func.date(SalesReceivable.due_date) < business_today(utc_now()).isoformat(),
             SalesReceivable.status.in_(["OPEN", "PARTIAL"]),
         )
     if due_date_from:
@@ -131,22 +135,27 @@ def record_receivable_payment(
     if not receivable:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Titulo a receber '{receivable_id}' nao encontrado.",
+            detail={"error_code": "RECEIVABLE_NOT_FOUND", "message": "Conta a receber não encontrada."},
         )
+
+    # This callback runs under BEGIN IMMEDIATE. Idempotent replay is resolved
+    # first, even when the original receipt has since settled the title.
+    if data.expected_balance_cents is not None and data.expected_balance_cents != receivable.balance_cents:
+        raise HTTPException(status_code=409, detail={"error_code": "RECEIVABLE_BALANCE_CHANGED", "message": "O saldo mudou. Confira o valor atualizado antes de registrar."})
+
+    if data.expected_balance_cents is not None and data.payment_method.upper() not in {"CASH", "PIX", "CARD", "OTHER"}:
+        raise HTTPException(status_code=400, detail={"error_code": "RECEIVABLE_PAYMENT_METHOD_INVALID", "message": "Selecione uma forma de recebimento válida."})
 
     if receivable.status not in ["OPEN", "PARTIAL"]:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Apenas titulos abertos ou parciais podem receber pagamentos. Status atual: {receivable.status}.",
+            detail={"error_code": "RECEIVABLE_NOT_OPEN", "message": "Esta conta não está aberta para recebimento."},
         )
 
     if data.amount_cents > receivable.balance_cents:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=(
-                f"Valor informado ({data.amount_cents} centavos) excede o saldo devedor restante "
-                f"do titulo ({receivable.balance_cents} centavos)."
-            ),
+            detail={"error_code": "RECEIVABLE_AMOUNT_EXCEEDS_BALANCE", "message": "O valor informado excede o saldo em aberto."},
         )
 
     if data.dispatch_id:
@@ -173,7 +182,8 @@ def record_receivable_payment(
             target_account = get_default_financial_account(db, acc_type)
 
     payment_id = str(uuid.uuid4())
-    payment_date = data.payment_date or utc_now()
+    payment_date = (business_day_start(data.payment_business_date)
+                    if data.payment_business_date is not None else data.payment_date or utc_now())
 
     payment = ReceivablePayment(
         id=payment_id,

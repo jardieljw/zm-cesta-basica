@@ -1,0 +1,530 @@
+<style>
+#zm-organization-demo {width:100%;}
+#zm-organization-demo .stage {padding:16px 0;min-height:970px;display:flex;justify-content:center;align-items:flex-start;}
+#zm-organization-demo .app {--page:light-dark(#f6f7f9,#141518);--surface:light-dark(#ffffff,#24262b);--ink:light-dark(#222730,#eef0f5);--sub:light-dark(#5c6472,#b6becb);--line:light-dark(#e0e4eb,#454b57);--accent:light-dark(#2866ae,#a7caff);--accent-ink:light-dark(#ffffff,#142947);--soft:light-dark(#edf4fd,#2b3e57);--warn:light-dark(#80501a,#f2c78d);--warn-fill:light-dark(#fff2df,#4b3b29);--shadow:light-dark(#16243e18,#00000055);--radius:18px; width:100%;max-width:420px;position:relative;overflow:clip;background:var(--page);color:var(--ink);border:1px solid var(--line);border-radius:26px;box-shadow:0 15px 45px var(--shadow);font:15px/1.45 'Segoe UI',system-ui,sans-serif;}
+#zm-organization-demo .app * {box-sizing:border-box;}
+#zm-organization-demo button {font:inherit;color:inherit;min-height:44px;border:0;background:transparent;border-radius:12px;transition:background 160ms ease,transform 160ms ease;}
+#zm-organization-demo button:hover {background:var(--soft);}
+#zm-organization-demo button:active {transform:scale(.985);}
+#zm-organization-demo .app h2,#zm-organization-demo .app h3,#zm-organization-demo .app p {margin:0;}
+#zm-organization-demo .app h2 {font-size:23px;font-weight:500;letter-spacing:-.6px;}
+#zm-organization-demo .app h3 {font-size:16px;font-weight:500;}
+#zm-organization-demo .demo-label {padding:13px 96px 13px 18px;font-size:11px;color:var(--sub);border-bottom:1px solid var(--line);background:var(--surface);}
+#zm-organization-demo .frame {display:grid;grid-template-areas:'header' 'content' 'nav';grid-template-columns:minmax(0,1fr);}
+#zm-organization-demo .app-header {grid-area:header;display:flex;align-items:center;gap:10px;padding:20px 18px 12px;}
+#zm-organization-demo .app-header > div {min-width:0;}
+#zm-organization-demo .brand {color:var(--sub);font-size:12px;margin-bottom:3px;}
+#zm-organization-demo .back {width:44px;flex-shrink:0;background:var(--surface);box-shadow:0 2px 8px var(--shadow);}
+#zm-organization-demo .back svg {width:18px;height:18px;}
+#zm-organization-demo .content {grid-area:content;padding:0 18px 24px;min-height:650px;min-width:0;}
+#zm-organization-demo .content-inner {display:grid;gap:20px;}
+#zm-organization-demo .context {font-size:12px;color:var(--sub);padding-bottom:2px;}
+#zm-organization-demo .hero {padding:22px;border-radius:var(--radius);background:var(--surface);box-shadow:0 5px 20px var(--shadow);}
+#zm-organization-demo .hero.finance {background:linear-gradient(135deg,var(--surface),var(--soft));}
+#zm-organization-demo .two {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:18px 0;}
+#zm-organization-demo .label {font-size:12px;color:var(--sub);display:block;}
+#zm-organization-demo .amount {font-size:23px;display:block;margin-top:4px;font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:-.5px;overflow-wrap:anywhere;}
+#zm-organization-demo .number {font-size:26px;font-weight:500;display:block;margin-top:4px;}
+#zm-organization-demo .primary {background:var(--accent);color:var(--accent-ink);padding:12px 16px;display:flex;gap:10px;align-items:center;justify-content:center;font-weight:500;width:100%;border-radius:14px;}
+#zm-organization-demo .primary:hover {background:var(--accent);box-shadow:0 4px 14px var(--shadow);}
+#zm-organization-demo .primary svg {width:17px;height:17px;}
+#zm-organization-demo .section-header {display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px;}
+#zm-organization-demo .section-header small {font-size:12px;color:var(--sub);}
+#zm-organization-demo .tile {padding:16px;background:var(--surface);border-radius:var(--radius);box-shadow:0 3px 14px var(--shadow);}
+#zm-organization-demo .tile-pair {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+#zm-organization-demo .row {display:flex;align-items:center;gap:12px;padding:16px 12px;min-height:76px;text-align:left;width:100%;background:var(--surface);border-radius:14px;}
+#zm-organization-demo .row > .copy {flex:1;min-width:0;}
+#zm-organization-demo .row .title {display:block;font-weight:500;overflow-wrap:anywhere;}
+#zm-organization-demo .row .subtitle {display:block;font-size:12px;color:var(--sub);margin-top:4px;overflow-wrap:anywhere;}
+#zm-organization-demo .row .value {font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap;}
+#zm-organization-demo .row .arrow {color:var(--sub);width:16px;height:16px;flex-shrink:0;}
+#zm-organization-demo .row-icon {width:40px;height:40px;background:var(--soft);color:var(--accent);border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+#zm-organization-demo .row-icon svg {width:19px;height:19px;}
+#zm-organization-demo .rows {display:grid;gap:8px;}
+#zm-organization-demo .tag {display:inline-block;background:var(--warn-fill);color:var(--warn);border-radius:20px;font-size:11px;padding:3px 8px;margin-top:6px;}
+#zm-organization-demo .neutral-tag {background:var(--soft);color:var(--sub);}
+#zm-organization-demo .tabs {display:flex;gap:5px;padding:5px;background:var(--surface);border-radius:16px;}
+#zm-organization-demo .tabs button {flex:1;padding:8px 6px;}
+#zm-organization-demo .tabs button[aria-pressed=true] {background:var(--accent);color:var(--accent-ink);box-shadow:0 2px 6px var(--shadow);}
+#zm-organization-demo .navigation {grid-area:nav;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:8px 6px 12px;background:var(--surface);border-top:1px solid var(--line);}
+#zm-organization-demo .navigation button {display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:11px;min-height:60px;padding:6px 2px;color:var(--sub);}
+#zm-organization-demo .navigation button svg {width:20px;height:20px;}
+#zm-organization-demo .navigation button[aria-current=page] {background:var(--soft);color:var(--accent);font-weight:500;}
+#zm-organization-demo .details {background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:0 4px 14px var(--shadow);}
+#zm-organization-demo .detail-line {display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);}
+#zm-organization-demo .detail-line:last-child {border-bottom:0;}
+#zm-organization-demo .detail-line span:first-child {color:var(--sub);}
+#zm-organization-demo .detail-line span:last-child {text-align:right;}
+#zm-organization-demo .detail-amount {font-size:32px;font-weight:500;font-variant-numeric:tabular-nums;margin:8px 0 4px;}
+#zm-organization-demo .note {font-size:12px;color:var(--sub);}
+#zm-organization-demo .result-message {padding:18px;background:var(--soft);border-radius:var(--radius);}
+#zm-organization-demo .result-message p {margin-top:6px;color:var(--sub);}
+#zm-organization-demo .desktop {max-width:none;border-radius:20px;}
+#zm-organization-demo .desktop .frame {grid-template-areas:'nav header' 'nav content';grid-template-columns:140px minmax(0,1fr);}
+#zm-organization-demo .desktop .navigation {display:flex;flex-direction:column;justify-content:flex-start;border-top:0;border-right:1px solid var(--line);padding:18px 10px;gap:8px;}
+#zm-organization-demo .desktop .navigation button {flex-direction:row;justify-content:flex-start;min-height:48px;gap:10px;font-size:13px;padding:10px;}
+#zm-organization-demo .desktop .navigation button svg {flex-shrink:0;}
+#zm-organization-demo .desktop .content {min-height:760px;}
+#zm-organization-demo .desktop .demo-label {padding-right:100px;}
+#zm-organization-demo .desktop .app-header {padding:24px 22px 12px;}
+#zm-organization-demo .desktop .content {padding:0 22px 28px;}
+#zm-organization-demo .product[data-motion=false] button {transition:none;transform:none;}
+#zm-organization-demo [hidden] {display:none!important;}
+@media(max-width:550px) {
+ #zm-organization-demo .stage {padding:10px 0;min-height:1030px;}
+ #zm-organization-demo .desktop .frame {grid-template-areas:'header' 'content' 'nav';grid-template-columns:minmax(0,1fr);}
+ #zm-organization-demo .desktop .navigation {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border:0;border-top:1px solid var(--line);padding:8px 6px 12px;gap:2px;}
+ #zm-organization-demo .desktop .navigation button {flex-direction:column;justify-content:center;gap:6px;font-size:11px;padding:6px 2px;min-height:60px;}
+ #zm-organization-demo .desktop .content {min-height:650px;padding:0 16px 24px;}
+ #zm-organization-demo .desktop .app-header {padding:20px 16px 12px;}
+ #zm-organization-demo .desktop .demo-label {padding-right:90px;}
+ #zm-organization-demo .two {gap:12px;}
+ #zm-organization-demo .amount {font-size:21px;}
+ #zm-organization-demo .row {padding:14px 10px;gap:9px;}
+}
+@media(prefers-reduced-motion:reduce) {#zm-organization-demo button {transition:none!important;transform:none!important;}}
+</style>
+<div id="zm-organization-demo" aria-label="Prévia integrada ZM" data-previous-label="Anterior" data-next-label="Próxima">
+ <section aria-label="Aplicativo com leitura recuperada"><div class="stage"><div class="app product mobile" data-device="main" data-reading="recovered" aria-label="Leitura recuperada"></div></div></section>
+</div>
+<template id="zm-organization-shell">
+ <div class="demo-label">Prévia integrada · Dados de exemplo</div>
+ <div class="frame">
+  <header class="app-header"><button class="back cursor-interaction" type="button" aria-label="Voltar" hidden><i data-lucide="arrow-left" aria-hidden="true"></i></button><div><div class="brand">ZM Cesta Básica</div><h2 class="page-title">Visão geral</h2></div></header>
+  <main class="content"><div class="content-inner"></div></main>
+  <nav class="navigation" aria-label="Áreas do aplicativo">
+   <button class="cursor-interaction" type="button" data-area="inicio" aria-current="page"><i data-lucide="house" aria-hidden="true"></i><span>Início</span></button>
+   <button class="cursor-interaction" type="button" data-area="financeiro"><i data-lucide="wallet" aria-hidden="true"></i><span>Financeiro</span></button>
+   <button class="cursor-interaction" type="button" data-area="vendas"><i data-lucide="shopping-bag" aria-hidden="true"></i><span>Negócio</span></button>
+   <button class="cursor-interaction" type="button" data-area="estoque"><i data-lucide="package" aria-hidden="true"></i><span>Estoque</span></button>
+   <button class="cursor-interaction" type="button" data-area="mais"><i data-lucide="ellipsis" aria-hidden="true"></i><span>Mais</span></button>
+  </nav>
+ </div>
+</template>
+<style>
+/* Extension roles: the original navigation rules above remain unchanged. */
+#zm-organization-demo .stage{min-height:var(--recovery-stage,1030px);}
+#zm-organization-demo .content .primary{border-radius:999px;min-height:52px;}
+#zm-organization-demo .content .rec-panel{padding:22px;background:var(--surface);border-radius:32px;box-shadow:0 4px 14px var(--shadow);min-width:0;}
+#zm-organization-demo .rec-flow{display:grid;gap:20px;min-width:0;}
+#zm-organization-demo .rec-field{display:grid;gap:9px;min-width:0;}
+#zm-organization-demo .rec-field>label,#zm-organization-demo .rec-legend{font-weight:500;}
+#zm-organization-demo .rec-field input:not([type=radio]),#zm-organization-demo .rec-field select,#zm-organization-demo .rec-field textarea,#zm-organization-demo .rec-field button.rec-date{font:inherit;font-size:16px;line-height:1.5;box-sizing:border-box;min-width:0;width:100%;max-width:100%;padding:15px 18px;min-height:56px;background:var(--page);color:var(--ink);border:1px solid light-dark(#7d8796,#7a8495);border-radius:24px;}
+#zm-organization-demo .rec-field textarea{resize:vertical;min-height:104px;}
+#zm-organization-demo .rec-field ::placeholder{color:var(--sub);opacity:1;}
+#zm-organization-demo .rec-field button.rec-date{display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;}
+#zm-organization-demo .rec-date span{min-width:0;overflow-wrap:anywhere;}
+#zm-organization-demo .rec-date svg{flex-shrink:0;}
+#zm-organization-demo .rec-choice{display:flex;gap:4px;padding:5px;background:var(--page);border:1px solid var(--line);border-radius:999px;}
+#zm-organization-demo .rec-choice label{display:flex;align-items:center;justify-content:center;gap:8px;flex:1;min-width:0;min-height:48px;padding:10px 8px;border-radius:999px;}
+#zm-organization-demo .rec-choice label:has(input:checked){background:var(--soft);color:var(--accent);}
+#zm-organization-demo .rec-choice input{width:18px;height:18px;accent-color:var(--accent);flex-shrink:0;}
+#zm-organization-demo .rec-fieldset{margin:0;padding:0;border:0;min-width:0;}
+#zm-organization-demo .rec-legend{margin-bottom:12px;padding:0;}
+#zm-organization-demo .rec-reveal{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows 260ms cubic-bezier(.2,0,0,1),opacity 180ms ease;}
+#zm-organization-demo .rec-reveal[data-open=true]{grid-template-rows:1fr;opacity:1;}
+#zm-organization-demo .rec-reveal-inner{overflow:hidden;min-height:0;}
+#zm-organization-demo .rec-reveal .rec-field{padding-top:20px;}
+#zm-organization-demo .rec-help{font-size:13px;line-height:1.45;color:var(--sub);}
+#zm-organization-demo .rec-total{padding:16px;background:var(--soft);border-radius:24px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+#zm-organization-demo .rec-money{font-variant-numeric:tabular-nums;}
+#zm-organization-demo .rec-secondary{border:1px solid var(--line);padding:12px 16px;border-radius:999px;width:100%;min-height:48px;}
+#zm-organization-demo .rec-errors{padding:16px;border-radius:24px;background:light-dark(#fff0ef,#472c30);color:light-dark(#a43136,#ffb5b7);}
+#zm-organization-demo .rec-error{font-size:13px;color:light-dark(#a43136,#ffb5b7);}
+#zm-organization-demo [aria-invalid=true]{border-color:light-dark(#a43136,#ffb5b7)!important;}
+#zm-organization-demo .rec-filters{display:flex;gap:8px;flex-wrap:wrap;}
+#zm-organization-demo .rec-filters button{padding:8px 12px;border:1px solid var(--line);border-radius:999px;font-size:13px;}
+#zm-organization-demo .rec-filters [aria-pressed=true]{background:var(--soft);color:var(--accent);border-color:var(--accent);}
+#zm-organization-demo .rec-ledger{margin:0;display:grid;}
+#zm-organization-demo .rec-ledger>div{display:flex;justify-content:space-between;gap:16px;padding:13px 0;}
+#zm-organization-demo .rec-ledger>div+div{border-top:1px solid var(--line);}
+#zm-organization-demo .rec-ledger dt{color:var(--sub);min-width:0;}
+#zm-organization-demo .rec-ledger dd{margin:0;text-align:right;min-width:0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums;}
+#zm-organization-demo .rec-calendar{color:var(--ink);background:var(--surface);font:inherit;width:min(360px,calc(100% - 24px));max-width:calc(100% - 24px);max-height:calc(100% - 24px);box-sizing:border-box;padding:16px;border:1px solid var(--line);border-radius:32px;box-shadow:0 16px 60px var(--shadow);}
+#zm-organization-demo .rec-calendar::backdrop{background:light-dark(#1b284b55,#00000088);}
+#zm-organization-demo .rec-calendar[open]::backdrop{animation:rec-backdrop 180ms ease both;}
+@keyframes rec-backdrop{from{opacity:0;}to{opacity:1;}}
+#zm-organization-demo .rec-cal-top,#zm-organization-demo .rec-cal-month,#zm-organization-demo .rec-cal-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+#zm-organization-demo .rec-cal-top button,#zm-organization-demo .rec-cal-month button{width:44px;flex-shrink:0;display:grid;place-items:center;}
+#zm-organization-demo .rec-cal-month{margin:12px 0;}
+#zm-organization-demo .rec-week,#zm-organization-demo .rec-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;}
+#zm-organization-demo .rec-week{font-size:13px;color:var(--sub);text-align:center;margin-bottom:6px;}
+#zm-organization-demo .rec-days button{min-width:0;padding:4px 0;font-size:16px;}
+#zm-organization-demo .rec-days [aria-pressed=true]{background:var(--accent);color:var(--accent-ink);}
+#zm-organization-demo .rec-cal-foot{margin-top:12px;}
+#zm-organization-demo .rec-warning{padding:16px;border-radius:24px;color:var(--warn);background:var(--warn-fill);display:grid;gap:8px;}
+#zm-organization-demo .rec-warning button{color:inherit;padding:8px 0;text-align:left;justify-self:start;}
+#zm-organization-demo .rec-field input[type=color]{width:72px;height:48px;min-height:48px;padding:6px;border-radius:16px;}
+#zm-organization-demo .product[data-motion=false] button,#zm-organization-demo .product[data-motion=false] .rec-reveal{transition:none;transform:none;}
+#zm-organization-demo .product[data-motion=false] .rec-calendar::backdrop{animation:none;}
+#zm-organization-demo .rec-form-width{width:100%;max-width:580px;justify-self:center;}
+@media(max-width:550px){#zm-organization-demo .row .value{white-space:normal;overflow-wrap:anywhere;}#zm-organization-demo .rec-ledger>div{flex-wrap:wrap;}#zm-organization-demo .rec-ledger dd{text-align:left;}#zm-organization-demo .rec-panel{padding:20px;}}
+@media(prefers-reduced-motion:reduce){#zm-organization-demo .rec-reveal{transition:none;}#zm-organization-demo .rec-calendar::backdrop{animation:none;}}
+</style>
+<template id="zm-organization-inicio">
+ <p class="context">Hoje, 15 de outubro</p>
+ <section class="hero finance"><h3>Seu financeiro nesta semana</h3><div class="two"><div><span class="label">A pagar</span><strong class="amount">R$ 1.280,00</strong></div><div><span class="label">A receber</span><strong class="amount">R$ 1.950,00</strong></div></div><button type="button" class="primary cursor-interaction" data-go="financeiro:resumo">Abrir Financeiro<i data-lucide="arrow-right" aria-hidden="true"></i></button></section>
+ <section><div class="section-header"><h3>Seu negócio hoje</h3></div><div class="tile-pair"><button class="tile cursor-interaction" type="button" data-go="vendas:resumo"><span class="label">Cestas vendidas</span><strong class="number">8</strong></button><button class="tile cursor-interaction" type="button" data-go="vendas:resumo"><span class="label">Valor das vendas</span><strong class="amount">R$ 1.240,00</strong></button></div></section>
+ <section><div class="section-header"><h3>Precisa da sua atenção</h3></div><div class="rows"><button class="row cursor-interaction" type="button" data-go="financeiro:pagar"><span class="row-icon"><i data-lucide="calendar-clock" aria-hidden="true"></i></span><span class="copy"><span class="title">2 contas a pagar</span><span class="subtitle">Vencem nesta semana</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button><button class="row cursor-interaction" type="button" data-go="estoque:produtos"><span class="row-icon"><i data-lucide="package-search" aria-hidden="true"></i></span><span class="copy"><span class="title">Arroz abaixo do mínimo</span><span class="subtitle">Conferir produtos e reposição</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button></div></section>
+</template>
+<template id="zm-organization-financeiro">
+ <p class="context">Financeiro</p>
+ <div class="tabs" aria-label="Visões do Financeiro"><button type="button" class="cursor-interaction" data-finance="resumo" aria-pressed="true">Resumo</button><button type="button" class="cursor-interaction" data-finance="pagar" aria-pressed="false">Pagar</button><button type="button" class="cursor-interaction" data-finance="receber" aria-pressed="false">Receber</button></div>
+ <div class="finance-content"></div>
+</template>
+<template id="zm-organization-financeiro-resumo">
+ <section class="hero"><span class="label">Nesta semana</span><div class="two"><div><span class="label">A pagar</span><strong class="amount">R$ 1.280,00</strong></div><div><span class="label">A receber</span><strong class="amount">R$ 1.950,00</strong></div></div></section>
+ <section><div class="section-header"><h3>Organizar seu financeiro</h3></div><div class="rows"><button type="button" class="row cursor-interaction" data-go="financeiro:contas"><span class="row-icon"><i data-lucide="landmark" aria-hidden="true"></i></span><span class="copy"><span class="title">Contas e cartões</span><span class="subtitle">Seus bancos em um só lugar</span><span class="tag neutral-tag">Proposta futura</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button><button type="button" class="row cursor-interaction" data-go="financeiro:documentos"><span class="row-icon"><i data-lucide="files" aria-hidden="true"></i></span><span class="copy"><span class="title">Extratos e faturas</span><span class="subtitle">Documentos e revisão de importações</span><span class="tag neutral-tag">Proposta futura</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button></div></section>
+</template>
+<template id="zm-organization-pagar">
+ <section><div class="section-header"><h3>A pagar nesta semana</h3><small>2 contas</small></div><div class="rows"><button class="row cursor-interaction" type="button" data-go="financeiro:conta-fornecedor"><span class="copy"><span class="title">Fornecedor de alimentos</span><span class="subtitle">Compra de produtos · 16 out.</span><span class="tag">Em aberto</span></span><span class="value">R$ 680,00</span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button><button class="row cursor-interaction" type="button" data-go="financeiro:conta-embalagens"><span class="copy"><span class="title">Fornecedor de embalagens</span><span class="subtitle">Compra de embalagens · 18 out.</span><span class="tag">Em aberto</span></span><span class="value">R$ 600,00</span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button></div></section>
+</template>
+<template id="zm-organization-receber">
+ <section><div class="section-header"><h3>A receber nesta semana</h3><small>2 contas</small></div><div class="rows"><button class="row cursor-interaction" type="button" data-go="financeiro:conta-ana"><span class="copy"><span class="title">Ana Souza</span><span class="subtitle">Venda de cestas · 17 out.</span><span class="tag">Em aberto</span></span><span class="value">R$ 1.250,00</span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button><button class="row cursor-interaction" type="button" data-go="financeiro:conta-bruno"><span class="copy"><span class="title">Bruno Lima</span><span class="subtitle">Saldo de venda · 18 out.</span><span class="tag">Parcial</span></span><span class="value">R$ 700,00</span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button></div></section>
+</template>
+<template id="zm-organization-estoque">
+ <p class="context">Produtos, compras e cestas</p><div class="rows">
+  <button class="row cursor-interaction" type="button" data-go="estoque:produtos"><span class="row-icon"><i data-lucide="package" aria-hidden="true"></i></span><span class="copy"><span class="title">Produtos</span><span class="subtitle">Cadastros e posição de estoque</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="estoque:compras"><span class="row-icon"><i data-lucide="truck" aria-hidden="true"></i></span><span class="copy"><span class="title">Compras</span><span class="subtitle">Entradas e fornecedores</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="estoque:cestas"><span class="row-icon"><i data-lucide="shopping-basket" aria-hidden="true"></i></span><span class="copy"><span class="title">Cestas e montagens</span><span class="subtitle">Tipos, composição e histórico de montagem</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="estoque:movimentacoes"><span class="row-icon"><i data-lucide="history" aria-hidden="true"></i></span><span class="copy"><span class="title">Movimentações</span><span class="subtitle">O que entrou e saiu do estoque</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+ </div>
+</template>
+<template id="zm-organization-vendas">
+ <p class="context">Hoje, 15 de outubro</p><section class="hero"><span class="label">Vendas do dia</span><strong class="detail-amount">R$ 1.240,00</strong><span class="label">8 cestas vendidas</span></section><div class="rows"><button class="row cursor-interaction" type="button" data-go="vendas:venda"><span class="copy"><span class="title">Venda de 8 cestas</span><span class="subtitle">Conferir itens, cliente e pagamento</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button><button class="row cursor-interaction" type="button" data-go="vendas:clientes"><span class="row-icon"><i data-lucide="users" aria-hidden="true"></i></span><span class="copy"><span class="title">Clientes</span><span class="subtitle">Cadastros e histórico</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button></div>
+</template>
+<template id="zm-organization-mais">
+ <p class="context">Documentos e ferramentas do aplicativo</p><div class="rows">
+  <button class="row cursor-interaction" type="button" data-go="mais:relatorios"><span class="row-icon"><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i></span><span class="copy"><span class="title">Relatórios</span><span class="subtitle">Consultar e exportar os dados</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="mais:impressao"><span class="row-icon"><i data-lucide="printer" aria-hidden="true"></i></span><span class="copy"><span class="title">Impressão e formulários</span><span class="subtitle">PDF e folhas para preencher à caneta</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="mais:configuracoes"><span class="row-icon"><i data-lucide="settings" aria-hidden="true"></i></span><span class="copy"><span class="title">Configurações e conexão</span><span class="subtitle">Aparência, servidor e pareamento</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="mais:backup"><span class="row-icon"><i data-lucide="database-backup" aria-hidden="true"></i></span><span class="copy"><span class="title">Backup</span><span class="subtitle">Cópias de segurança e recuperação</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+ </div>
+</template>
+<style>
+/* FE-048: content-only typography study. Navigation has no overrides. */
+#zm-organization-demo .app{--type-scale:1;}
+#zm-organization-demo .app .rec-field{grid-template-columns:minmax(0,1fr);}
+#zm-organization-demo .app .type-select{position:relative;min-width:0;width:100%;}
+#zm-organization-demo .app[data-adapted=true] .type-select select{appearance:none;overflow:hidden;text-overflow:ellipsis;padding-inline-end:44px;}
+#zm-organization-demo .app .type-select>svg{position:absolute;right:16px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--sub);width:18px;height:18px;}
+#zm-organization-demo .app .content,#zm-organization-demo .app .app-header{font-size:calc(15px * var(--type-scale));overflow-wrap:anywhere;}
+#zm-organization-demo .app .page-title{font-size:calc(23px * var(--type-scale));}
+#zm-organization-demo .app .brand,#zm-organization-demo .app .context,#zm-organization-demo .app .label,#zm-organization-demo .app .note,#zm-organization-demo .app .row .subtitle,#zm-organization-demo .app .section-header small{font-size:calc(12px * var(--type-scale));}
+#zm-organization-demo .app .content h3{font-size:calc(16px * var(--type-scale));}
+#zm-organization-demo .app .amount{font-size:calc(23px * var(--type-scale));}
+#zm-organization-demo .app .number{font-size:calc(26px * var(--type-scale));}
+#zm-organization-demo .app .detail-amount{font-size:calc(32px * var(--type-scale));}
+#zm-organization-demo .app .rec-help,#zm-organization-demo .app .rec-error,#zm-organization-demo .app .rec-filters button{font-size:calc(13px * var(--type-scale));}
+#zm-organization-demo .app .tag{font-size:calc(11px * var(--type-scale));}
+#zm-organization-demo .app .rec-field input:not([type=radio]),#zm-organization-demo .app .rec-field select,#zm-organization-demo .app .rec-field textarea,#zm-organization-demo .app .rec-field button.rec-date,#zm-organization-demo .app .rec-days button{font-size:calc(16px * var(--type-scale));}
+#zm-organization-demo .app[data-expanded=true] .app-header{flex-wrap:wrap;}
+#zm-organization-demo .app[data-expanded=true] .app-header>div{flex-basis:100%;}
+#zm-organization-demo .app[data-expanded=true] .content .primary svg{display:none;}
+
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .two,#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .tile-pair{grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(136px * var(--type-scale))),1fr));}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .section-header{flex-wrap:wrap;}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .row{flex-wrap:wrap;}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .row>.copy{flex-basis:calc(160px * var(--type-scale));}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .row>.value{flex:1 0 auto;max-width:100%;}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .row>svg{width:18px;flex-shrink:0;}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .rec-ledger>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(170px * var(--type-scale))),1fr));gap:8px 16px;}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .rec-ledger dd{text-align:start;}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .rec-choice{flex-wrap:wrap;border-radius:24px;}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .rec-choice label{flex-basis:calc(110px * var(--type-scale));}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .tabs{flex-wrap:wrap;}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .tabs button{flex-basis:calc(90px * var(--type-scale));}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .primary svg{flex-shrink:0;}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .type-money{overflow-wrap:normal;white-space:normal;font-variant-numeric:tabular-nums;}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .type-chunk{white-space:nowrap;}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .rec-cal-top,#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .rec-cal-month{flex-wrap:wrap;}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .rec-cal-top h3,#zm-organization-demo .app[data-reading=recovered][data-adapted=true] [data-calendar-period]{min-width:0;flex:1;}
+#zm-organization-demo .app[data-reading=recovered][data-adapted=true] .rec-calendar{overflow:auto;}
+#zm-organization-demo .app[data-expanded=true] .app-header{flex-wrap:wrap;}
+#zm-organization-demo .app[data-expanded=true] .app-header>div{flex-basis:100%;}
+#zm-organization-demo .app[data-expanded=true] .content .primary svg{display:none;}
+
+</style>
+<style>
+/* Recovered typography remains unchanged. Compact only the home composition. */
+#zm-organization-demo .stage{min-height:0;padding:10px 0;}
+#zm-organization-demo .app:has(.content[data-screen=inicio]) .app-header{padding-top:14px;padding-bottom:10px;}
+#zm-organization-demo .content[data-screen=inicio]{min-height:0;padding-bottom:14px;}
+#zm-organization-demo .content[data-screen=inicio] .content-inner{gap:12px;}
+#zm-organization-demo .home-period{display:flex;gap:4px;background:var(--surface);padding:4px;border-radius:16px;}
+#zm-organization-demo .home-period button{flex:1;min-width:0;min-height:44px;padding:8px;}
+#zm-organization-demo .home-period [aria-pressed=true]{background:var(--soft);color:var(--accent);font-weight:500;}
+#zm-organization-demo [data-action=result].rec-secondary{display:flex;align-items:center;justify-content:center;gap:10px;}
+#zm-organization-demo [data-action=result].rec-secondary svg{flex-shrink:0;}
+#zm-organization-demo .content[data-screen=inicio] .hero{padding:16px;}
+#zm-organization-demo .content[data-screen=inicio] .two{margin:10px 0 6px;}
+#zm-organization-demo .home-metric{display:block;min-width:0;text-align:left;padding:0;}
+#zm-organization-demo .home-scope{font-size:calc(12px * var(--type-scale));line-height:1.45;color:var(--sub);margin:0 0 12px!important;}
+#zm-organization-demo .content[data-screen=inicio] .primary{min-height:44px;padding:10px 12px;}
+#zm-organization-demo .content[data-screen=inicio] .tile{padding:12px;}
+#zm-organization-demo .content[data-screen=inicio] .section-header{margin-bottom:8px;}
+#zm-organization-demo .home-attention .row{min-height:60px;padding:10px 12px;}
+#zm-organization-demo .home-attention .row>svg{width:16px;flex-shrink:0;}
+#zm-organization-demo .app[data-expanded=true] .home-period{flex-wrap:wrap;}
+#zm-organization-demo .app[data-expanded=true] .home-period button{flex-basis:calc(70px * var(--type-scale));}
+#zm-organization-demo .app[data-adapted=true] .content[data-screen=inicio] .two,#zm-organization-demo .app[data-adapted=true] .content[data-screen=inicio] .tile-pair{grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(120px * var(--type-scale))),1fr));}
+
+</style>
+<script>
+(() => {
+ const root=document.getElementById('zm-organization-demo');
+ const systemMotion=matchMedia('(prefers-reduced-motion:reduce)');
+ const areas={inicio:'Visão geral',financeiro:'Financeiro',vendas:'Negócio',estoque:'Estoque',mais:'Mais'};
+ const design={appearance:'chat',background:'soft',accent:'#2866ae',motion:'standard',format:'mobile',textScale:'100',example:'everyday'};
+ const accounts=[
+  {id:'fornecedor',kind:'pay',name:'Fornecedor de alimentos',number:208,original:68000,initialPaid:0,due:'2026-10-16',origin:'Compra de produtos'},
+  {id:'embalagens',kind:'pay',name:'Fornecedor de embalagens',number:209,original:60000,initialPaid:0,due:'2026-10-18',origin:'Compra de embalagens'},
+  {id:'ana',kind:'receive',name:'Ana Souza',number:1042,original:125000,initialPaid:0,due:'2026-10-17',origin:'Venda de cestas'},
+  {id:'bruno',kind:'receive',name:'Bruno Lima',number:1043,original:90000,initialPaid:20000,due:'2026-10-18',origin:'Venda de cestas'}
+ ];
+ const methods={pay:{DINHEIRO:'Dinheiro',PIX:'Pix',BOLETO:'Boleto',TRANSFERENCIA:'Transferência',CHEQUE:'Cheque',CARTAO_CREDITO:'Cartão de crédito',OUTRO:'Outro'},receive:{CASH:'Dinheiro',PIX:'Pix',CARD:'Cartão',OTHER:'Outro'}};
+ const children={
+  'financeiro:contas':{title:'Contas e cartões',future:true,rows:[['Banco de exemplo','Conta da empresa · final 0821'],['Cartão de exemplo','Faturas e parcelas']]},
+  'financeiro:documentos':{title:'Extratos e faturas',future:true,rows:[['Fatura de outubro','Cartão de exemplo · Em revisão'],['Extrato de outubro','Banco de exemplo · Conferido']]},
+  'estoque:compras':{title:'Compras',rows:[['Compra de alimentos','Fornecedor de alimentos · R$ 680,00'],['Compra de embalagens','Fornecedor de embalagens · R$ 600,00']]},
+  'estoque:cestas':{title:'Cestas e montagens',rows:[['Cesta Básica Completa','Composição e montagens'],['Cesta de Carne','Composição e montagens']],basket:true},
+  'estoque:movimentacoes':{title:'Movimentações',rows:[['Entrada de produtos','Compra confirmada'],['Montagem de 8 cestas','Consumo de produtos e entrada de cestas'],['Venda de 8 cestas','Saída de cestas prontas']]},
+  'estoque:cesta-basica':{title:'Cesta Básica Completa',rows:[['Composição','Consultar produtos e quantidades'],['Registrar montagem','Padrão ou personalizada'],['Histórico de montagens','Registros anteriores']]},
+  'vendas:clientes':{title:'Clientes',rows:[['Ana Souza','Cadastro e histórico financeiro'],['Bruno Lima','Cadastro e histórico financeiro']]},
+  'vendas:venda':{title:'Detalhe da venda',label:'Total da venda',amount:'R$ 860,00',lines:[['Quantidade','8 cestas'],['Situação','Confirmada'],['Origem','Estoque de cestas prontas']]},
+  'mais:relatorios':{title:'Relatórios',rows:[['Vendas por período','Consultar e exportar'],['Resumo financeiro','Consultar e exportar'],['Posição de estoque','Consultar e exportar']]},
+  'mais:impressao':{title:'Impressão e formulários',rows:[['Relatório preenchido','Pré-visualizar, salvar PDF ou imprimir'],['Formulário em branco','Folha para preencher à caneta']]},
+  'mais:configuracoes':{title:'Configurações e conexão',rows:[['Aparência','Tema, cores e acessibilidade'],['Conexão com o servidor','Disponibilidade e pareamento']]},
+  'mais:backup':{title:'Backup',rows:[['Cópias de segurança','Consultar backups'],['Recuperação','Fluxo com revisão e confirmação']]}
+ };
+ const products=[{name:'Arroz · pacote de 5 kg',current:12,minimum:15,unit:'pacotes'},{name:'Óleo · frasco de 900 ml',current:36,minimum:20,unit:'frascos'},{name:'Café · pacote de 250 g',current:24,minimum:10,unit:'pacotes'}];
+ const settled={},history=[],views=[];
+ const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const icon=name=>`<i data-lucide="${name}" aria-hidden="true"></i>`;
+ const money=c=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(c/100);
+ const dateLabel=value=>new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(value+'T00:00:00Z'));
+ const shortDate=value=>new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'short',timeZone:'UTC'}).format(new Date(value+'T00:00:00Z'));
+ const validDate=value=>{if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const [y,m,d]=value.split('-').map(Number);return y>=1900&&y<=9999&&new Date(Date.UTC(y,m-1,d)).toISOString().slice(0,10)===value;};
+ const parseMoney=value=>{const clean=value.trim().replace(/^R\$\s*/,'');if(!/^(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d{1,2})?$/.test(clean))return null;const [whole,part='']=clean.replaceAll('.','').split(',');const cents=Number(whole)*100+Number(part.padEnd(2,'0'));return Number.isSafeInteger(cents)?cents:null;};
+ const paid=a=>a.initialPaid+(settled[a.id]||0),balance=a=>a.original-paid(a);
+ const group=a=>a.due<'2026-10-16'?'overdue':a.due==='2026-10-16'?'today':a.due<='2026-10-19'?'next':'later';
+ const periods={day:{short:'Dia',when:'hoje',range:'16 de outubro',filter:'today',baskets:8,sales:86000,cost:50000,expenses:6000,incomplete:0},week:{short:'Semana',when:'nesta semana',range:'12 a 18 de outubro',filter:'week',baskets:32,sales:344000,cost:205000,expenses:45000,incomplete:1},month:{short:'Mês',when:'neste mês',range:'1 a 31 de outubro',filter:'month',baskets:42,sales:450000,cost:260000,expenses:66000,incomplete:2}};
+ const filters={month:'Neste mês · 1 a 31 de outubro',week:'Nesta semana · 12 a 18 de outubro',today:'Vencem hoje · 16 de outubro',overdue:'Vencidas · até 15 de outubro',next:'Próximos 3 dias · 17 a 19 de outubro',open:'Todas em aberto'};
+ const selected=(kind,filter)=>accounts.filter(a=>a.kind===kind&&balance(a)>0&&(filter==='open'||(filter==='week'?a.due>='2026-10-12'&&a.due<='2026-10-18':filter==='month'?a.due>='2026-10-01'&&a.due<='2026-10-31':group(a)===filter)));
+ const total=list=>list.reduce((n,a)=>n+balance(a),0);
+ const status=a=>balance(a)===0?'Quitada':paid(a)>0?'Parcial':'Em aberto';
+ const blankDraft=()=>({mode:'full',amount:'',date:'2026-10-16',method:'',notes:''});
+ const button=(text,action,cls='primary',extra='')=>`<button type="button" class="${cls} cursor-interaction" data-action="${action}" ${extra}>${text}</button>`;
+ const ledger=items=>`<dl class="rec-ledger">${items.map(([k,v])=>`<div><dt>${esc(k)}</dt><dd>${v}</dd></div>`).join('')}</dl>`;
+ const rgb=h=>h.slice(1).match(/../g).map(v=>parseInt(v,16));
+ const mix=(a,b,f)=>'#'+rgb(a).map((v,i)=>Math.round(v*(1-f)+rgb(b)[i]*f).toString(16).padStart(2,'0')).join('');
+ const luminance=c=>rgb(c).map(v=>{v/=255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;}).reduce((n,v,i)=>n+v*[.2126,.7152,.0722][i],0);
+ const contrast=(a,b)=>{const values=[luminance(a),luminance(b)].sort((a,b)=>b-a);return(values[0]+.05)/(values[1]+.05);};
+ const readable=(seed,bgs,toward)=>{for(let n=0;n<=100;n++){const v=mix(seed,toward,n/100);if(bgs.every(b=>contrast(v,b)>=4.5))return v;}return toward;};
+ const reduced=()=>design.motion==='reduced'||systemMotion.matches;
+ function applyDesign(){
+  const original=design.accent==='#2866ae',softLight=original?'#edf4fd':mix('#ffffff',design.accent,.08),softDark=original?'#2b3e57':mix('#141518',design.accent,.23);
+  const light=original?'#2866ae':readable(design.accent,['#ffffff','#f6f7f9',softLight],'#000000'),dark=original?'#a7caff':readable(design.accent,['#24262b','#141518',softDark],'#ffffff');
+  for(const v of views){v.app.style.colorScheme=design.appearance==='chat'?'light dark':design.appearance;v.app.style.setProperty('--radius','32px');v.app.style.setProperty('--page',design.background==='pure'?'light-dark(#ffffff,#000000)':'light-dark(#f6f7f9,#141518)');v.app.style.setProperty('--accent',`light-dark(${light},${dark})`);v.app.style.setProperty('--accent-ink','light-dark(#ffffff,#142947)');v.app.style.setProperty('--soft',`light-dark(${softLight},${softDark})`);v.app.dataset.motion=String(!reduced());if(reduced())v.app.getAnimations({subtree:true}).forEach(a=>a.cancel());v.app.querySelectorAll('[data-pref]').forEach(input=>input.value=design[input.dataset.pref]);}
+  applyReading();
+ }
+// This code is inserted inside the preserved integrated demo's closure.
+const ordinaryAccounts=accounts.map(a=>({...a}));
+let activeExample='everyday';
+function changeReadingExample(){
+ if(design.example===activeExample)return;
+ if(views.some(v=>v.s.busy)){design.example=activeExample;return;}
+ activeExample=design.example;
+ accounts.forEach((a,i)=>Object.assign(a,ordinaryAccounts[i]));
+ if(activeExample==='stress')Object.assign(accounts[0],{
+  name:'Distribuidora de Alimentos São José e Filhos — Comércio e Abastecimento de Cestas Básicas Ltda.',
+  original:123456789,initialPaid:23456789
+ });
+ for(const key of Object.keys(settled))delete settled[key];
+ history.splice(0);
+ for(const v of views){
+  Object.assign(v.s,{area:'inicio',stacks:Object.fromEntries(Object.keys(areas).map(k=>[k,['resumo']])),filter:{pay:'week',receive:'week'},drafts:{},stockOnly:false,errors:{},review:null,last:null,busy:false});
+  v.render();
+ }
+}
+function wrapReadingMoney(container){
+ const walker=document.createTreeWalker(container,NodeFilter.SHOW_TEXT);
+ const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
+ for(const node of nodes){
+  if(node.parentElement.closest('.type-money,input,textarea,select,script,style'))continue;
+  const pattern=/(-?R\$)\s*([\d.]+,\d{2})/g;
+  const matches=[...node.textContent.matchAll(pattern)];if(!matches.length)continue;
+  const fragment=document.createDocumentFragment();let offset=0;
+  for(const m of matches){
+   fragment.append(node.textContent.slice(offset,m.index));
+   const amount=document.createElement('span');amount.className='type-money';
+   const currency=document.createElement('span');currency.className='type-chunk';currency.textContent=m[1];amount.append(currency,' ');
+   const chunks=m[2].match(/\d+\.|\d+,\d{2}/g)||[m[2]];
+   chunks.forEach((text,i)=>{if(i)amount.append(document.createElement('wbr'));const chunk=document.createElement('span');chunk.className='type-chunk';chunk.textContent=text;amount.append(chunk);});
+   fragment.append(amount);offset=m.index+m[0].length;
+  }
+  fragment.append(node.textContent.slice(offset));node.replaceWith(fragment);
+ }
+}
+function applyReading(){
+ for(const v of views){
+  const app=v.app,oriented=app.dataset.reading==='oriented';
+  app.classList.toggle('desktop',design.format==='desktop');app.classList.toggle('mobile',design.format!=='desktop');
+  app.style.setProperty('--type-scale',String(Number(design.textScale)/100));
+  app.dataset.adapted=String(Number(design.textScale)>100||activeExample==='stress');
+  app.dataset.expanded=String(Number(design.textScale)>100);
+  app.querySelector('.demo-label').textContent='Prévia integrada · Leitura recuperada · '+(activeExample==='stress'?'Caso de teste':'Dados de exemplo');app.closest('.stage').classList.toggle('viz-dotted-background',design.format!=='desktop');
+  const method=app.querySelector('[data-field=method]');
+  app.querySelector('[data-type-method]')?.remove();
+  if(method){
+   const wrapper=method.closest('.type-select');
+   if(app.dataset.adapted==='true'&&!wrapper){const box=document.createElement('div');box.className='type-select';method.before(box);box.append(method);const arrow=document.createElement('i');arrow.dataset.lucide='chevron-down';arrow.setAttribute('aria-hidden','true');box.append(arrow);}
+   if(app.dataset.adapted!=='true'&&wrapper)wrapper.replaceWith(method);
+   if(Number(design.textScale)>100&&method.value){const help=document.createElement('p');help.className='rec-help';help.dataset.typeMethod='true';help.textContent='Forma selecionada: '+method.selectedOptions[0].textContent;(method.closest('.type-select')||method).after(help);}
+  }
+  if(oriented||app.dataset.adapted==='true')wrapReadingMoney(app.querySelector('.content'));
+ }
+ globalThis.lucide?.createIcons({attrs:{width:18,height:18}});
+}
+
+ const canonical=v=>JSON.stringify((function order(v){return Array.isArray(v)?v.map(order):v&&typeof v==='object'?Object.fromEntries(Object.keys(v).sort().map(k=>[k,order(v[k])])):v;})(v??null));
+ const initial=window.openai?.widgetState?.privateContent??null,initialSignature=canonical(initial),seen=new Set([initialSignature]);
+ let restoring=false;
+ function remember(v){seen.add(canonical(v));if(seen.size>128)for(const key of seen)if(key!==initialSignature){seen.delete(key);break;}}
+ function save(){if(restoring||!window.openai?.setWidgetState)return;const snapshot={recoveryVersion:1,design:{...design},settled:{...settled},history:history.slice(-8),devices:Object.fromEntries(views.map(v=>[v.device,{area:v.s.area,homePeriod:v.s.homePeriod,stacks:v.s.stacks,filter:v.s.filter,drafts:v.s.drafts,stockOnly:v.s.stockOnly}]))};remember(snapshot);window.openai.setWidgetState({modelContent:{prototype:'Organização integrada ZM — FE-049',productionImplementation:false,design:{...design},devices:views.map(v=>({device:v.device,area:v.s.area,page:v.page()})),simulatedAmountsCents:{...settled}},privateContent:snapshot}).catch(()=>{});}
+ function make(tag,cls,text){const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el;}
+ for(const app of root.querySelectorAll('.app')){
+  app.appendChild(document.getElementById('zm-organization-shell').content.cloneNode(true));
+  const device=app.dataset.device,content=app.querySelector('.content-inner'),title=app.querySelector('.page-title'),backButton=app.querySelector('.back');
+  const s=views[0]?.s||{homePeriod:'week',area:'inicio',stacks:Object.fromEntries(Object.keys(areas).map(k=>[k,['resumo']])),filter:{pay:'week',receive:'week'},drafts:{},stockOnly:false,errors:{},review:null,last:null,busy:false};
+  const page=()=>s.stacks[s.area].at(-1),findAccount=()=>accounts.find(a=>page().endsWith('-'+a.id));
+  const draft=a=>s.drafts[a.id]||(s.drafts[a.id]=blankDraft());
+  const noun=a=>a.kind==='pay'?'pagamento':'recebimento';
+  const view={app,device,s,page,render};views.push(view);
+  function animate(){if(!reduced())content.animate([{opacity:.5,transform:'translateY(6px)'},{opacity:1,transform:'none'}],{duration:220,easing:'cubic-bezier(.2,0,0,1)'});}
+  function navigate(area,destination){if(s.busy)return;s.area=area;const stack=s.stacks[area];if(stack.at(-1)!==destination)stack.push(destination);if(stack.length>12)stack.splice(1,stack.length-12);s.errors={};render();animate();save();}
+  function back(){if(s.busy)return;const stack=s.stacks[s.area];if(stack.length>1)stack.pop();s.errors={};render();animate();save();}
+  function clone(name){content.appendChild(document.getElementById('zm-organization-'+name).content.cloneNode(true));}
+  function renderDetail(data){
+   if(data.future)content.appendChild(make('p','context','Exemplo de uma função planejada'));
+   if(data.amount){const hero=make('section','hero');hero.append(make('span','label',data.label),make('div','detail-amount',data.amount));content.appendChild(hero);}
+   if(data.lines){const box=make('section','details');for(const [k,v]of data.lines){const row=make('div','detail-line');row.append(make('span','',k),make('span','',v));box.appendChild(row);}content.appendChild(box);}
+   if(data.rows){const rows=make('div','rows');data.rows.forEach(([name,description],index)=>{const route=data.basket&&index===0?'estoque:cesta-basica':data===children['mais:configuracoes']&&index===0?'mais:aparencia':null;const row=make(route?'button':'div','row'+(route?' cursor-interaction':''));const copy=make('span','copy');copy.append(make('span','title',name),make('span','subtitle',description));row.appendChild(copy);if(route){row.type='button';row.dataset.go=route;const arrow=make('i','arrow');arrow.dataset.lucide='chevron-right';arrow.setAttribute('aria-hidden','true');row.appendChild(arrow);}rows.appendChild(row);});content.appendChild(rows);}
+   content.appendChild(make('p','note','Dados ilustrativos. Esta prévia mostra onde encontrar as informações.'));
+  }
+  function renderList(kind){
+   const filter=s.filter[kind],items=selected(kind,filter);
+   return `<div class="rec-filters" aria-label="Recorte de vencimento">${[['week','Semana'],['today','Hoje'],['month','Mês'],['overdue','Vencidas'],['next','Próximos 3 dias'],['open','Todas abertas']].map(([value,label])=>button(label,'filter','',`data-kind="${kind}" data-filter="${value}" aria-pressed="${filter===value}"`)).join('')}</div><section class="hero"><span class="label">${filters[filter]}</span><strong class="detail-amount rec-money">${money(total(items))}</strong><p class="rec-help">Saldo ${kind==='pay'?'a pagar':'a receber'} · ${items.length} ${items.length===1?'conta':'contas'} no recorte</p></section>${items.length?`<div class="rows">${items.map(a=>`<button type="button" class="row cursor-interaction" data-go="financeiro:conta-${a.id}"><span class="copy"><span class="title">${a.name}</span><span class="subtitle">${a.origin} · Vence ${shortDate(a.due)}</span><span class="tag">${status(a)}${group(a)==='overdue'?' · Vencida':''}</span></span><span class="value">${money(balance(a))}</span>${icon('chevron-right')}</button>`).join('')}</div>`:'<section class="details"><p role="status">Nenhuma conta em aberto neste recorte. Você pode consultar outros vencimentos.</p></section>'}`;
+  }
+  function renderAccount(a){
+   const records=history.filter(p=>p.account===a.id).slice().reverse(),previous=paid(a)-records.reduce((n,p)=>n+p.amount,0);
+   title.textContent=a.name;content.innerHTML=`<p class="context">${a.kind==='pay'?'Conta':'Venda'} #${a.number} · ${a.origin}</p><section class="rec-panel rec-flow rec-form-width"><div><span class="label">Saldo ${a.kind==='pay'?'a pagar':'a receber'}</span><strong class="detail-amount rec-money">${money(balance(a))}</strong></div>${ledger([['Valor original',money(a.original)],[a.kind==='pay'?'Já pago':'Já recebido',money(paid(a))],['Vencimento',dateLabel(a.due)],['Situação',status(a)]])}${balance(a)>0?button(`Registrar ${noun(a)} ${icon('arrow-right')}`,'form','primary',`data-id="${a.id}"`):'<p role="status">Esta conta está quitada.</p>'}</section><section class="details rec-flow rec-form-width"><h3>Histórico ${a.kind==='pay'?'de pagamentos':'de recebimentos'}</h3>${records.map(p=>ledger([[dateLabel(p.date),money(p.amount)],['Forma',methods[a.kind][p.method]],...(p.notes?[['Observação',esc(p.notes)]]:[])])).join('')}${previous?ledger([['Registros anteriores',money(previous)]]) : !records.length?'<p class="rec-help">Nenhum registro anterior nesta conta.</p>':''}</section>`;
+  }
+  function attributes(key){return `id="${device}-${key}" data-field="${key}" ${s.errors[key]?`aria-invalid="true" aria-describedby="${device}-${key}-error"`:''}`;}
+  const error=key=>s.errors[key]?`<span class="rec-error" id="${device}-${key}-error">${esc(s.errors[key])}</span>`:'';
+  function renderForm(a){
+   const d=draft(a);title.textContent='Registrar '+noun(a);
+   content.innerHTML=`<p class="context">${a.name}</p><div class="rec-flow rec-form-width"><section class="hero"><span class="label">Saldo em aberto</span><strong class="amount rec-money">${money(balance(a))}</strong></section><section class="rec-panel rec-flow"><p class="rec-errors" role="alert" ${Object.keys(s.errors).length?'':'hidden'}>Confira os campos indicados para continuar.</p><fieldset class="rec-fieldset"><legend class="rec-legend">Tipo de ${noun(a)}</legend><div class="rec-choice">${[['full','Integral'],['partial','Parcial']].map(([value,label])=>`<label class="cursor-interaction"><input type="radio" name="${device}-mode" data-mode value="${value}" ${d.mode===value?'checked':''}><span>${label}</span></label>`).join('')}</div><p class="rec-help" data-mode-help>${d.mode==='full'?`Valor integral definido: ${money(balance(a))}.`:'Informe apenas o valor pago ou recebido.'}</p><div class="rec-reveal" data-open="${d.mode==='partial'}" ${d.mode==='full'?'inert':''}><div class="rec-reveal-inner"><div class="rec-field"><label for="${device}-amount">${a.kind==='pay'?'Quanto você pagou?':'Quanto você recebeu?'}</label><input type="text" inputmode="decimal" placeholder="R$ 0,00" value="${esc(d.amount)}" ${attributes('amount')} ${d.mode==='full'?'disabled':''}><span class="rec-help">Até ${money(balance(a))}.</span>${error('amount')}</div></div></div></fieldset><div class="rec-field"><label for="${device}-date" id="${device}-date-label">Data do ${noun(a)}</label><button type="button" class="rec-date cursor-interaction" data-action="calendar" ${attributes('date')} aria-expanded="false" aria-controls="${device}-calendar" aria-labelledby="${device}-date-label ${device}-date-value"><span id="${device}-date-value">${dateLabel(d.date)}</span>${icon('calendar-days')}</button>${error('date')}<dialog class="rec-calendar" id="${device}-calendar" aria-labelledby="${device}-calendar-label"><div class="rec-cal-top"><h3 id="${device}-calendar-label">Data do ${noun(a)}</h3>${button(icon('x'),'calendar-close','','aria-label="Fechar calendário"')}</div><div class="rec-cal-month">${button(icon('chevron-left'),'calendar-month','','data-step="-1" aria-label="Mês anterior"')}<strong data-calendar-period></strong>${button(icon('chevron-right'),'calendar-month','','data-step="1" aria-label="Próximo mês"')}</div><div class="rec-week" aria-hidden="true"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div><div class="rec-days"></div><div class="rec-cal-foot">${button('Hoje','calendar-today','')}${button('Cancelar','calendar-close','')}</div></dialog></div><div class="rec-field"><label for="${device}-method">${a.kind==='pay'?'Como você pagou?':'Como você recebeu?'}</label><select ${attributes('method')}><option value="">Selecione</option>${Object.entries(methods[a.kind]).map(([key,label])=>`<option value="${key}" ${d.method===key?'selected':''}>${label}</option>`).join('')}</select>${error('method')}</div><div class="rec-field"><label for="${device}-notes">Observação <span class="rec-help">(opcional)</span></label><textarea rows="2" maxlength="300" placeholder="Uma referência para consultar depois" ${attributes('notes')}>${esc(d.notes)}</textarea></div><div class="rec-total"><span>Restará em aberto</span><strong class="rec-money" data-remaining aria-live="polite"></strong></div>${button(`Revisar ${noun(a)} ${icon('arrow-right')}`,'review')}</section><p class="rec-help">Registre um ${noun(a)} que você já realizou.</p></div>`;updateRemaining(a);
+  }
+  const amount=a=>draft(a).mode==='full'?balance(a):parseMoney(draft(a).amount);
+  function updateRemaining(a){const el=content.querySelector('[data-remaining]');if(!el)return;const value=amount(a);el.textContent=value!==null&&value>0&&value<=balance(a)?money(balance(a)-value):'—';}
+  function updateMode(a){const d=draft(a),partial=d.mode==='partial',reveal=content.querySelector('.rec-reveal');reveal.dataset.open=String(partial);reveal.inert=!partial;const input=reveal.querySelector('input');input.disabled=!partial;if(!partial){delete s.errors.amount;input.removeAttribute('aria-invalid');content.querySelector(`#${device}-amount-error`)?.remove();}content.querySelector('[data-mode-help]').textContent=partial?'Informe apenas o valor pago ou recebido.':`Valor integral definido: ${money(balance(a))}.`;updateRemaining(a);}
+  function validate(a){const d=draft(a),value=amount(a);s.errors={};if(d.mode==='partial'&&(value===null||value<=0||value>balance(a)))s.errors.amount=`Informe um valor maior que zero, até ${money(balance(a))}.`;if(!validDate(d.date))s.errors.date='Selecione uma data válida.';if(!methods[a.kind][d.method])s.errors.method='Selecione a forma utilizada.';return !Object.keys(s.errors).length&&value>0;}
+  function renderReview(a){const d=draft(a);title.textContent='Revisar '+noun(a);content.innerHTML=`<p class="context">${a.name}</p><section class="rec-panel rec-flow rec-form-width"><div><span class="label">Valor deste ${noun(a)}</span><strong class="detail-amount rec-money">${money(s.review.amount)}</strong></div>${ledger([['Tipo',d.mode==='full'?'Integral do saldo atual':'Parcial'],['Data',dateLabel(d.date)],['Forma',methods[a.kind][d.method]],['Observação',d.notes?esc(d.notes):'Não informada'],['Saldo esperado após o registro',money(s.review.balance-s.review.amount)]])}${s.errors.command?`<p class="rec-errors" role="alert">${esc(s.errors.command)}</p>`:''}${button(s.busy?'Registrando…':`Confirmar registro ${icon('check')}`,'confirm','primary',s.busy?'disabled':'')}${button('Editar dados','edit','rec-secondary',s.busy?'disabled':'')}<p class="rec-help">O saldo esperado será confirmado depois do registro.</p></section>`;}
+  function renderSuccess(a){title.textContent='Registro confirmado';const p=s.last;content.innerHTML=`<section class="rec-panel rec-flow rec-form-width"><h3>${a.kind==='pay'?'Pagamento':'Recebimento'} registrado</h3><p>${a.name}</p><strong class="detail-amount rec-money">${money(p.amount)}</strong>${ledger([['Data',dateLabel(p.date)],['Forma',methods[a.kind][p.method]],['Saldo restante',money(balance(a))]])}<p class="rec-help" role="status">${balance(a)===0?'A conta foi quitada e saiu dos recortes de contas em aberto.':'O saldo restante continua em aberto no vencimento da conta.'}</p>${button('Ver conta atualizada','confirmed-detail')}${button('Voltar à lista','return-list','rec-secondary')}</section>`;}
+  function renderStock(){title.textContent='Produtos';const only=page()==='produtos-atencao'||s.stockOnly,items=products.filter(p=>!only||p.current<p.minimum);content.innerHTML=`<p class="context">Posição de exemplo em 16 de outubro</p><div class="rec-filters" aria-label="Recorte do estoque">${button('Todos os produtos','stock-filter','',`data-only="false" aria-pressed="${!only}"`)}${button('Abaixo do mínimo','stock-filter','',`data-only="true" aria-pressed="${only}"`)}</div><div class="rows">${items.map(p=>`<section class="row"><span class="copy"><span class="title">${p.name}</span><span class="subtitle">${p.current} ${p.unit} disponíveis · mínimo ${p.minimum}</span>${p.current<p.minimum?`<span class="tag">Abaixo do mínimo · faltam ${p.minimum-p.current} ${p.unit}</span>`:''}</span></section>`).join('')}</div><p class="rec-help">A diferença até o mínimo cadastrado serve para conferência. A compra depende da necessidade do negócio.</p>`;}
+  function renderAppearance(){title.textContent='Aparência';content.innerHTML=`<p class="context">Preferências de aparência nesta prévia</p><section class="rec-panel rec-flow rec-form-width"><div class="rec-field"><label for="${device}-appearance">Aparência</label><select id="${device}-appearance" data-pref="appearance"><option value="chat">Seguir o chat</option><option value="light">Claro</option><option value="dark">Escuro</option></select></div><div class="rec-field"><label for="${device}-accent">Cor de destaque</label><input id="${device}-accent" type="color" data-pref="accent" value="${design.accent}"><p class="rec-help">Azul original por padrão. Escolha sua preferência.</p></div><div class="rec-field"><label for="${device}-background">Fundo</label><select id="${device}-background" data-pref="background"><option value="soft">Superfície suave</option><option value="pure">Branco / preto</option></select></div></section>`;}
+// FE-049: recovered reading; current attention stays independent of period.
+  const currentPeriod=()=>periods[s.homePeriod]||periods.week;
+  const periodControls=()=>`<div class="home-period" aria-label="Período do resumo">${Object.entries(periods).map(([key,p])=>button(p.short,'home-period','',`data-period="${key}" aria-pressed="${s.homePeriod===key}"`)).join('')}</div>`;
+  function renderHome(){
+   const p=currentPeriod(),pay=total(selected('pay',p.filter)),receive=total(selected('receive',p.filter));
+   const latePay=selected('pay','overdue').length,lateReceive=selected('receive','overdue').length;
+   const late=latePay+lateReceive,nowPay=total(selected('pay','today')),nowReceive=total(selected('receive','today'));
+   const attention=late?`${late} ${late===1?'conta atrasada':'contas atrasadas'}`:`Hoje: ${money(nowPay)} a pagar`;
+   const detail=late?`Hoje: pagar ${money(nowPay)} · receber ${money(nowReceive)}`:`A receber hoje: ${money(nowReceive)} · Sem atrasadas`;
+   content.innerHTML=`${periodControls()}<p class="context">${p.range} · exemplo em 16/10</p>
+    <section class="hero finance"><h3>Seu financeiro ${p.when}</h3><div class="two"><button type="button" class="home-metric cursor-interaction" data-action="home-financial" data-kind="pay"><span class="label">A pagar</span><strong class="amount">${money(pay)}</strong></button><button type="button" class="home-metric cursor-interaction" data-action="home-financial" data-kind="receive"><span class="label">A receber</span><strong class="amount">${money(receive)}</strong></button></div><p class="home-scope">Em aberto · vencimentos do período</p><button type="button" class="primary cursor-interaction" data-go="financeiro:resumo">Abrir Financeiro ${icon('arrow-right')}</button></section>
+    <section><div class="section-header"><h3>Seu negócio ${p.when}</h3></div><div class="tile-pair"><button class="tile cursor-interaction" type="button" data-go="vendas:resumo"><span class="label">Cestas vendidas</span><strong class="number">${p.baskets}</strong></button><button class="tile cursor-interaction" type="button" data-go="vendas:resumo"><span class="label">Valor das vendas</span><strong class="amount">${money(p.sales)}</strong></button></div></section>
+    <section class="home-attention"><div class="section-header"><h3>Precisa da sua atenção</h3><small>Agora</small></div><div class="rows"><button class="row cursor-interaction" type="button" data-go="financeiro:resumo"><span class="row-icon">${icon('calendar-clock')}</span><span class="copy"><span class="title">${attention}</span><span class="subtitle">${detail}</span></span>${icon('chevron-right')}</button><button class="row cursor-interaction" type="button" data-go="estoque:produtos-atencao"><span class="row-icon">${icon('package-search')}</span><span class="copy"><span class="title">Arroz abaixo do mínimo</span><span class="subtitle">12 pacotes · mínimo cadastrado 15</span></span>${icon('chevron-right')}</button></div></section>`;
+  }
+  function businessResult(){
+   const p=currentPeriod(),result=p.sales-p.cost-p.expenses;
+   return `<section class="details rec-flow"><div><span class="label">Resultado do negócio · ${p.range}</span><strong class="amount rec-money">${money(result)}</strong></div><p class="rec-help">Vendas menos custos registrados e outras despesas pagas no período.</p>${p.incomplete?`<div class="rec-warning"><span>${p.incomplete} ${p.incomplete===1?'venda com custo incompleto':'vendas com custo incompleto'}</span></div>`:''}${button('Entender o resultado '+icon('arrow-right'),'result','rec-secondary')}</section>`;
+  }
+  function renderBusiness(){
+   const p=currentPeriod();content.innerHTML=`${periodControls()}<p class="context">Vendas, clientes e resultado · ${p.range} · apurado até 16/10</p><section class="hero"><span class="label">Vendas ${p.when}</span><strong class="detail-amount rec-money">${money(p.sales)}</strong><span class="label">${p.baskets} cestas vendidas</span></section>${businessResult()}`;
+   const rows=make('div','rows');rows.innerHTML=`<button class="row cursor-interaction" type="button" data-go="vendas:venda"><span class="copy"><span class="title">Venda de 8 cestas</span><span class="subtitle">Conferir itens, cliente e pagamento</span></span>${icon('chevron-right')}</button><button class="row cursor-interaction" type="button" data-go="vendas:clientes"><span class="row-icon">${icon('users')}</span><span class="copy"><span class="title">Clientes</span><span class="subtitle">Cadastros e histórico</span></span>${icon('chevron-right')}</button>`;content.appendChild(rows);
+  }
+  function renderFinance(){
+   clone('financeiro');const current=page(),tab=['pagar','receber'].includes(current)?current:'resumo',p=currentPeriod();content.querySelector('.context').textContent='Pagar, receber e acompanhar vencimentos';content.querySelectorAll('[data-finance]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.finance===tab)));const target=content.querySelector('.finance-content');target.className='finance-content rec-flow';
+   if(tab!=='resumo'){target.innerHTML=renderList(tab==='pagar'?'pay':'receive');return;}
+   target.appendChild(document.getElementById('zm-organization-financeiro-resumo').content.cloneNode(true));const amounts=target.querySelectorAll('.hero .amount');amounts[0].textContent=money(total(selected('pay',p.filter)));amounts[1].textContent=money(total(selected('receive',p.filter)));target.querySelector('.hero>.label').textContent='Em aberto · '+p.range;
+   const deadlines=make('section','rec-flow');deadlines.innerHTML=`<h3>Vencimentos atuais</h3>${['pay','receive'].map(kind=>`<section class="rec-flow"><h3>${kind==='pay'?'A pagar':'A receber'}</h3><div class="rows">${[['today','Vencem hoje'],['overdue','Contas atrasadas'],['next','Próximos 3 dias']].map(([filter,label])=>{const items=selected(kind,filter);return `<button type="button" class="row cursor-interaction" data-action="deadline" data-kind="${kind}" data-filter="${filter}"><span class="copy"><span class="title">${label}</span><span class="subtitle">${items.length} ${items.length===1?'conta':'contas'} · ${money(total(items))}</span></span>${icon('chevron-right')}</button>`;}).join('')}</div></section>`).join('')}<p class="rec-help">Posição atual em 16/10. Próximos três dias: 17 a 19/10, separados de hoje. Pendências cadastradas não são saldo bancário.</p>`;target.insertBefore(deadlines,target.children[1]);
+  }
+  function renderResult(){
+   const p=currentPeriod();title.textContent='Entender o resultado';content.innerHTML=`<p class="context">Resultado do negócio · ${p.range} · exemplo em 16/10</p><section class="rec-panel rec-flow rec-form-width"><h3>Como este valor é calculado</h3>${ledger([['Vendas confirmadas',money(p.sales)],['Custos registrados nas vendas',money(p.cost)],['Lucro bruto calculado',money(p.sales-p.cost)],['Outras despesas pagas',money(p.expenses)],['Resultado do negócio',money(p.sales-p.cost-p.expenses)]])}${p.incomplete?`<div class="rec-warning"><span>${p.incomplete} ${p.incomplete===1?'venda tem custo sinalizado como incompleto':'vendas têm custo sinalizado como incompleto'}</span><p>O cálculo usa os custos registrados. Considere essa limitação ao interpretar o resultado.</p></div><p class="rec-help">O sinal identifica vendas sem itens ou com algum item de custo total não positivo. Isso não afirma, por si só, que você preencheu algo errado.</p>`:''}<p>As vendas podem ainda não ter sido recebidas. Este resultado não representa saldo bancário.</p>${button('Voltar ao contexto','back','rec-secondary')}</section>`;
+  }
+
+  function render(){
+   content.replaceChildren();const p=page(),key=s.area+':'+p,a=s.area==='financeiro'?findAccount():null;content.parentElement.dataset.screen=s.area;title.textContent=areas[s.area];backButton.hidden=s.stacks[s.area].length<=1;backButton.disabled=s.busy;app.querySelectorAll('.navigation button').forEach(b=>{b.disabled=s.busy;if(b.dataset.area===s.area)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});content.setAttribute('aria-busy',String(s.busy));
+   if(a){if(p.startsWith('registrar-'))renderForm(a);else if(p.startsWith('revisar-'))renderReview(a);else if(p.startsWith('concluido-'))renderSuccess(a);else renderAccount(a);}
+   else if(s.area==='vendas'&&p==='resultado')renderResult();
+   else if(s.area==='estoque'&&['produtos','produtos-atencao'].includes(p))renderStock();
+   else if(s.area==='mais'&&p==='aparencia')renderAppearance();
+   else if(children[key]){title.textContent=children[key].title;content.appendChild(make('p','context',areas[s.area]));renderDetail(children[key]);}
+   else if(s.area==='financeiro')renderFinance();
+   else if(s.area==='inicio')renderHome();
+   else if(s.area==='vendas')renderBusiness();
+   else{clone(s.area);if(s.area==='vendas'){content.querySelector('.context').textContent='Hoje, 16 de outubro';content.querySelector('.detail-amount').textContent=money(86000);}}
+   applyDesign();globalThis.lucide?.createIcons({attrs:{width:18,height:18}});fitStage();
+  }
+  function drawCalendar(dialog,focus){const [year,month]=dialog.dataset.month.split('-').map(Number),first=new Date(Date.UTC(year,month-1,1)).getUTCDay(),days=new Date(Date.UTC(year,month,0)).getUTCDate(),a=findAccount();dialog.querySelector('[data-calendar-period]').textContent=new Intl.DateTimeFormat('pt-BR',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(Date.UTC(year,month-1,1)));dialog.querySelector('.rec-days').innerHTML='<span aria-hidden="true"></span>'.repeat(first)+Array.from({length:days},(_,i)=>{const value=`${year}-${String(month).padStart(2,'0')}-${String(i+1).padStart(2,'0')}`;return button(String(i+1),'calendar-date','',`data-date="${value}" aria-label="${dateLabel(value)}" aria-pressed="${value===draft(a).date}"`);}).join('');dialog.querySelector('[data-step="-1"]').disabled=year===1900&&month===1;dialog.querySelector('[data-step="1"]').disabled=year===9999&&month===12;if(focus)dialog.querySelector(`[data-date="${focus}"]`)?.focus();}
+  function openCalendar(){const dialog=content.querySelector('dialog'),trigger=content.querySelector('[data-action=calendar]'),a=findAccount();dialog.dataset.month=draft(a).date.slice(0,7);drawCalendar(dialog);trigger.setAttribute('aria-expanded','true');dialog.showModal();if(!reduced())dialog.animate([{opacity:0,transform:'translateY(12px) scale(.98)'},{opacity:1,transform:'none'}],{duration:240,easing:'cubic-bezier(.2,.8,.2,1)',fill:'backwards'});dialog.querySelector(`[data-date="${draft(a).date}"]`)?.focus();if(!dialog.dataset.bound){dialog.dataset.bound='true';dialog.addEventListener('close',()=>{if(dialog.open)return;dialog.getAnimations().forEach(a=>a.cancel());trigger.setAttribute('aria-expanded','false');trigger.focus();});}}
+  function chooseDate(value){draft(findAccount()).date=value;content.querySelector(`#${device}-date-value`).textContent=dateLabel(value);content.querySelector('dialog').close();save();}
+  function confirm(a){if(s.busy)return;if(!s.review||s.review.account!==a.id||s.review.balance!==balance(a)){s.errors.command='O saldo mudou. Volte a editar e confira o valor novamente.';render();return;}const d={...draft(a)},value=s.review.amount;s.busy=true;render();setTimeout(()=>{settled[a.id]=(settled[a.id]||0)+value;const payment={account:a.id,amount:value,date:d.date,method:d.method,notes:d.notes};history.push(payment);if(history.length>8)history.shift();s.last=payment;s.busy=false;s.review=null;delete s.drafts[a.id];s.stacks.financeiro=s.stacks.financeiro.filter(p=>!p.startsWith('registrar-')&&!p.startsWith('revisar-')&&!p.startsWith('concluido-'));s.stacks.financeiro.push('concluido-'+a.id);for(const v of views)if(v!==view&&!v.s.busy)v.render();render();animate();save();},650);}
+  app.addEventListener('click',event=>{
+   const b=event.target.closest('button');if(!b||!app.contains(b)||b.disabled||s.busy)return;
+   if(b.dataset.area){s.area=b.dataset.area;render();save();return;}
+   if(b.dataset.go){const [area,destination]=b.dataset.go.split(':');navigate(area,destination);return;}
+   if(b.dataset.finance){const stack=s.stacks.financeiro;if(['resumo','pagar','receber'].includes(stack.at(-1)))stack[stack.length-1]=b.dataset.finance;else stack.push(b.dataset.finance);s.errors={};render();save();return;}
+   const action=b.dataset.action,a=findAccount();
+   if(action==='back'){back();return;}if(action==='filter'){s.filter[b.dataset.kind]=b.dataset.filter;render();save();return;}
+   if(action==='deadline'){const kind=b.dataset.kind||'pay';s.filter[kind]=b.dataset.filter;navigate('financeiro',kind==='pay'?'pagar':'receber');return;}
+   if(action==='result'){navigate('vendas','resultado');return;}
+   if(action==='home-period'){if(periods[b.dataset.period]){s.homePeriod=b.dataset.period;render();save();}return;}
+   if(action==='home-financial'){const kind=b.dataset.kind;s.filter[kind]=currentPeriod().filter;navigate('financeiro',kind==='pay'?'pagar':'receber');return;}
+   if(action==='stock-filter'){s.stockOnly=b.dataset.only==='true';s.stacks.estoque[s.stacks.estoque.length-1]='produtos';render();save();return;}
+   if(action==='form'){draft(a);navigate('financeiro','registrar-'+a.id);return;}
+   if(action==='review'){if(validate(a)){s.review={account:a.id,amount:amount(a),balance:balance(a)};navigate('financeiro','revisar-'+a.id);}else{render();content.querySelector(`[data-field="${Object.keys(s.errors)[0]}"]`)?.focus();}return;}
+   if(action==='edit'){back();return;}if(action==='confirm'){confirm(a);return;}
+   if(action==='confirmed-detail'){s.stacks.financeiro.pop();if(page()!=='conta-'+a.id)s.stacks.financeiro.push('conta-'+a.id);render();save();return;}
+   if(action==='return-list'){const list=a.kind==='pay'?'pagar':'receber',at=s.stacks.financeiro.lastIndexOf(list);s.stacks.financeiro=at>=0?s.stacks.financeiro.slice(0,at+1):['resumo',list];render();save();return;}
+   if(action==='calendar'){openCalendar();return;}if(action==='calendar-close'){content.querySelector('dialog').close();return;}if(action==='calendar-date'){chooseDate(b.dataset.date);return;}if(action==='calendar-today'){chooseDate('2026-10-16');return;}
+   if(action==='calendar-month'){const dialog=content.querySelector('dialog'),[y,m]=dialog.dataset.month.split('-').map(Number);dialog.dataset.month=new Date(Date.UTC(y,m-1+Number(b.dataset.step),1)).toISOString().slice(0,7);drawCalendar(dialog);}
+  });
+  backButton.addEventListener('click',back);
+  app.addEventListener('input',event=>{if(restoring)return;const key=event.target.dataset.field,a=findAccount();if(a&&['amount','notes'].includes(key)){draft(a)[key]=event.target.value;updateRemaining(a);}if(event.target.dataset.pref==='accent'){design.accent=event.target.value;applyDesign();}});
+  app.addEventListener('change',event=>{if(restoring)return;const a=findAccount();if(event.target.hasAttribute('data-mode')&&a){draft(a).mode=event.target.value;updateMode(a);fitStage();save();return;}const key=event.target.dataset.field;if(a&&['amount','method','notes'].includes(key)){draft(a)[key]=event.target.value;save();}const pref=event.target.dataset.pref;if(pref&&pref in design){design[pref]=event.target.value;applyDesign();save();}});
+  content.addEventListener('keydown',event=>{const value=event.target.dataset.date;if(!value||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(event.key))return;event.preventDefault();const d=new Date(value+'T00:00:00Z'),key=event.key;if(key==='ArrowLeft')d.setUTCDate(d.getUTCDate()-1);if(key==='ArrowRight')d.setUTCDate(d.getUTCDate()+1);if(key==='ArrowUp')d.setUTCDate(d.getUTCDate()-7);if(key==='ArrowDown')d.setUTCDate(d.getUTCDate()+7);if(key==='Home')d.setUTCDate(d.getUTCDate()-d.getUTCDay());if(key==='End')d.setUTCDate(d.getUTCDate()+6-d.getUTCDay());if(key==='PageUp'||key==='PageDown'){const day=d.getUTCDate();d.setUTCDate(1);d.setUTCMonth(d.getUTCMonth()+(key==='PageUp'?-1:1)*(event.shiftKey?12:1));d.setUTCDate(Math.min(day,new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()+1,0)).getUTCDate()));}if(d.getUTCFullYear()>=1900&&d.getUTCFullYear()<=9999){const dialog=content.querySelector('dialog'),next=d.toISOString().slice(0,10);dialog.dataset.month=next.slice(0,7);drawCalendar(dialog,next);}});
+  view.restore=saved=>{if(!saved)return;if(periods[saved.homePeriod])s.homePeriod=saved.homePeriod;const validPage=(area,p)=>p==='resumo'||(area==='financeiro'&&(['pagar','receber'].includes(p)||accounts.some(a=>p==='conta-'+a.id||p==='registrar-'+a.id)))||(area==='vendas'&&p==='resultado')||(area==='estoque'&&p==='produtos-atencao')||(area==='mais'&&p==='aparencia')||!!children[area+':'+p]||(area==='estoque'&&p==='produtos');if(areas[saved.area])s.area=saved.area;for(const area of Object.keys(areas)){const stack=saved.stacks?.[area];if(Array.isArray(stack)&&stack.length)s.stacks[area]=stack.slice(0,12).map(p=>typeof p==='string'?p:'resumo').map(p=>p.replace(/^revisar-|^concluido-/,'conta-')).filter(p=>validPage(area,p));if(!s.stacks[area].length)s.stacks[area]=['resumo'];}for(const kind of ['pay','receive'])if(filters[saved.filter?.[kind]])s.filter[kind]=saved.filter[kind];s.stockOnly=saved.stockOnly===true;s.drafts={};for(const a of accounts){const d=saved.drafts?.[a.id];if(!d)continue;const restored=blankDraft();if(['full','partial'].includes(d.mode))restored.mode=d.mode;for(const key of ['amount','notes'])if(typeof d[key]==='string')restored[key]=d[key].slice(0,300);if(methods[a.kind][d.method])restored.method=d.method;if(validDate(d.date))restored.date=d.date;s.drafts[a.id]=restored;}s.errors={};s.review=null;s.last=null;render();};
+ }
+ function restore(saved){
+  if(saved?.recoveryVersion!==1||views.some(v=>v.s.busy))return;
+  restoring=true;
+  try{
+   if(saved.design){const d=saved.design;if(['mobile','desktop'].includes(d.format))design.format=d.format;if(['100','150','200'].includes(d.textScale))design.textScale=d.textScale;if(['everyday','stress'].includes(d.example))design.example=d.example;changeReadingExample();if(['chat','light','dark'].includes(d.appearance))design.appearance=d.appearance;if(['soft','pure'].includes(d.background))design.background=d.background;if(['standard','reduced'].includes(d.motion))design.motion=d.motion;if(typeof d.accent==='string'&&/^#[0-9a-f]{6}$/i.test(d.accent))design.accent=d.accent;}
+   for(const a of accounts){const value=saved.settled?.[a.id];settled[a.id]=Number.isSafeInteger(value)&&value>=0&&value<=a.original-a.initialPaid?value:0;}
+   history.splice(0);const cumulative={};for(const p of Array.isArray(saved.history)?saved.history.slice(-8):[]){const a=accounts.find(a=>a.id===p.account);if(a&&Number.isSafeInteger(p.amount)&&p.amount>0&&(cumulative[a.id]||0)+p.amount<=(settled[a.id]||0)&&validDate(p.date)&&methods[a.kind][p.method]){history.push({account:a.id,amount:p.amount,date:p.date,method:p.method,notes:typeof p.notes==='string'?p.notes.slice(0,300):''});cumulative[a.id]=(cumulative[a.id]||0)+p.amount;}}
+   for(const v of views)v.restore(saved.devices?.[v.device]);applyDesign();
+  }finally{restoring=false;}
+ }
+ let stageFrame=0,stageHeight=1030,lastWidth=0;
+ function fitStage(){if(stageFrame)return;stageFrame=requestAnimationFrame(()=>{stageFrame=0;const width=Math.round(root.getBoundingClientRect().width);const stageKey=width+'|'+design.format+'|'+design.textScale+'|'+design.example;if(stageKey!==lastWidth){stageHeight=1030;lastWidth=stageKey;}for(const v of views)if(v.app.getClientRects().length)stageHeight=Math.max(stageHeight,Math.ceil(v.app.getBoundingClientRect().height)+32);root.style.setProperty('--recovery-stage',stageHeight+'px');});}
+ for(const v of views)v.render();restore(initial);
+ for(const name of ['click','input','change'])root.addEventListener(name,event=>{const app=event.composedPath().find(e=>e?.classList?.contains('app'));if(!app)return;for(const v of views)if(v.app!==app)v.render();applyReading();});
+ window.addEventListener('openai:set_globals',event=>{const saved=event.detail?.globals?.widgetState?.privateContent;if(saved?.recoveryVersion!==1||seen.has(canonical(saved)))return;remember(saved);restore(saved);});
+ systemMotion.addEventListener('change',applyDesign);new ResizeObserver(fitStage).observe(root);
+ if(globalThis.Tweak){const t=new Tweak({container:root,onChange:()=>{changeReadingExample();applyDesign();fitStage();save();}});t.addSelect(design,'appearance',{label:'Aparência',options:[{label:'Seguir o chat',value:'chat'},{label:'Claro',value:'light'},{label:'Escuro',value:'dark'}]});t.addSelect(design,'background',{label:'Fundo',options:[{label:'Suave',value:'soft'},{label:'Branco / preto',value:'pure'}]});t.addSelect(design,'format',{label:'Formato da prévia',options:[{label:'Celular',value:'mobile'},{label:'Computador',value:'desktop'}]});t.addSelect(design,'textScale',{label:'Texto do conteúdo',options:[{label:'100%',value:'100'},{label:'150%',value:'150'},{label:'200%',value:'200'}]});t.addSelect(design,'example',{label:'Caso de leitura (reinicia exemplo)',options:[{label:'Cotidiano',value:'everyday'},{label:'Nome longo e quantias altas',value:'stress'}]});t.addSelect(design,'motion',{label:'Movimento',options:[{label:'Padrão',value:'standard'},{label:'Reduzido',value:'reduced'}]});}
+})();
+</script>

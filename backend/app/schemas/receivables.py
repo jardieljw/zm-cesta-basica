@@ -1,6 +1,6 @@
 import datetime
 from typing import Optional, List
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 class ReceivablePaymentCreate(BaseModel):
     amount_cents: int = Field(..., gt=0, description="Valor do pagamento / amortizacao em centavos")
@@ -9,6 +9,14 @@ class ReceivablePaymentCreate(BaseModel):
     dispatch_id: Optional[str] = Field(None, description="ID da saida fisica/despacho onde ocorreu o recebimento na rota")
     payment_date: Optional[datetime.datetime] = Field(None, description="Data do recebimento (padrao now)")
     notes: Optional[str] = Field(None, description="Observacoes sobre o recebimento")
+    expected_balance_cents: Optional[int] = Field(None, ge=0, description="Saldo conferido na revisão; precondição aditiva")
+    payment_business_date: Optional[datetime.date] = Field(None, description="Dia civil do recebimento em UTC-03, sem horário informado")
+
+    @model_validator(mode="after")
+    def one_date_representation(self):
+        if self.payment_date is not None and self.payment_business_date is not None:
+            raise ValueError("Use payment_date ou payment_business_date, não ambos.")
+        return self
 
 class ReceivablePaymentCancelRequest(BaseModel):
     reason: str = Field(..., min_length=3, description="Justificativa do estorno do pagamento")
@@ -56,3 +64,4 @@ class SalesReceivableResponse(BaseModel):
 class SalesReceivableDetailResponse(SalesReceivableResponse):
     sale_date: datetime.datetime
     payments: List[ReceivablePaymentResponse]
+    payment_review_version: int = 1

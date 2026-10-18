@@ -1,0 +1,52 @@
+{
+  "status": "PASS",
+  "samples": [
+    {
+      "alias": "nubank_pf",
+      "rows": 5,
+      "new_events": 5,
+      "linked_events": 0,
+      "similar_operation_groups": 0,
+      "reused_occurrences": 0,
+      "reported_control_checks": 3,
+      "source_fields_match": true,
+      "original_bytes_match": true
+    },
+    {
+      "alias": "nubank_pj_period_a",
+      "rows": 97,
+      "new_events": 97,
+      "linked_events": 0,
+      "similar_operation_groups": 1,
+      "reused_occurrences": 0,
+      "reported_control_checks": 3,
+      "source_fields_match": true,
+      "original_bytes_match": true
+    },
+    {
+      "alias": "nubank_pj_period_b",
+      "rows": 187,
+      "new_events": 90,
+      "linked_events": 97,
+      "similar_operation_groups": 1,
+      "reused_occurrences": 0,
+      "reported_control_checks": 0,
+      "source_fields_match": true,
+      "original_bytes_match": true
+    }
+  ],
+  "checks": {
+    "events_count": 192,
+    "source_groups": 2,
+    "books_unchanged": true,
+    "original_replays": true,
+    "preview_replays": true,
+    "confirmation_replays": true,
+    "backup_restored": true,
+    "evidence_preserved": true,
+    "integrity_ok": true,
+    "foreign_keys_ok": true
+  },
+  "schema_revision": "fc2f3a4b6512",
+  "timestamp_utc": "2026-10-16T05:34:13.334501+00:00"
+}

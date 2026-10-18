@@ -1,0 +1,104 @@
+# Manual Operacional do Usuário e da Empresa
+## ZM Cesta Básica — Sistema de Gestão de Estoque, Produção, Vendas e Financeiro
+
+**Versão do Documento:** 1.0 (Sistema Homologado - Fases 1 a 9)  
+**Público-Alvo:** Gestores da Empresa, Encarregados de Galpão, Operadores de Caixa e Entregadores/Responsáveis por Rotas  
+**Idioma:** Português Brasileiro (pt-BR)  
+
+---
+
+> **Escopo atual (13/10/2026):** Produção em lote/desmontagem, expedição,
+> responsáveis e a tela de tesouraria foram arquivados. Vendas de balcão,
+> montagem durante a venda, compras, fiado, pagamentos e relatórios financeiros
+> continuam ativos. Consulte [o guia de restauração](../client/_archive/README.md).
+
+## 1. Visão Geral da Rotina Operacional
+
+Compras repõem os insumos. Vendas usam cestas disponíveis na loja ou montam
+as cestas durante a própria venda. Fiados, recebimentos e contas a pagar
+alimentam o financeiro e os relatórios. A montagem e a venda continuam
+preservando a regra de não descontar ingredientes duas vezes.
+
+---
+
+## 2. Cadastro de Produtos e Embalagens Comerciais
+
+### 2.1. Insumos e Matérias-Primas
+- **Unidade-Base de Armazenamento:** Todo insumo possui uma unidade-base estrita de medição:
+  - `G` (Gramas): Para itens pesáveis secos (arroz, feijão, açúcar, café, farinha, sal).
+  - `ML` (Mililitros): Para líquidos (óleo de soja, detergente, vinagre, desinfetante).
+  - `UNIT` (Unidade): Para itens unitários indivisíveis (sabonete, esponja de aço, pasta de dente, embalagens plásticas, caixas de papelão).
+- **Estoque Mínimo:** Definido na unidade-base. Quando o saldo atinge ou fica abaixo deste valor, o item é automaticamente destacado em vermelho no **Dashboard** e no relatório de reposição.
+
+### 2.2. Embalagens Comerciais e Fatores de Conversão
+Na compra, fornecedores vendem fardos, caixas e sacos, enquanto a montagem consome unidades ou gramas. O sistema elimina erros manuais:
+- Exemplo 1: Arroz Agulhinha Tipo 1 (unidade-base: `G`). Embalagem cadastrada: *Fardo 6x5kg* com fator de conversão de `30.000` gramas. Ao registrar a compra de 10 fardos, o estoque é creditado automaticamente em `300.000` gramas.
+- Exemplo 2: Sabonete (unidade-base: `UNIT`). Embalagem: *Caixa c/ 72 unidades* (fator: `72`). Ao comprar 5 caixas, o saldo sobe `360` unidades.
+
+---
+
+## 3. Composição de Cestas e Versionamento de Receitas
+
+### 3.1. Tipos Comerciais de Cestas
+- O sistema permite cadastrar tipos comerciais padrão (ex.: *Cesta Família Padrão*, *Cesta Econômica*, *Cesta Natalina*, *Cesta Limpeza*).
+- Cada tipo possui código de identificação único, descrição, preço de venda sugerido e permissão para personalização.
+
+### 3.2. Imutabilidade e Versionamento de Receitas
+- Cada cesta possui uma **Receita Ativa** detalhando exatamente quais produtos compõem a cesta e em qual quantidade na unidade-base.
+- **Regra de Ouro:** Toda alteração de composição cria uma **nova versão** da receita (Versão 2, Versão 3). As versões anteriores permanecem imutáveis no histórico contábil, assegurando que o custo de cestas montadas no passado nunca seja recalculado retroativamente.
+
+---
+
+## 4. Entrada de Compras e Custo Médio Ponderado Móvel (CMPM)
+
+### 4.1. Registro de Compras
+1. Acesse o menu **Compras** e clique em **Nova Compra**.
+2. Informe o fornecedor, número da nota fiscal e os itens adquiridos (selecionando a embalagem comercial ou unidade avulsa).
+3. O sistema calcula o valor total da nota e o custo unitário por unidade-base em escala de microcentavos ($1 \text{ centavo} = 10.000 \text{ microcentavos}$).
+
+### 4.2. Recálculo Automático do CMPM
+O Custo Médio Ponderado Móvel é atualizado instantaneamente a cada entrada com arredondamento bancário *half-even*:
+$$\text{CMPM}_{\text{novo}} = \frac{(\text{Estoque Atual} \times \text{CMPM Antigo}) + (\text{Qtd Compra} \times \text{Custo Unitário da Compra})}{\text{Estoque Atual} + \text{Qtd Compra}}$$
+
+---
+
+## 7. Registro de Vendas e Prevenção de Duplo Desconto de Estoque
+
+### 7.1. Vendas de Balcão (Loja Física)
+- Vendas feitas diretamente no galpão (`DIRECT_STORE`) dão baixa nas cestas prontas do estoque da loja (`STORE`).
+
+## 10. Vendas a Prazo (Fiado), Cobranças e Quitações
+
+1. O cliente pode ser cadastrado previamente com limite de crédito e dados de contato.
+2. Ao registrar uma venda a prazo (`INSTALLMENT` ou `CREDIT_TERM`), o sistema gera títulos em **Contas a Receber**.
+3. O cliente pode amortizar o valor em parcelas ou valor avulso. Cada pagamento registra o meio utilizado e abate o saldo devedor.
+4. Quando o saldo zera, o título é marcado automaticamente como `PAID` (Quitado).
+
+---
+
+## 11. Contas a Pagar e Livro-Caixa da Tesouraria
+
+1. **Contas a Pagar:** Registro de obrigações com fornecedores de insumos e contas fixas (aluguel, energia, água, internet, manutenção).
+2. **Classificação entre Empresa e Sócios:**
+   - `BUSINESS`: Despesas operacionais do negócio (computadas na DRE).
+   - `PERSONAL_WITHDRAWAL`: Retiradas particulares dos sócios. Deduzem saldo da conta da empresa, mas não distorcem o lucro operacional do negócio.
+3. **Livro-Caixa Imutável (`cash_flow_entries`):** O livro-caixa é estritamente *append-only*. Nenhum lançamento de caixa pode ser editado ou apagado; correções ocorrem exclusivamente por estornos auditáveis.
+
+---
+
+## 12. Dashboard, Relatórios Gerenciais e Impressão de Formulários A4
+
+### 12.1. Dashboard Operacional e Financeiro
+Apresenta em tempo real:
+- Total de cestas vendidas no dia/mês.
+- Alertas de produtos abaixo do estoque mínimo.
+- Saldo atual e saldo projetado da tesouraria (considerando contas a pagar e receber nos próximos 30 dias).
+
+### 12.2. Exportação de Planilhas e Relatórios Preenchidos
+Os 6 relatórios ativos do aplicativo podem ser visualizados na tela, baixados em formato de planilha digital (CSV e XLSX) ou gerados em PDF paginado formatado para papel A4.
+
+### 12.3. Formulários em Branco para Preenchimento Manual à Caneta
+Para facilitar o trabalho no pátio onde não há computadores disponíveis, o sistema disponibiliza 3 formulários A4 padronizados com linhas largas (8 a 10 mm de altura) para escrita à mão:
+- **Formulário A:** Vendas Fiadas, Pagamentos e Quitação.
+- **Formulário B:** Contas a Pagar e Despesas.
+- **Formulário D:** Balanço Físico de Estoque (Inventário / Prancheta).

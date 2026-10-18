@@ -1,0 +1,29 @@
+--- a/client/lib/views/receivables_view.dart
++++ b/client/lib/views/receivables_view.dart
+@@ -2,7 +2,7 @@
+ import '../models/sales_receivable.dart';
+ import '../models/financial_account.dart';
+ import '../services/receivable_service.dart';
+-import '../services/treasury_service.dart';
++import '../services/financial_accounts_service.dart';
+ import '../l10n/l10n_extension.dart';
+ import '../utils/formatters.dart';
+ import '../utils/api_error_mapper.dart';
+@@ -16,7 +16,7 @@
+ 
+ class _ReceivablesViewState extends State<ReceivablesView> {
+   final ReceivableService _receivableService = ReceivableService();
+-  final TreasuryService _treasuryService = TreasuryService();
++  final FinancialAccountsService _accountsService = FinancialAccountsService();
+ 
+   List<SalesReceivable> _receivables = [];
+   bool _isLoading = true;
+@@ -135,7 +135,7 @@
+     String? payError;
+ 
+     try {
+-      accounts = await _treasuryService.getAccounts(isActive: true);
++      accounts = await _accountsService.getAccounts(isActive: true);
+       if (accounts.isNotEmpty) {
+         selectedAccountId = accounts.firstWhere((a) => a.isDefault, orElse: () => accounts.first).id;
+       }

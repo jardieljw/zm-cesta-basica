@@ -1,0 +1,2675 @@
+{
+  "date": "2026-10-16",
+  "result": "passed",
+  "scope": "Correção da prévia; sem aplicativo Flutter, API ou banco",
+  "cases": 64,
+  "engines": [
+    {
+      "engine": "edge",
+      "profile": "Edge com viewport móvel",
+      "nativeDateSupported": true,
+      "nativeBefore": {
+        "width": 358,
+        "fontSize": 16,
+        "forcedBoxSizing": false,
+        "date": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 56
+        },
+        "reference": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 56
+        },
+        "field": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 84.296875
+        },
+        "input": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 56
+        },
+        "aligned": true,
+        "fitsField": true,
+        "inputContained": true,
+        "declaredType": "date",
+        "inputType": "date",
+        "inputPadding": "14px 18px",
+        "documentOverflow": false
+      },
+      "stressBefore": {
+        "width": 358,
+        "fontSize": 16,
+        "forcedBoxSizing": true,
+        "date": {
+          "left": 41,
+          "right": 355,
+          "width": 314,
+          "height": 86
+        },
+        "reference": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 56
+        },
+        "field": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 114.296875
+        },
+        "input": {
+          "left": 41,
+          "right": 355,
+          "width": 314,
+          "height": 86
+        },
+        "aligned": false,
+        "fitsField": false,
+        "inputContained": true,
+        "declaredType": "date",
+        "inputType": "date",
+        "inputPadding": "14px 18px",
+        "documentOverflow": false
+      },
+      "cases": [
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 288,
+          "fontSize": 16,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 232,
+            "width": 176,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 288,
+          "fontSize": 16,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 232,
+            "width": 176,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 288,
+          "fontSize": 20,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 232,
+            "width": 176,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 288,
+          "fontSize": 20,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 232,
+            "width": 176,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 328,
+          "fontSize": 16,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 272,
+            "width": 216,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 328,
+          "fontSize": 16,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 272,
+            "width": 216,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 328,
+          "fontSize": 20,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 272,
+            "width": 216,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 328,
+          "fontSize": 20,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 272,
+            "width": 216,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 358,
+          "fontSize": 16,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 298,
+            "width": 238,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 358,
+          "fontSize": 16,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 298,
+            "width": 238,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 358,
+          "fontSize": 20,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 298,
+            "width": 238,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 358,
+          "fontSize": 20,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 298,
+            "width": 238,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 380,
+          "fontSize": 16,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 320,
+            "width": 260,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 380,
+          "fontSize": 16,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 320,
+            "width": 260,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 380,
+          "fontSize": 20,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 320,
+            "width": 260,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 380,
+          "fontSize": 20,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 320,
+            "width": 260,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 288,
+          "fontSize": 16,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 232,
+            "width": 176,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 288,
+          "fontSize": 16,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 232,
+            "width": 176,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 288,
+          "fontSize": 20,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 232,
+            "width": 176,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 288,
+          "fontSize": 20,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 232,
+            "width": 176,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 328,
+          "fontSize": 16,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 272,
+            "width": 216,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 328,
+          "fontSize": 16,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 272,
+            "width": 216,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 328,
+          "fontSize": 20,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 272,
+            "width": 216,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 328,
+          "fontSize": 20,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 272,
+            "width": 216,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 358,
+          "fontSize": 16,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 298,
+            "width": 238,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 358,
+          "fontSize": 16,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 298,
+            "width": 238,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 358,
+          "fontSize": 20,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 298,
+            "width": 238,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 358,
+          "fontSize": 20,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 298,
+            "width": 238,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 380,
+          "fontSize": 16,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 320,
+            "width": 260,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 380,
+          "fontSize": 16,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 320,
+            "width": 260,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 380,
+          "fontSize": 20,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 320,
+            "width": 260,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 380,
+          "fontSize": 20,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 320,
+            "width": 260,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "date",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        }
+      ],
+      "emptyDate": {
+        "width": 358,
+        "fontSize": 16,
+        "forcedBoxSizing": false,
+        "date": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 56
+        },
+        "reference": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 56
+        },
+        "field": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 84.296875
+        },
+        "input": {
+          "left": 60,
+          "right": 298,
+          "width": 238,
+          "height": 54
+        },
+        "aligned": true,
+        "fitsField": true,
+        "inputContained": true,
+        "declaredType": "date",
+        "inputType": "date",
+        "inputPadding": "0px",
+        "documentOverflow": false
+      },
+      "interaction": "data selecionada preservada na revisão e ao editar; pagamento parcial mantido",
+      "javascriptErrors": []
+    },
+    {
+      "engine": "webkit",
+      "profile": "WebKit no Windows, viewport móvel e identificação iPhone; não é um iPhone físico",
+      "nativeDateSupported": false,
+      "nativeBefore": {
+        "width": 358,
+        "fontSize": 16,
+        "forcedBoxSizing": false,
+        "date": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 56
+        },
+        "reference": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 56
+        },
+        "field": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 84.296875
+        },
+        "input": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 56
+        },
+        "aligned": true,
+        "fitsField": true,
+        "inputContained": true,
+        "declaredType": "date",
+        "inputType": "text",
+        "inputPadding": "14px 18px",
+        "documentOverflow": false
+      },
+      "stressBefore": {
+        "width": 358,
+        "fontSize": 16,
+        "forcedBoxSizing": true,
+        "date": {
+          "left": 41,
+          "right": 355,
+          "width": 314,
+          "height": 86
+        },
+        "reference": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 56
+        },
+        "field": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 114.296875
+        },
+        "input": {
+          "left": 41,
+          "right": 355,
+          "width": 314,
+          "height": 86
+        },
+        "aligned": false,
+        "fitsField": false,
+        "inputContained": true,
+        "declaredType": "date",
+        "inputType": "text",
+        "inputPadding": "14px 18px",
+        "documentOverflow": false
+      },
+      "cases": [
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 288,
+          "fontSize": 16,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 232,
+            "width": 176,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 288,
+          "fontSize": 16,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 232,
+            "width": 176,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 288,
+          "fontSize": 20,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 232,
+            "width": 176,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 288,
+          "fontSize": 20,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 232,
+            "width": 176,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 328,
+          "fontSize": 16,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 272,
+            "width": 216,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 328,
+          "fontSize": 16,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 272,
+            "width": 216,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 328,
+          "fontSize": 20,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 272,
+            "width": 216,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 328,
+          "fontSize": 20,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 272,
+            "width": 216,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 358,
+          "fontSize": 16,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 298,
+            "width": 238,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 358,
+          "fontSize": 16,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 298,
+            "width": 238,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 358,
+          "fontSize": 20,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 298,
+            "width": 238,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 358,
+          "fontSize": 20,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 298,
+            "width": 238,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 380,
+          "fontSize": 16,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 320,
+            "width": 260,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 380,
+          "fontSize": 16,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 320,
+            "width": 260,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 380,
+          "fontSize": 20,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 320,
+            "width": 260,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 380,
+          "fontSize": 20,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 320,
+            "width": 260,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 288,
+          "fontSize": 16,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 232,
+            "width": 176,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 288,
+          "fontSize": 16,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 232,
+            "width": 176,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 288,
+          "fontSize": 20,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 232,
+            "width": 176,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 288,
+          "fontSize": 20,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 251,
+            "width": 214,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 232,
+            "width": 176,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 328,
+          "fontSize": 16,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 272,
+            "width": 216,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 328,
+          "fontSize": 16,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 272,
+            "width": 216,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 328,
+          "fontSize": 20,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 272,
+            "width": 216,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 328,
+          "fontSize": 20,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 56
+          },
+          "field": {
+            "left": 37,
+            "right": 291,
+            "width": 254,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 56,
+            "right": 272,
+            "width": 216,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 358,
+          "fontSize": 16,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 298,
+            "width": 238,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 358,
+          "fontSize": 16,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 298,
+            "width": 238,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 358,
+          "fontSize": 20,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 298,
+            "width": 238,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 358,
+          "fontSize": 20,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 317,
+            "width": 276,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 298,
+            "width": 238,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 380,
+          "fontSize": 16,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 320,
+            "width": 260,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 380,
+          "fontSize": 16,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 320,
+            "width": 260,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 380,
+          "fontSize": 20,
+          "forcedBoxSizing": false,
+          "date": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 320,
+            "width": 260,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 380,
+          "fontSize": 20,
+          "forcedBoxSizing": true,
+          "date": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "reference": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 56
+          },
+          "field": {
+            "left": 41,
+            "right": 339,
+            "width": 298,
+            "height": 84.296875
+          },
+          "input": {
+            "left": 60,
+            "right": 320,
+            "width": 260,
+            "height": 54
+          },
+          "aligned": true,
+          "fitsField": true,
+          "inputContained": true,
+          "declaredType": "date",
+          "inputType": "text",
+          "inputPadding": "0px",
+          "documentOverflow": false
+        }
+      ],
+      "emptyDate": {
+        "width": 358,
+        "fontSize": 16,
+        "forcedBoxSizing": false,
+        "date": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 56
+        },
+        "reference": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 56
+        },
+        "field": {
+          "left": 41,
+          "right": 317,
+          "width": 276,
+          "height": 84.296875
+        },
+        "input": {
+          "left": 60,
+          "right": 298,
+          "width": 238,
+          "height": 54
+        },
+        "aligned": true,
+        "fitsField": true,
+        "inputContained": true,
+        "declaredType": "date",
+        "inputType": "text",
+        "inputPadding": "0px",
+        "documentOverflow": false
+      },
+      "interaction": "data selecionada preservada na revisão e ao editar; pagamento parcial mantido",
+      "javascriptErrors": []
+    }
+  ],
+  "limitation": "WebKit desktop com perfil móvel não reproduz UIKit/Safari no iPhone. Nesta instalação o WebKit apresenta type=date como fallback text; sua cobertura é de layout e fluxo, sem validar o seletor nativo iOS. A condição content-box é estresse explícito, não reprodução comprovada do defeito nativo."
+}

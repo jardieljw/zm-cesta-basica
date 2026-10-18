@@ -1,104 +1,131 @@
-# Manual de Impressão Direta Multiplataforma e Compatibilidade Epson Wi-Fi
-## ZM Cesta Básica — Módulo de Relatórios, Documentos A4 e Impressão Nativa
+# Guia de impressão Wi-Fi — Android, Windows e Epson
 
-**Versão do Documento:** 1.0 (Sistema Homologado - Fases 1 a 9)  
-**Público-Alvo:** Gestores, Encarregados de Escritório e Operadores de Galpão  
-**Equipamentos Suportados:** Impressoras Epson Wi-Fi (Série EcoTank), HP, Canon, Brother, Laser e Matriciais  
+Revisão: 14/10/2026. [Análise e limites de compatibilidade](IMPRESSAO_WIFI_E_ANDROID.md).
 
----
+## Antes de começar
 
-## 1. Arquitetura de Impressão do Sistema
+O app imprime PDFs por meio do sistema operacional. A compatibilidade depende
+do modelo da impressora e do serviço/driver que a atende. Ter Wi-Fi, por si só,
+não garante impressão pelo Android. O padrão Mopria atende modelos certificados;
+outros equipamentos podem exigir um serviço específico do fabricante.
 
-O módulo de relatórios e impressão do **ZM Cesta Básica** foi desenvolvido para operar de forma nativa e integrada tanto no **Windows Desktop** quanto no **Android Mobile**, eliminando a necessidade de instalar pacotes de escritório como Microsoft Excel ou visualizadores de terceiros:
+Fontes: [Android: impressão de documentos](https://developer.android.com/training/printing/custom-docs),
+[Mopria: imprimir pelo Android](https://mopria.org/print-from-android).
 
-```
-┌────────────────────────────────────────────────────────┐
-│             Aplicativo ZM Cesta Básica                │
-│    (Gerador Nativo de PDF Vetorial: ReportPdfBuilder)  │
-└───────────────────────────┬────────────────────────────┘
-                            │
-              ┌─────────────┴─────────────┐
-              ▼                           ▼
-┌───────────────────────────┐ ┌───────────────────────────┐
-│ Windows Print Spooler     │ │ Android Print Framework   │
-│ - Drivers Nativos Windows │ │ - Mopria Print Service    │
-│ - Epson ESC/P-R Driver    │ │ - Epson Print Enabler     │
-│ - Impressoras USB / Wi-Fi │ │ - Impressoras Wi-Fi Direto│
-└─────────────┬─────────────┘ └─────────────┬─────────────┘
-              │                             │
-              └──────────────┬──────────────┘
-                             │
-                             ▼
-              ┌───────────────────────────┐
-              │   Impressão Física em A4  │
-              │  (ou Salvar/Compartilhar) │
-              └───────────────────────────┘
-```
+## Android
 
----
+Para configurar ou testar antes de abrir documentos, entre em
+**Configurações → Impressão e impressoras** no app. Esse diagnóstico funciona
+sem conexão com o servidor e sem acessar dados comerciais. A página de teste
+abre a seleção nativa de impressoras do Android.
 
-## 2. Modalidades de Impressão Disponíveis
+1. Confira se o celular e a impressora estão acessíveis na mesma rede local.
+   Evite redes de visitantes com isolamento entre dispositivos. Uma impressora
+   ligada por cabo à mesma rede também pode ser acessível pelo celular.
+2. Abra um relatório ou formulário no app e toque no ícone de impressão.
+3. Toque em **Procurar impressora e imprimir**. O Android abre sua janela de
+   impressão; os serviços habilitados no aparelho procuram as impressoras.
+4. Escolha a impressora e confira papel, orientação, páginas e cópias antes de
+   confirmar.
 
-### 2.1. Relatórios Preenchidos em Tempo Real
-- Gerados com base nos dados reais do sistema para o período selecionado (Hoje, Mês, Ano, Período Customizado ou Todo o Histórico).
-- Incluem cabeçalho padronizado da empresa, tabela zebrada para leitura confortável, paginação no rodapé (`Página X de Y`) e carimbo de data/hora de emissão.
-- Totalizadores financeiros e operacionais formatados no padrão monetário brasileiro (`R$ X.XXX,XX`).
+O app não mostra uma lista própria de impressoras no Android, porque a API de
+enumeração do pacote instalado não oferece esse recurso nessa plataforma.
+Quem descobre os dispositivos é o serviço de impressão do Android.
 
-### 2.2. Formulários em Branco para Preenchimento Manual à Caneta (Prancheta)
-Projetados especificamente para a rotina prática de galpão e carga/descarga na rua, onde não há computador disponível:
-- **Linhas Altas e Espaçosas:** Cada linha possui entre **8 e 10 mm de altura**, proporcionando espaço amplo para escrita manual legível à caneta.
-- **Caixas de Seleção (*Checkboxes*):** Espaço para visto de conferência física e assinaturas de recebimento.
-- **Tabelas Claras:** Sem fontes minúsculas nem compressão excessiva de colunas.
+### Se a impressora não aparecer
 
-Os 4 modelos disponíveis:
-1. **Formulário A:** Vendas Fiadas, Pagamentos e Quitação (controle de parcelas e cobrança na rota).
-2. **Formulário B:** Contas a Pagar e Despesas Operacionais (controle de faturas e vencimentos).
-3. **Formulário C:** Saídas Físicas e Conferência Diária (romaneio de carga, devoluções intactas e avarias).
-4. **Formulário D:** Balanço Físico de Estoque (contagem cega e auditoria de insumos no depósito).
+Use **Configurar impressão no Android** na janela do app. O botão abre as
+configurações de impressão do sistema, quando essa tela existe no aparelho.
+Também é possível pesquisar “Impressão” nas configurações do celular.
 
----
+Confira se está ativado o serviço padrão, Mopria ou um serviço do fabricante
+compatível com o modelo. Para Epson, consulte o serviço indicado pelo fabricante
+para aquela impressora; não é uma garantia para toda a linha Epson.
+Instalação e ativação são decisões do operador nas configurações/loja de apps.
 
-## 3. Configuração de Impressoras Epson Wi-Fi
+Se a descoberta automática falhar, alguns serviços permitem adicionar a
+impressora por IP. Essa opção depende do serviço e é configurada na janela do
+próprio sistema. Verifique também VPN, isolamento da rede e o estado da
+impressora. Ao voltar das configurações, o app atualiza as capacidades; há ainda
+o botão **Atualizar**.
 
-O sistema não utiliza portas seriais proprietárias nem sockets TCP crus; ele integra-se diretamente à **camada oficial de spooler do sistema operacional**, garantindo compatibilidade universal com toda a linha Epson (ex.: EcoTank L3250, L4260, L3150, L4160, M1120).
+### Wi-Fi Direct
 
-### 3.1. Configuração no Windows Desktop
-1. Conecte a impressora Epson à mesma rede Wi-Fi do computador.
-2. Instale o pacote de drivers oficiais da Epson para Windows (**Epson ESC/P-R Driver**).
-3. No Windows, acesse **Configurações $\rightarrow$ Dispositivos $\rightarrow$ Impressoras e Scanners** e confirme se a Epson está definida como disponível (ou impressora padrão).
-4. Ao clicar no botão **Imprimir** dentro do aplicativo ZM Cesta Básica:
-   - A janela oficial do **Spooler do Windows** abrirá automaticamente.
-   - Selecione a impressora Epson, a quantidade de cópias e clique em **Imprimir**.
+Esse modo depende do suporte do celular e da impressora. O procedimento de
+conexão varia por modelo. Ao entrar na rede direta da impressora, o celular pode
+perder a conexão com o servidor da loja. Carregue o documento antes de trocar a
+rede e retorne à rede da loja depois da impressão. O app não altera a conexão
+Wi-Fi automaticamente.
 
-### 3.2. Configuração no Smartphone Android
-1. Conecte o smartphone Android à mesma rede Wi-Fi da impressora.
-2. Na Google Play Store do celular, instale o serviço oficial:
-   - **Epson Print Enabler** (plugin oficial da Epson) OU
-   - **Mopria Print Service** (padrão universal da indústria).
-3. No Android, acesse **Configurações $\rightarrow$ Dispositivos Conectados $\rightarrow$ Preferências de Conexão $\rightarrow$ Impressão** e certifique-se de que o plugin está **Ativado**.
-4. No aplicativo ZM Cesta Básica no celular:
-   - Ao visualizar o relatório ou formulário, clique no ícone da impressora.
-   - O Android localizará automaticamente a Epson conectada na rede Wi-Fi local.
-   - Escolha o número de cópias e confirme a impressão.
+## Windows
 
----
+Adicione a impressora em **Configurações → Impressoras e scanners** e instale o
+driver adequado ao modelo. Ela precisa estar acessível pela rede e cadastrada
+no sistema; o app não substitui o instalador do fabricante.
 
-## 4. Pré-visualização Interativa no Aplicativo (`PdfPreview`)
+Na janela de impressão do app:
 
-Antes de enviar qualquer documento para a impressora física, o operador visualiza o documento completo na tela:
-- **Zoom e Navegação:** Permite folhear as páginas do relatório e dar zoom para conferir valores.
-- **Orientação Automática:** Relatórios mais largos (como o Extrato de Contas a Pagar e Romaneio Completo de Expedição) são gerados automaticamente em orientação **Paisagem (Horizontal)** para garantir que nenhuma coluna seja cortada.
-- **Margens de Segurança:** Configurado com margem mínima de 15 mm, impedindo cortes em cabeçalhos ou rodapés mesmo em impressoras jato de tinta que exigem margem inferior maior.
+- **Procurar impressora e imprimir** abre a seleção nativa do Windows.
+- **Impressoras cadastradas no sistema** mostra a lista que o Windows retorna,
+  quando essa função é suportada. A impressora padrão aparece primeiro.
+- A impressão direta por item é oferecida somente quando a plataforma oferece
+  o recurso. Um dispositivo informado como indisponível fica desabilitado nesse
+  caminho; a janela nativa continua disponível para conferir a configuração.
 
----
+Nomes como “Wi-Fi” ou “Network” não são usados como prova de conectividade. Um
+estado disponível informado pelo driver também não comprova papel ou tinta.
 
-## 5. Rota de Contingência (Impressora Offline / Sem Papel)
+## Página de teste
 
-Caso a impressora esteja desligada, sem papel ou sem tinta, a operação da empresa não é interrompida:
+Toque em **Imprimir página de teste A4**. Nada é impresso automaticamente ao
+abrir a janela ou atualizar a lista.
 
-1. **Botão "Salvar PDF":**  
-   Permite salvar o arquivo `.pdf` diretamente no disco local do computador ou na pasta de Downloads do celular.
-2. **Botão "Compartilhar":**  
-   No celular Android, permite enviar o arquivo imediatamente via WhatsApp, Telegram ou e-mail para o cliente ou para uma gráfica rápida.
-3. **Exportação para Planilhas (CSV / XLSX):**  
-   Todos os relatórios preenchidos possuem botões alternativos para baixar os dados em formato de planilha, permitindo abri-los no Excel quando for necessária análise customizada.
+A página contém acentos, números, moeda, uma referência de **100 x 20 mm** e
+linhas de 8, 9 e 10 mm. Ela não contém dados de clientes, vendas ou pagamentos.
+Selecione A4, retrato e escala de 100% quando disponível, e confira a folha:
+
+1. Texto, acentos e números legíveis.
+2. Referência com as medidas esperadas, sem redução/ampliação automática.
+3. Ausência de cortes nas bordas e alinhamento adequado.
+
+Depois, teste um documento real em paisagem e um documento de várias páginas,
+incluindo seleção de intervalo e cópias. A homologação depende da saída física
+no celular/serviço/impressora que serão usados.
+
+## Cancelamento, erro e fila
+
+O app diferencia cancelamento, erro e retorno de conclusão do sistema. Esse
+retorno não é uma medição de entrega física. Se houver trabalho bloqueado,
+confira papel, tinta, conectividade e fila do Android/Windows antes de reenviar.
+
+Enquanto uma impressão aguarda o sistema, o app bloqueia outro envio pela mesma
+tela. A janela do app pode ser fechada; isso não cancela automaticamente o
+trabalho já entregue ao sistema. Acompanhe a fila do sistema para cancelar ou
+resolver um trabalho pendente.
+
+Falha ao consultar impressoras tem mensagem própria. Não deve ser confundida
+com “nenhuma impressora encontrada”; a seleção nativa continua sendo uma
+alternativa quando a consulta não está disponível.
+
+## Salvar e compartilhar
+
+**Salvar PDF** abre o seletor de destino. **Compartilhar** entrega o PDF ao
+compartilhamento da plataforma. Esses caminhos permitem obter o documento
+mesmo sem impressora acessível. Exportar XLSX não envia o arquivo diretamente à
+impressora; é necessário um programa que abra e imprima planilhas.
+
+Os modelos ativos são fiados, contas a pagar e inventário. O formulário de
+expedição permanece arquivado na interface. As opções de campos, ordem,
+margens, espaço manual e paginação estão no
+[guia de relatórios e formulários](RELATORIOS_E_IMPRESSAO.md).
+
+## Situação da validação
+
+Foram realizados testes automatizados com adaptadores simulados e compilações
+Windows/Android. No ambiente desta análise, só havia Microsoft Print to PDF no
+Windows e nenhum Android conectado por ADB. Portanto, nenhuma impressora Wi-Fi
+física ou serviço de um celular real foi homologado nesta entrega.
+
+Para registrar a homologação, anotar modelo da impressora, celular/versão do
+Android, serviço ativado, modo de conexão e resultado dos cenários da
+[matriz de validação](IMPRESSAO_WIFI_E_ANDROID.md).

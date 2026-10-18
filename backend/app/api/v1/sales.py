@@ -29,6 +29,7 @@ def serialize_sale(s: Sale) -> SaleResponse:
     items = [
         SaleItemResponse(
             id=it.id,
+            assembled_on_demand=bool(it.production_batch and it.production_batch.is_direct_sale),
             basket_type_id=it.basket_type_id,
             basket_type_name=it.basket_type.name if it.basket_type else None,
             production_batch_id=it.production_batch_id,

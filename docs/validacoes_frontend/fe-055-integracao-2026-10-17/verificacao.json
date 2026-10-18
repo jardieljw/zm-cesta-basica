@@ -1,0 +1,297 @@
+{
+  "date": "2026-10-17",
+  "decision": "FE-055",
+  "status": "main_integration_verified_windows_release_built",
+  "final": {
+    "backendPassed": 436,
+    "backendWarnings": 14,
+    "flutterPassed": 334,
+    "analysis": "no issues",
+    "windowsReleaseBuild": "succeeded"
+  },
+  "scope": "Five-area native shell, live overview/financial lists, reviewed financial journeys, device appearance and operational dark-theme compatibility",
+  "visualValidation": {
+    "scope": "One matched Receber fixture: 418 x 815.578125, dark, Bruno R$ 700.00; primary captures at other sizes/text scales",
+    "comparisons": [
+      {
+        "block": "header",
+        "deltaPixels": {
+          "x": 0.0,
+          "y": 0.0,
+          "height": -0.578125
+        },
+        "allMeasuredDeltasBelowOnePixel": true
+      },
+      {
+        "block": "context",
+        "deltaPixels": {
+          "x": 0.0,
+          "y": -0.578125
+        },
+        "allMeasuredDeltasBelowOnePixel": true
+      },
+      {
+        "block": "tab",
+        "deltaPixels": {
+          "x": 0.0,
+          "y": 0.03125,
+          "height": 0.0,
+          "width": 0.010416666666685614
+        },
+        "allMeasuredDeltasBelowOnePixel": true
+      },
+      {
+        "block": "filter",
+        "deltaPixels": {
+          "x": 0.0,
+          "y": 0.03125,
+          "height": 0.0,
+          "width": 0.0
+        },
+        "allMeasuredDeltasBelowOnePixel": true
+      },
+      {
+        "block": "label",
+        "deltaPixels": {
+          "x": 0.0,
+          "y": 0.03125,
+          "height": -0.390625
+        },
+        "allMeasuredDeltasBelowOnePixel": true
+      },
+      {
+        "block": "money",
+        "deltaPixels": {
+          "x": 0.0,
+          "y": 0.640625,
+          "height": 0.0
+        },
+        "allMeasuredDeltasBelowOnePixel": true
+      },
+      {
+        "block": "range",
+        "deltaPixels": {
+          "x": 0.0,
+          "y": -0.75,
+          "height": 0.15625
+        },
+        "allMeasuredDeltasBelowOnePixel": true
+      },
+      {
+        "block": "count",
+        "deltaPixels": {
+          "x": 0.0,
+          "y": -0.59375,
+          "height": 0.15625,
+          "width": -0.0146484375
+        },
+        "allMeasuredDeltasBelowOnePixel": true
+      },
+      {
+        "block": "section",
+        "deltaPixels": {
+          "x": 0.0,
+          "y": -0.4375,
+          "height": 0.125,
+          "width": 0.0
+        },
+        "allMeasuredDeltasBelowOnePixel": true
+      },
+      {
+        "block": "balance",
+        "deltaPixels": {
+          "x": 0.0,
+          "y": 0.03125,
+          "width": 0.0,
+          "height": -0.46875
+        }
+      }
+    ],
+    "limit": "Layout measurements and inspected widget captures are not a proof of zero differing raster pixels across every interface or operating system."
+  },
+  "preservedArchives": [
+    {
+      "path": "docs/referencias_frontend/rodada-acabamento-2026-10-16",
+      "verifiedFiles": 35
+    },
+    {
+      "path": "docs/validacoes_frontend/fe-053-piloto-pagar-2026-10-16",
+      "verifiedFiles": 8
+    },
+    {
+      "path": "docs/validacoes_frontend/fe-054-receber-2026-10-17",
+      "verifiedFiles": 11
+    }
+  ],
+  "sources": [
+    {
+      "path": "client/lib/main.dart",
+      "bytes": 1935,
+      "sha256": "54bf525dce8e524f99c42fb293ec0a3049b9622bd286b0d8c566a97147e1a510"
+    },
+    {
+      "path": "client/lib/views/home_view.dart",
+      "bytes": 45,
+      "sha256": "f782b5d6dffd6814accd9bf68fa166cc11ad801e11bc48229eaaa68c6f15294e"
+    },
+    {
+      "path": "client/lib/services/app_overview_controller.dart",
+      "bytes": 6504,
+      "sha256": "5d49be1c45f84eb43d6fd362821833a3af06b156f36e75842e42572a860477d4"
+    },
+    {
+      "path": "client/lib/services/app_appearance_controller.dart",
+      "bytes": 2607,
+      "sha256": "49ad16187cfe5d3f695260f9b0bfb649499a07c4563395fc8136727b76f73fca"
+    },
+    {
+      "path": "client/lib/views/app_shell_view.dart",
+      "bytes": 24579,
+      "sha256": "5b8927c28ed73ab4ef44092325b4e116ae4199094614311b0dc4375d6ce56195"
+    },
+    {
+      "path": "client/lib/views/app_finance_view.dart",
+      "bytes": 20533,
+      "sha256": "31f39cfb919bc1469354febc7e7174d04d62cad9c26cc9220e2d0861d48e98fa"
+    },
+    {
+      "path": "client/lib/views/app_appearance_view.dart",
+      "bytes": 7920,
+      "sha256": "7ca33b302ed7aa26a084a52eaa4418da4f43173bf96aaabdd75ca1596995ab2e"
+    },
+    {
+      "path": "client/lib/views/app_settings_menu_view.dart",
+      "bytes": 1449,
+      "sha256": "64dd851b4ee4c921360b66da213b9d4f72876ca013daf88af63a62d3adf088ab"
+    },
+    {
+      "path": "client/lib/widgets/shared/approved_app_style.dart",
+      "bytes": 19472,
+      "sha256": "6cf62d442526622cbc2915bfaa07a56cb20cbca9af812c7096d4fd9e2befd0f3"
+    },
+    {
+      "path": "client/lib/widgets/shared/approved_icon.dart",
+      "bytes": 2379,
+      "sha256": "54690ef9f34152c6e0dcd95b0c89792657d7c53a4ff299975839c5a68184a3af"
+    },
+    {
+      "path": "client/lib/widgets/shared/approved_icon_paths.dart",
+      "bytes": 23081,
+      "sha256": "7f5c7fc10a99bdf6c4ba504fdbe56690060e187cc602f992b7a4440f7d03c7cc"
+    },
+    {
+      "path": "client/lib/widgets/shared/approved_icon_license.dart",
+      "bytes": 3365,
+      "sha256": "aa3bba85a1651fd9ef6c2b40121df8ebd33e57cd0ee360ae7324311caa7f7f42"
+    },
+    {
+      "path": "client/lib/widgets/shared/app_operation_scope.dart",
+      "bytes": 1108,
+      "sha256": "86fe0ba38659e7da3fbf8e85c92f3f86432c2044ab11e0cd92e3409d091f7fb6"
+    },
+    {
+      "path": "client/lib/widgets/shared/app_period_selector.dart",
+      "bytes": 2787,
+      "sha256": "0cf2938ba3135a5b65710803900cab7d50cff98c5a79da7495ae66c06455fb77"
+    },
+    {
+      "path": "client/lib/widgets/shared/financial_surface.dart",
+      "bytes": 1161,
+      "sha256": "0bb46a16ec8ce6aad632e3aac2d41e45ba620063742b01856daef3e444e3a4ed"
+    },
+    {
+      "path": "client/lib/widgets/shared/reviewed_payment_view.dart",
+      "bytes": 28103,
+      "sha256": "967ad4bb45adbcffbff0581fb1ad11f7ce0ad5c24eef37a8fd38e64088fe74e8"
+    },
+    {
+      "path": "client/lib/utils/adaptive_ui_color.dart",
+      "bytes": 1111,
+      "sha256": "8be4e04a9756b4522d7dec5f9f55ed57604c8b34d0eab26101d56e13df4cbcaf"
+    },
+    {
+      "path": "client/lib/utils/app_date_labels.dart",
+      "bytes": 816,
+      "sha256": "5ca667bbc3cbc53a4278b412b7c08ff9a5c5517497a063d3e8fef8d70b3fcdc5"
+    },
+    {
+      "path": "client/lib/l10n/app_pt.arb",
+      "bytes": 110387,
+      "sha256": "a49101f3bdd9bc436010ac15f0747e968b94981bc90b17837ef545ac97294a3b"
+    },
+    {
+      "path": "client/test/approved_app_integration_test.dart",
+      "bytes": 13400,
+      "sha256": "d8312a1a4e290f73d9b3f9e8353b443c300fb690a4979065d5b77bb4f4f3ddab"
+    },
+    {
+      "path": "client/test/app_appearance_test.dart",
+      "bytes": 3810,
+      "sha256": "ff5a33e06a87271f91c679eac4bccb537a4312b979994a341bf310f0c96f1b5e"
+    },
+    {
+      "path": "client/test/home_cards_responsive_test.dart",
+      "bytes": 5137,
+      "sha256": "711481daeaba884bf7daf8a55c677abc888bd4f510f8f554c0af21ca31857f57"
+    },
+    {
+      "path": "backend/app/services/business_dashboard.py",
+      "bytes": 13545,
+      "sha256": "b60bb4c4c21923d31408fb650e1508292993384a0c9d26e8fa1feb80aef4b7b9"
+    },
+    {
+      "path": "backend/app/api/v1/dashboard.py",
+      "bytes": 2429,
+      "sha256": "7bff29a7980e314a871e2c6e6d23ab38bb9e0ed0d1e2913bf5b4dd2d127b093f"
+    },
+    {
+      "path": "backend/app/services/financial.py",
+      "bytes": 33290,
+      "sha256": "96e6817bd6435f28aecceacfaff35fa42967560426b65d943b59c1218766a653"
+    },
+    {
+      "path": "backend/app/services/receivables.py",
+      "bytes": 12666,
+      "sha256": "66f7a24b936b3dfd6ebd2bf4cc378a3407ce30668aae3748d6a9f772efff1faf"
+    }
+  ],
+  "build": [
+    {
+      "path": "client/build/windows/x64/runner/Release/zm_cesta_basica_client.exe",
+      "bytes": 92160,
+      "sha256": "6561954208c01df6d5aa4d9832a0b323b830c3c4510beb968e6b019947160a50"
+    },
+    {
+      "path": "client/build/windows/x64/runner/Release/data/app.so",
+      "bytes": 10683272,
+      "sha256": "699323c4a548ec545cda386df0d1f00f1dc9ce3c3ab7f44c50dc5601b4d5b2af"
+    }
+  ],
+  "logs": [
+    {
+      "path": "tmp/fe-055-flutter-delivery.log",
+      "bytes": 89330,
+      "sha256": "d14e1f356680c6eb9e08f38a5a932a6a95b0227d79ecce1681191752013d6966"
+    },
+    {
+      "path": "tmp/fe-055-analyze-delivery.log",
+      "bytes": 98,
+      "sha256": "7344f05aaa4dc14a4cd704649ab58cdfae26f242c8ab61719e9b70978a044c87"
+    },
+    {
+      "path": "tmp/fe-055-backend-final.log",
+      "bytes": 1553,
+      "sha256": "a2eed755a2f82dd5c68608a9ff6d869a027286c6b4cc70fe0e470f63cf3e6ebd"
+    },
+    {
+      "path": "tmp/fe-055-windows-release-success.txt",
+      "bytes": 215,
+      "sha256": "dae318d8976ffa348aabdfb47d5870350fec968a1566c5b8f76ad1354c5bd9d6"
+    }
+  ],
+  "companyDataMutated": false,
+  "sitePublished": false,
+  "installedDeploymentReplaced": false,
+  "nativeBinary": "C:\\Users\\jardi\\Desktop\\ZM CESTA BASICA\\client\\build\\windows\\x64\\runner\\Release\\zm_cesta_basica_client.exe",
+  "note": "All tests use isolated fixtures. Release output is updated; user installation and real-device acceptance are separate."
+}

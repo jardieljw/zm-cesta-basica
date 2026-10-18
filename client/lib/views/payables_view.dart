@@ -1,22 +1,33 @@
+import '../utils/scroll_layout.dart';
+import '../widgets/payables/payable_filters_panel.dart';
+import '../widgets/shared/financial_summary_panel.dart';
+import '../widgets/shared/approved_app_style.dart';
 import 'package:flutter/material.dart';
 import '../models/account_payable.dart';
-import '../models/financial_account.dart';
 import '../services/payable_service.dart';
-import '../services/treasury_service.dart';
+import '../services/payable_payment_coordinator.dart';
+import 'payable_payment_view.dart';
 import '../l10n/l10n_extension.dart';
 import '../utils/formatters.dart';
 import '../utils/api_error_mapper.dart';
 
 class PayablesView extends StatefulWidget {
-  const PayablesView({super.key});
+  const PayablesView({super.key, this.service, this.paymentCoordinator});
+  final PayableService? service;
+  final PayablePaymentCoordinator? paymentCoordinator;
 
   @override
   State<PayablesView> createState() => _PayablesViewState();
 }
 
 class _PayablesViewState extends State<PayablesView> {
-  final PayableService _payableService = PayableService();
-  final TreasuryService _treasuryService = TreasuryService();
+  late final PayableService _payableService;
+  int _requestVersion = 0, _pendingVersion = 0, _nextOffset = 0;
+  late final PayablePaymentCoordinator _paymentCoordinator;
+  List<PayablePaymentAttempt> _pendingPayments = [];
+  bool _pendingReadFailed = false, _hasMore = false, _loadingMore = false;
+  String? _moreError;
+  String? _beneficiaryFilter;
 
   List<AccountPayable> _payables = [];
   bool _isLoading = true;
@@ -35,45 +46,169 @@ class _PayablesViewState extends State<PayablesView> {
   @override
   void initState() {
     super.initState();
+    _payableService = widget.service ?? PayableService();
+    _paymentCoordinator =
+        widget.paymentCoordinator ??
+        PayablePaymentCoordinator(service: _payableService);
     _loadPayables();
   }
 
   @override
   void dispose() {
     _beneficiaryController.dispose();
+    if (widget.paymentCoordinator == null) _paymentCoordinator.dispose();
+    if (widget.service == null) _payableService.close();
     super.dispose();
   }
 
   Future<void> _loadPayables() async {
+    if (!mounted) return;
+    final requestVersion = ++_requestVersion;
+    _loadPendingPayments();
     setState(() {
       _isLoading = true;
       _errorMessage = null;
+      _loadingMore = false;
+      _moreError = null;
+      _hasMore = false;
     });
 
     try {
-      final items = await _payableService.getPayables(
-        dueDateFrom: _dueDateFrom,
-        dueDateTo: _dueDateTo,
-        status: _statusFilter,
-        category: _categoryFilter,
-        nature: _natureFilter,
-        beneficiary: _beneficiaryController.text.trim().isNotEmpty
-            ? _beneficiaryController.text.trim()
-            : null,
-        overdueOnly: _overdueOnly,
-        month: _monthFilter,
-        year: _yearFilter,
-      );
+      final items = await _fetchPayables();
+      if (!mounted || requestVersion != _requestVersion) return;
       setState(() {
         _payables = items;
+        _nextOffset = items.length;
+        _hasMore = items.length == 100;
         _isLoading = false;
       });
     } catch (e) {
+      if (!mounted || requestVersion != _requestVersion) return;
       setState(() {
         _errorMessage = ApiErrorMapper.toLocalizedMessage(e, context.l10n);
         _isLoading = false;
       });
     }
+  }
+
+  Future<List<AccountPayable>> _fetchPayables({int offset = 0}) =>
+      _payableService.getPayables(
+        dueDateFrom: _dueDateFrom,
+        dueDateTo: _dueDateTo,
+        status: _statusFilter,
+        category: _categoryFilter,
+        nature: _natureFilter,
+        beneficiary: _beneficiaryFilter,
+        overdueOnly: _overdueOnly,
+        month: _monthFilter,
+        year: _yearFilter,
+        limit: 100,
+        offset: offset,
+      );
+
+  Future<void> _loadPendingPayments() async {
+    final version = ++_pendingVersion;
+    try {
+      final pending = await _paymentCoordinator.pending();
+      if (mounted && version == _pendingVersion) {
+        setState(() {
+          _pendingPayments = pending;
+          _pendingReadFailed = false;
+        });
+      }
+    } catch (_) {
+      if (mounted && version == _pendingVersion) {
+        setState(() => _pendingReadFailed = true);
+      }
+    }
+  }
+
+  Future<void> _loadMore() async {
+    if (_loadingMore || !_hasMore) return;
+    final version = _requestVersion;
+    setState(() {
+      _loadingMore = true;
+      _moreError = null;
+    });
+    try {
+      final items = await _fetchPayables(offset: _nextOffset);
+      if (!mounted || version != _requestVersion) return;
+      setState(() {
+        final ids = _payables.map((p) => p.id).toSet();
+        _payables.addAll(items.where((p) => ids.add(p.id)));
+        _nextOffset += items.length;
+        _hasMore = items.length == 100;
+        _loadingMore = false;
+      });
+    } catch (_) {
+      if (mounted && version == _requestVersion) {
+        setState(() {
+          _loadingMore = false;
+          _moreError = context.l10n.paymentFlowMoreFailed;
+        });
+      }
+    }
+  }
+
+  Future<void> _openPayment(String id) async {
+    await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) =>
+            PayablePaymentView(payableId: id, coordinator: _paymentCoordinator),
+      ),
+    );
+    if (mounted) await _loadPayables();
+  }
+
+  Widget _pendingSection() {
+    if (_pendingPayments.isEmpty && !_pendingReadFailed) {
+      return const SizedBox.shrink();
+    }
+    final l = context.l10n;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+      child: ApprovedSurface(
+        padding: const EdgeInsets.all(18),
+        radius: 24,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              l.paymentFlowPendingTitle,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            if (_pendingReadFailed) ...[
+              Text(l.paymentFlowPendingReadError),
+              TextButton(
+                onPressed: _loadPendingPayments,
+                child: Text(l.commonRefresh),
+              ),
+            ],
+            for (final attempt in _pendingPayments)
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(
+                  attempt.confirmation == null
+                      ? Icons.sync
+                      : Icons.check_circle_outline,
+                ),
+                title: Text(
+                  l.paymentFlowPendingItem(
+                    attempt.beneficiary,
+                    attempt.payableNumber,
+                  ),
+                ),
+                subtitle: Text(
+                  attempt.confirmation == null
+                      ? l.paymentFlowUncertain
+                      : l.paymentFlowConfirmed,
+                ),
+                onTap: () => _openPayment(attempt.payableId),
+              ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _clearFilters() {
@@ -83,6 +218,7 @@ class _PayablesViewState extends State<PayablesView> {
       _natureFilter = null;
       _overdueOnly = false;
       _beneficiaryController.clear();
+      _beneficiaryFilter = null;
       _monthFilter = null;
       _yearFilter = null;
       _dueDateFrom = null;
@@ -96,9 +232,9 @@ class _PayablesViewState extends State<PayablesView> {
     try {
       await _payableService.generateNextRecurrence(payable.id);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.payableRecurrenceSuccess)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.payableRecurrenceSuccess)));
         _loadPayables();
       }
     } catch (e) {
@@ -139,7 +275,12 @@ class _PayablesViewState extends State<PayablesView> {
   }
 
   int _parseToCents(String text) {
-    final cleaned = text.replaceAll('R\$', '').replaceAll(' ', '').replaceAll('.', '').replaceAll(',', '.').trim();
+    final cleaned = text
+        .replaceAll('R\$', '')
+        .replaceAll(' ', '')
+        .replaceAll('.', '')
+        .replaceAll(',', '.')
+        .trim();
     final val = double.tryParse(cleaned) ?? 0.0;
     return (val * 100).round();
   }
@@ -175,7 +316,10 @@ class _PayablesViewState extends State<PayablesView> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       if (formError != null) ...[
-                        Text(formError!, style: const TextStyle(color: Colors.red)),
+                        Text(
+                          formError!,
+                          style: const TextStyle(color: Colors.red),
+                        ),
                         const SizedBox(height: 8),
                       ],
                       TextField(
@@ -204,19 +348,53 @@ class _PayablesViewState extends State<PayablesView> {
                                 border: const OutlineInputBorder(),
                               ),
                               items: [
-                                DropdownMenuItem(value: 'FORNECEDOR', child: Text(l10n.payableCategorySupplier)),
-                                DropdownMenuItem(value: 'ENERGIA', child: Text(l10n.payableCategoryElectricity)),
-                                DropdownMenuItem(value: 'ALUGUEL', child: Text(l10n.payableCategoryRent)),
-                                DropdownMenuItem(value: 'FRETE', child: Text(l10n.payableCategoryFreight)),
-                                DropdownMenuItem(value: 'MANUTENCAO', child: Text(l10n.payableCategoryMaintenance)),
-                                DropdownMenuItem(value: 'EMPRESTIMO', child: Text(l10n.payableCategoryLoan)),
-                                DropdownMenuItem(value: 'CARTAO_CREDITO', child: Text(l10n.payableCategoryCreditCard)),
-                                DropdownMenuItem(value: 'RETIRADA_SOCIO', child: Text(l10n.payableCategoryPartnerWithdrawal)),
-                                DropdownMenuItem(value: 'IMPOSTO', child: Text(l10n.payableCategoryTaxes)),
-                                DropdownMenuItem(value: 'OUTROS', child: Text(l10n.payableCategoryOthers)),
+                                DropdownMenuItem(
+                                  value: 'FORNECEDOR',
+                                  child: Text(l10n.payableCategorySupplier),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'ENERGIA',
+                                  child: Text(l10n.payableCategoryElectricity),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'ALUGUEL',
+                                  child: Text(l10n.payableCategoryRent),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'FRETE',
+                                  child: Text(l10n.payableCategoryFreight),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'MANUTENCAO',
+                                  child: Text(l10n.payableCategoryMaintenance),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'EMPRESTIMO',
+                                  child: Text(l10n.payableCategoryLoan),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'CARTAO_CREDITO',
+                                  child: Text(l10n.payableCategoryCreditCard),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'RETIRADA_SOCIO',
+                                  child: Text(
+                                    l10n.payableCategoryPartnerWithdrawal,
+                                  ),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'IMPOSTO',
+                                  child: Text(l10n.payableCategoryTaxes),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'OUTROS',
+                                  child: Text(l10n.payableCategoryOthers),
+                                ),
                               ],
                               onChanged: (val) {
-                                if (val != null) setDialogState(() => category = val);
+                                if (val != null) {
+                                  setDialogState(() => category = val);
+                                }
                               },
                             ),
                           ),
@@ -229,11 +407,19 @@ class _PayablesViewState extends State<PayablesView> {
                                 border: const OutlineInputBorder(),
                               ),
                               items: [
-                                DropdownMenuItem(value: 'BUSINESS', child: Text(l10n.payableNatureBusiness)),
-                                DropdownMenuItem(value: 'PERSONAL_WITHDRAWAL', child: Text(l10n.payableNaturePersonal)),
+                                DropdownMenuItem(
+                                  value: 'BUSINESS',
+                                  child: Text(l10n.payableNatureBusiness),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'PERSONAL_WITHDRAWAL',
+                                  child: Text(l10n.payableNaturePersonal),
+                                ),
                               ],
                               onChanged: (val) {
-                                if (val != null) setDialogState(() => nature = val);
+                                if (val != null) {
+                                  setDialogState(() => nature = val);
+                                }
                               },
                             ),
                           ),
@@ -245,7 +431,10 @@ class _PayablesViewState extends State<PayablesView> {
                           Expanded(
                             child: TextField(
                               controller: amountController,
-                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
                               decoration: InputDecoration(
                                 labelText: l10n.payableOriginalAmount,
                                 prefixText: 'R\$ ',
@@ -262,16 +451,41 @@ class _PayablesViewState extends State<PayablesView> {
                                 border: const OutlineInputBorder(),
                               ),
                               items: [
-                                DropdownMenuItem(value: 'BOLETO', child: Text(l10n.payablePaymentMethodBoleto)),
-                                DropdownMenuItem(value: 'PIX', child: Text(l10n.payablePaymentMethodPix)),
-                                DropdownMenuItem(value: 'TRANSFERENCIA', child: Text(l10n.payablePaymentMethodTransfer)),
-                                DropdownMenuItem(value: 'CHEQUE', child: Text(l10n.payablePaymentMethodCheck)),
-                                DropdownMenuItem(value: 'CARTAO_CREDITO', child: Text(l10n.payablePaymentMethodCard)),
-                                DropdownMenuItem(value: 'DINHEIRO', child: Text(l10n.payablePaymentMethodCash)),
-                                DropdownMenuItem(value: 'OUTRO', child: Text(l10n.payablePaymentMethodOther)),
+                                DropdownMenuItem(
+                                  value: 'BOLETO',
+                                  child: Text(l10n.payablePaymentMethodBoleto),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'PIX',
+                                  child: Text(l10n.payablePaymentMethodPix),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'TRANSFERENCIA',
+                                  child: Text(
+                                    l10n.payablePaymentMethodTransfer,
+                                  ),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'CHEQUE',
+                                  child: Text(l10n.payablePaymentMethodCheck),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'CARTAO_CREDITO',
+                                  child: Text(l10n.payablePaymentMethodCard),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'DINHEIRO',
+                                  child: Text(l10n.payablePaymentMethodCash),
+                                ),
+                                DropdownMenuItem(
+                                  value: 'OUTRO',
+                                  child: Text(l10n.payablePaymentMethodOther),
+                                ),
                               ],
                               onChanged: (val) {
-                                if (val != null) setDialogState(() => paymentMethod = val);
+                                if (val != null) {
+                                  setDialogState(() => paymentMethod = val);
+                                }
                               },
                             ),
                           ),
@@ -280,11 +494,13 @@ class _PayablesViewState extends State<PayablesView> {
                       const SizedBox(height: 12),
                       ListTile(
                         shape: RoundedRectangleBorder(
-                          side: const BorderSide(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(4),
+                          side: BorderSide(color: Theme.of(context).colorScheme.outline),
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                        title: Text('${l10n.payableDueDate}: ${AppFormatters.formatDate(selectedDueDate)}'),
-                        trailing: const Icon(Icons.calendar_today),
+                        title: Text(
+                          '${l10n.payableDueDate}: ${AppFormatters.formatDate(selectedDueDate)}',
+                        ),
+                        trailing: const Icon(Icons.calendar_today_outlined),
                         onTap: () async {
                           final picked = await showDatePicker(
                             context: context,
@@ -330,12 +546,23 @@ class _PayablesViewState extends State<PayablesView> {
                             border: const OutlineInputBorder(),
                           ),
                           items: [
-                            DropdownMenuItem(value: 'MONTHLY', child: Text(l10n.payableRecurrenceMonthly)),
-                            DropdownMenuItem(value: 'WEEKLY', child: Text(l10n.payableRecurrenceWeekly)),
-                            DropdownMenuItem(value: 'YEARLY', child: Text(l10n.payableRecurrenceYearly)),
+                            DropdownMenuItem(
+                              value: 'MONTHLY',
+                              child: Text(l10n.payableRecurrenceMonthly),
+                            ),
+                            DropdownMenuItem(
+                              value: 'WEEKLY',
+                              child: Text(l10n.payableRecurrenceWeekly),
+                            ),
+                            DropdownMenuItem(
+                              value: 'YEARLY',
+                              child: Text(l10n.payableRecurrenceYearly),
+                            ),
                           ],
                           onChanged: (val) {
-                            if (val != null) setDialogState(() => recurrencePeriod = val);
+                            if (val != null) {
+                              setDialogState(() => recurrencePeriod = val);
+                            }
                           },
                         ),
                         const SizedBox(height: 12),
@@ -356,26 +583,43 @@ class _PayablesViewState extends State<PayablesView> {
                   onPressed: isSaving ? null : () => Navigator.pop(ctx),
                   child: Text(l10n.commonCancel),
                 ),
-                ElevatedButton(
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    minimumSize: const Size(0, 40),
+                  ),
                   onPressed: isSaving
                       ? null
                       : () async {
                           if (descController.text.trim().isEmpty) {
-                            setDialogState(() => formError = 'Informe a descrição da obrigação.');
+                            setDialogState(
+                              () => formError =
+                                  'Informe a descrição da obrigação.',
+                            );
                             return;
                           }
                           if (benController.text.trim().isEmpty) {
-                            setDialogState(() => formError = 'Informe o favorecido/fornecedor.');
+                            setDialogState(
+                              () => formError =
+                                  'Informe o favorecido/fornecedor.',
+                            );
                             return;
                           }
                           final cents = _parseToCents(amountController.text);
                           if (cents <= 0) {
-                            setDialogState(() => formError = l10n.payablePaymentAmountMustBePositive);
+                            setDialogState(
+                              () => formError =
+                                  l10n.payablePaymentAmountMustBePositive,
+                            );
                             return;
                           }
-                          final installments = int.tryParse(installmentsController.text) ?? 1;
+                          final installments =
+                              int.tryParse(installmentsController.text) ?? 1;
                           if (installments < 1) {
-                            setDialogState(() => formError = 'Número de parcelas deve ser ao menos 1.');
+                            setDialogState(
+                              () => formError =
+                                  'Número de parcelas deve ser ao menos 1.',
+                            );
                             return;
                           }
 
@@ -396,7 +640,9 @@ class _PayablesViewState extends State<PayablesView> {
                                 paymentMethod: paymentMethod,
                                 totalInstallments: installments,
                                 isRecurrent: isRecurrent,
-                                recurrencePeriod: isRecurrent ? recurrencePeriod : null,
+                                recurrencePeriod: isRecurrent
+                                    ? recurrencePeriod
+                                    : null,
                                 notes: notesController.text.trim().isNotEmpty
                                     ? notesController.text.trim()
                                     : null,
@@ -413,7 +659,10 @@ class _PayablesViewState extends State<PayablesView> {
                           } catch (e) {
                             setDialogState(() {
                               isSaving = false;
-                              formError = ApiErrorMapper.toLocalizedMessage(e, l10n);
+                              formError = ApiErrorMapper.toLocalizedMessage(
+                                e,
+                                l10n,
+                              );
                             });
                           }
                         },
@@ -421,195 +670,12 @@ class _PayablesViewState extends State<PayablesView> {
                       ? const SizedBox(
                           width: 16,
                           height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
                         )
                       : Text(l10n.commonSave),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Future<void> _showPaymentDialog(AccountPayable payable) async {
-    final l10n = context.l10n;
-    final initialVal = (payable.balanceCents / 100.0).toStringAsFixed(2).replaceAll('.', ',');
-    final amountController = TextEditingController(text: initialVal);
-    final notesController = TextEditingController();
-    String paymentMethod = payable.paymentMethod;
-    String? selectedAccountId;
-    List<FinancialAccount> accounts = [];
-    bool isLoadingAccounts = true;
-    bool isSaving = false;
-    String? payError;
-
-    // Load financial accounts
-    try {
-      accounts = await _treasuryService.getAccounts(isActive: true);
-      if (accounts.isNotEmpty) {
-        selectedAccountId = accounts.firstWhere((a) => a.isDefault, orElse: () => accounts.first).id;
-      }
-      isLoadingAccounts = false;
-    } catch (_) {
-      isLoadingAccounts = false;
-    }
-
-    if (!mounted) return;
-
-    await showDialog(
-      context: context,
-      builder: (ctx) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: Text(l10n.payablePaymentAction),
-              content: SizedBox(
-                width: 460,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (payError != null) ...[
-                      Text(payError!, style: const TextStyle(color: Colors.red)),
-                      const SizedBox(height: 8),
-                    ],
-                    Text(
-                      '${payable.description} (#${payable.payableNumber})',
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    Text(
-                      '${l10n.payableBeneficiary}: ${payable.beneficiary}',
-                      style: const TextStyle(color: Colors.black87),
-                    ),
-                    Text(
-                      '${l10n.payableBalance}: ${AppFormatters.formatCurrency(payable.balanceCents)}',
-                      style: const TextStyle(color: Colors.black54),
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: amountController,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      decoration: InputDecoration(
-                        labelText: l10n.payablePaidAmount,
-                        prefixText: 'R\$ ',
-                        border: const OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    if (isLoadingAccounts)
-                      const LinearProgressIndicator()
-                    else
-                      DropdownButtonFormField<String>(
-                        initialValue: selectedAccountId,
-                        decoration: InputDecoration(
-                          labelText: l10n.payableSelectAccount,
-                          border: const OutlineInputBorder(),
-                        ),
-                        items: accounts.map((a) {
-                          return DropdownMenuItem(
-                            value: a.id,
-                            child: Text('${a.name} (${AppFormatters.formatCurrency(a.currentBalanceCents)})'),
-                          );
-                        }).toList(),
-                        onChanged: (val) {
-                          if (val != null) setDialogState(() => selectedAccountId = val);
-                        },
-                      ),
-                    const SizedBox(height: 12),
-                    DropdownButtonFormField<String>(
-                      initialValue: paymentMethod,
-                      decoration: InputDecoration(
-                        labelText: l10n.payablePaymentMethod,
-                        border: const OutlineInputBorder(),
-                      ),
-                      items: [
-                        DropdownMenuItem(value: 'BOLETO', child: Text(l10n.payablePaymentMethodBoleto)),
-                        DropdownMenuItem(value: 'PIX', child: Text(l10n.payablePaymentMethodPix)),
-                        DropdownMenuItem(value: 'TRANSFERENCIA', child: Text(l10n.payablePaymentMethodTransfer)),
-                        DropdownMenuItem(value: 'CHEQUE', child: Text(l10n.payablePaymentMethodCheck)),
-                        DropdownMenuItem(value: 'CARTAO_CREDITO', child: Text(l10n.payablePaymentMethodCard)),
-                        DropdownMenuItem(value: 'DINHEIRO', child: Text(l10n.payablePaymentMethodCash)),
-                        DropdownMenuItem(value: 'OUTRO', child: Text(l10n.payablePaymentMethodOther)),
-                      ],
-                      onChanged: (val) {
-                        if (val != null) setDialogState(() => paymentMethod = val);
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: notesController,
-                      decoration: InputDecoration(
-                        labelText: l10n.commonNotes,
-                        border: const OutlineInputBorder(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: isSaving ? null : () => Navigator.pop(ctx),
-                  child: Text(l10n.commonCancel),
-                ),
-                ElevatedButton(
-                  onPressed: isSaving
-                      ? null
-                      : () async {
-                          final cents = _parseToCents(amountController.text);
-                          if (cents <= 0) {
-                            setDialogState(() => payError = l10n.payablePaymentAmountMustBePositive);
-                            return;
-                          }
-                          if (cents > payable.balanceCents) {
-                            setDialogState(() => payError = l10n.payablePaymentAmountExceedsBalance);
-                            return;
-                          }
-                          if (selectedAccountId == null) {
-                            setDialogState(() => payError = 'Selecione a conta financeira de saída.');
-                            return;
-                          }
-
-                          setDialogState(() {
-                            isSaving = true;
-                            payError = null;
-                          });
-
-                          try {
-                            await _payableService.recordPayment(
-                              payable.id,
-                              PayablePaymentCreate(
-                                amountCents: cents,
-                                accountId: selectedAccountId!,
-                                paymentMethod: paymentMethod,
-                                notes: notesController.text.trim().isNotEmpty
-                                    ? notesController.text.trim()
-                                    : null,
-                              ),
-                            );
-
-                            if (mounted) {
-                              Navigator.pop(ctx);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(l10n.payablePaymentSuccess)),
-                              );
-                              _loadPayables();
-                            }
-                          } catch (e) {
-                            setDialogState(() {
-                              isSaving = false;
-                              payError = ApiErrorMapper.toLocalizedMessage(e, l10n);
-                            });
-                          }
-                        },
-                  child: isSaving
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                        )
-                      : Text(l10n.commonConfirm),
                 ),
               ],
             );
@@ -634,9 +700,14 @@ class _PayablesViewState extends State<PayablesView> {
               }
               if (snapshot.hasError || !snapshot.hasData) {
                 return AlertDialog(
-                  content: Text(ApiErrorMapper.toLocalizedMessage(snapshot.error, l10n)),
+                  content: Text(
+                    ApiErrorMapper.toLocalizedMessage(snapshot.error, l10n),
+                  ),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.commonClose)),
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      child: Text(l10n.commonClose),
+                    ),
                   ],
                 );
               }
@@ -662,63 +733,94 @@ class _PayablesViewState extends State<PayablesView> {
                             return ListTile(
                               contentPadding: EdgeInsets.zero,
                               leading: Icon(
-                                isConfirmed ? Icons.check_circle : Icons.cancel,
-                                color: isConfirmed ? Colors.green : Colors.grey,
+                                isConfirmed ? Icons.check_circle_outline : Icons.cancel_outlined,
+                                color: isConfirmed ? AppPalette.of(context).accent : AppPalette.of(context).sub,
                               ),
                               title: Text(
                                 AppFormatters.formatCurrency(p.amountCents),
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
-                                  decoration: isConfirmed ? null : TextDecoration.lineThrough,
+                                  decoration: isConfirmed
+                                      ? null
+                                      : TextDecoration.lineThrough,
                                 ),
                               ),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${AppFormatters.formatDateTime(p.paymentDate)} via ${p.paymentMethod}${p.accountName != null ? ' (${p.accountName})' : ''}',
+                                    '${AppFormatters.formatDateTime(p.paymentDate)} via ${p.paymentMethod}',
                                     style: const TextStyle(fontSize: 12),
                                   ),
                                   if (!isConfirmed && p.reversalReason != null)
                                     Text(
                                       'Estornado: ${p.reversalReason}',
-                                      style: const TextStyle(fontSize: 12, color: Colors.red),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: AppPalette.of(context).warn,
+                                      ),
                                     ),
                                   if (p.notes != null)
-                                    Text(context.l10n.commonNotesPrefix(p.notes!), style: const TextStyle(fontSize: 11, color: Colors.black54)),
+                                    Text(
+                                      context.l10n.commonNotesPrefix(p.notes!),
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
                                 ],
                               ),
                               trailing: isConfirmed
                                   ? IconButton(
-                                      icon: const Icon(Icons.undo, color: Colors.orange),
+                                      icon: Icon(
+                                        Icons.undo,
+                                        color: AppPalette.of(context).warn,
+                                      ),
                                       tooltip: l10n.payableRevertPaymentTooltip,
                                       onPressed: () async {
-                                        final reasonController = TextEditingController();
+                                        final reasonController =
+                                            TextEditingController();
                                         final confirmed = await showDialog<bool>(
                                           context: context,
                                           builder: (dCtx) => AlertDialog(
-                                            title: Text(l10n.payableRevertPaymentTitle),
+                                            title: Text(
+                                              l10n.payableRevertPaymentTitle,
+                                            ),
                                             content: TextField(
                                               controller: reasonController,
                                               decoration: InputDecoration(
-                                                labelText: l10n.payableRevertPaymentReason,
-                                                border: const OutlineInputBorder(),
+                                                labelText: l10n
+                                                    .payableRevertPaymentReason,
+                                                border:
+                                                    const OutlineInputBorder(),
                                               ),
                                             ),
                                             actions: [
                                               TextButton(
-                                                onPressed: () => Navigator.pop(dCtx, false),
+                                                onPressed: () =>
+                                                    Navigator.pop(dCtx, false),
                                                 child: Text(l10n.commonCancel),
                                               ),
-                                              ElevatedButton(
-                                                onPressed: () => Navigator.pop(dCtx, true),
+                                              FilledButton(
+                                                style: FilledButton.styleFrom(
+                                                  backgroundColor: AppPalette.of(context).warn,
+                                                  foregroundColor: AppPalette.of(context).accentInk,
+                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                                ),
+                                                onPressed: () =>
+                                                    Navigator.pop(dCtx, true),
                                                 child: Text(l10n.commonConfirm),
                                               ),
                                             ],
                                           ),
                                         );
 
-                                        if (confirmed == true && reasonController.text.trim().isNotEmpty) {
+                                        if (confirmed == true &&
+                                            reasonController.text
+                                                .trim()
+                                                .isNotEmpty) {
                                           try {
                                             await _payableService.cancelPayment(
                                               p.id,
@@ -728,8 +830,17 @@ class _PayablesViewState extends State<PayablesView> {
                                             _loadPayables();
                                           } catch (err) {
                                             if (mounted) {
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(content: Text(ApiErrorMapper.toLocalizedMessage(err, l10n))),
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    ApiErrorMapper.toLocalizedMessage(
+                                                      err,
+                                                      l10n,
+                                                    ),
+                                                  ),
+                                                ),
                                               );
                                             }
                                           }
@@ -767,7 +878,11 @@ class _PayablesViewState extends State<PayablesView> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(context.l10n.payableConfirmCancelObligationNamed(payable.description)),
+            Text(
+              context.l10n.payableConfirmCancelObligationNamed(
+                payable.description,
+              ),
+            ),
             const SizedBox(height: 12),
             TextField(
               controller: reasonController,
@@ -779,11 +894,20 @@ class _PayablesViewState extends State<PayablesView> {
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l10n.commonCancel)),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(l10n.commonCancel),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: AppPalette.of(context).warn,
+              foregroundColor: AppPalette.of(context).accentInk,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
             onPressed: () => Navigator.pop(ctx, true),
-            child: Text(l10n.commonConfirm, style: const TextStyle(color: Colors.white)),
+            child: Text(
+              l10n.commonConfirm,
+            ),
           ),
         ],
       ),
@@ -791,11 +915,14 @@ class _PayablesViewState extends State<PayablesView> {
 
     if (confirmed == true && reasonController.text.trim().isNotEmpty) {
       try {
-        await _payableService.cancelPayable(payable.id, reasonController.text.trim());
+        await _payableService.cancelPayable(
+          payable.id,
+          reasonController.text.trim(),
+        );
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.payableCancelSuccess)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.payableCancelSuccess)));
           _loadPayables();
         }
       } catch (e) {
@@ -809,280 +936,272 @@ class _PayablesViewState extends State<PayablesView> {
   }
 
   Widget _buildSummaryHeader() {
-    final l10n = context.l10n;
-    return Container(
-      color: Colors.blueGrey.shade50,
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
+    final l = context.l10n;
+    final pal = AppPalette.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+      child: ApprovedSurface(
+        padding: const EdgeInsets.all(16),
+        radius: 24,
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            cardTheme: Theme.of(context).cardTheme.copyWith(color: Colors.transparent),
+          ),
+          child: FinancialSummaryPanel(
+            caption: l.payableDisplayedSummary,
+            metrics: [
+              FinancialSummaryMetric(
+                l.payableOpenShort,
+                _totalOpenCents,
+                pal.ink,
+              ),
+              FinancialSummaryMetric(
+                l.payableOverdue,
+                _overdueCents,
+                pal.warn,
+              ),
+              FinancialSummaryMetric(
+                l.payablePaidAmount,
+                _paidCents,
+                pal.accent,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showFilters() async {
+    final initial = PayableFilters(
+      status: _statusFilter,
+      category: _categoryFilter,
+      nature: _natureFilter,
+      month: _monthFilter,
+      year: _yearFilter,
+      from: _dueDateFrom,
+      to: _dueDateTo,
+      overdue: _overdueOnly,
+    );
+    final PayableFilters? result;
+    if (MediaQuery.sizeOf(context).width < 640) {
+      result = await showModalBottomSheet<PayableFilters>(
+        context: context,
+        isScrollControlled: true,
+        useSafeArea: true,
+        builder: (_) => FractionallySizedBox(
+          heightFactor: .9,
+          child: PayableFiltersPanel(initial: initial),
+        ),
+      );
+    } else {
+      result = await showDialog<PayableFilters>(
+        context: context,
+        builder: (_) => Dialog(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 680, maxHeight: 650),
+            child: PayableFiltersPanel(initial: initial),
+          ),
+        ),
+      );
+    }
+    if (!mounted || result == null) return;
+    setState(() {
+      _statusFilter = result!.status;
+      _categoryFilter = result.category;
+      _natureFilter = result.nature;
+      _monthFilter = result.month;
+      _yearFilter = result.year;
+      _dueDateFrom = result.from;
+      _dueDateTo = result.to;
+      _overdueOnly = result.overdue;
+    });
+    _loadPayables();
+  }
+
+  void _search() {
+    final text = _beneficiaryController.text.trim();
+    setState(() => _beneficiaryFilter = text.isEmpty ? null : text);
+    _loadPayables();
+  }
+
+  Widget _buildFilterBar() {
+    final l = context.l10n;
+    final p = AppPalette.of(context);
+    Widget chip(String label, VoidCallback clear) => InputChip(
+      deleteIcon: const Icon(Icons.close, size: 16),
+      deleteButtonTooltipMessage: l.receivableFilterClear,
+      label: Text(label, style: const TextStyle(fontSize: 12)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      backgroundColor: p.soft,
+      side: BorderSide(color: p.line),
+      onDeleted: () {
+        setState(clear);
+        _loadPayables();
+      },
+    );
+    final chips = <Widget>[
+      if (_beneficiaryFilter != null)
+        chip(_beneficiaryFilter!, () {
+          _beneficiaryFilter = null;
+          _beneficiaryController.clear();
+        }),
+      if (_statusFilter != null)
+        chip(_statusLabel(_statusFilter!), () => _statusFilter = null),
+      if (_categoryFilter != null)
+        chip(_categoryLabel(_categoryFilter!), () => _categoryFilter = null),
+      if (_natureFilter != null)
+        chip(
+          _natureFilter == 'BUSINESS'
+              ? l.payableNatureBusiness
+              : l.payableNaturePersonal,
+          () => _natureFilter = null,
+        ),
+      if (_monthFilter != null)
+        chip(
+          '${l.payableFilterMonth}: $_monthFilter',
+          () => _monthFilter = null,
+        ),
+      if (_yearFilter != null)
+        chip('${l.payableFilterYear}: $_yearFilter', () => _yearFilter = null),
+      if (_dueDateFrom != null && _dueDateTo != null)
+        chip(
+          '${AppFormatters.formatDate(_dueDateFrom!)} – ${AppFormatters.formatDate(_dueDateTo!)}',
+          () {
+            _dueDateFrom = null;
+            _dueDateTo = null;
+          },
+        ),
+    ];
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Card(
-              elevation: 0,
-              color: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l10n.treasuryOpenPayables, style: const TextStyle(fontSize: 13, color: Colors.black54)),
-                    const SizedBox(height: 4),
-                    Text(
-                      AppFormatters.formatCurrency(_totalOpenCents),
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.orange),
-                    ),
-                  ],
-                ),
+          TextField(
+            controller: _beneficiaryController,
+            textInputAction: TextInputAction.search,
+            decoration: InputDecoration(
+              labelText: l.payableBeneficiary,
+              isDense: true,
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+              suffixIcon: IconButton(
+                tooltip: l.payableSearch,
+                icon: const Icon(Icons.search),
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  _search();
+                },
               ),
             ),
+            onSubmitted: (_) => _search(),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Card(
-              elevation: 0,
-              color: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l10n.treasuryOverduePayables, style: const TextStyle(fontSize: 13, color: Colors.black54)),
-                    const SizedBox(height: 4),
-                    Text(
-                      AppFormatters.formatCurrency(_overdueCents),
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.red),
-                    ),
-                  ],
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 6,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              OutlinedButton.icon(
+                onPressed: _showFilters,
+                icon: const Icon(Icons.tune, size: 18),
+                label: Text(l.payableFiltersTitle),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(0, 38),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 ),
               ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Card(
-              elevation: 0,
-              color: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(l10n.payablePaidAmount, style: const TextStyle(fontSize: 13, color: Colors.black54)),
-                    const SizedBox(height: 4),
-                    Text(
-                      AppFormatters.formatCurrency(_paidCents),
-                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.green),
-                    ),
-                  ],
-                ),
+              FilterChip(
+                label: Text(l.payableOverdue),
+                selected: _overdueOnly,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                onSelected: (v) {
+                  setState(() => _overdueOnly = v);
+                  _loadPayables();
+                },
               ),
-            ),
+              if (chips.isNotEmpty ||
+                  _overdueOnly ||
+                  _beneficiaryFilter != null)
+                TextButton(
+                  onPressed: _clearFilters,
+                  child: Text(l.receivableFilterClear),
+                ),
+              ...chips,
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildFilterBar() {
-    final l10n = context.l10n;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Wrap(
-        spacing: 12,
-        runSpacing: 8,
-        crossAxisAlignment: WrapCrossAlignment.center,
+  String _statusLabel(String value) {
+    final l = context.l10n;
+    return switch (value) {
+      'OPEN' => l.payableStatusOpen,
+      'PARTIAL' => l.payableStatusPartial,
+      'PAID' => l.payableStatusPaid,
+      'CANCELED' => l.payableStatusCanceled,
+      _ => value,
+    };
+  }
+
+  String _categoryLabel(String value) {
+    final l = context.l10n;
+    return switch (value) {
+      'FORNECEDOR' => l.payableCategorySupplier,
+      'ENERGIA' => l.payableCategoryElectricity,
+      'ALUGUEL' => l.payableCategoryRent,
+      'FRETE' => l.payableCategoryFreightShort,
+      'MANUTENCAO' => l.payableCategoryMaintenance,
+      'EMPRESTIMO' => l.payableCategoryLoan,
+      'CARTAO_CREDITO' => l.payableCategoryCreditCard,
+      'RETIRADA_SOCIO' => l.payableCategoryPartnerWithdrawal,
+      'IMPOSTO' => l.payableCategoryTaxesShort,
+      'OUTROS' => l.payableCategoryOthers,
+      _ => value,
+    };
+  }
+
+  String _paymentMethodLabel(String value) {
+    final l = context.l10n;
+    return switch (value) {
+      'BOLETO' => l.payablePaymentMethodBoleto,
+      'PIX' => l.payablePaymentMethodPix,
+      'TRANSFERENCIA' => l.payablePaymentMethodTransfer,
+      'CHEQUE' => l.payablePaymentMethodCheck,
+      'CARTAO_CREDITO' => l.payablePaymentMethodCard,
+      'DINHEIRO' => l.payablePaymentMethodCash,
+      'OUTRO' => l.payablePaymentMethodOther,
+      _ => value,
+    };
+  }
+
+  Widget _payableTag(String label, {IconData? icon, Color? color}) {
+    final pal = AppPalette.of(context);
+    final tagColor = color ?? pal.sub;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: pal.page,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: pal.line),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(
-            width: 200,
-            child: DropdownButtonFormField<String?>(
-              isExpanded: true,
-              initialValue: _statusFilter,
-              decoration: InputDecoration(
-                labelText: l10n.payableStatus,
-                isDense: true,
-                border: const OutlineInputBorder(),
-              ),
-              items: [
-                DropdownMenuItem(value: null, child: Text(l10n.categoryAll)),
-                DropdownMenuItem(value: 'OPEN', child: Text(l10n.payableStatusOpen)),
-                DropdownMenuItem(value: 'PARTIAL', child: Text(l10n.payableStatusPartial)),
-                DropdownMenuItem(value: 'PAID', child: Text(l10n.payableStatusPaid)),
-                DropdownMenuItem(value: 'CANCELED', child: Text(l10n.payableStatusCanceled)),
-              ],
-              onChanged: (val) {
-                setState(() => _statusFilter = val);
-                _loadPayables();
-              },
+          if (icon != null) ...[
+            Icon(icon, size: 12, color: tagColor),
+            const SizedBox(width: 4),
+          ],
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.w500,
+              color: tagColor,
             ),
-          ),
-          SizedBox(
-            width: 200,
-            child: DropdownButtonFormField<String?>(
-              isExpanded: true,
-              initialValue: _categoryFilter,
-              decoration: InputDecoration(
-                labelText: l10n.payableCategory,
-                isDense: true,
-                border: const OutlineInputBorder(),
-              ),
-              items: [
-                DropdownMenuItem(value: null, child: Text(l10n.categoryAll)),
-                DropdownMenuItem(value: 'FORNECEDOR', child: Text(l10n.payableCategorySupplier)),
-                DropdownMenuItem(value: 'ENERGIA', child: Text(l10n.payableCategoryElectricity)),
-                DropdownMenuItem(value: 'ALUGUEL', child: Text(l10n.payableCategoryRent)),
-                DropdownMenuItem(value: 'FRETE', child: Text(l10n.payableCategoryFreightShort)),
-                DropdownMenuItem(value: 'MANUTENCAO', child: Text(l10n.payableCategoryMaintenance)),
-                DropdownMenuItem(value: 'EMPRESTIMO', child: Text(l10n.payableCategoryLoan)),
-                DropdownMenuItem(value: 'CARTAO_CREDITO', child: Text(l10n.payableCategoryCreditCard)),
-                DropdownMenuItem(value: 'RETIRADA_SOCIO', child: Text(l10n.payableCategoryPartnerWithdrawal)),
-                DropdownMenuItem(value: 'IMPOSTO', child: Text(l10n.payableCategoryTaxesShort)),
-                DropdownMenuItem(value: 'OUTROS', child: Text(l10n.payableCategoryOthers)),
-              ],
-              onChanged: (val) {
-                setState(() => _categoryFilter = val);
-                _loadPayables();
-              },
-            ),
-          ),
-          SizedBox(
-            width: 200,
-            child: DropdownButtonFormField<String?>(
-              isExpanded: true,
-              initialValue: _natureFilter,
-              decoration: InputDecoration(
-                labelText: l10n.payableNature,
-                isDense: true,
-                border: const OutlineInputBorder(),
-              ),
-              items: [
-                DropdownMenuItem(value: null, child: Text(l10n.categoryAll)),
-                DropdownMenuItem(value: 'BUSINESS', child: Text(l10n.payableNatureBusiness)),
-                DropdownMenuItem(value: 'PERSONAL_WITHDRAWAL', child: Text(l10n.payableNaturePersonal)),
-              ],
-              onChanged: (val) {
-                setState(() => _natureFilter = val);
-                _loadPayables();
-              },
-            ),
-          ),
-          SizedBox(
-            width: 180,
-            child: TextField(
-              controller: _beneficiaryController,
-              decoration: InputDecoration(
-                labelText: l10n.payableBeneficiary,
-                isDense: true,
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.search, size: 20),
-                  onPressed: _loadPayables,
-                ),
-                border: const OutlineInputBorder(),
-              ),
-              onSubmitted: (_) => _loadPayables(),
-            ),
-          ),
-          SizedBox(
-            width: 140,
-            child: DropdownButtonFormField<int?>(
-              isExpanded: true,
-              initialValue: _monthFilter,
-              decoration: InputDecoration(
-                labelText: l10n.payableFilterMonth,
-                isDense: true,
-                border: const OutlineInputBorder(),
-              ),
-              items: [
-                DropdownMenuItem(value: null, child: Text(l10n.filterAllOption)),
-                DropdownMenuItem(value: 1, child: Text(l10n.monthJan)),
-                DropdownMenuItem(value: 2, child: Text(l10n.monthFeb)),
-                DropdownMenuItem(value: 3, child: Text(l10n.monthMar)),
-                DropdownMenuItem(value: 4, child: Text(l10n.monthApr)),
-                DropdownMenuItem(value: 5, child: Text(l10n.monthMay)),
-                DropdownMenuItem(value: 6, child: Text(l10n.monthJun)),
-                DropdownMenuItem(value: 7, child: Text(l10n.monthJul)),
-                DropdownMenuItem(value: 8, child: Text(l10n.monthAug)),
-                DropdownMenuItem(value: 9, child: Text(l10n.monthSep)),
-                DropdownMenuItem(value: 10, child: Text(l10n.monthOct)),
-                DropdownMenuItem(value: 11, child: Text(l10n.monthNov)),
-                DropdownMenuItem(value: 12, child: Text(l10n.monthDec)),
-              ],
-              onChanged: (val) {
-                setState(() => _monthFilter = val);
-                _loadPayables();
-              },
-            ),
-          ),
-          SizedBox(
-            width: 140,
-            child: DropdownButtonFormField<int?>(
-              isExpanded: true,
-              initialValue: _yearFilter,
-              decoration: InputDecoration(
-                labelText: l10n.payableFilterYear,
-                isDense: true,
-                border: const OutlineInputBorder(),
-              ),
-              items: [
-                DropdownMenuItem(value: null, child: Text(l10n.filterAllOption)),
-                const DropdownMenuItem(value: 2024, child: Text('2024')),
-                const DropdownMenuItem(value: 2025, child: Text('2025')),
-                const DropdownMenuItem(value: 2026, child: Text('2026')),
-                const DropdownMenuItem(value: 2027, child: Text('2027')),
-                const DropdownMenuItem(value: 2028, child: Text('2028')),
-                const DropdownMenuItem(value: 2029, child: Text('2029')),
-                const DropdownMenuItem(value: 2030, child: Text('2030')),
-              ],
-              onChanged: (val) {
-                setState(() => _yearFilter = val);
-                _loadPayables();
-              },
-            ),
-          ),
-          OutlinedButton.icon(
-            icon: const Icon(Icons.date_range, size: 16),
-            label: Text(
-              _dueDateFrom != null && _dueDateTo != null
-                  ? '${AppFormatters.formatDate(_dueDateFrom!)} - ${AppFormatters.formatDate(_dueDateTo!)}'
-                  : l10n.payableFilterPeriod,
-              style: const TextStyle(fontSize: 12),
-            ),
-            onPressed: () async {
-              final range = await showDateRangePicker(
-                context: context,
-                firstDate: DateTime(2020),
-                lastDate: DateTime(2035),
-                initialDateRange: _dueDateFrom != null && _dueDateTo != null
-                    ? DateTimeRange(start: _dueDateFrom!, end: _dueDateTo!)
-                    : null,
-              );
-              if (range != null) {
-                setState(() {
-                  _dueDateFrom = range.start;
-                  _dueDateTo = range.end;
-                });
-                _loadPayables();
-              }
-            },
-          ),
-          FilterChip(
-            label: Text(l10n.payableOverdue),
-            selected: _overdueOnly,
-            onSelected: (val) {
-              setState(() => _overdueOnly = val);
-              _loadPayables();
-            },
-          ),
-          TextButton.icon(
-            icon: const Icon(Icons.clear_all, size: 16),
-            label: Text(l10n.receivableFilterClear),
-            onPressed: _clearFilters,
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: l10n.commonRefresh,
-            onPressed: _loadPayables,
           ),
         ],
       ),
@@ -1091,233 +1210,350 @@ class _PayablesViewState extends State<PayablesView> {
 
   Widget _buildStatusBadge(AccountPayable p) {
     final l10n = context.l10n;
+    final pal = AppPalette.of(context);
     Color bg;
     Color fg;
     String text;
 
     if (p.isOverdue) {
-      bg = Colors.red.shade100;
-      fg = Colors.red.shade900;
+      bg = pal.warnFill;
+      fg = pal.warn;
       text = l10n.payableOverdue;
     } else {
       switch (p.status) {
         case 'PAID':
-          bg = Colors.green.shade100;
-          fg = Colors.green.shade900;
+          bg = pal.soft;
+          fg = pal.accent;
           text = l10n.payableStatusPaid;
           break;
         case 'PARTIAL':
-          bg = Colors.orange.shade100;
-          fg = Colors.orange.shade900;
+          bg = pal.warnFill;
+          fg = pal.warn;
           text = l10n.payableStatusPartial;
           break;
         case 'CANCELED':
-          bg = Colors.grey.shade300;
-          fg = Colors.grey.shade800;
+          bg = pal.page;
+          fg = pal.sub;
           text = l10n.payableStatusCanceled;
           break;
         default:
-          bg = Colors.blue.shade100;
-          fg = Colors.blue.shade900;
+          bg = pal.soft;
+          fg = pal.accent;
           text = l10n.payableStatusOpen;
       }
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(12)),
-      child: Text(text, style: TextStyle(color: fg, fontWeight: FontWeight.bold, fontSize: 12)),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: fg.withValues(alpha: 0.3)),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(color: fg, fontWeight: FontWeight.w600, fontSize: 12),
+      ),
+    );
+  }
+
+  Widget _buildPayableCard(AccountPayable p) {
+    final l10n = context.l10n;
+    final pal = AppPalette.of(context);
+    final canPay = p.status == 'OPEN' || p.status == 'PARTIAL';
+    final canCancel = p.status == 'OPEN' && p.paidAmountCents == 0;
+    return ApprovedSurface(
+      radius: 24,
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '#${p.payableNumber} · ${p.description}',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: pal.ink,
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Text(
+                      '${l10n.payableBeneficiary}: ${p.beneficiary}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: pal.sub,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 8),
+              _buildStatusBadge(p),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: [
+              _payableTag(_categoryLabel(p.category)),
+              if (p.paymentMethod.isNotEmpty)
+                _payableTag(
+                  _paymentMethodLabel(p.paymentMethod),
+                  icon: Icons.payment_outlined,
+                ),
+              if (p.nature == 'PERSONAL_WITHDRAWAL')
+                _payableTag(
+                  l10n.payableNaturePersonal,
+                  icon: Icons.person_outline,
+                  color: pal.warn,
+                ),
+              if (p.totalInstallments > 1)
+                _payableTag(
+                  l10n.payableInstallment(
+                    p.installmentNumber,
+                    p.totalInstallments,
+                  ),
+                  icon: Icons.calendar_today_outlined,
+                ),
+              if (p.isRecurrent)
+                _payableTag(
+                  l10n.payableRecurrent,
+                  icon: Icons.repeat,
+                  color: pal.accent,
+                ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            decoration: BoxDecoration(
+              color: pal.page,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: pal.line),
+            ),
+            child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              runAlignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 16,
+              runSpacing: 8,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.payableBalance,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: pal.sub,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      AppFormatters.formatCurrency(p.balanceCents),
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: p.isOverdue ? pal.warn : pal.ink,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.event_outlined,
+                          size: 14,
+                          color: p.isOverdue ? pal.warn : pal.sub,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          '${l10n.payableDueDate}: ${AppFormatters.formatDate(p.dueDate)}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: p.isOverdue ? FontWeight.bold : FontWeight.w500,
+                            color: p.isOverdue ? pal.warn : pal.ink,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${l10n.payableOriginalAmount}: ${AppFormatters.formatCurrency(p.originalAmountCents)}',
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: pal.sub,
+                      ),
+                    ),
+                    if (p.paidAmountCents > 0) ...[
+                      const SizedBox(height: 1),
+                      Text(
+                        '${l10n.payablePaidAmount}: ${AppFormatters.formatCurrency(p.paidAmountCents)}',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: pal.accent,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            alignment: WrapAlignment.end,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            runSpacing: 6,
+            children: [
+              if (p.isRecurrent)
+                TextButton.icon(
+                  icon: Icon(Icons.repeat, size: 16, color: pal.accent),
+                  label: Text(
+                    l10n.payableGenerateNextRecurrence,
+                    style: TextStyle(color: pal.accent, fontSize: 13),
+                  ),
+                  onPressed: () => _generateNextRecurrence(p),
+                ),
+              if (p.paymentsCount > 0)
+                OutlinedButton.icon(
+                  icon: const Icon(Icons.history, size: 16),
+                  label: Text('${l10n.payableHistoryAction} (${p.paymentsCount})'),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(0, 36),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  onPressed: () => _showHistoryDialog(p),
+                ),
+              if (canCancel)
+                TextButton.icon(
+                  icon: Icon(Icons.cancel_outlined, size: 16, color: pal.warn),
+                  label: Text(
+                    l10n.payableCancelAction,
+                    style: TextStyle(color: pal.warn, fontSize: 13),
+                  ),
+                  onPressed: () => _cancelPayable(p),
+                ),
+              if (canPay)
+                FilledButton.icon(
+                  icon: const Icon(Icons.payment, size: 16),
+                  label: Text(l10n.payablePaymentAction),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: pal.accent,
+                    foregroundColor: pal.accentInk,
+                    minimumSize: const Size(0, 38),
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                  onPressed: () => _openPayment(p.id),
+                ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.payablesTitle),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        icon: const Icon(Icons.add),
-        label: Text(l10n.payablesNew),
+    final l = context.l10n;
+    final padding = fabScrollPadding(context, top: 12, extended: false);
+    return ApprovedPage(
+      title: l.payablesTitle,
+      actions: [
+        IconButton(
+          tooltip: l.payableFiltersTitle,
+          onPressed: _showFilters,
+          icon: const Icon(Icons.tune),
+        ),
+        IconButton(
+          tooltip: l.commonRefresh,
+          onPressed: _loadPayables,
+          icon: const Icon(Icons.refresh),
+        ),
+      ],
+      floatingActionButton: FloatingActionButton(
+        tooltip: l.payableCreateShort,
+        shape: const CircleBorder(),
         onPressed: _showCreatePayableDialog,
+        child: const Icon(Icons.add),
       ),
-      body: Column(
-        children: [
-          _buildSummaryHeader(),
-          _buildFilterBar(),
-          const Divider(height: 1),
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _errorMessage != null
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
-                            const SizedBox(height: 12),
-                            ElevatedButton(onPressed: _loadPayables, child: Text(l10n.commonRefresh)),
-                          ],
-                        ),
-                      )
-                    : _payables.isEmpty
-                        ? Center(child: Text(l10n.payableNoPayables))
-                        : ListView.separated(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                            itemCount: _payables.length,
-                            separatorBuilder: (_, __) => const SizedBox(height: 12),
-                            itemBuilder: (context, index) {
-                              final p = _payables[index];
-                              final canPay = p.status == 'OPEN' || p.status == 'PARTIAL';
-                              final canCancel = p.status == 'OPEN' && p.paidAmountCents == 0;
-
-                              return Card(
-                                elevation: 2,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  '#${p.payableNumber} - ${p.description}',
-                                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                                ),
-                                                const SizedBox(height: 2),
-                                                Text(
-                                                  '${l10n.payableBeneficiary}: ${p.beneficiary}',
-                                                  style: const TextStyle(color: Colors.black87, fontSize: 13),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          _buildStatusBadge(p),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Wrap(
-                                        spacing: 8,
-                                        children: [
-                                          Chip(
-                                            visualDensity: VisualDensity.compact,
-                                            label: Text(p.category, style: const TextStyle(fontSize: 11)),
-                                            backgroundColor: Colors.grey.shade200,
-                                          ),
-                                          if (p.nature == 'PERSONAL_WITHDRAWAL')
-                                            Chip(
-                                              visualDensity: VisualDensity.compact,
-                                              label: Text(l10n.payableNaturePersonal, style: const TextStyle(fontSize: 11, color: Colors.purple)),
-                                              backgroundColor: Colors.purple.shade50,
-                                            ),
-                                          if (p.totalInstallments > 1)
-                                            Chip(
-                                              visualDensity: VisualDensity.compact,
-                                              label: Text(
-                                                l10n.payableInstallment(p.installmentNumber, p.totalInstallments),
-                                                style: const TextStyle(fontSize: 11, color: Colors.indigo),
-                                              ),
-                                              backgroundColor: Colors.indigo.shade50,
-                                            ),
-                                          if (p.isRecurrent)
-                                            Chip(
-                                              visualDensity: VisualDensity.compact,
-                                              label: Text(l10n.payableRecurrent, style: const TextStyle(fontSize: 11, color: Colors.teal)),
-                                              backgroundColor: Colors.teal.shade50,
-                                            ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                '${l10n.payableOriginalAmount}: ${AppFormatters.formatCurrency(p.originalAmountCents)}',
-                                                style: const TextStyle(fontSize: 12, color: Colors.black54),
-                                              ),
-                                              Text(
-                                                '${l10n.payablePaidAmount}: ${AppFormatters.formatCurrency(p.paidAmountCents)}',
-                                                style: const TextStyle(fontSize: 12, color: Colors.green),
-                                              ),
-                                              Text(
-                                                '${l10n.payableBalance}: ${AppFormatters.formatCurrency(p.balanceCents)}',
-                                                style: TextStyle(
-                                                  fontSize: 13,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: p.isOverdue ? Colors.red : Colors.black87,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Column(
-                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                            children: [
-                                              Text(
-                                                '${l10n.payableDueDate}: ${AppFormatters.formatDate(p.dueDate)}',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: p.isOverdue ? Colors.red : Colors.black87,
-                                                ),
-                                              ),
-                                              Text(
-                                                'Forma: ${p.paymentMethod}',
-                                                style: const TextStyle(fontSize: 12, color: Colors.black54),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 12),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        children: [
-                                          if (p.isRecurrent)
-                                            TextButton.icon(
-                                              icon: const Icon(Icons.repeat, size: 18, color: Colors.teal),
-                                              label: Text(l10n.payableGenerateNextRecurrence, style: const TextStyle(color: Colors.teal)),
-                                              onPressed: () => _generateNextRecurrence(p),
-                                            ),
-                                          if (p.paymentsCount > 0)
-                                            TextButton.icon(
-                                              icon: const Icon(Icons.history, size: 18),
-                                              label: Text('${l10n.payableHistoryAction} (${p.paymentsCount})'),
-                                              onPressed: () => _showHistoryDialog(p),
-                                            ),
-                                          if (canCancel)
-                                            TextButton.icon(
-                                              icon: const Icon(Icons.cancel_outlined, size: 18, color: Colors.red),
-                                              label: Text(l10n.payableCancelAction, style: const TextStyle(color: Colors.red)),
-                                              onPressed: () => _cancelPayable(p),
-                                            ),
-                                          if (canPay) ...[
-                                            const SizedBox(width: 8),
-                                            ElevatedButton.icon(
-                                              icon: const Icon(Icons.payment, size: 18),
-                                              label: Text(l10n.payablePaymentAction),
-                                              onPressed: () => _showPaymentDialog(p),
-                                            ),
-                                          ],
-                                        ],
-                                      ),
-                                    ],
+      body: RefreshIndicator(
+        onRefresh: _loadPayables,
+        child: CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(child: _pendingSection()),
+            SliverToBoxAdapter(child: _buildSummaryHeader()),
+            SliverToBoxAdapter(child: _buildFilterBar()),
+            if (_isLoading || _errorMessage != null || _payables.isEmpty)
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Padding(
+                  padding: padding,
+                  child: Center(
+                    child: _isLoading
+                        ? const CircularProgressIndicator()
+                        : _errorMessage != null
+                        ? Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(_errorMessage!, textAlign: TextAlign.center),
+                              const SizedBox(height: 12),
+                              FilledButton(
+                                onPressed: _loadPayables,
+                                child: Text(l.commonRefresh),
+                              ),
+                            ],
+                          )
+                        : Text(
+                            l.payableNoPayables,
+                            textAlign: TextAlign.center,
+                          ),
+                  ),
+                ),
+              ),
+            if (!_isLoading && _errorMessage == null && _payables.isNotEmpty)
+              SliverPadding(
+                padding: padding,
+                sliver: SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: index < _payables.length
+                          ? _buildPayableCard(_payables[index])
+                          : Column(
+                              children: [
+                                if (_moreError != null) Text(_moreError!),
+                                OutlinedButton(
+                                  onPressed: _loadingMore ? null : _loadMore,
+                                  child: Text(
+                                    _loadingMore
+                                        ? l.commonLoading
+                                        : l.paymentFlowMore,
                                   ),
                                 ),
-                              );
-                            },
-                          ),
-          ),
-        ],
+                              ],
+                            ),
+                    ),
+                    childCount: _payables.length + (_hasMore ? 1 : 0),
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

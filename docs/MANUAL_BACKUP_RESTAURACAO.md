@@ -3,7 +3,7 @@
 
 **Versão do Documento:** 1.0 (Sistema Homologado - Fases 1 a 9)  
 **Público-Alvo:** Administradores do Sistema, Suporte Técnico e Proprietários da Empresa  
-**Objetivo:** Garantir risco zero de perda de dados históricos e fornecer roteiro claro de recuperação imediata  
+**Objetivo:** Reduzir o risco de perda de dados históricos e orientar a recuperação com cópias verificadas. Nenhum procedimento garante risco zero de perda.
 
 ---
 
@@ -30,12 +30,12 @@ Diferente de cópias manuais de arquivos que podem corromper se feitas enquanto 
 
 ## 3. Rotina de Backup Automático Diário
 
-O sistema vem configurado com uma tarefa no **Agendador de Tarefas do Windows**:
+O projeto oferece um script de instalação da tarefa no **Agendador de Tarefas do Windows**. A existência dos arquivos não confirma a instalação neste computador; verificar a tarefa e seus logs. Ver [Backup e restauração](BACKUP_E_RESTAURACAO.md).
 
 - **Frequência:** Diariamente às 23:00.
 - **Local de Gravação:**  
   `backend\backups\estoque_backup_diario_YYYYMMDD_HHMMSS.db`
-- **Política de Retenção:** O script mantém automaticamente os últimos **30 arquivos de backup**. Versões com mais de 30 dias são expurgadas gradualmente para economizar espaço em disco.
+- **Política de Retenção:** O script aplica retenção por quantidade de arquivos comuns, normalmente **30 backups**, não por uma idade fixa de 30 dias. Backups protegidos anteriores à criação de novo banco seguem a regra própria de [Novo banco](NOVO_BANCO_DE_DADOS.md).
 - **Arquivo de Log de Auditoria:** Gravado em `backend\backups\logs\`.
 
 ---

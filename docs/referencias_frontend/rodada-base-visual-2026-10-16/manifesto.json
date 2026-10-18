@@ -1,0 +1,127 @@
+{
+  "consolidado_em": "2026-10-16",
+  "rodada": "Base visual de cores, formas e espaco",
+  "situacao": "Verificacao local final concluida; proposta em avaliacao",
+  "arquivos": [
+    {
+      "arquivo": "fundamentos-visuais-zm.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-visuais-zm.html",
+      "sha256": "486160a8cbcf66aa502a9fcdce66ace04ca47e282451d4724970da3de5d60c0c",
+      "bytes": 47518
+    },
+    {
+      "arquivo": "fundamentos-visuais-zm-preview.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-visuais-zm-preview.html",
+      "sha256": "722ea0f350e738f814d5220ea68769e930e413feeea7919a61a8a8c2b352cd63",
+      "bytes": 138550
+    },
+    {
+      "arquivo": "check-fundamentos-visuais.cjs",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\check-fundamentos-visuais.cjs",
+      "sha256": "7093dae3bd05058726cd37b1280cf4c443c0c6961d8516d6cb4c8fc0b2607b7a",
+      "bytes": 14864
+    },
+    {
+      "arquivo": "fundamentos-visuais-verificacao.json",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-visuais-verificacao.json",
+      "sha256": "b96bbf3bc08a507a086d053ec1edc7620e12085288c4d3ecc3470f8428b6e01d",
+      "bytes": 213889
+    },
+    {
+      "arquivo": "fundamentos-edge-confirmacao-pendente.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-edge-confirmacao-pendente.png",
+      "sha256": "b71f995cb023221534170e9eee42fc68c055c47994a561984aee81bd304675c8",
+      "bytes": 36089
+    },
+    {
+      "arquivo": "fundamentos-edge-destaque-ametista.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-edge-destaque-ametista.png",
+      "sha256": "d4843a5acabd949f1b96d4c6e985cd1c5c69e7655600567f557edb2b99f7c03e",
+      "bytes": 52271
+    },
+    {
+      "arquivo": "fundamentos-edge-destaque-petroleo.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-edge-destaque-petroleo.png",
+      "sha256": "59d8e0203ad3a9a441c529bd55210e694e86bd5d9c0707a56470dbc7cbbbb8b3",
+      "bytes": 49335
+    },
+    {
+      "arquivo": "fundamentos-edge-formulario-claro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-edge-formulario-claro.png",
+      "sha256": "47dbcf466f2572fc724c1dadc0fda2ac5fb1315d13e20bdfd4a668ca069ef0fe",
+      "bytes": 52252
+    },
+    {
+      "arquivo": "fundamentos-edge-formulario-escuro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-edge-formulario-escuro.png",
+      "sha256": "5c96b3a40c8234550524dcfb1ee7cfe073d49ed083e403b9557244aa70dd0425",
+      "bytes": 51254
+    },
+    {
+      "arquivo": "fundamentos-edge-lista-ampla.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-edge-lista-ampla.png",
+      "sha256": "925216f386e8940fbe31b558a8749994ced43220641535c21ffb8a3ec4229356",
+      "bytes": 35015
+    },
+    {
+      "arquivo": "fundamentos-edge-lista-celular-escura.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-edge-lista-celular-escura.png",
+      "sha256": "a67a1b71c7735db458ea7f3e98d1f56de990b5ff37bbc3c40a95cc823618226e",
+      "bytes": 32801
+    },
+    {
+      "arquivo": "fundamentos-edge-validacao.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-edge-validacao.png",
+      "sha256": "314b62d8954176fb13b0b1e852e20f0917e4a75592d8a5dce3c1946708477f5e",
+      "bytes": 66029
+    },
+    {
+      "arquivo": "fundamentos-webkit-confirmacao-pendente.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-webkit-confirmacao-pendente.png",
+      "sha256": "3d67a4122f6b766654cf0bf06b7433e96494e65adddec43b70fb9e2631eae7bf",
+      "bytes": 31478
+    },
+    {
+      "arquivo": "fundamentos-webkit-destaque-ametista.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-webkit-destaque-ametista.png",
+      "sha256": "77214a8c4e3f465155097ebb61fd6ae961e919a02995ef5e1d081b2d68d91a55",
+      "bytes": 46047
+    },
+    {
+      "arquivo": "fundamentos-webkit-destaque-petroleo.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-webkit-destaque-petroleo.png",
+      "sha256": "533cedb624b7e7c366e24d3545bb2abec2e84c8d457ae805b1ed00070841ac9e",
+      "bytes": 43670
+    },
+    {
+      "arquivo": "fundamentos-webkit-formulario-claro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-webkit-formulario-claro.png",
+      "sha256": "6a2faed60145ee4aef7371873ac2b28640fa9a62bf8d66c3d29b7bfa65d8c30c",
+      "bytes": 45889
+    },
+    {
+      "arquivo": "fundamentos-webkit-formulario-escuro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-webkit-formulario-escuro.png",
+      "sha256": "afd09e9f73c42e8166dead9e53100aef17355f33e850271376f1ad6e073fee27",
+      "bytes": 45885
+    },
+    {
+      "arquivo": "fundamentos-webkit-lista-ampla.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-webkit-lista-ampla.png",
+      "sha256": "845e4d7a5e39b8797241b84e108199dcf2a1555f7d715f919930bc0053ccd5f2",
+      "bytes": 29382
+    },
+    {
+      "arquivo": "fundamentos-webkit-lista-celular-escura.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-webkit-lista-celular-escura.png",
+      "sha256": "da958257679015835ae219e2222b4c1700ba55a03b7ad136d1ca939f9aec11b2",
+      "bytes": 28076
+    },
+    {
+      "arquivo": "fundamentos-webkit-validacao.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-webkit-validacao.png",
+      "sha256": "f19cbf74cd471fce3c9175c46f4a152305f61c45873822c4a41e11877d22153f",
+      "bytes": 57045
+    }
+  ]
+}

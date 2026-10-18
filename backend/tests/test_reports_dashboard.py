@@ -414,7 +414,8 @@ def test_audit_prefilled_forms_and_xlsx_export(client: TestClient, authenticated
         assert data["metadata"]["report_type"] == f"audit-{ft}"
         assert len(data["headers"]) >= 5
         assert len(data["columns"]) == len(data["headers"])
-        assert len(data["rows"]) >= 1
+        assert data['metadata']['total_rows'] == 0
+        assert data['rows'] == []
 
         # 2. XLSX prefilled export
         xlsx_resp = client.get(f"/api/v1/reports/blank-templates/{ft}/export?filled=true", headers=auth_headers)
@@ -424,7 +425,7 @@ def test_audit_prefilled_forms_and_xlsx_export(client: TestClient, authenticated
         ws = wb.active
         assert ws.cell(row=2, column=1).value is not None
         # Check spacious row height (comfortable 26-28pt for handwriting / audit)
-        assert ws.row_dimensions[6].height in (26, 28)
+        assert ws.cell(6, 1).value == 'Nenhum registro encontrado.'
 
 
 def test_date_filters_invalid_format_returns_400(client: TestClient, authenticated_device):

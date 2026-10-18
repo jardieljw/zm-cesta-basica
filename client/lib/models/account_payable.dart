@@ -33,16 +33,35 @@ class PayablePayment {
       payableId: json['payable_id'] as String,
       accountId: json['account_id'] as String,
       accountName: json['account_name'] as String?,
-      paymentDate: DateTime.parse(json['payment_date'] as String),
+      paymentDate: _utc(json['payment_date'] as String),
       amountCents: (json['amount_cents'] as num).toInt(),
       paymentMethod: json['payment_method'] as String? ?? 'BOLETO',
       status: json['status'] as String? ?? 'CONFIRMED',
       reversalReason: json['reversal_reason'] as String?,
       reversalOfId: json['reversal_of_id'] as String?,
       notes: json['notes'] as String?,
-      createdAt: DateTime.parse(json['created_at'] as String),
+      createdAt: _utc(json['created_at'] as String),
     );
   }
+
+  static DateTime _utc(String value) => DateTime.parse(
+    RegExp(r'(Z|[+-]\d\d:\d\d)$').hasMatch(value) ? value : '${value}Z',
+  ).toUtc();
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'payable_id': payableId,
+    'account_id': accountId,
+    'account_name': accountName,
+    'payment_date': paymentDate.toUtc().toIso8601String(),
+    'amount_cents': amountCents,
+    'payment_method': paymentMethod,
+    'status': status,
+    'reversal_reason': reversalReason,
+    'reversal_of_id': reversalOfId,
+    'notes': notes,
+    'created_at': createdAt.toUtc().toIso8601String(),
+  };
 }
 
 class AccountPayable {
@@ -70,6 +89,7 @@ class AccountPayable {
   final DateTime updatedAt;
   final int paymentsCount;
   final List<PayablePayment> payments;
+  final int paymentReviewVersion;
 
   AccountPayable({
     required this.id,
@@ -96,6 +116,7 @@ class AccountPayable {
     required this.updatedAt,
     this.paymentsCount = 0,
     this.payments = const [],
+    this.paymentReviewVersion = 0,
   });
 
   factory AccountPayable.fromJson(Map<String, dynamic> json) {
@@ -125,9 +146,11 @@ class AccountPayable {
       paymentsCount: (json['payments_count'] as num?)?.toInt() ?? 0,
       payments: json['payments'] != null
           ? (json['payments'] as List<dynamic>)
-              .map((p) => PayablePayment.fromJson(p as Map<String, dynamic>))
-              .toList()
+                .map((p) => PayablePayment.fromJson(p as Map<String, dynamic>))
+                .toList()
           : const [],
+      paymentReviewVersion:
+          (json['payment_review_version'] as num?)?.toInt() ?? 0,
     );
   }
 }
@@ -164,43 +187,53 @@ class AccountPayableCreate {
   });
 
   Map<String, dynamic> toJson() => {
-        'description': description,
-        'beneficiary': beneficiary,
-        'category': category,
-        'nature': nature,
-        'original_amount_cents': originalAmountCents,
-        'due_date': dueDate.toIso8601String(),
-        'payment_method': paymentMethod,
-        if (purchaseId != null) 'purchase_id': purchaseId,
-        'total_installments': totalInstallments,
-        if (installmentDueDates != null)
-          'installment_due_dates': installmentDueDates!.map((d) => d.toIso8601String()).toList(),
-        'is_recurrent': isRecurrent,
-        if (recurrencePeriod != null) 'recurrence_period': recurrencePeriod,
-        if (notes != null && notes!.trim().isNotEmpty) 'notes': notes!.trim(),
-      };
+    'description': description,
+    'beneficiary': beneficiary,
+    'category': category,
+    'nature': nature,
+    'original_amount_cents': originalAmountCents,
+    'due_date': dueDate.toIso8601String(),
+    'payment_method': paymentMethod,
+    if (purchaseId != null) 'purchase_id': purchaseId,
+    'total_installments': totalInstallments,
+    if (installmentDueDates != null)
+      'installment_due_dates': installmentDueDates!
+          .map((d) => d.toIso8601String())
+          .toList(),
+    'is_recurrent': isRecurrent,
+    if (recurrencePeriod != null) 'recurrence_period': recurrencePeriod,
+    if (notes != null && notes!.trim().isNotEmpty) 'notes': notes!.trim(),
+  };
 }
 
 class PayablePaymentCreate {
   final int amountCents;
-  final String accountId;
+  final String? accountId;
   final String paymentMethod;
   final DateTime? paymentDate;
   final String? notes;
+  final int? expectedBalanceCents;
+  final String? paymentBusinessDate;
 
   PayablePaymentCreate({
     required this.amountCents,
-    required this.accountId,
+    this.accountId,
     this.paymentMethod = 'BOLETO',
     this.paymentDate,
     this.notes,
+    this.expectedBalanceCents,
+    this.paymentBusinessDate,
   });
 
   Map<String, dynamic> toJson() => {
-        'amount_cents': amountCents,
-        'account_id': accountId,
-        'payment_method': paymentMethod,
-        if (paymentDate != null) 'payment_date': paymentDate!.toIso8601String(),
-        if (notes != null && notes!.trim().isNotEmpty) 'notes': notes!.trim(),
-      };
+    'amount_cents': amountCents,
+    'account_id': accountId,
+    'payment_method': paymentMethod,
+    if (paymentDate != null) 'payment_date': paymentDate!.toIso8601String(),
+    if (notes != null && notes!.trim().isNotEmpty) 'notes': notes!.trim(),
+    if (expectedBalanceCents != null)
+      'expected_balance_cents': expectedBalanceCents,
+    if (paymentBusinessDate != null)
+      'payment_business_date': paymentBusinessDate,
+  };
 }

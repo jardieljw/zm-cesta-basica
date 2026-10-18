@@ -1,0 +1,222 @@
+--- a/client/lib/views/reports_view.dart
++++ b/client/lib/views/reports_view.dart
+@@ -37,13 +37,28 @@
+   bool _onlyBelowMin = false;
+ 
+   List<Map<String, String>> get _availableReports => [
+-    {'type': 'sales', 'title': context.l10n.salesTitle},
+-    {'type': 'purchases-movements', 'title': 'Compras e Movimentações do Razão'},
+-    {'type': 'receivables', 'title': 'Contas a Receber, Pagamentos e Quitações'},
+-    {'type': 'payables', 'title': 'Contas a Pagar, Vencimentos e Pagamentos'},
+-    {'type': 'physical-inventory', 'title': 'Estoque Atual e Contagem Física'},
+-    {'type': 'financial-summary', 'title': 'DRE Gerencial e Demonstrativo Financeiro'},
+-  ];
++        {'type': 'sales', 'title': context.l10n.salesTitle},
++        {
++          'type': 'purchases-movements',
++          'title': 'Compras e Movimentações do Razão'
++        },
++        {
++          'type': 'receivables',
++          'title': 'Contas a Receber, Pagamentos e Quitações'
++        },
++        {
++          'type': 'payables',
++          'title': 'Contas a Pagar, Vencimentos e Pagamentos'
++        },
++        {
++          'type': 'physical-inventory',
++          'title': 'Estoque Atual e Contagem Física'
++        },
++        {
++          'type': 'business-financial-summary',
++          'title': context.l10n.companyFinancialReportTitle
++        },
++      ];
+ 
+   @override
+   void initState() {
+@@ -91,7 +106,8 @@
+         date: filters['date'],
+         startDate: filters['start_date'],
+         endDate: filters['end_date'],
+-        month: filters['month'] != null ? int.tryParse(filters['month']!) : null,
++        month:
++            filters['month'] != null ? int.tryParse(filters['month']!) : null,
+         year: filters['year'] != null ? int.tryParse(filters['year']!) : null,
+         onlyBelowMin: _onlyBelowMin,
+       );
+@@ -119,7 +135,8 @@
+       );
+ 
+       final extension = format.toLowerCase();
+-      final fileName = 'relatorio_${_selectedReportType}_${DateTime.now().millisecondsSinceEpoch}.$extension';
++      final fileName =
++          'relatorio_${_selectedReportType}_${DateTime.now().millisecondsSinceEpoch}.$extension';
+ 
+       await Printing.sharePdf(
+         bytes: Uint8List.fromList(bytes),
+@@ -159,7 +176,8 @@
+         builder: (_) => PdfViewerScreen(
+           title: rep.metadata.title,
+           fileName: 'relatorio_$_selectedReportType.pdf',
+-          buildPdf: (format) => ReportPdfBuilder.buildReportPdf(rep, isLandscape: isLandscape),
++          buildPdf: (format) =>
++              ReportPdfBuilder.buildReportPdf(rep, isLandscape: isLandscape),
+         ),
+       ),
+     );
+@@ -168,7 +186,9 @@
+   String _formatCellValue(dynamic value, String col) {
+     if (value == null) return '';
+     final colLower = col.toLowerCase();
+-    if (colLower.endsWith('_cents') || colLower.contains('valor') || colLower.contains('preco')) {
++    if (colLower.endsWith('_cents') ||
++        colLower.contains('valor') ||
++        colLower.contains('preco')) {
+       if (value is int) {
+         return AppFormatters.formatCurrency(value);
+       } else if (value is double) {
+@@ -178,10 +198,16 @@
+     if (value is DateTime) {
+       return AppFormatters.formatDateTime(value);
+     }
+-    if (value is String && (colLower.contains('date') || colLower.contains('data') || colLower.contains('at') || colLower.contains('vencimento'))) {
++    if (value is String &&
++        (colLower.contains('date') ||
++            colLower.contains('data') ||
++            colLower.contains('at') ||
++            colLower.contains('vencimento'))) {
+       final parsed = DateTime.tryParse(value);
+       if (parsed != null) {
+-        return value.contains('T') ? AppFormatters.formatDateTime(parsed) : AppFormatters.formatDate(parsed);
++        return value.contains('T')
++            ? AppFormatters.formatDateTime(parsed)
++            : AppFormatters.formatDate(parsed);
+       }
+     }
+     return value.toString();
+@@ -231,7 +257,8 @@
+                       Expanded(
+                         child: Text(
+                           _errorMessage!,
+-                          style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
++                          style: const TextStyle(
++                              color: Colors.red, fontWeight: FontWeight.bold),
+                         ),
+                       ),
+                     ],
+@@ -271,8 +298,10 @@
+               initialValue: _selectedReportType,
+               isExpanded: true,
+               decoration: InputDecoration(
+-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
++                contentPadding:
++                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
++                border:
++                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+               ),
+               items: _availableReports.map((r) {
+                 return DropdownMenuItem(
+@@ -398,7 +427,8 @@
+               Row(
+                 mainAxisAlignment: MainAxisAlignment.center,
+                 children: [
+-                  Text(context.l10n.commonSelectedDateLabel(AppFormatters.formatDate(_selectedDate))),
++                  Text(context.l10n.commonSelectedDateLabel(
++                      AppFormatters.formatDate(_selectedDate))),
+                   const SizedBox(width: 8),
+                   TextButton.icon(
+                     icon: const Icon(Icons.calendar_today, size: 16),
+@@ -454,7 +484,9 @@
+                   DropdownButton<int>(
+                     value: _selectedMonth,
+                     items: List.generate(12, (i) => i + 1).map((m) {
+-                      return DropdownMenuItem(value: m, child: Text(context.l10n.commonMonthNumber(m)));
++                      return DropdownMenuItem(
++                          value: m,
++                          child: Text(context.l10n.commonMonthNumber(m)));
+                     }).toList(),
+                     onChanged: (val) {
+                       if (val != null) {
+@@ -543,7 +575,9 @@
+           ),
+           icon: const Icon(Icons.table_chart, color: Colors.green),
+           label: Text(_isExporting ? 'Exportando...' : l10n.reportExportXlsx),
+-          onPressed: _report == null || _isLoading || _isExporting ? null : () => _exportFile('xlsx'),
++          onPressed: _report == null || _isLoading || _isExporting
++              ? null
++              : () => _exportFile('xlsx'),
+         ),
+         OutlinedButton.icon(
+           style: OutlinedButton.styleFrom(
+@@ -551,7 +585,9 @@
+           ),
+           icon: const Icon(Icons.file_present, color: Colors.blueGrey),
+           label: Text(_isExporting ? 'Exportando...' : l10n.reportExportCsv),
+-          onPressed: _report == null || _isLoading || _isExporting ? null : () => _exportFile('csv'),
++          onPressed: _report == null || _isLoading || _isExporting
++              ? null
++              : () => _exportFile('csv'),
+         ),
+       ],
+     );
+@@ -574,7 +610,10 @@
+               children: [
+                 Text(
+                   meta.title,
+-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.blue.shade900),
++                  style: TextStyle(
++                      fontWeight: FontWeight.bold,
++                      fontSize: 15,
++                      color: Colors.blue.shade900),
+                 ),
+                 Text(
+                   'Filtro: ${meta.filterInfo.label} | Total: ${meta.totalRows} registro(s)',
+@@ -629,7 +668,8 @@
+               return DataColumn(
+                 label: Text(
+                   h,
+-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
++                  style: const TextStyle(
++                      fontWeight: FontWeight.bold, fontSize: 13),
+                 ),
+               );
+             }).toList(),
+@@ -664,11 +704,15 @@
+           children: [
+             Row(
+               children: [
+-                Icon(Icons.calculate, color: Colors.blueGrey.shade800, size: 20),
++                Icon(Icons.calculate,
++                    color: Colors.blueGrey.shade800, size: 20),
+                 const SizedBox(width: 8),
+                 Text(
+                   l10n.reportTotals,
+-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.blueGrey.shade900),
++                  style: TextStyle(
++                      fontWeight: FontWeight.bold,
++                      fontSize: 14,
++                      color: Colors.blueGrey.shade900),
+                 ),
+               ],
+             ),
+@@ -683,11 +727,15 @@
+                   children: [
+                     Text(
+                       '${ReportPdfBuilder.formatTotalLabel(entry.key)}: ',
+-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
++                      style: const TextStyle(
++                          fontWeight: FontWeight.bold, fontSize: 13),
+                     ),
+                     Text(
+                       valStr,
+-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.blueGrey.shade900),
++                      style: TextStyle(
++                          fontWeight: FontWeight.bold,
++                          fontSize: 14,
++                          color: Colors.blueGrey.shade900),
+                     ),
+                   ],
+                 );

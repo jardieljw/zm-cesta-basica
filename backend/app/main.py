@@ -5,14 +5,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import engine
 from app.models import Base
+from app.models.financial_imports import FINANCIAL_IMPORT_TABLE_NAMES
 from app.core.security import generate_self_signed_cert, get_local_ip, get_cert_fingerprint
 from app.api.v1.router import api_v1_router
+from app.core.database_maintenance import DatabaseGate, DatabaseMaintenanceMiddleware
+from app.core.financial_payloads import FinancialPayloadLimitMiddleware
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
 logger = logging.getLogger("zm_backend")
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    app.state.database_gate = DatabaseGate()
     # Startup tasks
     settings.ensure_directories()
     cert_path = settings.CERTS_DIR / "server.crt"
@@ -29,7 +33,11 @@ async def lifespan(app: FastAPI):
     logger.info("=" * 60)
 
     # Initialize database tables if not existing
-    Base.metadata.create_all(bind=engine)
+    # New financial evidence schema is installed exclusively through Alembic.
+    # Preserve legacy startup until the deployment migration is applied.
+    Base.metadata.create_all(bind=engine, tables=[
+        table for table in Base.metadata.sorted_tables if table.name not in FINANCIAL_IMPORT_TABLE_NAMES
+    ])
     from sqlalchemy.orm import Session as _Session
     from app.services.financial import ensure_default_financial_account
     with _Session(engine) as _init_db:
@@ -46,6 +54,8 @@ app = FastAPI(
     version=settings.VERSION,
     lifespan=lifespan,
 )
+app.add_middleware(DatabaseMaintenanceMiddleware)
+app.add_middleware(FinancialPayloadLimitMiddleware, prefix=settings.API_V1_PREFIX + "/financial-imports")
 
 app.add_middleware(
     CORSMiddleware,

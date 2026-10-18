@@ -1,0 +1,455 @@
+{
+  "date": "2026-10-16",
+  "results": [
+    {
+      "engine": "edge",
+      "result": "passed",
+      "checks": [
+        "Jornada conectada de pagamento parcial; integral exclui valor oculto; calendário animado; validação; editar preserva rascunho; saldo e recorte atualizados",
+        "Três informações úteis levam ao recorte/detalhe ou explicação coerentes; horizonte inclui 17–19/10 e exclui 20/10",
+        "Pagamento simulado compartilhado entre composições; navegação e tabelas Windows; claro/escuro e preferências locais",
+        "Helper de ajustes original com provedor simulado; redução do sistema prevalece; 20 combinações de página/dispositivo/largura/texto sem transbordamento por motor"
+      ],
+      "layouts": [
+        {
+          "device": "mobile",
+          "width": 288,
+          "scale": 100,
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "mobile",
+          "width": 288,
+          "scale": 200,
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "mobile",
+          "width": 358,
+          "scale": 100,
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "mobile",
+          "width": 358,
+          "scale": 200,
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "mobile",
+          "width": 440,
+          "scale": 100,
+          "scroll": 438,
+          "client": 438,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "mobile",
+          "width": 440,
+          "scale": 200,
+          "scroll": 438,
+          "client": 438,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "mobile",
+          "width": 440,
+          "scale": 100,
+          "scroll": 438,
+          "client": 438,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "mobile",
+          "width": 440,
+          "scale": 200,
+          "scroll": 438,
+          "client": 438,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "scale": 100,
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "scale": 200,
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "desktop",
+          "width": 358,
+          "scale": 100,
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "desktop",
+          "width": 358,
+          "scale": 200,
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "desktop",
+          "width": 736,
+          "scale": 100,
+          "scroll": 734,
+          "client": 734,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "desktop",
+          "width": 736,
+          "scale": 200,
+          "scroll": 734,
+          "client": 734,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "desktop",
+          "width": 992,
+          "scale": 100,
+          "scroll": 990,
+          "client": 990,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "desktop",
+          "width": 992,
+          "scale": 200,
+          "scroll": 990,
+          "client": 990,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "page": "home",
+          "device": "mobile",
+          "width": 288,
+          "scale": 100,
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "page": "home",
+          "device": "mobile",
+          "width": 288,
+          "scale": 200,
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "page": "home",
+          "device": "desktop",
+          "width": 992,
+          "scale": 100,
+          "scroll": 990,
+          "client": 990,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "page": "home",
+          "device": "desktop",
+          "width": 992,
+          "scale": 200,
+          "scroll": 990,
+          "client": 990,
+          "body": 992,
+          "viewport": 992
+        }
+      ],
+      "calendar": {
+        "open": true,
+        "animations": [
+          {
+            "duration": 240,
+            "frames": [
+              {
+                "offset": null,
+                "easing": "linear",
+                "composite": "auto",
+                "transform": "translateY(12px) scale(0.98)",
+                "opacity": "0",
+                "computedOffset": 0
+              },
+              {
+                "offset": null,
+                "easing": "linear",
+                "composite": "auto",
+                "transform": "none",
+                "opacity": "1",
+                "computedOffset": 1
+              }
+            ]
+          }
+        ],
+        "focused": "2026-10-16"
+      },
+      "javascriptErrors": [],
+      "limits": "Browser tests on Windows; actual host controls UI and iPhone/Android not tested. All business data/operations are local fixtures."
+    },
+    {
+      "engine": "webkit",
+      "result": "passed",
+      "checks": [
+        "Jornada conectada de pagamento parcial; integral exclui valor oculto; calendário animado; validação; editar preserva rascunho; saldo e recorte atualizados",
+        "Três informações úteis levam ao recorte/detalhe ou explicação coerentes; horizonte inclui 17–19/10 e exclui 20/10",
+        "Pagamento simulado compartilhado entre composições; navegação e tabelas Windows; claro/escuro e preferências locais",
+        "Helper de ajustes original com provedor simulado; redução do sistema prevalece; 20 combinações de página/dispositivo/largura/texto sem transbordamento por motor"
+      ],
+      "layouts": [
+        {
+          "device": "mobile",
+          "width": 288,
+          "scale": 100,
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "mobile",
+          "width": 288,
+          "scale": 200,
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "mobile",
+          "width": 358,
+          "scale": 100,
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "mobile",
+          "width": 358,
+          "scale": 200,
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "mobile",
+          "width": 440,
+          "scale": 100,
+          "scroll": 438,
+          "client": 438,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "mobile",
+          "width": 440,
+          "scale": 200,
+          "scroll": 438,
+          "client": 438,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "mobile",
+          "width": 440,
+          "scale": 100,
+          "scroll": 438,
+          "client": 438,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "mobile",
+          "width": 440,
+          "scale": 200,
+          "scroll": 438,
+          "client": 438,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "scale": 100,
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "scale": 200,
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "desktop",
+          "width": 358,
+          "scale": 100,
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "desktop",
+          "width": 358,
+          "scale": 200,
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "desktop",
+          "width": 736,
+          "scale": 100,
+          "scroll": 734,
+          "client": 734,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "desktop",
+          "width": 736,
+          "scale": 200,
+          "scroll": 734,
+          "client": 734,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "desktop",
+          "width": 992,
+          "scale": 100,
+          "scroll": 990,
+          "client": 990,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "desktop",
+          "width": 992,
+          "scale": 200,
+          "scroll": 990,
+          "client": 990,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "page": "home",
+          "device": "mobile",
+          "width": 288,
+          "scale": 100,
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "page": "home",
+          "device": "mobile",
+          "width": 288,
+          "scale": 200,
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "page": "home",
+          "device": "desktop",
+          "width": 992,
+          "scale": 100,
+          "scroll": 990,
+          "client": 990,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "page": "home",
+          "device": "desktop",
+          "width": 992,
+          "scale": 200,
+          "scroll": 990,
+          "client": 990,
+          "body": 992,
+          "viewport": 992
+        }
+      ],
+      "calendar": {
+        "open": true,
+        "animations": [
+          {
+            "duration": 240,
+            "frames": [
+              {
+                "composite": "auto",
+                "easing": "linear",
+                "offset": null,
+                "computedOffset": 0,
+                "transform": "translateY(12px) scale(0.98)",
+                "opacity": "0"
+              },
+              {
+                "composite": "auto",
+                "easing": "linear",
+                "offset": null,
+                "computedOffset": 1,
+                "transform": "none",
+                "opacity": "1"
+              }
+            ]
+          }
+        ],
+        "focused": "2026-10-16"
+      },
+      "javascriptErrors": [],
+      "limits": "Browser tests on Windows; actual host controls UI and iPhone/Android not tested. All business data/operations are local fixtures."
+    }
+  ]
+}

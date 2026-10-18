@@ -1,0 +1,50 @@
+/* FE-048: content-only typography study. Navigation has no overrides. */
+#zm-typography-demo .app{--type-scale:1;}
+#zm-typography-demo .app .rec-field{grid-template-columns:minmax(0,1fr);}
+#zm-typography-demo .app .type-select{position:relative;min-width:0;width:100%;}
+#zm-typography-demo .app[data-adapted=true] .type-select select{appearance:none;overflow:hidden;text-overflow:ellipsis;padding-inline-end:44px;}
+#zm-typography-demo .app .type-select>svg{position:absolute;right:16px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--sub);width:18px;height:18px;}
+#zm-typography-demo .app .content,#zm-typography-demo .app .app-header{font-size:calc(15px * var(--type-scale));overflow-wrap:anywhere;}
+#zm-typography-demo .app .page-title{font-size:calc(23px * var(--type-scale));}
+#zm-typography-demo .app .brand,#zm-typography-demo .app .context,#zm-typography-demo .app .label,#zm-typography-demo .app .note,#zm-typography-demo .app .row .subtitle,#zm-typography-demo .app .section-header small{font-size:calc(12px * var(--type-scale));}
+#zm-typography-demo .app .content h3{font-size:calc(16px * var(--type-scale));}
+#zm-typography-demo .app .amount{font-size:calc(23px * var(--type-scale));}
+#zm-typography-demo .app .number{font-size:calc(26px * var(--type-scale));}
+#zm-typography-demo .app .detail-amount{font-size:calc(32px * var(--type-scale));}
+#zm-typography-demo .app .rec-help,#zm-typography-demo .app .rec-error,#zm-typography-demo .app .rec-filters button{font-size:calc(13px * var(--type-scale));}
+#zm-typography-demo .app .tag{font-size:calc(11px * var(--type-scale));}
+#zm-typography-demo .app .rec-field input:not([type=radio]),#zm-typography-demo .app .rec-field select,#zm-typography-demo .app .rec-field textarea,#zm-typography-demo .app .rec-field button.rec-date,#zm-typography-demo .app .rec-days button{font-size:calc(16px * var(--type-scale));}
+#zm-typography-demo .app[data-reading=oriented] .content,#zm-typography-demo .app[data-reading=oriented] .app-header{font-size:calc(16px * var(--type-scale));line-height:1.5;}
+#zm-typography-demo .app[data-reading=oriented] .page-title{font-size:calc(24px * var(--type-scale));line-height:1.25;letter-spacing:normal;}
+#zm-typography-demo .app[data-reading=oriented] .content h3{font-size:calc(18px * var(--type-scale));line-height:1.3334;}
+#zm-typography-demo .app[data-reading=oriented] .brand,#zm-typography-demo .app[data-reading=oriented] .context,#zm-typography-demo .app[data-reading=oriented] .note,#zm-typography-demo .app[data-reading=oriented] .row .subtitle,#zm-typography-demo .app[data-reading=oriented] .section-header small,#zm-typography-demo .app[data-reading=oriented] .rec-help,#zm-typography-demo .app[data-reading=oriented] .rec-filters button{font-size:calc(14px * var(--type-scale));line-height:1.4286;}
+#zm-typography-demo .app[data-reading=oriented] .label,#zm-typography-demo .app[data-reading=oriented] .rec-field>label,#zm-typography-demo .app[data-reading=oriented] .rec-legend,#zm-typography-demo .app[data-reading=oriented] .row .title{font-size:calc(16px * var(--type-scale));line-height:1.375;font-weight:500;}
+#zm-typography-demo .app[data-reading=oriented] .label{color:var(--ink);}
+#zm-typography-demo .app[data-reading=oriented] .amount{font-size:calc(24px * var(--type-scale));line-height:1.25;letter-spacing:normal;}
+#zm-typography-demo .app[data-reading=oriented] .detail-amount{display:block;font-size:calc(28px * var(--type-scale));line-height:1.2143;letter-spacing:normal;}
+#zm-typography-demo .app[data-reading=oriented] .number{font-size:calc(28px * var(--type-scale));line-height:1.2143;}
+#zm-typography-demo .app[data-reading=oriented] .row .value{font-size:calc(18px * var(--type-scale));line-height:1.3334;white-space:normal;}
+#zm-typography-demo .app[data-reading=oriented] .tag,#zm-typography-demo .app[data-reading=oriented] .rec-error{font-size:calc(14px * var(--type-scale));line-height:1.4286;}
+#zm-typography-demo .app[data-reading=oriented] .primary,#zm-typography-demo .app[data-reading=oriented] .rec-secondary{font-size:calc(16px * var(--type-scale));line-height:1.375;font-weight:500;}
+#zm-typography-demo .app[data-reading=oriented] .two,#zm-typography-demo .app[data-reading=oriented] .tile-pair{grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(136px * var(--type-scale))),1fr));}
+#zm-typography-demo .app[data-reading=oriented] .section-header{flex-wrap:wrap;}
+#zm-typography-demo .app[data-reading=oriented] .row{flex-wrap:wrap;}
+#zm-typography-demo .app[data-reading=oriented] .row>.copy{flex-basis:calc(160px * var(--type-scale));}
+#zm-typography-demo .app[data-reading=oriented] .row>.value{flex:1 0 auto;max-width:100%;}
+#zm-typography-demo .app[data-reading=oriented] .row>svg{width:18px;flex-shrink:0;}
+#zm-typography-demo .app[data-reading=oriented] .rec-ledger>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(170px * var(--type-scale))),1fr));gap:8px 16px;}
+#zm-typography-demo .app[data-reading=oriented] .rec-ledger dd{text-align:start;}
+#zm-typography-demo .app[data-reading=oriented] .rec-choice{flex-wrap:wrap;border-radius:24px;}
+#zm-typography-demo .app[data-reading=oriented] .rec-choice label{flex-basis:calc(110px * var(--type-scale));}
+#zm-typography-demo .app[data-reading=oriented] .tabs{flex-wrap:wrap;}
+#zm-typography-demo .app[data-reading=oriented] .tabs button{flex-basis:calc(90px * var(--type-scale));}
+#zm-typography-demo .app[data-reading=oriented] .primary svg{flex-shrink:0;}
+#zm-typography-demo .app[data-reading=oriented] .type-money{overflow-wrap:normal;white-space:normal;font-variant-numeric:tabular-nums;}
+#zm-typography-demo .app[data-reading=oriented] .type-chunk{white-space:nowrap;}
+#zm-typography-demo .app[data-reading=oriented] .rec-cal-top,#zm-typography-demo .app[data-reading=oriented] .rec-cal-month{flex-wrap:wrap;}
+#zm-typography-demo .app[data-reading=oriented] .rec-cal-top h3,#zm-typography-demo .app[data-reading=oriented] [data-calendar-period]{min-width:0;flex:1;}
+#zm-typography-demo .app[data-reading=oriented] .rec-calendar{overflow:auto;}
+#zm-typography-demo .app[data-expanded=true] .app-header{flex-wrap:wrap;}
+#zm-typography-demo .app[data-expanded=true] .app-header>div{flex-basis:100%;}
+#zm-typography-demo .app[data-expanded=true] .content .primary svg{display:none;}
+@media(max-width:550px){#zm-typography-demo .app .amount{font-size:calc(21px * var(--type-scale));}#zm-typography-demo .app[data-reading=oriented] .amount{font-size:calc(24px * var(--type-scale));}}

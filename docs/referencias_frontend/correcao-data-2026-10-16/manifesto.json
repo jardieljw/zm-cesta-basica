@@ -1,0 +1,67 @@
+{
+  "consolidado_em": "2026-10-16",
+  "correcao": "Alinhamento do campo de data na previa",
+  "situacao": "Verificacao local concluida; confirmacao no iPhone pendente",
+  "arquivos": [
+    {
+      "arquivo": "jornada-pagar-data-alinhada-zm.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\jornada-pagar-data-alinhada-zm.html",
+      "sha256": "44f26e432a75a9290a3fef9b15846745f3b9b3e56efc3264d347cbfa551b42d6",
+      "bytes": 64955
+    },
+    {
+      "arquivo": "jornada-pagar-data-alinhada-zm-preview.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\jornada-pagar-data-alinhada-zm-preview.html",
+      "sha256": "efb76e402fcbae219bcd5951799c923bb8adce579179a25e2563d66e02df2ed9",
+      "bytes": 158607
+    },
+    {
+      "arquivo": "jornada-pagar-integral-zm-preview.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\jornada-pagar-integral-zm-preview.html",
+      "sha256": "507e8f0a5ce4b84ba2afbd513dbab7901e6f821cf3e0da1fa121bd5cbdee5ec4",
+      "bytes": 158328
+    },
+    {
+      "arquivo": "check-data-alinhada.cjs",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\check-data-alinhada.cjs",
+      "sha256": "8450b98d7db4f742a9da0145ddf89df83a875e3dfb2d7aae3c0b3c573d566404",
+      "bytes": 8358
+    },
+    {
+      "arquivo": "data-alinhada-verificacao.json",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\data-alinhada-verificacao.json",
+      "sha256": "7004d718f33f40fb3f3588d01186b24e8bfaccb202fa511d7961dfb1e51d3c66",
+      "bytes": 66163
+    },
+    {
+      "arquivo": "data-edge-integral.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\data-edge-integral.png",
+      "sha256": "db59a952d31a7c5db8882b6d8827edc424867605abd37cb321b0eb3aa5523866",
+      "bytes": 53883
+    },
+    {
+      "arquivo": "data-edge-parcial.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\data-edge-parcial.png",
+      "sha256": "afb7cc67824d072d553cbd856cddb27dcc385035bcae89dbd2bf2d31481c8f2b",
+      "bytes": 61716
+    },
+    {
+      "arquivo": "data-webkit-integral.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\data-webkit-integral.png",
+      "sha256": "ed48ab08157a4cb1b7a16b5ecac7ea78454fac302bebf5ddf0f6ccbf364628c6",
+      "bytes": 48757
+    },
+    {
+      "arquivo": "data-webkit-parcial.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\data-webkit-parcial.png",
+      "sha256": "61383f15e83ab5e9a0e6bd98c7d56f88de4ae1bbea21983efe359597f25f5b73",
+      "bytes": 54338
+    },
+    {
+      "arquivo": "data-excedendo-iphone.jpg",
+      "origem": "C:\\Users\\jardi\\.codex\\codex-remote-attachments\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\B8BBD5CD-CEE6-4E9E-849F-FD4E868147CA\\1-Foto-1.jpg",
+      "sha256": "828395f25f9356dd6dc80387baeb97fc6e2593e181a6bc36e26a0122f6500fd6",
+      "bytes": 89383
+    }
+  ]
+}

@@ -1,0 +1,1025 @@
+{
+  "date": "2026-10-16",
+  "results": [
+    {
+      "engine": "edge",
+      "result": "passed",
+      "checks": [
+        "Barra comparada diretamente com a referência original: largura, preenchimento da seleção, coordenadas dos itens, espaçamentos, raios, tipografia e cores iguais em 1024",
+        "Cinco áreas, Clientes, Compras, Cestas/montagens, Movimentações, Relatórios, Impressão, Configurações/conexão, Backup e propostas financeiras preservados; contexto por área conservado nos dois dispositivos",
+        "Pagamento parcial 300 de 680 atualiza saldo 380 e resumo 980; integral exclui campo oculto; novo registro volta a integral; recebimento integral 1250 quita Ana e resumo fica 700; rascunho e erros preservados ao alternar áreas/editar",
+        "Próximos três dias separados de hoje/vencidas; vazio contextual; resultado explica composição/limitação; estoque entra no recorte correto",
+        "Helper original com provedor simulado, controles após restauração sem perder rascunho, redução do sistema respeitada, 32 layouts por motor e snapshots menores que 16 KiB"
+      ],
+      "sidebar": {
+        "original": {
+          "width": 140,
+          "padding": "18px 10px",
+          "gap": "8px",
+          "extraBrand": 0,
+          "buttons": [
+            {
+              "label": "Início",
+              "x": 10,
+              "y": 18,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(40, 102, 174)",
+              "background": "rgb(237, 244, 253)"
+            },
+            {
+              "label": "Financeiro",
+              "x": 10,
+              "y": 74,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(92, 100, 114)",
+              "background": "rgba(0, 0, 0, 0)"
+            },
+            {
+              "label": "Vendas",
+              "x": 10,
+              "y": 130,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(92, 100, 114)",
+              "background": "rgba(0, 0, 0, 0)"
+            },
+            {
+              "label": "Estoque",
+              "x": 10,
+              "y": 186,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(92, 100, 114)",
+              "background": "rgba(0, 0, 0, 0)"
+            },
+            {
+              "label": "Mais",
+              "x": 10,
+              "y": 242,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(92, 100, 114)",
+              "background": "rgba(0, 0, 0, 0)"
+            }
+          ]
+        },
+        "recovered": {
+          "width": 140,
+          "padding": "18px 10px",
+          "gap": "8px",
+          "extraBrand": 0,
+          "buttons": [
+            {
+              "label": "Início",
+              "x": 10,
+              "y": 18,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(40, 102, 174)",
+              "background": "rgb(237, 244, 253)"
+            },
+            {
+              "label": "Financeiro",
+              "x": 10,
+              "y": 74,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(92, 100, 114)",
+              "background": "rgba(0, 0, 0, 0)"
+            },
+            {
+              "label": "Vendas",
+              "x": 10,
+              "y": 130,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(92, 100, 114)",
+              "background": "rgba(0, 0, 0, 0)"
+            },
+            {
+              "label": "Estoque",
+              "x": 10,
+              "y": 186,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(92, 100, 114)",
+              "background": "rgba(0, 0, 0, 0)"
+            },
+            {
+              "label": "Mais",
+              "x": 10,
+              "y": 242,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(92, 100, 114)",
+              "background": "rgba(0, 0, 0, 0)"
+            }
+          ]
+        }
+      },
+      "calendar": {
+        "open": true,
+        "focused": "2026-10-16",
+        "animations": [
+          {
+            "duration": 240,
+            "frames": [
+              {
+                "offset": null,
+                "easing": "linear",
+                "composite": "auto",
+                "transform": "translateY(12px) scale(0.98)",
+                "opacity": "0",
+                "computedOffset": 0
+              },
+              {
+                "offset": null,
+                "easing": "linear",
+                "composite": "auto",
+                "transform": "none",
+                "opacity": "1",
+                "computedOffset": 1
+              }
+            ]
+          }
+        ]
+      },
+      "layouts": [
+        {
+          "device": "mobile",
+          "width": 288,
+          "theme": "light",
+          "family": "form",
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "mobile",
+          "width": 288,
+          "theme": "light",
+          "family": "home",
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "mobile",
+          "width": 288,
+          "theme": "dark",
+          "family": "form",
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "mobile",
+          "width": 288,
+          "theme": "dark",
+          "family": "home",
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "mobile",
+          "width": 358,
+          "theme": "light",
+          "family": "form",
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "mobile",
+          "width": 358,
+          "theme": "light",
+          "family": "home",
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "mobile",
+          "width": 358,
+          "theme": "dark",
+          "family": "form",
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "mobile",
+          "width": 358,
+          "theme": "dark",
+          "family": "home",
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "light",
+          "family": "form",
+          "scroll": 418,
+          "client": 418,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "light",
+          "family": "home",
+          "scroll": 418,
+          "client": 418,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "dark",
+          "family": "form",
+          "scroll": 418,
+          "client": 418,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "dark",
+          "family": "home",
+          "scroll": 418,
+          "client": 418,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "light",
+          "family": "form",
+          "scroll": 418,
+          "client": 418,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "light",
+          "family": "home",
+          "scroll": 418,
+          "client": 418,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "dark",
+          "family": "form",
+          "scroll": 418,
+          "client": 418,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "dark",
+          "family": "home",
+          "scroll": 418,
+          "client": 418,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "theme": "light",
+          "family": "form",
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "theme": "light",
+          "family": "home",
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "theme": "dark",
+          "family": "form",
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "theme": "dark",
+          "family": "home",
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "desktop",
+          "width": 358,
+          "theme": "light",
+          "family": "form",
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "desktop",
+          "width": 358,
+          "theme": "light",
+          "family": "home",
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "desktop",
+          "width": 358,
+          "theme": "dark",
+          "family": "form",
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "desktop",
+          "width": 358,
+          "theme": "dark",
+          "family": "home",
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "desktop",
+          "width": 736,
+          "theme": "light",
+          "family": "form",
+          "scroll": 734,
+          "client": 734,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "desktop",
+          "width": 736,
+          "theme": "light",
+          "family": "home",
+          "scroll": 734,
+          "client": 734,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "desktop",
+          "width": 736,
+          "theme": "dark",
+          "family": "form",
+          "scroll": 734,
+          "client": 734,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "desktop",
+          "width": 736,
+          "theme": "dark",
+          "family": "home",
+          "scroll": 734,
+          "client": 734,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "desktop",
+          "width": 992,
+          "theme": "light",
+          "family": "form",
+          "scroll": 990,
+          "client": 990,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "desktop",
+          "width": 992,
+          "theme": "light",
+          "family": "home",
+          "scroll": 990,
+          "client": 990,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "desktop",
+          "width": 992,
+          "theme": "dark",
+          "family": "form",
+          "scroll": 990,
+          "client": 990,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "desktop",
+          "width": 992,
+          "theme": "dark",
+          "family": "home",
+          "scroll": 990,
+          "client": 990,
+          "body": 992,
+          "viewport": 992
+        }
+      ],
+      "javascriptErrors": [],
+      "limits": "Edge/WebKit on Windows; local fixtures only; no Flutter/API/real device or host panel certification. Normal text scale; new typography remains outside this recovery."
+    },
+    {
+      "engine": "webkit",
+      "result": "passed",
+      "checks": [
+        "Barra comparada diretamente com a referência original: largura, preenchimento da seleção, coordenadas dos itens, espaçamentos, raios, tipografia e cores iguais em 1024",
+        "Cinco áreas, Clientes, Compras, Cestas/montagens, Movimentações, Relatórios, Impressão, Configurações/conexão, Backup e propostas financeiras preservados; contexto por área conservado nos dois dispositivos",
+        "Pagamento parcial 300 de 680 atualiza saldo 380 e resumo 980; integral exclui campo oculto; novo registro volta a integral; recebimento integral 1250 quita Ana e resumo fica 700; rascunho e erros preservados ao alternar áreas/editar",
+        "Próximos três dias separados de hoje/vencidas; vazio contextual; resultado explica composição/limitação; estoque entra no recorte correto",
+        "Helper original com provedor simulado, controles após restauração sem perder rascunho, redução do sistema respeitada, 32 layouts por motor e snapshots menores que 16 KiB"
+      ],
+      "sidebar": {
+        "original": {
+          "width": 140,
+          "padding": "18px 10px",
+          "gap": "8px",
+          "extraBrand": 0,
+          "buttons": [
+            {
+              "label": "Início",
+              "x": 10,
+              "y": 18,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(40, 102, 174)",
+              "background": "rgb(237, 244, 253)"
+            },
+            {
+              "label": "Financeiro",
+              "x": 10,
+              "y": 74,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(92, 100, 114)",
+              "background": "rgba(0, 0, 0, 0)"
+            },
+            {
+              "label": "Vendas",
+              "x": 10,
+              "y": 130,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(92, 100, 114)",
+              "background": "rgba(0, 0, 0, 0)"
+            },
+            {
+              "label": "Estoque",
+              "x": 10,
+              "y": 186,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(92, 100, 114)",
+              "background": "rgba(0, 0, 0, 0)"
+            },
+            {
+              "label": "Mais",
+              "x": 10,
+              "y": 242,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(92, 100, 114)",
+              "background": "rgba(0, 0, 0, 0)"
+            }
+          ]
+        },
+        "recovered": {
+          "width": 140,
+          "padding": "18px 10px",
+          "gap": "8px",
+          "extraBrand": 0,
+          "buttons": [
+            {
+              "label": "Início",
+              "x": 10,
+              "y": 18,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(40, 102, 174)",
+              "background": "rgb(237, 244, 253)"
+            },
+            {
+              "label": "Financeiro",
+              "x": 10,
+              "y": 74,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(92, 100, 114)",
+              "background": "rgba(0, 0, 0, 0)"
+            },
+            {
+              "label": "Vendas",
+              "x": 10,
+              "y": 130,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(92, 100, 114)",
+              "background": "rgba(0, 0, 0, 0)"
+            },
+            {
+              "label": "Estoque",
+              "x": 10,
+              "y": 186,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(92, 100, 114)",
+              "background": "rgba(0, 0, 0, 0)"
+            },
+            {
+              "label": "Mais",
+              "x": 10,
+              "y": 242,
+              "width": 119,
+              "height": 48,
+              "radius": "12px",
+              "font": "13px",
+              "padding": "10px",
+              "align": "flex-start",
+              "color": "rgb(92, 100, 114)",
+              "background": "rgba(0, 0, 0, 0)"
+            }
+          ]
+        }
+      },
+      "calendar": {
+        "open": true,
+        "focused": "2026-10-16",
+        "animations": [
+          {
+            "duration": 240,
+            "frames": [
+              {
+                "composite": "auto",
+                "easing": "linear",
+                "offset": null,
+                "computedOffset": 0,
+                "transform": "translateY(12px) scale(0.98)",
+                "opacity": "0"
+              },
+              {
+                "composite": "auto",
+                "easing": "linear",
+                "offset": null,
+                "computedOffset": 1,
+                "transform": "none",
+                "opacity": "1"
+              }
+            ]
+          }
+        ]
+      },
+      "layouts": [
+        {
+          "device": "mobile",
+          "width": 288,
+          "theme": "light",
+          "family": "form",
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "mobile",
+          "width": 288,
+          "theme": "light",
+          "family": "home",
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "mobile",
+          "width": 288,
+          "theme": "dark",
+          "family": "form",
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "mobile",
+          "width": 288,
+          "theme": "dark",
+          "family": "home",
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "mobile",
+          "width": 358,
+          "theme": "light",
+          "family": "form",
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "mobile",
+          "width": 358,
+          "theme": "light",
+          "family": "home",
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "mobile",
+          "width": 358,
+          "theme": "dark",
+          "family": "form",
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "mobile",
+          "width": 358,
+          "theme": "dark",
+          "family": "home",
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "light",
+          "family": "form",
+          "scroll": 418,
+          "client": 418,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "light",
+          "family": "home",
+          "scroll": 418,
+          "client": 418,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "dark",
+          "family": "form",
+          "scroll": 418,
+          "client": 418,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "dark",
+          "family": "home",
+          "scroll": 418,
+          "client": 418,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "light",
+          "family": "form",
+          "scroll": 418,
+          "client": 418,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "light",
+          "family": "home",
+          "scroll": 418,
+          "client": 418,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "dark",
+          "family": "form",
+          "scroll": 418,
+          "client": 418,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "dark",
+          "family": "home",
+          "scroll": 418,
+          "client": 418,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "theme": "light",
+          "family": "form",
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "theme": "light",
+          "family": "home",
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "theme": "dark",
+          "family": "form",
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "theme": "dark",
+          "family": "home",
+          "scroll": 286,
+          "client": 286,
+          "body": 288,
+          "viewport": 288
+        },
+        {
+          "device": "desktop",
+          "width": 358,
+          "theme": "light",
+          "family": "form",
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "desktop",
+          "width": 358,
+          "theme": "light",
+          "family": "home",
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "desktop",
+          "width": 358,
+          "theme": "dark",
+          "family": "form",
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "desktop",
+          "width": 358,
+          "theme": "dark",
+          "family": "home",
+          "scroll": 356,
+          "client": 356,
+          "body": 358,
+          "viewport": 358
+        },
+        {
+          "device": "desktop",
+          "width": 736,
+          "theme": "light",
+          "family": "form",
+          "scroll": 734,
+          "client": 734,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "desktop",
+          "width": 736,
+          "theme": "light",
+          "family": "home",
+          "scroll": 734,
+          "client": 734,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "desktop",
+          "width": 736,
+          "theme": "dark",
+          "family": "form",
+          "scroll": 734,
+          "client": 734,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "desktop",
+          "width": 736,
+          "theme": "dark",
+          "family": "home",
+          "scroll": 734,
+          "client": 734,
+          "body": 736,
+          "viewport": 736
+        },
+        {
+          "device": "desktop",
+          "width": 992,
+          "theme": "light",
+          "family": "form",
+          "scroll": 990,
+          "client": 990,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "desktop",
+          "width": 992,
+          "theme": "light",
+          "family": "home",
+          "scroll": 990,
+          "client": 990,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "desktop",
+          "width": 992,
+          "theme": "dark",
+          "family": "form",
+          "scroll": 990,
+          "client": 990,
+          "body": 992,
+          "viewport": 992
+        },
+        {
+          "device": "desktop",
+          "width": 992,
+          "theme": "dark",
+          "family": "home",
+          "scroll": 990,
+          "client": 990,
+          "body": 992,
+          "viewport": 992
+        }
+      ],
+      "javascriptErrors": [],
+      "limits": "Edge/WebKit on Windows; local fixtures only; no Flutter/API/real device or host panel certification. Normal text scale; new typography remains outside this recovery."
+    }
+  ]
+}

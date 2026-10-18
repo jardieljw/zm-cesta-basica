@@ -7,8 +7,24 @@ from app.api.deps import get_current_device
 from app.models.auth import PairedDevice
 from app.schemas.reports import DashboardResponse
 from app.services.reports import get_dashboard_data
+from app.schemas.business_dashboard import BusinessDashboardResponse
+from app.services.business_dashboard import get_business_dashboard
 
 router = APIRouter()
+
+
+@router.get("/dashboard/business-summary", response_model=BusinessDashboardResponse)
+def business_dashboard_summary(
+    filter_type: str = Query("today"),
+    date: Optional[str] = Query(None),
+    start_date: Optional[str] = Query(None),
+    end_date: Optional[str] = Query(None),
+    month: Optional[int] = Query(None, ge=1, le=12),
+    year: Optional[int] = Query(None, ge=2000, le=2200),
+    db: Session = Depends(get_db),
+    device: PairedDevice = Depends(get_current_device),
+):
+    return get_business_dashboard(db, filter_type, date, start_date, end_date, month, year)
 
 
 @router.get("/dashboard/summary", response_model=DashboardResponse)

@@ -26,7 +26,9 @@ class BasketService {
     final response = await _client.get('/api/v1/basket-types$query');
 
     if (response is List) {
-      return response.map((json) => BasketType.fromJson(json as Map<String, dynamic>)).toList();
+      return response
+          .map((json) => BasketType.fromJson(json as Map<String, dynamic>))
+          .toList();
     }
     return [];
   }
@@ -41,7 +43,8 @@ class BasketService {
     return BasketType.fromJson(response as Map<String, dynamic>);
   }
 
-  Future<BasketType> updateBasketType(String id, Map<String, dynamic> data) async {
+  Future<BasketType> updateBasketType(
+      String id, Map<String, dynamic> data) async {
     final response = await _client.put('/api/v1/basket-types/$id', body: data);
     return BasketType.fromJson(response as Map<String, dynamic>);
   }
@@ -50,19 +53,31 @@ class BasketService {
     await _client.delete('/api/v1/basket-types/$id');
   }
 
+  Future<Map<String, dynamic>> checkDeletion(String id) async =>
+      Map<String, dynamic>.from(
+          await _client.get('/api/v1/basket-types/$id/deletion-check') as Map);
+
+  Future<Map<String, dynamic>> deleteFromCatalog(String id) async =>
+      Map<String, dynamic>.from(
+          await _client.delete('/api/v1/basket-types/$id/catalog') as Map);
+
   // --- RECEITAS VERSIONADAS ---
 
   Future<List<RecipeVersion>> getRecipeVersions(String basketTypeId) async {
-    final response = await _client.get('/api/v1/basket-types/$basketTypeId/recipes');
+    final response =
+        await _client.get('/api/v1/basket-types/$basketTypeId/recipes');
     if (response is List) {
-      return response.map((json) => RecipeVersion.fromJson(json as Map<String, dynamic>)).toList();
+      return response
+          .map((json) => RecipeVersion.fromJson(json as Map<String, dynamic>))
+          .toList();
     }
     return [];
   }
 
   Future<RecipeVersion?> getActiveRecipe(String basketTypeId) async {
     try {
-      final response = await _client.get('/api/v1/basket-types/$basketTypeId/recipes/active');
+      final response = await _client
+          .get('/api/v1/basket-types/$basketTypeId/recipes/active');
       return RecipeVersion.fromJson(response as Map<String, dynamic>);
     } on ApiException catch (e) {
       if (e.statusCode == 404) return null;
@@ -70,8 +85,10 @@ class BasketService {
     }
   }
 
-  Future<RecipeVersion> createRecipeVersion(String basketTypeId, Map<String, dynamic> data) async {
-    final response = await _client.post('/api/v1/basket-types/$basketTypeId/recipes', body: data);
+  Future<RecipeVersion> createRecipeVersion(
+      String basketTypeId, Map<String, dynamic> data) async {
+    final response = await _client
+        .post('/api/v1/basket-types/$basketTypeId/recipes', body: data);
     return RecipeVersion.fromJson(response as Map<String, dynamic>);
   }
 }

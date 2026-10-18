@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zm_cesta_basica_client/core/api_client.dart';
 import 'package:zm_cesta_basica_client/models/account_payable.dart';
-import 'package:zm_cesta_basica_client/models/cash_flow_entry.dart';
-import 'package:zm_cesta_basica_client/models/financial_account.dart';
+import '../_archive/models/cash_flow_entry.dart';
+import '../_archive/models/financial_account.dart';
 import 'package:zm_cesta_basica_client/models/sales_receivable.dart';
 import 'package:zm_cesta_basica_client/services/payable_service.dart';
 import 'package:zm_cesta_basica_client/services/receivable_service.dart';

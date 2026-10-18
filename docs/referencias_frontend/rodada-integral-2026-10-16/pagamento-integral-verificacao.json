@@ -1,0 +1,299 @@
+{
+  "date": "2026-10-16",
+  "result": "passed",
+  "scope": "Prévia de planejamento; sem API, banco ou aplicativo Flutter",
+  "browser": "Edge headless",
+  "tests": [
+    "integral selecionado por padrão, campo de valor oculto/inativo e quitação sem digitar; painéis 32, campos 28 e botões cápsula",
+    "campo parcial expande/recolhe com transição de altura; valor anterior preservado, mas ignorado no integral; redução de movimento sem transição",
+    "valor vazio, zero, negativo, acima do saldo e formato ambíguo não avançam; foco e mensagens de erro",
+    "rascunho preservado ao alternar áreas; revisão editável; clique repetido gera um registro; 680 − 300 = 380; total 1.280 − 300 = 980",
+    "falha anterior à gravação mantém os dados e permite nova tentativa; quitação só uma vez; filtro preservado; estado sem resultados",
+    "estado restaurado sem recriar vínculo dos ajustes; dados e filtro restaurados; aparência continua ajustável",
+    "mesmo percurso no desktop; lista contextual em largura ampla e refluência no estreito; temas claro e escuro"
+  ],
+  "layouts": [
+    {
+      "label": "integral_inicial",
+      "device": "mobile",
+      "width": 748,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "integral_inicial",
+      "device": "mobile",
+      "width": 380,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "integral_inicial",
+      "device": "mobile",
+      "width": 328,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "integral_inicial",
+      "device": "mobile",
+      "width": 288,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "parcial_revelado",
+      "device": "mobile",
+      "width": 748,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "parcial_revelado",
+      "device": "mobile",
+      "width": 380,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "parcial_revelado",
+      "device": "mobile",
+      "width": 328,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "parcial_revelado",
+      "device": "mobile",
+      "width": 288,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "lista",
+      "device": "mobile",
+      "width": 748,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "lista",
+      "device": "mobile",
+      "width": 380,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "lista",
+      "device": "mobile",
+      "width": 328,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "lista",
+      "device": "mobile",
+      "width": 288,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "validacao",
+      "device": "mobile",
+      "width": 748,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "validacao",
+      "device": "mobile",
+      "width": 380,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "validacao",
+      "device": "mobile",
+      "width": 328,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "validacao",
+      "device": "mobile",
+      "width": 288,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "formulario",
+      "device": "mobile",
+      "width": 748,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "formulario",
+      "device": "mobile",
+      "width": 380,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "formulario",
+      "device": "mobile",
+      "width": 328,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "formulario",
+      "device": "mobile",
+      "width": 288,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "conferencia",
+      "device": "mobile",
+      "width": 748,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "conferencia",
+      "device": "mobile",
+      "width": 380,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "conferencia",
+      "device": "mobile",
+      "width": 328,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "conferencia",
+      "device": "mobile",
+      "width": 288,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "conclusao",
+      "device": "mobile",
+      "width": 748,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "conclusao",
+      "device": "mobile",
+      "width": 380,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "conclusao",
+      "device": "mobile",
+      "width": 328,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "conclusao",
+      "device": "mobile",
+      "width": 288,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "falha",
+      "device": "mobile",
+      "width": 748,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "falha",
+      "device": "mobile",
+      "width": 380,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "falha",
+      "device": "mobile",
+      "width": 328,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "falha",
+      "device": "mobile",
+      "width": 288,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "detalhe",
+      "device": "desktop",
+      "width": 748,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "detalhe",
+      "device": "desktop",
+      "width": 380,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "detalhe",
+      "device": "desktop",
+      "width": 328,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "detalhe",
+      "device": "desktop",
+      "width": 288,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "formulario",
+      "device": "desktop",
+      "width": 748,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "formulario",
+      "device": "desktop",
+      "width": 380,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "formulario",
+      "device": "desktop",
+      "width": 328,
+      "overflow": false,
+      "controlsOutside": []
+    },
+    {
+      "label": "formulario",
+      "device": "desktop",
+      "width": 288,
+      "overflow": false,
+      "controlsOutside": []
+    }
+  ],
+  "javascriptErrors": [],
+  "notes": "Ajustes simulados pelo contrato Tweak; não automatiza o painel nativo do chat."
+}

@@ -40,7 +40,7 @@ class ReceivablePayment {
       dispatchId: json['dispatch_id'] as String?,
       accountId: json['account_id'] as String?,
       accountName: json['account_name'] as String?,
-      paymentDate: DateTime.parse(json['payment_date'] as String),
+      paymentDate: _utc(json['payment_date'] as String),
       amountCents: (json['amount_cents'] as num).toInt(),
       paymentMethod: json['payment_method'] as String? ?? 'CASH',
       status: json['status'] as String? ?? 'CONFIRMED',
@@ -49,9 +49,30 @@ class ReceivablePayment {
       reversalReason: json['reversal_reason'] as String?,
       reversalOfId: json['reversal_of_id'] as String?,
       notes: json['notes'] as String?,
-      createdAt: DateTime.parse(json['created_at'] as String),
+      createdAt: _utc(json['created_at'] as String),
     );
   }
+  static DateTime _utc(String value) => DateTime.parse(
+    RegExp(r'(Z|[+-]\d\d:\d\d)$').hasMatch(value) ? value : '${value}Z',
+  ).toUtc();
+
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'receivable_id': receivableId,
+    'dispatch_id': dispatchId,
+    'account_id': accountId,
+    'account_name': accountName,
+    'payment_date': paymentDate.toUtc().toIso8601String(),
+    'amount_cents': amountCents,
+    'payment_method': paymentMethod,
+    'status': status,
+    'is_route_collection': isRouteCollection,
+    'repass_status': repassStatus,
+    'reversal_reason': reversalReason,
+    'reversal_of_id': reversalOfId,
+    'notes': notes,
+    'created_at': createdAt.toUtc().toIso8601String(),
+  };
 }
 
 class ReceivablePaymentCreate {
@@ -61,6 +82,8 @@ class ReceivablePaymentCreate {
   final String? dispatchId;
   final DateTime? paymentDate;
   final String? notes;
+  final int? expectedBalanceCents;
+  final String? paymentBusinessDate;
 
   ReceivablePaymentCreate({
     required this.amountCents,
@@ -69,16 +92,23 @@ class ReceivablePaymentCreate {
     this.dispatchId,
     this.paymentDate,
     this.notes,
+    this.expectedBalanceCents,
+    this.paymentBusinessDate,
   });
 
   Map<String, dynamic> toJson() => {
-        'amount_cents': amountCents,
-        'payment_method': paymentMethod,
-        if (accountId != null) 'account_id': accountId,
-        if (dispatchId != null) 'dispatch_id': dispatchId,
-        'payment_date': paymentDate?.toIso8601String(),
-        'notes': notes,
-      };
+    'amount_cents': amountCents,
+    'payment_method': paymentMethod,
+    if (accountId != null) 'account_id': accountId,
+    if (dispatchId != null) 'dispatch_id': dispatchId,
+    if (paymentDate != null || paymentBusinessDate == null)
+      'payment_date': paymentDate?.toIso8601String(),
+    'notes': paymentBusinessDate == null ? notes : notes?.trim(),
+    if (expectedBalanceCents != null)
+      'expected_balance_cents': expectedBalanceCents,
+    if (paymentBusinessDate != null)
+      'payment_business_date': paymentBusinessDate,
+  };
 }
 
 class SalesReceivable {
@@ -100,6 +130,7 @@ class SalesReceivable {
   final int paymentsCount;
   final DateTime? saleDate;
   final List<ReceivablePayment> payments;
+  final int paymentReviewVersion;
 
   SalesReceivable({
     required this.id,
@@ -120,6 +151,7 @@ class SalesReceivable {
     this.paymentsCount = 0,
     this.saleDate,
     this.payments = const [],
+    this.paymentReviewVersion = 0,
   });
 
   factory SalesReceivable.fromJson(Map<String, dynamic> json) {
@@ -137,14 +169,24 @@ class SalesReceivable {
       isOverdue: json['is_overdue'] as bool? ?? false,
       basketTypesSummary: json['basket_types_summary'] as String?,
       notes: json['notes'] as String?,
-      createdAt: json['created_at'] != null ? DateTime.parse(json['created_at'] as String) : DateTime.now(),
-      updatedAt: json['updated_at'] != null ? DateTime.parse(json['updated_at'] as String) : DateTime.now(),
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'] as String)
+          : DateTime.now(),
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'] as String)
+          : DateTime.now(),
       paymentsCount: (json['payments_count'] as num?)?.toInt() ?? 0,
-      saleDate: json['sale_date'] != null ? DateTime.parse(json['sale_date'] as String) : null,
+      saleDate: json['sale_date'] != null
+          ? DateTime.parse(json['sale_date'] as String)
+          : null,
+      paymentReviewVersion:
+          (json['payment_review_version'] as num?)?.toInt() ?? 0,
       payments: json['payments'] != null
           ? (json['payments'] as List<dynamic>)
-              .map((e) => ReceivablePayment.fromJson(e as Map<String, dynamic>))
-              .toList()
+                .map(
+                  (e) => ReceivablePayment.fromJson(e as Map<String, dynamic>),
+                )
+                .toList()
           : const [],
     );
   }

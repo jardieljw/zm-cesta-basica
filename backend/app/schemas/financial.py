@@ -1,6 +1,6 @@
 import datetime
 from typing import Optional, List
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 # ==================== FINANCIAL ACCOUNTS ====================
 
@@ -126,10 +126,18 @@ class AccountPayableCancelRequest(BaseModel):
 
 class PayablePaymentCreate(BaseModel):
     amount_cents: int = Field(..., gt=0, description="Valor pago em centavos")
-    account_id: str = Field(..., description="Conta financeira de onde saiu o recurso")
+    account_id: Optional[str] = Field(None, description="Vínculo interno opcional para compatibilidade contábil")
     payment_method: str = Field(default="BOLETO", description="Meio de pagamento efetivo")
     payment_date: Optional[datetime.datetime] = Field(None, description="Data/hora do desembolso")
     notes: Optional[str] = Field(None, description="Comprovante / observacoes")
+    expected_balance_cents: Optional[int] = Field(None, ge=0, description="Saldo conferido na revisão; precondição aditiva")
+    payment_business_date: Optional[datetime.date] = Field(None, description="Dia civil do pagamento em UTC-03, sem horário informado")
+
+    @model_validator(mode="after")
+    def one_date_representation(self):
+        if self.payment_date is not None and self.payment_business_date is not None:
+            raise ValueError("Use payment_date ou payment_business_date, não ambos.")
+        return self
 
 
 class PayablePaymentCancelRequest(BaseModel):
@@ -183,6 +191,7 @@ class AccountPayableResponse(BaseModel):
 
 class AccountPayableDetailResponse(AccountPayableResponse):
     payments: List[PayablePaymentResponse] = []
+    payment_review_version: int = 1
 
 
 # ==================== TREASURY SUMMARY ====================

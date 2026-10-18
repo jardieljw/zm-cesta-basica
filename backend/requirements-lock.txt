@@ -4,6 +4,7 @@ annotated-types==0.8.0
 anyio==4.15.1
 certifi==2026.7.22
 cffi==2.1.1
+charset-normalizer==3.5.2
 click==8.5.0
 colorama==0.4.6
 cryptography==50.0.2
@@ -16,10 +17,14 @@ iniconfig==2.3.1
 Mako==1.4.3
 MarkupSafe==3.0.4
 packaging==26.3
+pdfminer.six==20260107
+pdfplumber==0.11.10
+pillow==12.3.0
 pluggy==1.6.0
 pycparser==3.11
 pydantic==2.13.5
 pydantic_core==2.46.5
+pypdfium2==5.14.0
 Pygments==2.21.0
 pytest==9.1.1
 SQLAlchemy==2.1.4

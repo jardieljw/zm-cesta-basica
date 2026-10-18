@@ -39,9 +39,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get commonSearch => 'Buscar';
 
   @override
-  String get commonFilter => 'Filtrar';
-
-  @override
   String get commonClear => 'Limpar';
 
   @override
@@ -69,9 +66,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get commonYes => 'Sim';
 
   @override
-  String get commonNo => 'Não';
-
-  @override
   String get commonSuccess => 'Operação realizada com sucesso';
 
   @override
@@ -79,9 +73,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get commonWarning => 'Atenção';
-
-  @override
-  String get commonUnit => 'un';
 
   @override
   String get commonViewDetails => 'Ver Detalhes';
@@ -150,9 +141,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get productBaseUnit => 'Unidade Base';
 
   @override
-  String get productCostPrice => 'Preço de Custo';
-
-  @override
   String get productMinStock => 'Estoque Mínimo';
 
   @override
@@ -198,19 +186,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get basketTypeAllowsCustom => 'Permite Personalização';
 
   @override
-  String get recipesTitle => 'Ficha Técnica / Receita';
-
-  @override
   String get recipeVersionLabel => 'Versão da Receita';
 
   @override
   String get recipeAddIngredient => 'Adicionar Insumo';
-
-  @override
-  String get recipeQuantityPerBasket => 'Quantidade por Cesta';
-
-  @override
-  String get recipeSection => 'Seção do Insumo';
 
   @override
   String get purchasesTitle => 'Entrada de Compras';
@@ -243,36 +222,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get productionBatchesTitle => 'Lotes de Produção';
 
   @override
-  String get productionBatchNew => 'Nova Montagem de Cestas';
-
-  @override
   String productionBatchNumber(int number) {
     return 'Lote #$number';
   }
-
-  @override
-  String get productionQuantityProduced => 'Qtd. Produzida';
-
-  @override
-  String get productionQuantityDisassembled => 'Qtd. Desmontada';
-
-  @override
-  String get productionCurrentStock => 'Saldo em Estoque';
-
-  @override
-  String get productionUnitCost => 'Custo Unitário';
-
-  @override
-  String get productionTotalCost => 'Custo Total do Lote';
-
-  @override
-  String get productionStatusConfirmed => 'Confirmado';
-
-  @override
-  String get productionStatusDisassembled => 'Desmontado';
-
-  @override
-  String get productionStatusCanceled => 'Cancelado';
 
   @override
   String get productionDirectSale => 'Venda Direta';
@@ -295,10 +247,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get productionDisassembleReasonLabel => 'Motivo da Desmontagem';
 
   @override
-  String get productionDisassembleReasonHint =>
-      'Ex: Avaria em embalagem, readequação';
-
-  @override
   String get productionDisassembleTriageTitle => 'Triagem Física dos Insumos';
 
   @override
@@ -315,36 +263,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get productionLossReasonLabel => 'Motivo da Perda';
-
-  @override
-  String get productionDisassembleDescription =>
-      'A desmontagem realiza triagem física: itens intactos retornam ao estoque e avarias são registradas como perda sem inflar o estoque fisicamente.';
-
-  @override
   String get productionDisassembledSuccess => 'Lote desmontado com sucesso!';
-
-  @override
-  String get productionBatchSearchHint =>
-      'Buscar por lote (#1), tipo ou observações...';
-
-  @override
-  String get productionBatchFilterAllStatus => 'Todos os Status';
-
-  @override
-  String get productionBatchFilterConfirmed => 'Confirmados';
-
-  @override
-  String get productionBatchFilterDisassembled => 'Desmontados';
-
-  @override
-  String get productionBatchFilterAllTypes => 'Todos os Tipos';
-
-  @override
-  String get productionBatchFilterStandard => 'Cesta Padrão';
-
-  @override
-  String get productionBatchFilterCustom => 'Personalizada';
 
   @override
   String get productionBatchEmpty => 'Nenhum lote de produção encontrado.';
@@ -358,84 +277,10 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get productionBatchCancelDescription =>
-      'Esta operação cancela a ordem de produção, deduz o saldo das cestas acabadas e retorna 100% dos insumos consumidos ao estoque fisicamente.\\n\\nRequer que todas as cestas acabadas estejam disponíveis em estoque.';
-
-  @override
-  String get productionBatchCancelReasonLabel => 'Motivo do Estorno';
-
-  @override
-  String get productionBatchCancelReasonHint =>
-      'Ex: Ordem gerada em duplicidade';
-
-  @override
   String get productionBatchCancelConfirm => 'Confirmar Estorno';
 
   @override
   String get productionBatchCancelSuccess => 'Lote estornado com sucesso!';
-
-  @override
-  String get productionBatchSnapshotTitle =>
-      'Snapshot Imutável de Insumos Consumidos';
-
-  @override
-  String productionBatchSectionLabel(String section, String cost) {
-    return 'Seção: $section | Custo un: $cost';
-  }
-
-  @override
-  String productionBatchTotalItemCost(String cost) {
-    return 'Total: $cost';
-  }
-
-  @override
-  String get productionBatchDisassembleButton => 'Desmontar Lote';
-
-  @override
-  String get productionBatchCancelButton => 'Estorno Total';
-
-  @override
-  String get productionBatchDetailProduced => 'Quantidade Produzida';
-
-  @override
-  String get productionBatchDetailStock => 'Saldo Disponível';
-
-  @override
-  String get productionBatchDetailDisassembled => 'Quantidade Desmontada';
-
-  @override
-  String get productionBatchDetailUnitCost => 'Custo Unitário';
-
-  @override
-  String get productionBatchDetailTotalCost => 'Custo Total';
-
-  @override
-  String productionBatchDetailDate(String date) {
-    return 'Data: $date';
-  }
-
-  @override
-  String productionBatchDetailNotes(String notes) {
-    return 'Observações: $notes';
-  }
-
-  @override
-  String productionBatchDetailDisassembledAt(String date, String reason) {
-    return 'Desmontado em: $date ($reason)';
-  }
-
-  @override
-  String productionBatchDescriptionLabel(String description) {
-    return 'Descrição: $description';
-  }
-
-  @override
-  String productionBatchConsumedTotal(String quantity) {
-    return 'Consumido total: $quantity';
-  }
-
-  @override
-  String get validationInvalid => 'Inválido';
 
   @override
   String validationMinChars(int min) {
@@ -445,11 +290,6 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get validationMustBePositive =>
       'A quantidade a desmontar deve ser maior que zero.';
-
-  @override
-  String validationInsufficientStockForDisassembly(int max) {
-    return 'Saldo insuficiente para desmontagem: máximo permitido é de $max unidade(s).';
-  }
 
   @override
   String get commonTryAgain => 'Tentar Novamente';
@@ -479,17 +319,6 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get homeInventoryMovementsDescription =>
       'Histórico auditável e imutável de todas as movimentações.';
-
-  @override
-  String get homePhase4Header => 'Produção e Desmontagem';
-
-  @override
-  String get homeProductionBatchesDescription =>
-      'Histórico de ordens, desmontagem com triagem e estorno total.';
-
-  @override
-  String get homeProductionAssemblyDescription =>
-      'Simulação de viabilidade com CMPM e baixa atômica.';
 
   @override
   String get homeServerStatusTitle => 'Status do Servidor';
@@ -599,7 +428,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String productInactivateConfirm(String name) {
-    return 'Deseja inativar o produto \"$name\"?\n\nA exclusão física é proibida para preservar a integridade das transações anteriores. O produto deixará de aparecer em novas composições.';
+    return 'Deseja inativar o produto \"$name\"?\n\nO cadastro e o histórico serão preservados. Ele deixará de aparecer em novas compras e composições. Produtos nunca utilizados também podem ser excluídos definitivamente pela ação de excluir.';
   }
 
   @override
@@ -626,7 +455,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String productPackagingsCount(int count) {
-    return 'Embalagens ($count)';
+    return 'Formas de compra ($count)';
   }
 
   @override
@@ -708,7 +537,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get packagingsTitle => 'Embalagens Comerciais';
+  String get packagingsTitle => 'Formas de compra (embalagens)';
 
   @override
   String packagingProductSubtitle(String name, String unit) {
@@ -744,7 +573,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String packagingDialogQtyLabel(String unit) {
-    return 'Quantidade na Unidade Base * ($unit)';
+    return 'Conteúdo de uma embalagem ($unit) *';
   }
 
   @override
@@ -853,11 +682,11 @@ class AppLocalizationsPt extends AppLocalizations {
       'Permite que operadores alterem itens durante a montagem física.';
 
   @override
-  String get basketTypeFormTracksStock => 'Controla Estoque de Cesta Acabada';
+  String get basketTypeFormTracksStock => 'Estoque de cestas prontas';
 
   @override
   String get basketTypeFormTracksStockSubtitle =>
-      'Mantém saldo da cesta como produto acabado no inventário.';
+      'Mantém o saldo de cestas prontas no estoque. Na venda, permite escolher Pronta ou Montar.';
 
   @override
   String get basketTypeFormStatusActive => 'Status Ativo';
@@ -1113,11 +942,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get purchaseFormProductLabel => 'Produto *';
 
   @override
-  String get purchaseFormPackagingLabel => 'Embalagem';
+  String get purchaseFormPackagingLabel => 'Forma de compra';
 
   @override
   String purchaseFormBaseUnitPackaging(String unit) {
-    return 'Unidade Base ($unit)';
+    return 'Sem embalagem: comprar em $unit';
   }
 
   @override
@@ -1326,104 +1155,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get stockAdjustmentSelectProductError => 'Selecione um produto.';
 
   @override
-  String get assemblyHeaderTitle => 'Montagem de Cestas (Ordem de Produção)';
-
-  @override
-  String get assemblyTabStandard => 'Cesta Padrão';
-
-  @override
-  String get assemblyTabCustom => 'Cesta Personalizada';
-
-  @override
-  String get assemblyStandardBasketLabel => 'Tipo de Cesta *';
-
-  @override
-  String get assemblyStandardQtyLabel => 'Quantidade a Montar *';
-
-  @override
-  String get assemblyStandardQtyValidation =>
-      'Informe uma quantidade válida maior que zero';
-
-  @override
-  String get assemblyStandardDirectSale =>
-      'Venda Direta (Não adiciona ao estoque acabado)';
-
-  @override
-  String get assemblyStandardDirectSaleSubtitle =>
-      'Baixa os insumos consumidos sem criar saldo da cesta montada no inventário.';
-
-  @override
-  String get assemblyStandardNotesLabel => 'Observações da Ordem';
-
-  @override
-  String get assemblyStandardNotesHint => 'Ex: Pedido especial cliente XPTO';
-
-  @override
-  String get assemblyFeasibilityTitle =>
-      'Simulação de Viabilidade e Custo Médio (CMPM)';
-
-  @override
-  String get assemblyFeasibleOk => 'Estoque Suficiente para Montagem';
-
-  @override
-  String get assemblyFeasibleFail => 'Estoque Insuficiente para Montagem';
-
-  @override
-  String assemblyTotalCostPreview(String cost) {
-    return 'Custo Total do Lote: $cost';
-  }
-
-  @override
-  String assemblyUnitCostPreview(String cost) {
-    return 'Custo Unitário da Cesta: $cost';
-  }
-
-  @override
-  String get assemblyConfirmDialogTitle => 'Confirmar Montagem de Cestas';
-
-  @override
-  String assemblyConfirmDialogContent(int qty, String name) {
-    return 'Deseja confirmar a montagem de $qty cesta(s) \"$name\"?\n\nOs insumos serão baixados e o lote de cestas acabadas será adicionado ao estoque imediatamente.';
-  }
-
-  @override
-  String assemblyConfirmSuccess(int number, String cost) {
-    return 'Lote #$number montado com sucesso! Custo unitário: $cost';
-  }
-
-  @override
-  String get assemblySubmitStandard => 'Confirmar Montagem da Cesta Padrão';
-
-  @override
-  String get assemblySubmitCustom =>
-      'Confirmar Montagem da Cesta Personalizada';
-
-  @override
-  String get assemblyCustomBaseBasket => 'Modelo Base da Cesta';
-
-  @override
-  String get assemblyCustomDescLabel => 'Descrição da Cesta Personalizada *';
-
-  @override
-  String get assemblyCustomDescHint =>
-      'Ex: Cesta Natalina Especial para Empresa Alpha';
-
-  @override
-  String get assemblyCustomDescRequired =>
-      'Informe a descrição da cesta personalizada';
-
-  @override
-  String assemblyCustomItemsHeader(int count) {
-    return 'Composição Customizada de Insumos ($count)';
-  }
-
-  @override
-  String get assemblyCustomAddItem => 'Adicionar Insumo';
-
-  @override
-  String get assemblyCustomQtyValidation => 'Quantidade inválida';
-
-  @override
   String get pairingViewTitle => 'Pareamento do Dispositivo';
 
   @override
@@ -1548,8 +1279,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settingsQrClose => 'Fechar';
 
   @override
-  String get cameraPermissionDenied =>
-      'Câmera aguardando permissão ou reinicialização.';
+  String get cameraPermissionDenied => 'O acesso à câmera não foi permitido.';
+
+  @override
+  String get pairingCameraPermissionHint =>
+      'Permita o acesso à câmera para ler o QR Code. Se o Android não perguntar novamente, habilite a câmera nas configurações de permissões deste aplicativo e volte para esta tela.';
+
+  @override
+  String get pairingCameraUnavailable =>
+      'Não foi possível abrir a câmera. Feche outros aplicativos que estejam usando a câmera e tente novamente.';
 
   @override
   String get cameraPermissionRequest => 'Ativar Câmera';
@@ -1584,9 +1322,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get categoryMeat => 'Carnes & Frios';
 
   @override
-  String get categoryHygiene => 'Higiene';
-
-  @override
   String get categoryOthers => 'Outros';
 
   @override
@@ -1611,9 +1346,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get productionBatchViewIngredients => 'Ver Insumos';
-
-  @override
-  String get productionDisassemble => 'Desmontar';
 
   @override
   String get productionDisassembleNoIngredients =>
@@ -1818,10 +1550,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get saleAssemblyMode => 'Origem da Cesta';
 
   @override
-  String get saleAssemblyModeStock => 'Estoque Acabado';
+  String get saleAssemblyModeStock => 'Pronta';
 
   @override
-  String get saleAssemblyModeDemand => 'Montar Imediatamente';
+  String get saleAssemblyModeDemand => 'Montar';
 
   @override
   String get saleGrossTotal => 'Total Bruto';
@@ -1878,7 +1610,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String saleStockAvailable(int qty) {
-    return 'Saldo disponível: $qty';
+    return 'Cestas prontas disponíveis: $qty';
   }
 
   @override
@@ -1998,10 +1730,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get moduleDispatches => 'Saídas e Conferências';
 
   @override
-  String get homeDispatchesDescription =>
-      'Controle de saídas físicas, conferência e repasses';
-
-  @override
   String get moduleResponsiblePersons => 'Pessoas Responsáveis';
 
   @override
@@ -2012,50 +1740,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get responsiblePersonsTitle => 'Pessoas Responsáveis';
 
   @override
-  String get responsiblePersonNew => 'Novo Responsável';
-
-  @override
-  String get responsiblePersonEdit => 'Editar Responsável';
-
-  @override
   String get responsiblePersonName => 'Nome';
-
-  @override
-  String get responsiblePersonPhone => 'Telefone / WhatsApp';
-
-  @override
-  String get responsiblePersonNotes => 'Observações';
-
-  @override
-  String get responsiblePersonActive => 'Ativo';
-
-  @override
-  String get responsiblePersonInactive => 'Inativo';
-
-  @override
-  String get responsiblePersonsEmpty =>
-      'Nenhuma pessoa responsável cadastrada.';
 
   @override
   String get responsiblePersonCustodyTitle => 'Custódia Atual de Cestas';
 
   @override
-  String responsiblePersonTotalInCustody(int qty) {
-    return 'Total sob custódia: $qty cestas';
-  }
-
-  @override
-  String get responsiblePersonNoCustody =>
-      'Nenhuma cesta sob custódia no momento.';
-
-  @override
-  String get responsiblePersonSavedSuccess => 'Responsável salvo com sucesso.';
-
-  @override
   String get dispatchesTitle => 'Saídas Físicas e Conferência';
-
-  @override
-  String get dispatchNew => 'Nova Saída de Cestas';
 
   @override
   String dispatchNumber(int number) {
@@ -2063,109 +1754,14 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get dispatchResponsible => 'Responsável';
-
-  @override
   String get dispatchDate => 'Data da Saída';
-
-  @override
-  String get dispatchTotalBaskets => 'Total de Cestas';
-
-  @override
-  String get dispatchTotalReference => 'Valor de Referência';
-
-  @override
-  String get dispatchStatusOpen => 'Aberta';
-
-  @override
-  String get dispatchStatusConcluded => 'Concluída';
-
-  @override
-  String get dispatchStatusPendingInvestigation => 'Sob Investigação';
-
-  @override
-  String get dispatchStatusCanceled => 'Cancelada';
 
   @override
   String get dispatchStatusResolved => 'Resolvido';
 
   @override
-  String get dispatchesEmpty => 'Nenhuma saída física registrada.';
-
-  @override
-  String get dispatchCancel => 'Cancelar Saída';
-
-  @override
-  String dispatchCancelConfirm(int number) {
-    return 'Deseja realmente cancelar a saída #$number?';
-  }
-
-  @override
-  String get dispatchCancelReason => 'Motivo do cancelamento';
-
-  @override
-  String get dispatchCancelSuccess =>
-      'Saída cancelada com sucesso. Cestas retornadas ao estoque da loja.';
-
-  @override
-  String get dispatchCreatedSuccess => 'Saída registrada com sucesso.';
-
-  @override
-  String get dispatchFormTitle => 'Registrar Saída Física';
-
-  @override
-  String get dispatchSelectResponsible => 'Selecione o Responsável';
-
-  @override
-  String get dispatchItemsTitle => 'Cestas a Retirar';
-
-  @override
-  String get dispatchAddItem => 'Adicionar Cesta';
-
-  @override
-  String get dispatchItemBasket => 'Tipo de Cesta';
-
-  @override
-  String get dispatchItemQuantity => 'Quantidade';
-
-  @override
-  String get dispatchItemUnitPrice => 'Preço de Referência';
-
-  @override
-  String get dispatchItemSubtotal => 'Subtotal';
-
-  @override
-  String get dispatchItemNotes => 'Personalizações / Observações';
-
-  @override
-  String dispatchAvailableStoreStock(int qty) {
-    return 'Estoque loja: $qty';
-  }
-
-  @override
-  String dispatchInsufficientStoreStock(String name, int stock, int qty) {
-    return 'Estoque insuficiente na loja para \"$name\". Disponível: $stock, Solicitado: $qty.';
-  }
-
-  @override
   String get dispatchDuplicateBasketConsolidatedNotice =>
       'Cesta repetida: será consolidada automaticamente no despacho.';
-
-  @override
-  String get dispatchSubmit => 'Confirmar Saída Física';
-
-  @override
-  String conferenceTitle(int number) {
-    return 'Conferência da Saída #$number';
-  }
-
-  @override
-  String get conferenceScreenTitle => 'Conferência de Saída';
-
-  @override
-  String conferenceStatusLabel(String status) {
-    return 'Status da Saída: $status';
-  }
 
   @override
   String get conferencePhysicalEquationTitle =>
@@ -2192,16 +1788,6 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String conferenceCustodyRemainingLabel(int qty) {
-    return 'Em Trânsito / Custódia: $qty';
-  }
-
-  @override
-  String conferenceDiscrepancyLabel(int qty) {
-    return 'Divergência Física: $qty cestas';
-  }
-
-  @override
   String get conferencePhysicalEquationBalanced =>
       'Equação Física Bateu (Sem divergências)';
 
@@ -2210,47 +1796,8 @@ class AppLocalizationsPt extends AppLocalizations {
       'Divergência Física Detectada!';
 
   @override
-  String get conferenceFinancialTitle =>
-      'Controle Financeiro de Rota e Repasses';
-
-  @override
   String conferenceExpectedCashLabel(String amount) {
     return 'Dinheiro em Mãos Esperado: $amount';
-  }
-
-  @override
-  String conferenceActualRepaidLabel(String amount) {
-    return 'Repasses Realizados: $amount';
-  }
-
-  @override
-  String conferencePendingCashLabel(String amount) {
-    return 'Saldo a Repassar: $amount';
-  }
-
-  @override
-  String conferenceCashSalesLabel(String amount) {
-    return 'Vendas à Vista (Dinheiro): $amount';
-  }
-
-  @override
-  String conferenceDirectCompanyLabel(String amount) {
-    return 'Pix / Cartão Direto à Empresa: $amount';
-  }
-
-  @override
-  String conferenceCreditSalesLabel(String amount) {
-    return 'Vendas a Prazo (Fiado na rota): $amount';
-  }
-
-  @override
-  String conferenceDebtCollectedLabel(String amount) {
-    return 'Cobrança de Fiados em Rota: $amount';
-  }
-
-  @override
-  String conferenceExpensesLabel(String amount) {
-    return 'Despesas Autorizadas Abatidas: $amount';
   }
 
   @override
@@ -2270,167 +1817,12 @@ class AppLocalizationsPt extends AppLocalizations {
       'As despesas autorizadas superaram as vendas em dinheiro da rota. Saldo credor ao entregador / ressarcimento pela empresa.';
 
   @override
-  String get conferenceActionReturn => 'Devolução Intacta';
-
-  @override
-  String get conferenceActionLoss => 'Avaria / Perda';
-
-  @override
-  String get conferenceActionExpense => 'Despesa Autorizada';
-
-  @override
-  String get conferenceActionRepayment => 'Repasse de Dinheiro';
-
-  @override
-  String get conferenceActionSettle => 'Concluir Acerto / Fechamento';
-
-  @override
-  String get conferenceActionInvestigation => 'Documentar Investigação';
-
-  @override
-  String get conferenceSettledSuccess => 'Conferência registrada com sucesso.';
-
-  @override
-  String get conferenceInvestigationUpdatedSuccess =>
-      'Notas de investigação atualizadas com sucesso.';
-
-  @override
-  String get conferenceReturnsListTitle => 'Devoluções de Cestas Intactas';
-
-  @override
-  String get conferenceLossesListTitle => 'Avarias e Perdas Físicas';
-
-  @override
-  String get conferenceExpensesListTitle => 'Despesas Autorizadas';
-
-  @override
-  String get conferenceRepaymentsListTitle =>
-      'Repasses Financeiros Registrados';
-
-  @override
-  String get conferenceNoReturns => 'Nenhuma devolução intacta registrada.';
-
-  @override
-  String get conferenceNoLosses => 'Nenhuma avaria ou perda registrada.';
-
-  @override
-  String get conferenceNoExpenses => 'Nenhuma despesa autorizada registrada.';
-
-  @override
-  String get conferenceNoRepayments => 'Nenhum repasse de dinheiro registrado.';
-
-  @override
-  String get dialogReturnTitle => 'Registrar Devolução Intacta';
-
-  @override
-  String get dialogReturnQty => 'Quantidade Devolvida';
-
-  @override
-  String get dialogReturnNotes => 'Observações';
-
-  @override
-  String get dialogLossTitle => 'Registrar Avaria ou Perda';
-
-  @override
-  String get dialogLossQty => 'Quantidade Avariada/Perdida';
-
-  @override
-  String get dialogLossReason => 'Justificativa Obrigatória da Perda';
-
-  @override
-  String get dialogLossReasonRequired =>
-      'A justificativa da perda é obrigatória (mínimo 3 caracteres).';
-
-  @override
-  String get dialogExpenseTitle => 'Registrar Despesa Autorizada';
-
-  @override
-  String get dialogExpenseAmount => 'Valor da Despesa';
-
-  @override
-  String get dialogExpenseDesc => 'Descrição (ex: Combustível, Borracharia)';
-
-  @override
-  String get dialogExpenseReceipt => 'Nº do Comprovante / Cupom';
-
-  @override
-  String get dialogExpenseAuthorizedBy => 'Autorizado por';
-
-  @override
-  String get dialogRepaymentTitle => 'Registrar Repasse Financeiro';
-
-  @override
-  String get dialogRepaymentAmount => 'Valor Repassado';
-
-  @override
-  String get dialogRepaymentMethod => 'Forma do Repasse';
-
-  @override
-  String get dialogRepaymentReceivedBy => 'Recebido na Empresa por';
-
-  @override
-  String get dialogRepaymentNotes => 'Observações';
-
-  @override
-  String get dialogSettleTitle => 'Fechamento Operacional / Acerto';
-
-  @override
-  String get dialogSettleAuditedBy => 'Auditor / Responsável pelo Fechamento';
-
-  @override
-  String get dialogSettleAuditedByRequired =>
-      'Informe o nome do responsável pelo fechamento.';
-
-  @override
-  String get dialogSettleNotes => 'Observações do Fechamento';
-
-  @override
-  String get dialogSettleWarningDivergent =>
-      'Atenção: Existem divergências físicas ou financeiras. O fechamento será registrado como SOB INVESTIGAÇÃO.';
-
-  @override
-  String get dialogSettleInvestigationNotes => 'Notas Iniciais da Investigação';
-
-  @override
-  String get dialogInvestigationTitle => 'Investigação de Divergências';
-
-  @override
-  String get dialogInvestigationNotes =>
-      'Parecer da Investigação / Justificativas';
-
-  @override
-  String get dialogInvestigationMarkResolved =>
-      'Marcar como Resolvido (Divergências apuradas/justificadas)';
-
-  @override
-  String get dialogInvestigationSave => 'Salvar Parecer';
-
-  @override
-  String get saleModeLabel => 'Modalidade da Venda';
-
-  @override
-  String get saleModeDirectStore => 'Balcão / Loja';
-
-  @override
-  String get saleModeCommercialRoute => 'Rota / Venda Externa';
-
-  @override
-  String get saleRouteSelectDispatch => 'Vincular à Saída / Rota Ativa';
-
-  @override
-  String get saleRouteNoDispatches =>
-      'Nenhuma saída aberta disponível para este responsável.';
-
-  @override
-  String get saleRouteResponsibleLabel => 'Responsável pela Rota';
-
-  @override
   String saleCustodyStockAvailable(int qty) {
     return 'Saldo sob custódia: $qty';
   }
 
   @override
-  String get homePhase7Header => 'Fase 7: Gestão Financeira & Tesouraria';
+  String get homePhase7Header => 'Financeiro';
 
   @override
   String get modulePayables => 'Contas a Pagar';
@@ -2438,13 +1830,6 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get homePayablesDescription =>
       'Boletos, cheques, empréstimos, fornecedores e parcelamentos';
-
-  @override
-  String get moduleTreasury => 'Tesouraria & Livro-Caixa';
-
-  @override
-  String get homeTreasuryDescription =>
-      'Caixa físico, contas bancárias, transferências e conciliação';
 
   @override
   String get payablesTitle => 'Contas a Pagar';
@@ -2556,9 +1941,6 @@ class AppLocalizationsPt extends AppLocalizations {
       'O valor do pagamento deve ser maior que zero.';
 
   @override
-  String get payableSelectAccount => 'Conta Financeira de Saída';
-
-  @override
   String get payableNoPayables => 'Nenhuma obrigação a pagar encontrada.';
 
   @override
@@ -2568,135 +1950,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get payableFilterYear => 'Ano';
 
   @override
-  String get treasuryTitle => 'Tesouraria & Conciliação';
-
-  @override
-  String get treasuryTabAccounts => 'Saldos & Contas';
-
-  @override
-  String get treasuryTabLedger => 'Livro-Caixa (Extrato)';
-
-  @override
-  String get treasuryTabSummary => 'Visão Gerencial';
-
-  @override
-  String get treasuryTotalAvailable => 'Saldo Disponível (Caixa e Bancos)';
-
-  @override
-  String get treasuryCashBalance => 'Caixa Físico da Loja';
-
-  @override
-  String get treasuryBankBalance => 'Contas Bancárias';
-
-  @override
-  String get treasuryRouteCashPending => 'Dinheiro em Rota (em trânsito)';
-
-  @override
-  String get treasuryProjectedNet => 'Saldo Líquido Projetado';
-
-  @override
-  String get treasuryOpenReceivables => 'A Receber (Fiados Pendentes)';
-
-  @override
-  String get treasuryOverdueReceivables => 'A Receber Vencidos';
-
-  @override
   String get treasuryOpenPayables => 'A Pagar (Obrigações Abertas)';
 
   @override
   String get treasuryOverduePayables => 'A Pagar Vencidos';
-
-  @override
-  String get treasuryBusinessExpenses => 'Despesas Operacionais (Mês)';
-
-  @override
-  String get treasuryPersonalWithdrawals => 'Retiradas de Sócios (Mês)';
-
-  @override
-  String get treasuryNewAccount => 'Nova Conta Financeira';
-
-  @override
-  String get treasuryEditAccount => 'Editar Conta Financeira';
-
-  @override
-  String get treasuryAccountName => 'Nome da Conta';
-
-  @override
-  String get treasuryAccountType => 'Tipo de Conta';
-
-  @override
-  String get treasuryTypeCash => 'Caixa Físico';
-
-  @override
-  String get treasuryTypeBank => 'Conta Bancária';
-
-  @override
-  String get treasuryTypeOther => 'Outra Conta / Cofre';
-
-  @override
-  String get treasuryBankName => 'Instituição Financeira / Banco';
-
-  @override
-  String get treasuryAccountNumber => 'Agência e Conta';
-
-  @override
-  String get treasuryInitialBalance => 'Saldo Inicial de Abertura';
-
-  @override
-  String get treasuryIsDefault => 'Conta Padrão';
-
-  @override
-  String get treasuryTransferTitle => 'Transferência entre Contas';
-
-  @override
-  String get treasurySourceAccount => 'Conta de Origem (Saída)';
-
-  @override
-  String get treasuryDestinationAccount => 'Conta de Destino (Entrada)';
-
-  @override
-  String get treasuryTransferAmount => 'Valor da Transferência';
-
-  @override
-  String get treasuryTransferSuccess => 'Transferência realizada com sucesso';
-
-  @override
-  String get treasuryManualEntryTitle => 'Lançamento no Livro-Caixa';
-
-  @override
-  String get treasuryEntryType => 'Tipo de Lançamento';
-
-  @override
-  String get treasuryEntryCredit => 'Crédito (Entrada)';
-
-  @override
-  String get treasuryEntryDebit => 'Débito (Saída)';
-
-  @override
-  String get treasuryEntryCategory => 'Categoria';
-
-  @override
-  String get treasuryEntryDescription => 'Descrição do Lançamento';
-
-  @override
-  String get treasuryEntryAmount => 'Valor';
-
-  @override
-  String get treasuryEntrySuccess => 'Lançamento registrado com sucesso';
-
-  @override
-  String get treasuryNoEntries =>
-      'Nenhuma movimentação registrada no livro-caixa.';
-
-  @override
-  String get treasuryNoAccounts => 'Nenhuma conta financeira cadastrada.';
-
-  @override
-  String get treasuryReversalBadge => 'ESTORNO';
-
-  @override
-  String get treasuryImmutableNote =>
-      'Livro-Caixa imutável: todas as operações são estritamente append-only.';
 
   @override
   String get receivableRepassDirect => 'Direto na Empresa / Loja';
@@ -2770,7 +2027,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get homeDashboardDescription =>
-      'Visão consolidada operacional, faturamento e livro-caixa';
+      'Vendas, estoque, recebimentos, pagamentos e resultado';
 
   @override
   String get moduleReports => 'Relatórios & Planilhas';
@@ -2844,25 +2101,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get dashboardStockNormal => 'Estoque em Nível Regular';
 
   @override
-  String get dashboardSectionFinancial => 'Financeiro & Tesouraria';
-
-  @override
-  String get dashboardOpenReceivables => 'A Receber (Em Aberto)';
-
-  @override
   String get dashboardOverdueReceivables => 'A Receber Vencidos';
 
   @override
-  String get dashboardEffectiveReceived => 'Recebimentos Efetivos';
-
-  @override
-  String get dashboardOpenPayables => 'A Pagar (Em Aberto)';
-
-  @override
   String get dashboardOverduePayables => 'A Pagar Vencidos';
-
-  @override
-  String get dashboardEffectivePaid => 'Pagamentos Efetuados';
 
   @override
   String get dashboardCashInflow => 'Entradas de Caixa';
@@ -2872,13 +2114,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get dashboardTreasuryBalance => 'Saldo Disponível (Tesouraria)';
-
-  @override
-  String get dashboardProjectedCash => 'Saldo de Caixa Projetado';
-
-  @override
-  String get dashboardProjectionNotice =>
-      'Atenção: Valores projetados são estimativas futuras e NÃO constituem dinheiro disponível em caixa.';
 
   @override
   String get reportsTitle => 'Relatórios Gerenciais e Planilhas';
@@ -3131,20 +2366,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get dashboardNoOpenPayables => 'Nenhuma conta a pagar em aberto.';
 
   @override
-  String get conferenceMethodCashHand => 'Dinheiro em Mãos';
-
-  @override
-  String get conferenceMethodPixSettled => 'PIX Repassado';
-
-  @override
-  String get conferenceMethodBankTransfer => 'Transferência Bancária';
-
-  @override
-  String commonObservationsPrefix(String notes) {
-    return 'Observações: $notes';
-  }
-
-  @override
   String get payableCategorySupplier => 'Fornecedor';
 
   @override
@@ -3257,100 +2478,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get filterAllOption => 'Todos';
 
   @override
-  String get treasuryNeedTwoAccountsForTransfer =>
-      'São necessárias ao menos 2 contas para realizar transferências.';
-
-  @override
-  String get treasuryAccountLabel => 'Conta Financeira';
-
-  @override
-  String get treasuryAccountFilterLabel => 'Conta';
-
-  @override
-  String get treasuryLaunchEntry => 'Lançamento';
-
-  @override
-  String get treasuryConsolidatedPosition => 'Posição Consolidada da Empresa';
-
-  @override
-  String treasuryCashPhysicalLabel(String amount) {
-    return 'Caixa Físico: $amount';
-  }
-
-  @override
-  String treasuryBankLabel(String amount) {
-    return 'Bancos: $amount';
-  }
-
-  @override
-  String get treasuryFormulaExplanation =>
-      'Fórmula: Disponível + A Receber - A Pagar';
-
-  @override
-  String get treasuryFutureCommitmentsTitle => 'Compromissos Futuros & Fiados';
-
-  @override
-  String get treasuryCustodyCouriers => 'Em custódia de entregadores';
-
-  @override
-  String get treasuryExpenseSegregationTitle => 'Segregação de Despesas (Mês)';
-
-  @override
-  String get treasuryBusinessExpensesDesc => 'Gastos operacionais da atividade';
-
-  @override
-  String get treasuryPersonalWithdrawalsDesc =>
-      'Não misturar com contas da empresa';
-
-  @override
-  String get treasuryCatCapitalContribution => 'Aporte de Capital';
-
-  @override
-  String get treasuryCatSalesRevenue => 'Receita de Vendas';
-
-  @override
-  String get treasuryCatCustomerReceipt => 'Recebimento de Cliente';
-
-  @override
-  String get treasuryCatOtherCredits => 'Outros Créditos';
-
-  @override
-  String get treasuryCatPartnerWithdrawal => 'Retirada de Sócios / Pró-labore';
-
-  @override
-  String get treasuryCatSupplierPayment => 'Pagamento Fornecedor';
-
-  @override
-  String get treasuryCatElectricity => 'Energia Elétrica';
-
-  @override
-  String get treasuryCatRent => 'Aluguel';
-
-  @override
-  String get treasuryCatFreightFuel => 'Frete / Combustível';
-
-  @override
-  String get treasuryCatMaintenance => 'Manutenção';
-
-  @override
-  String get treasuryCatOtherExpenses => 'Outras Despesas';
-
-  @override
-  String get treasuryMethodPix => 'PIX';
-
-  @override
-  String get treasuryMethodCash => 'Dinheiro';
-
-  @override
-  String get treasuryMethodTransfer => 'Transferência';
-
-  @override
-  String get treasuryMethodCard => 'Cartão';
-
-  @override
-  String get treasuryMethodOther => 'Outro';
-
-  @override
   String receivablesBasketsPrefix(String summary) {
     return 'Cestas: $summary';
   }
@@ -3361,8 +2488,7 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get tooltipPrintSelectPrinter =>
-      'Imprimir / Selecionar Impressora (Epson Wi-Fi)';
+  String get tooltipPrintSelectPrinter => 'Imprimir / Selecionar impressora';
 
   @override
   String get tooltipShareSavePdf => 'Compartilhar / Salvar PDF';
@@ -3372,32 +2498,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get payableRevertPaymentTooltip => 'Estornar este pagamento';
-
-  @override
-  String get dispatchPhysicalNotesHint =>
-      'Observações da saída física (opcional)';
-
-  @override
-  String get dispatchCustomizationHint =>
-      'Ex: Cesta personalizada, lote específico';
-
-  @override
-  String get conferenceLossReasonHint =>
-      'Ex: Caixa molhou na chuva durante entrega';
-
-  @override
-  String get conferenceReceivedByHint => 'Colaborador que conferiu e recebeu';
-
-  @override
-  String get conferenceAuditorNameHint => 'Nome do conferente / auditor';
-
-  @override
-  String get conferenceInitialJustificationHint =>
-      'Justificativa inicial das divergências';
-
-  @override
-  String get conferenceInvestigationHint =>
-      'Descreva a apuração, se foi justificado, perdas aceitas ou ressarcimento';
 
   @override
   String get cameraStarting => 'Iniciando leitor de câmera...';
@@ -3497,10 +2597,6 @@ class AppLocalizationsPt extends AppLocalizations {
       'A data de vencimento é obrigatória para compras pendentes.';
 
   @override
-  String get purchasePaymentFinancialAccountLabel =>
-      'Conta Financeira de Liquidação';
-
-  @override
   String purchasePaymentPendingNotice(String date) {
     return 'Esta compra gerará uma obrigação em aberto no módulo de Contas a Pagar com vencimento em $date.';
   }
@@ -3580,4 +2676,1892 @@ class AppLocalizationsPt extends AppLocalizations {
   String backupRestoreErrorMsg(String error) {
     return 'Falha ao restaurar backup: $error';
   }
+
+  @override
+  String get companyFinanceTitle => 'Recebimentos, pagamentos e resultado';
+
+  @override
+  String get companyFinancialReportTitle =>
+      'Resultado, recebimentos e pagamentos';
+
+  @override
+  String get companyPaymentsScope =>
+      'Valores confirmados no período selecionado, incluindo os estornos registrados nesse período.';
+
+  @override
+  String get companyReceived => 'Recebimentos confirmados';
+
+  @override
+  String get companyPaid => 'Pagamentos confirmados';
+
+  @override
+  String get companyPaymentDifference => 'Diferença entre recebido e pago';
+
+  @override
+  String get companyDifferenceExplanation =>
+      'Compara os movimentos do período. Não representa saldo bancário nem lucro.';
+
+  @override
+  String get companyResultTitle => 'Resultado das vendas no período';
+
+  @override
+  String get companyResultExplanation =>
+      'As vendas a prazo entram no valor vendido, mesmo antes do recebimento. As outras despesas são consideradas quando pagas.';
+
+  @override
+  String get companySalesRevenue => 'Valor das vendas';
+
+  @override
+  String get companySoldCost => 'Custo das cestas vendidas';
+
+  @override
+  String get companyGrossProfit => 'Lucro bruto das vendas';
+
+  @override
+  String get companyOperatingExpenses => 'Outras despesas do negócio pagas';
+
+  @override
+  String get companyOperatingResult => 'Resultado gerencial do período';
+
+  @override
+  String get companyCostExplanation =>
+      'O custo dos insumos vendidos já está no custo das cestas. As compras de estoque não são descontadas novamente do lucro bruto. Retiradas pessoais são mostradas separadamente.';
+
+  @override
+  String get companyPendingTitle => 'Contas ainda pendentes';
+
+  @override
+  String get companyPendingScope =>
+      'Totais atuais de todas as contas em aberto. Os vencimentos no período aparecem abaixo.';
+
+  @override
+  String get companyPendingReceivable => 'Total pendente a receber';
+
+  @override
+  String get companyPendingPayable => 'Total pendente a pagar';
+
+  @override
+  String get companyReceivableDueInPeriod =>
+      'A receber com vencimento no período';
+
+  @override
+  String get companyPayableDueInPeriod => 'A pagar com vencimento no período';
+
+  @override
+  String get companyReceivedDetails => 'Recebimentos confirmados no período';
+
+  @override
+  String get companyPaidDetails => 'Pagamentos confirmados no período';
+
+  @override
+  String get companyNoPayments => 'Nenhum registro confirmado neste período.';
+
+  @override
+  String get companyPaidStatus => 'Recebida';
+
+  @override
+  String get companyPartialStatus => 'Recebida parcialmente';
+
+  @override
+  String get companyPendingStatus => 'A receber';
+
+  @override
+  String get companyStockAvailable => 'Disponível';
+
+  @override
+  String companyMissingCost(int count) {
+    return 'Há $count venda(s) com custo incompleto. O resultado gerencial precisa ser conferido.';
+  }
+
+  @override
+  String companyStockPaid(String value) {
+    return 'Compras de estoque pagas: $value';
+  }
+
+  @override
+  String companyWithdrawalsPaid(String value) {
+    return 'Retiradas pessoais pagas: $value';
+  }
+
+  @override
+  String companyOverdueAmount(String value) {
+    return 'Vencido: $value';
+  }
+
+  @override
+  String companyPaymentDescription(String method, String date) {
+    return '$method · $date';
+  }
+
+  @override
+  String get companyPurchasesTitle => 'Compras registradas no período';
+
+  @override
+  String companyPurchaseCount(int count) {
+    return '$count compra(s) confirmada(s)';
+  }
+
+  @override
+  String get companyPurchasesExplanation =>
+      'Inclui compras pagas e a prazo. Os pagamentos confirmados aparecem separadamente no financeiro.';
+
+  @override
+  String get productDeleteButton => 'Excluir definitivamente';
+
+  @override
+  String get productDeleteTitle => 'Excluir produto nunca utilizado?';
+
+  @override
+  String productDeleteConfirm(String name) {
+    return 'Excluir definitivamente \"$name\"? O cadastro e suas embalagens nunca usadas serão removidos. Essa ação não pode ser desfeita.';
+  }
+
+  @override
+  String get productDeletedSuccess =>
+      'Produto nunca utilizado excluído definitivamente.';
+
+  @override
+  String get productDeleteBlockedTitle =>
+      'Este produto tem vínculos ou histórico';
+
+  @override
+  String productDeleteBlocked(String name, String reasons) {
+    return '\"$name\" não pode ser excluído definitivamente porque possui registros em:\n\n$reasons\n\nPara deixar de utilizá-lo, você pode inativar o cadastro. Se ele estiver em uma receita ativa, retire-o dessa composição antes de inativar.';
+  }
+
+  @override
+  String get productDeleteHistoryError =>
+      'O produto possui vínculos ou histórico. A exclusão definitiva foi bloqueada para preservar esses registros.';
+
+  @override
+  String get productUsageRecipes =>
+      '• Receitas de cestas, incluindo versões anteriores';
+
+  @override
+  String get productUsagePurchases =>
+      '• Compras, incluindo rascunhos e compras canceladas';
+
+  @override
+  String get productUsageProduction =>
+      '• Montagens ou composições já registradas';
+
+  @override
+  String get productUsageMovements =>
+      '• Movimentações de estoque, mesmo com estoque zerado';
+
+  @override
+  String get productUsageHistory => '• Outros registros anteriores';
+
+  @override
+  String get packagingHelpExplanation =>
+      'A embalagem comercial é a forma como você compra este produto: pacote, saco, fardo, caixa ou unidade. Ela informa quanto uma embalagem acrescenta ao estoque. Não é a embalagem vazia usada para montar a cesta.\n\nExemplo: se o arroz é controlado em gramas, um saco de 5 kg contém 5.000 g. Ao comprar 3 sacos, entram 15.000 g no estoque. Sem uma embalagem cadastrada, a compra é informada diretamente na unidade-base do produto.';
+
+  @override
+  String packagingContentHelp(String unit) {
+    return 'Informe o conteúdo de uma única embalagem na unidade-base $unit. Exemplos: caixa com 12 unidades = 12 UNIT; saco de 5 kg = 5.000 G; frasco de 500 ml = 500 ML. Use o exemplo que corresponde à unidade deste produto.';
+  }
+
+  @override
+  String get purchasePackagingHelpTitle => 'Como informar quantidade e preço?';
+
+  @override
+  String get purchasePackagingHelpExplanation =>
+      'Escolha a forma como comprou o produto. A quantidade indica quantas embalagens você comprou, e o preço é o valor de uma delas.\n\nExemplo: 3 sacos de arroz de 5 kg a R\$ 25 por saco = 15 kg no estoque e R\$ 75 na compra. Caixa com 12 unidades: 2 caixas = 24 unidades.\n\nSe escolher \"Sem embalagem\", informe a quantidade e o preço na unidade-base exibida. Para comprar por kg ou litro com preço por kg/litro, cadastre essa forma de compra antes: 1 kg = 1.000 g; 1 litro = 1.000 ml.';
+
+  @override
+  String get purchaseQuantityPackages => 'Quantidade de embalagens';
+
+  @override
+  String purchaseQuantityBaseUnits(String unit) {
+    return 'Quantidade em $unit';
+  }
+
+  @override
+  String get purchasePricePerPackage => 'Preço de uma embalagem (R\$)';
+
+  @override
+  String purchasePricePerBaseUnit(String unit) {
+    return 'Preço por $unit (R\$)';
+  }
+
+  @override
+  String get purchasePackageCountHelp =>
+      'Ex.: para 3 sacos ou 3 caixas, informe 3.';
+
+  @override
+  String get purchaseBaseCountHelp =>
+      'Quantidade diretamente na unidade-base exibida.';
+
+  @override
+  String get purchasePackagePriceHelp =>
+      'Valor de um saco, pacote ou caixa da forma de compra escolhida.';
+
+  @override
+  String get purchaseBasePriceHelp =>
+      'Preço de uma única unidade-base. Para preço por kg/litro, cadastre a forma de compra.';
+
+  @override
+  String purchasePackagingContents(String name, String quantity) {
+    return 'Cada \"$name\" acrescenta $quantity ao estoque.';
+  }
+
+  @override
+  String get settingsHttpsUrlRequired =>
+      'Informe uma URL HTTPS válida do servidor, sem usuário ou senha no endereço.';
+
+  @override
+  String get settingsTokenEntryHelp =>
+      'Opcional: cole um token já emitido pelo servidor. Deixe vazio para manter a autenticação atual ou autenticar automaticamente no servidor deste computador (localhost).';
+
+  @override
+  String get settingsSaveAuthenticate => 'Salvar e autenticar este computador';
+
+  @override
+  String get settingsPairComputer => 'Parear este computador por PIN';
+
+  @override
+  String get settingsAuthenticatedSuccess =>
+      'Computador autenticado no servidor.';
+
+  @override
+  String get settingsSavedNeedsAuthentication =>
+      'Configurações salvas. O servidor ainda não confirmou a autenticação. Confira a conexão, informe um token válido ou faça o pareamento por PIN.';
+
+  @override
+  String get newDatabaseTitle => 'Criar e usar um novo banco';
+
+  @override
+  String get newDatabaseCreating => 'Criando e ativando o novo banco...';
+
+  @override
+  String get newDatabaseHelp =>
+      'Gera um backup verificado do banco atual e começa com um banco vazio. Os pareamentos dos dispositivos são mantidos.';
+
+  @override
+  String get newDatabaseConfirmationBody =>
+      'Esta ação troca o banco usado por toda a empresa, incluindo computadores, celulares e tablets. Produtos, receitas, clientes, compras, vendas, estoque e contas começarão vazios. Um backup obrigatório do banco atual será criado e verificado antes da troca. Os dispositivos continuam pareados. Para recuperar os dados anteriores, use Restaurar no backup de segurança. Para confirmar, digite NOVO BANCO.';
+
+  @override
+  String get newDatabaseConfirmationLabel => 'Digite NOVO BANCO';
+
+  @override
+  String get newDatabaseConfirmAction => 'Gerar backup e ativar banco novo';
+
+  @override
+  String newDatabaseSuccess(String filename) {
+    return 'Novo banco ativado. Backup anterior: $filename. Recarregue as páginas nos demais dispositivos.';
+  }
+
+  @override
+  String get newDatabaseFailed =>
+      'Não foi possível concluir a criação do banco. Confira a conexão e tente novamente; a mesma operação será retomada com segurança.';
+
+  @override
+  String get newDatabaseAlreadyProcessed =>
+      'Esta solicitação já foi concluída anteriormente. O banco atual foi mantido. Para criar outro banco, inicie uma nova solicitação.';
+
+  @override
+  String get payableFiltersTitle => 'Filtros';
+
+  @override
+  String get payableCreateShort => 'Criar conta a pagar';
+
+  @override
+  String get payableOpenShort => 'A pagar';
+
+  @override
+  String get payableDisplayedSummary => 'Resumo das contas exibidas';
+
+  @override
+  String get payableSearch => 'Buscar favorecido';
+
+  @override
+  String get saleCancelAssemblyHelp =>
+      'Informe o que aconteceu fisicamente com cada item montado nesta venda. Cestas vendidas de estoque pronto voltam como cestas prontas.';
+
+  @override
+  String get saleCancelAssemblyQuestion => 'Situação da montagem';
+
+  @override
+  String get saleCancelKeepBaskets => 'As cestas continuam montadas';
+
+  @override
+  String get saleCancelReturnIngredients => 'A montagem não aconteceu';
+
+  @override
+  String get saleCancelAssemblyRequired =>
+      'Informe a situação de todas as montagens antes de cancelar.';
+
+  @override
+  String get saleAssemblyStockHelp =>
+      'Usa cestas já montadas e desconta do estoque de cestas prontas.';
+
+  @override
+  String get saleAssemblyDemandHelp =>
+      'Consome os produtos da composição e registra a montagem ao confirmar a venda.';
+
+  @override
+  String get saleStockSelectBasket =>
+      'Selecione uma cesta para consultar o saldo.';
+
+  @override
+  String get saleStockLoading => 'Consultando saldo…';
+
+  @override
+  String get saleStockQueryFailed =>
+      'Não foi possível consultar o saldo. Tente novamente.';
+
+  @override
+  String get basketTypeFormNoStockSubtitle =>
+      'As cestas são montadas na venda, com baixa dos produtos da composição.';
+
+  @override
+  String get saleAssemblyAutomatic => 'Montar na venda';
+
+  @override
+  String get basketStockDisabledError =>
+      'Esta cesta está configurada para montagem na venda. Para usar cestas prontas, ative Estoque de cestas prontas no cadastro.';
+
+  @override
+  String get basketStockRemainsError =>
+      'Ainda existem cestas prontas deste tipo em estoque. Resolva esse saldo antes de desativar a opção.';
+
+  @override
+  String get assemblyRegister => 'Registrar montagem';
+
+  @override
+  String get assemblyRegisterHelp =>
+      'Informe a quantidade e quando as cestas foram fabricadas. Revise a composição antes de confirmar: os produtos serão consumidos e as cestas prontas entrarão no estoque.';
+
+  @override
+  String get assemblyHistory => 'Montagens';
+
+  @override
+  String assemblyHistoryTitle(String name) {
+    return 'Montagens — $name';
+  }
+
+  @override
+  String assemblyStandardStock(int qty) {
+    return 'Cestas padrão prontas: $qty';
+  }
+
+  @override
+  String get assemblyOccurredAt => 'Data e horário da fabricação';
+
+  @override
+  String get assemblyReview => 'Revisar montagem';
+
+  @override
+  String get assemblyConfirm => 'Confirmar montagem';
+
+  @override
+  String get assemblyRetry => 'Retomar confirmação';
+
+  @override
+  String get assemblySaved => 'Montagem registrada e estoque atualizado.';
+
+  @override
+  String get assemblyComposition => 'Produtos a consumir';
+
+  @override
+  String assemblyEstimatedCost(String value) {
+    return 'Custo total estimado: $value';
+  }
+
+  @override
+  String assemblyRecordedCost(String value) {
+    return 'Custo total registrado: $value';
+  }
+
+  @override
+  String assemblyRequiredAvailable(String required, String available) {
+    return 'Necessário: $required · Disponível: $available';
+  }
+
+  @override
+  String assemblyMissing(String qty) {
+    return 'Faltam: $qty';
+  }
+
+  @override
+  String get assemblyInsufficientHelp =>
+      'Faltam produtos para esta montagem. Reponha o estoque ou altere a quantidade e revise novamente.';
+
+  @override
+  String get assemblyPendingHelp =>
+      'Existe uma montagem aguardando confirmação do servidor. Retome a mesma solicitação para verificar o resultado sem registrar as cestas novamente.';
+
+  @override
+  String get assemblyRecipeChanged =>
+      'A receita mudou desde a revisão. Confira a composição novamente antes de confirmar.';
+
+  @override
+  String get assemblyInactiveHelp =>
+      'Este tipo de cesta está inativo. O histórico continua disponível.';
+
+  @override
+  String get assemblyNoStockHelp =>
+      'Este tipo está configurado para montar na venda. Ative Estoque de cestas prontas no cadastro para registrar fabricação antecipada.';
+
+  @override
+  String get assemblyNoRecipeHelp =>
+      'Cadastre uma receita ativa antes de registrar a montagem.';
+
+  @override
+  String get assemblyHistoryHelp =>
+      'Inclui montagens antecipadas e realizadas na venda. A quantidade fabricada é histórica; não representa o saldo atual de cada lote.';
+
+  @override
+  String get assemblyHistoryEmpty =>
+      'Nenhuma montagem registrada para este tipo de cesta.';
+
+  @override
+  String get assemblyOriginSale => 'Montada na venda';
+
+  @override
+  String get assemblyOriginAdvance => 'Montagem antecipada';
+
+  @override
+  String get assemblyRecorded => 'Montagem registrada';
+
+  @override
+  String get assemblyUndone => 'Montagem desfeita';
+
+  @override
+  String get assemblyCustom => 'Composição personalizada';
+
+  @override
+  String assemblyBatch(int number, int qty) {
+    return 'Montagem #$number · $qty cestas';
+  }
+
+  @override
+  String assemblyPage(int page, int total) {
+    return 'Página $page de $total';
+  }
+
+  @override
+  String get assemblyPreviousPage => 'Página anterior';
+
+  @override
+  String get assemblyNextPage => 'Próxima página';
+
+  @override
+  String get assemblyCustomize => 'Personalizar esta montagem';
+
+  @override
+  String get assemblyCustomizeHelp =>
+      'Altere os produtos destas cestas sem mudar a receita cadastrada.';
+
+  @override
+  String get assemblyCustomDescription =>
+      'Identificação da montagem personalizada';
+
+  @override
+  String get assemblyCustomDescriptionRequired =>
+      'Informe uma identificação para diferenciar estas cestas.';
+
+  @override
+  String get assemblyCustomItemsHelp =>
+      'Composição por cesta. Todas as cestas desta montagem terão os mesmos produtos e quantidades.';
+
+  @override
+  String get assemblyProduct => 'Produto';
+
+  @override
+  String get assemblyQuantityPerBasket => 'Quantidade por cesta';
+
+  @override
+  String get assemblyBaseUnitsHelp =>
+      'Use números inteiros na unidade indicada: G = gramas, ML = mililitros e UN = unidades. Ao trocar o produto, informe a quantidade novamente.';
+
+  @override
+  String get assemblyAddProduct => 'Adicionar produto';
+
+  @override
+  String get assemblyRemoveProduct => 'Remover produto';
+
+  @override
+  String get assemblyCustomItemsRequired =>
+      'Inclua ao menos um produto na montagem personalizada.';
+
+  @override
+  String get assemblyCustomizationDisabled =>
+      'Este tipo de cesta não permite personalização. Confira seu cadastro.';
+
+  @override
+  String assemblyCustomStock(int quantity) {
+    return 'Prontas desta montagem: $quantity';
+  }
+
+  @override
+  String get basketDeleteButton => 'Excluir cesta';
+
+  @override
+  String get basketDeleteBlockedTitle => 'Cesta ainda em uso';
+
+  @override
+  String get basketDeleteBlockedHelp =>
+      'A cesta tem vendas não canceladas, estoque ou operações pendentes. Confira esses registros antes de tentar excluir novamente.';
+
+  @override
+  String get basketDeleteActiveSales =>
+      'Há venda não cancelada com esta cesta. Cancele a operação incorreta antes de excluir o cadastro.';
+
+  @override
+  String get basketDeleteStockRemains =>
+      'Ainda há cestas em estoque. Cancelar uma venda pode devolver cestas prontas; confira o destino físico antes de excluir o cadastro.';
+
+  @override
+  String get basketDeleteActiveDispatches =>
+      'Há uma saída/conferência ainda aberta vinculada a esta cesta.';
+
+  @override
+  String basketDeleteUnusedConfirm(String name) {
+    return 'Excluir definitivamente “$name” e suas receitas nunca utilizadas? Os produtos da receita serão preservados.';
+  }
+
+  @override
+  String basketDeleteCatalogConfirm(String name) {
+    return 'Excluir “$name” do catálogo? A cesta deixará de aparecer na lista e nas novas operações. Seu cadastro e suas receitas permanecerão no banco para preservar vendas canceladas, montagens e movimentações. Essa ação não apaga o histórico.';
+  }
+
+  @override
+  String get basketDeletedPermanently =>
+      'Cesta nunca utilizada excluída definitivamente.';
+
+  @override
+  String get basketRemovedFromCatalog =>
+      'Cesta excluída do catálogo. Histórico preservado.';
+
+  @override
+  String get basketRemovedError =>
+      'Esta cesta foi excluída do catálogo e permanece somente no histórico.';
+
+  @override
+  String get formDocumentType => 'Documento';
+
+  @override
+  String get formSelectColumns => 'Campos do documento';
+
+  @override
+  String get formColumnsHelp =>
+      'Marque as colunas que devem aparecer no PDF e na planilha. Mantenha pelo menos uma.';
+
+  @override
+  String get formAllColumns => 'Selecionar todas';
+
+  @override
+  String get printerDialogTitle => 'Impressão e impressoras';
+
+  @override
+  String get printerSettingsEntryHelp =>
+      'Configurar a impressão e testar uma página A4, mesmo sem conexão com o servidor.';
+
+  @override
+  String get printerAndroidDiscovery =>
+      'No Android, a procura e a seleção da impressora acontecem na janela de impressão do sistema, usando os serviços ativados no celular.';
+
+  @override
+  String get printerDesktopDiscovery =>
+      'Use a janela de impressão do sistema ou uma impressora cadastrada abaixo. Impressoras de rede precisam estar instaladas no computador.';
+
+  @override
+  String get printerSystemPrint => 'Procurar impressora e imprimir';
+
+  @override
+  String get printerTestAction => 'Imprimir página de teste A4';
+
+  @override
+  String get printerOpenSettings => 'Configurar impressão no Android';
+
+  @override
+  String get printerSettingsHelp =>
+      'Ative um serviço de impressão compatível nas configurações. Ao voltar ao app, tente imprimir novamente.';
+
+  @override
+  String get printerSettingsUnavailable =>
+      'Não foi possível abrir as configurações. Procure Impressão nas configurações do Android.';
+
+  @override
+  String get printerInstalledTitle => 'Impressoras cadastradas no sistema';
+
+  @override
+  String get printerNoInstalled =>
+      'Nenhuma impressora cadastrada foi retornada. Instale a impressora nas configurações do computador e atualize esta lista.';
+
+  @override
+  String get printerNotAvailable => 'Indisponível segundo o sistema';
+
+  @override
+  String get printerDiscoveryError =>
+      'Não foi possível consultar as impressoras. Você ainda pode tentar a janela de impressão do sistema ou atualizar a consulta.';
+
+  @override
+  String get printerUnsupported =>
+      'O serviço de impressão não está disponível neste dispositivo. Você pode salvar o PDF e imprimir em outro dispositivo.';
+
+  @override
+  String get printerWaiting =>
+      'Aguardando retorno do sistema de impressão. Você pode fechar esta janela; acompanhe também a fila de impressão do sistema.';
+
+  @override
+  String get printerJobBusy =>
+      'Já existe uma impressão em andamento nesta tela. Acompanhe a fila do sistema antes de tentar novamente.';
+
+  @override
+  String get printerJobSubmitted =>
+      'O sistema retornou a conclusão do trabalho. Confira se a folha saiu corretamente; o app não verifica papel ou tinta.';
+
+  @override
+  String get printerJobCanceled => 'Impressão cancelada.';
+
+  @override
+  String get printerJobError =>
+      'Não foi possível concluir a impressão. Confira a conexão, a impressora e a fila do sistema. Você também pode salvar o PDF.';
+
+  @override
+  String get printerPreviewError =>
+      'Não foi possível carregar a prévia deste PDF. Tente gerar o documento novamente.';
+
+  @override
+  String get printerHelpTitle => 'A impressora não apareceu?';
+
+  @override
+  String get printerHelpNetwork =>
+      'Confira se a impressora está ligada e acessível na mesma rede local do dispositivo. Redes de visitantes, isolamento entre aparelhos e VPN podem impedir a descoberta.';
+
+  @override
+  String get printerHelpAndroid =>
+      'No Android, ative o serviço padrão de impressão, Mopria ou um serviço do fabricante compatível com o modelo. A busca de impressoras é feita por esse serviço na janela do sistema.';
+
+  @override
+  String get printerHelpWindows =>
+      'No Windows, adicione a impressora em Configurações > Impressoras e scanners e confira o driver do modelo. Depois atualize esta lista.';
+
+  @override
+  String get printerHelpIp =>
+      'Se a busca automática falhar, verifique se o serviço de impressão ou as configurações do sistema permitem adicionar a impressora pelo endereço IP.';
+
+  @override
+  String get printerHelpDirect =>
+      'Wi-Fi Direct depende do suporte do celular e da impressora. Essa conexão pode interromper o acesso ao servidor da loja; carregue o documento antes de mudar de rede.';
+
+  @override
+  String get printerHelpQueue =>
+      'Se houver trabalho bloqueado, confira papel, tinta, estado da impressora e fila de impressão. Evite reenviar sem verificar a fila para não duplicar folhas.';
+
+  @override
+  String get printerCompatibility =>
+      'Ter Wi-Fi não garante compatibilidade. O modelo precisa ser atendido pelo serviço de impressão do Android ou pelo driver do Windows.';
+
+  @override
+  String get printerTestTitle => 'Página de teste de impressão A4';
+
+  @override
+  String get printerTestInstructions =>
+      'Selecione papel A4 e escala de 100% quando disponível. Confira texto, bordas, proporções e alinhamento nesta folha antes de imprimir documentos da loja.';
+
+  @override
+  String get printerTestCharacters =>
+      'Teste de acentos: ação, quitação, descrição, café, açúcar.';
+
+  @override
+  String get printerTestScale =>
+      'A referência abaixo deve medir 100 mm de largura e 20 mm de altura, sem redimensionamento.';
+
+  @override
+  String printerTestLine(int height) {
+    return 'Espaço para escrita: $height mm';
+  }
+
+  @override
+  String get printerTestFooter =>
+      'Documento de teste sem dados comerciais. Confira também orientação, escala e margens nas configurações da impressora.';
+
+  @override
+  String get formColumnOrder => 'Ordem das colunas';
+
+  @override
+  String get formColumnOrderHelp =>
+      'Use as setas para mover os campos. A lista de cima para baixo define a ordem da esquerda para a direita no PDF e no XLSX.';
+
+  @override
+  String get formColumnMoveUp => 'Mover para cima';
+
+  @override
+  String get formColumnMoveDown => 'Mover para baixo';
+
+  @override
+  String get formColumnOrderReset => 'Restaurar ordem padrão';
+
+  @override
+  String get formPrintSettings => 'Configuração da impressão';
+
+  @override
+  String get formOrientation => 'Orientação da folha';
+
+  @override
+  String get formOrientationAuto => 'Automática';
+
+  @override
+  String get formPortrait => 'Vertical (retrato)';
+
+  @override
+  String get formLandscape => 'Horizontal (paisagem)';
+
+  @override
+  String get formRowHeight => 'Altura mínima da linha (mm)';
+
+  @override
+  String get formFontSize => 'Tamanho da fonte (pt)';
+
+  @override
+  String get formPageMargins => 'Margens da folha (mm)';
+
+  @override
+  String get formMarginTop => 'Superior (mm)';
+
+  @override
+  String get formMarginBottom => 'Inferior (mm)';
+
+  @override
+  String get formMarginLeft => 'Esquerda (mm)';
+
+  @override
+  String get formMarginRight => 'Direita (mm)';
+
+  @override
+  String get formMarginHelp =>
+      'O padrão usa 15 mm. Margens menores dependem da área imprimível da sua impressora. Confira a prévia.';
+
+  @override
+  String get formAutoRows => 'Ajustar linhas em branco para uma página';
+
+  @override
+  String get formBlankRows => 'Total de linhas em branco';
+
+  @override
+  String get formShowSignatures => 'Incluir espaços de assinatura no rodapé';
+
+  @override
+  String get formColumnWidths => 'Ajustar larguras das colunas';
+
+  @override
+  String get formColumnWidthHelp =>
+      'Larguras proporcionais: um valor maior reserva mais espaço para a coluna dentro da folha.';
+
+  @override
+  String get formResetDefaults => 'Restaurar padrão automático';
+
+  @override
+  String get formNoRecords => 'Nenhum registro encontrado para este documento.';
+
+  @override
+  String get formPaperOnly =>
+      'Anotações no papel e alterações na planilha não atualizam os pagamentos ou o estoque do sistema.';
+
+  @override
+  String get formPreparing => 'Calculando páginas do documento…';
+
+  @override
+  String get formSavePdf => 'Salvar PDF';
+
+  @override
+  String get formSaveXlsx => 'Salvar planilha XLSX';
+
+  @override
+  String get formPreview => 'Prévia do documento';
+
+  @override
+  String get formInvalidNumber => 'Informe um número dentro do intervalo.';
+
+  @override
+  String get formFileSaved => 'Arquivo salvo no local escolhido.';
+
+  @override
+  String get formExportFailure =>
+      'Não foi possível gerar ou salvar o documento. Confira as opções e tente novamente.';
+
+  @override
+  String get formPaymentsHelp =>
+      'Conferência de fiados: valor original, total recebido, data do pagamento e saldo restante.';
+
+  @override
+  String get formPayablesHelp =>
+      'Conferência de obrigações e pagamentos, com valor pago e saldo em colunas próprias.';
+
+  @override
+  String get formInventoryHelp =>
+      'Contagem de produtos e cestas da loja, com espaços para quantidade física, diferença e conferência.';
+
+  @override
+  String formDocumentSummary(int columns, int rows, int pages) {
+    return '$columns colunas · $rows linhas · $pages página(s) no PDF';
+  }
+
+  @override
+  String get paymentFlowDetail => 'Conta a pagar';
+
+  @override
+  String get paymentFlowRegister => 'Registrar pagamento';
+
+  @override
+  String get paymentFlowBalance => 'Saldo em aberto';
+
+  @override
+  String paymentFlowTitleRef(int number) {
+    return 'Conta #$number';
+  }
+
+  @override
+  String get paymentFlowSituation => 'Situação';
+
+  @override
+  String get paymentFlowNoHistory => 'Nenhum pagamento registrado nesta conta.';
+
+  @override
+  String get paymentFlowNotOpen => 'Esta conta não está aberta para pagamento.';
+
+  @override
+  String get paymentFlowReversed => 'Estornado';
+
+  @override
+  String get paymentFlowKind => 'Tipo de pagamento';
+
+  @override
+  String get paymentFlowFull => 'Integral';
+
+  @override
+  String get paymentFlowPartial => 'Parcial';
+
+  @override
+  String get paymentFlowAmount => 'Quanto você pagou?';
+
+  @override
+  String paymentFlowAmountLimit(String amount) {
+    return 'Informe um valor entre R\$ 0,01 e $amount.';
+  }
+
+  @override
+  String get paymentFlowDate => 'Data do pagamento';
+
+  @override
+  String get paymentFlowMethod => 'Como você pagou?';
+
+  @override
+  String get paymentFlowSelectMethod => 'Selecione a forma de pagamento';
+
+  @override
+  String get paymentFlowRemaining => 'Restará em aberto após este registro';
+
+  @override
+  String get paymentFlowReview => 'Revisar pagamento';
+
+  @override
+  String get paymentFlowSending => 'Registrando…';
+
+  @override
+  String get paymentFlowRecordedOnly =>
+      'Registre um pagamento que você já realizou. A confirmação lança o registro no aplicativo.';
+
+  @override
+  String get paymentFlowBalanceChanged =>
+      'O saldo mudou. Confira o valor atualizado e revise novamente.';
+
+  @override
+  String get paymentFlowUncertain => 'Esta tentativa aguarda confirmação.';
+
+  @override
+  String get paymentFlowResumeHelp =>
+      'Retomar usa os mesmos dados e pode concluir o pagamento original. Aguarde a confirmação desta tentativa antes de criar outro registro.';
+
+  @override
+  String get paymentFlowResume => 'Retomar registro';
+
+  @override
+  String get paymentFlowConfirmed => 'Pagamento registrado';
+
+  @override
+  String get paymentFlowReference => 'Referência do registro';
+
+  @override
+  String get paymentFlowRefreshing =>
+      'Pagamento registrado. Atualizando a conta…';
+
+  @override
+  String get paymentFlowConfirmedRefreshFailed =>
+      'O pagamento está registrado. Falta atualizar a consulta da conta.';
+
+  @override
+  String get paymentFlowCurrentBalance => 'Saldo atual consultado';
+
+  @override
+  String get paymentFlowFinish => 'Voltar às contas';
+
+  @override
+  String get paymentFlowUnexpected =>
+      'Não foi possível concluir esta etapa. Tente atualizar a consulta.';
+
+  @override
+  String get paymentFlowLocalStorage =>
+      'Não foi possível conservar os dados da tentativa neste aparelho. Atualize antes de continuar.';
+
+  @override
+  String get paymentFlowConnectionChanged =>
+      'A conexão foi alterada. Para retomar este registro, volte à conexão original.';
+
+  @override
+  String get paymentFlowInvalidConfirmation =>
+      'A resposta não permitiu confirmar o registro. Retome a mesma tentativa.';
+
+  @override
+  String get paymentFlowServerUpdate =>
+      'Atualize o servidor para usar o pagamento com revisão e recuperação.';
+
+  @override
+  String get paymentFlowPendingTitle => 'Registros para acompanhar';
+
+  @override
+  String paymentFlowPendingItem(String beneficiary, int number) {
+    return '$beneficiary · conta #$number';
+  }
+
+  @override
+  String get paymentFlowPendingReadError =>
+      'Não foi possível consultar os registros pendentes deste aparelho.';
+
+  @override
+  String get paymentFlowMore => 'Carregar mais contas';
+
+  @override
+  String get paymentFlowMoreFailed =>
+      'Não foi possível carregar as próximas contas.';
+
+  @override
+  String get paymentFlowValue => 'Valor deste registro';
+
+  @override
+  String get paymentFlowRecordedRemaining => 'Saldo após este registro';
+
+  @override
+  String get receiptFlowDetail => 'Conta a receber';
+
+  @override
+  String get receiptFlowRegister => 'Registrar recebimento';
+
+  @override
+  String get receiptFlowReview => 'Revisar recebimento';
+
+  @override
+  String get receiptFlowConfirmed => 'Recebimento registrado';
+
+  @override
+  String get receiptFlowNoHistory =>
+      'Nenhum recebimento registrado nesta conta.';
+
+  @override
+  String get receiptFlowNotOpen =>
+      'Esta conta não está aberta para recebimento.';
+
+  @override
+  String get receiptFlowKind => 'Tipo de recebimento';
+
+  @override
+  String get receiptFlowAmount => 'Quanto você recebeu?';
+
+  @override
+  String get receiptFlowDate => 'Data do recebimento';
+
+  @override
+  String get receiptFlowMethod => 'Como você recebeu?';
+
+  @override
+  String get receiptFlowSelectMethod => 'Selecione a forma de recebimento';
+
+  @override
+  String get receiptFlowRecordedOnly =>
+      'Registre um valor que você já recebeu. A confirmação lança o registro no aplicativo.';
+
+  @override
+  String get receiptFlowResumeHelp =>
+      'Retomar usa os mesmos dados e pode concluir o recebimento original. Aguarde a confirmação desta tentativa antes de criar outro registro.';
+
+  @override
+  String get receiptFlowRefreshing =>
+      'Recebimento registrado. Atualizando a conta…';
+
+  @override
+  String get receiptFlowConfirmedRefreshFailed =>
+      'O recebimento está registrado. Falta atualizar a consulta da conta.';
+
+  @override
+  String get receiptFlowServerUpdate =>
+      'Atualize o servidor para usar o recebimento com revisão e recuperação.';
+
+  @override
+  String get receiptFlowCash => 'Dinheiro';
+
+  @override
+  String get receiptFlowReceived => 'Já recebido';
+
+  @override
+  String receiptFlowSaleRef(int number) {
+    return 'Venda #$number';
+  }
+
+  @override
+  String receiptFlowPendingItem(String customer, int number) {
+    return '$customer · venda #$number';
+  }
+
+  @override
+  String get receiptFlowOrigin => 'Ver venda de origem';
+
+  @override
+  String get receiptFlowOriginHelp =>
+      'O recebimento reduz ou quita a dívida desta venda.';
+
+  @override
+  String get receiptFlowSaleTotal => 'Valor original da venda';
+
+  @override
+  String receiptFlowSaleItem(int quantity, String name) {
+    return '$quantity × $name';
+  }
+
+  @override
+  String receiptFlowBasketFallback(String id) {
+    return 'Tipo de cesta $id';
+  }
+
+  @override
+  String get receiptFlowOriginUnavailable =>
+      'Não foi possível conferir a venda de origem. Atualize a consulta.';
+
+  @override
+  String get receiptFlowSummary => 'Resumo das contas exibidas';
+
+  @override
+  String get receiptFlowFilters => 'Filtros';
+
+  @override
+  String get receiptFlowFilterAll => 'Todas as situações';
+
+  @override
+  String get receiptFlowFilterOpen => 'Em aberto, incluindo parciais';
+
+  @override
+  String receiptFlowFilterScope(String status, String overdue) {
+    return '$status · $overdue';
+  }
+
+  @override
+  String get receiptFlowFilterAnyDue => 'Todos os vencimentos';
+
+  @override
+  String get receiptFlowFilterApplied => 'Filtros adicionais aplicados';
+
+  @override
+  String receiptFlowSaleDate(String date) {
+    return 'Venda em $date';
+  }
+
+  @override
+  String receiptFlowReversalReason(String reason) {
+    return 'Motivo do estorno: $reason';
+  }
+
+  @override
+  String get appBrand => 'ZM Cesta Básica';
+
+  @override
+  String get appOverview => 'Visão geral';
+
+  @override
+  String get appHome => 'Início';
+
+  @override
+  String get appFinance => 'Financeiro';
+
+  @override
+  String get appBusiness => 'Negócio';
+
+  @override
+  String get appInventory => 'Estoque';
+
+  @override
+  String get appMore => 'Mais';
+
+  @override
+  String get appDay => 'Dia';
+
+  @override
+  String get appWeek => 'Semana';
+
+  @override
+  String get appMonth => 'Mês';
+
+  @override
+  String get appTodayWhen => 'hoje';
+
+  @override
+  String get appWeekWhen => 'nesta semana';
+
+  @override
+  String get appMonthWhen => 'neste mês';
+
+  @override
+  String get appSummary => 'Resumo';
+
+  @override
+  String get appPay => 'A pagar';
+
+  @override
+  String get appReceive => 'A receber';
+
+  @override
+  String get appPayTab => 'Pagar';
+
+  @override
+  String get appReceiveTab => 'Receber';
+
+  @override
+  String get appFilter => 'Filtrar';
+
+  @override
+  String get appThisWeek => 'Nesta semana';
+
+  @override
+  String get appThisMonth => 'Neste mês';
+
+  @override
+  String get appDueToday => 'Vencem hoje';
+
+  @override
+  String get appOverdue => 'Vencidas';
+
+  @override
+  String get appNextThree => 'Próximos 3 dias';
+
+  @override
+  String get appAllOpen => 'Todas em aberto';
+
+  @override
+  String get appCurrentPosition => 'Posição atual';
+
+  @override
+  String appBeforeDate(String date) {
+    return 'Vencidas · antes de $date';
+  }
+
+  @override
+  String get appDueScope => 'Vencimento das contas';
+
+  @override
+  String get appBalancePay => 'Saldo a pagar';
+
+  @override
+  String get appBalanceReceive => 'Saldo a receber';
+
+  @override
+  String appOpenCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count contas em aberto',
+      one: '1 conta em aberto',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String appPartialCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count parciais',
+      one: '1 parcial',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String appOriginDue(String origin, String date) {
+    return '$origin · Vence $date';
+  }
+
+  @override
+  String get appPurchaseOrigin => 'Compra de produtos';
+
+  @override
+  String get appSaleOrigin => 'Venda de cestas';
+
+  @override
+  String get appPartial => 'Parcial';
+
+  @override
+  String get appOpen => 'Em aberto';
+
+  @override
+  String get appDueTodayShort => 'Vence hoje';
+
+  @override
+  String get appPaid => 'Pago';
+
+  @override
+  String get appReceived => 'Recebido';
+
+  @override
+  String appOriginalPaid(String original, String kind, String paid) {
+    return 'Original $original · $kind $paid';
+  }
+
+  @override
+  String get appFinanceContext => 'Pagar, receber e acompanhar vencimentos';
+
+  @override
+  String get appOpenInPeriod => 'Em aberto · vencimentos do período';
+
+  @override
+  String get appCurrentDeadlines => 'Vencimentos atuais';
+
+  @override
+  String appAccountAmount(int count, String amount) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count contas',
+      one: '1 conta',
+    );
+    return '$_temp0 · $amount';
+  }
+
+  @override
+  String get appPendingNotBank =>
+      'Pendências cadastradas não são saldo bancário. Próximos três dias são separados de hoje.';
+
+  @override
+  String get appOrganizeFinance => 'Organizar seu financeiro';
+
+  @override
+  String get appAccountsCards => 'Contas e cartões';
+
+  @override
+  String get appStatements => 'Extratos e faturas';
+
+  @override
+  String get appFutureFeature =>
+      'Proposta futura. Esta função ainda não está disponível no aplicativo.';
+
+  @override
+  String get appAccounts => 'Contas';
+
+  @override
+  String appResults(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count resultados',
+      one: '1 resultado',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appNoOpenAccounts =>
+      'Nenhuma conta em aberto neste recorte. Você pode consultar outros vencimentos.';
+
+  @override
+  String get appHistoryAndRecords => 'Histórico e cadastros';
+
+  @override
+  String appYourFinance(String when) {
+    return 'Seu financeiro $when';
+  }
+
+  @override
+  String appYourBusiness(String when) {
+    return 'Seu negócio $when';
+  }
+
+  @override
+  String get appOpenDueInPeriod => 'Em aberto · vencimentos do período';
+
+  @override
+  String get appOpenFinance => 'Abrir Financeiro';
+
+  @override
+  String get appBasketsSold => 'Cestas vendidas';
+
+  @override
+  String get appSalesValue => 'Valor das vendas';
+
+  @override
+  String get appAttention => 'Precisa da sua atenção';
+
+  @override
+  String get appNow => 'Agora';
+
+  @override
+  String appLateAccounts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count contas atrasadas',
+      one: '1 conta atrasada',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String appTodayPay(String amount) {
+    return 'Hoje: $amount a pagar';
+  }
+
+  @override
+  String appTodayAmounts(String pay, String receive) {
+    return 'Hoje: pagar $pay · receber $receive';
+  }
+
+  @override
+  String get appNoLowStock => 'Nenhum produto abaixo do mínimo';
+
+  @override
+  String get appCheckInventory => 'Conferir produtos e reposição';
+
+  @override
+  String appLowStockProduct(String name) {
+    return '$name abaixo do mínimo';
+  }
+
+  @override
+  String appStockMinimum(String current, String minimum) {
+    return '$current disponíveis · mínimo cadastrado $minimum';
+  }
+
+  @override
+  String appBusinessContext(String range) {
+    return 'Vendas, clientes e resultado · $range';
+  }
+
+  @override
+  String appSalesWhen(String when) {
+    return 'Vendas $when';
+  }
+
+  @override
+  String appBasketsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count cestas vendidas',
+      one: '1 cesta vendida',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String appBusinessResult(String range) {
+    return 'Resultado do negócio · $range';
+  }
+
+  @override
+  String get appResultExplanation =>
+      'Vendas menos custos registrados e outras despesas pagas no período.';
+
+  @override
+  String appIncompleteCost(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count vendas com custo incompleto',
+      one: '1 venda com custo incompleto',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get appUnderstandResult => 'Entender o resultado';
+
+  @override
+  String appSaleRow(String amount) {
+    return '$amount · Conferir itens, cliente e pagamento';
+  }
+
+  @override
+  String get appSales => 'Vendas';
+
+  @override
+  String get appSalesDescription => 'Registrar e consultar vendas';
+
+  @override
+  String get appCustomers => 'Clientes';
+
+  @override
+  String get appCustomersDescription => 'Cadastros e histórico';
+
+  @override
+  String get appInventoryContext => 'Produtos, compras e cestas';
+
+  @override
+  String get appProducts => 'Produtos';
+
+  @override
+  String get appProductsDescription => 'Cadastros e posição de estoque';
+
+  @override
+  String get appPurchases => 'Compras';
+
+  @override
+  String get appPurchasesDescription => 'Entradas e fornecedores';
+
+  @override
+  String get appBasketsAssembly => 'Cestas e montagens';
+
+  @override
+  String get appBasketsDescription =>
+      'Tipos, composição e histórico de montagem';
+
+  @override
+  String get appMovements => 'Movimentações';
+
+  @override
+  String get appMovementsDescription => 'O que entrou e saiu do estoque';
+
+  @override
+  String get appStockPosition => 'Posição do estoque';
+
+  @override
+  String get appMoreContext => 'Documentos e ferramentas do aplicativo';
+
+  @override
+  String get appReports => 'Relatórios';
+
+  @override
+  String get appReportsDescription => 'Consultar e exportar os dados';
+
+  @override
+  String get appPrinting => 'Impressão e formulários';
+
+  @override
+  String get appPrintingDescription => 'PDF e folhas para preencher à caneta';
+
+  @override
+  String get appSettingsConnection => 'Configurações e conexão';
+
+  @override
+  String get appSettingsDescription => 'Aparência, servidor e pareamento';
+
+  @override
+  String get appBackup => 'Backup';
+
+  @override
+  String get appBackupDescription => 'Cópias de segurança e recuperação';
+
+  @override
+  String get appConfirmedSales => 'Vendas confirmadas';
+
+  @override
+  String get appSoldCosts => 'Custos registrados nas vendas';
+
+  @override
+  String get appGrossProfit => 'Lucro bruto calculado';
+
+  @override
+  String get appPaidExpenses => 'Outras despesas pagas';
+
+  @override
+  String get appResult => 'Resultado do negócio';
+
+  @override
+  String get appResultHow => 'Como este valor é calculado';
+
+  @override
+  String get appResultNotBank =>
+      'As vendas podem ainda não ter sido recebidas. Este resultado não representa saldo bancário.';
+
+  @override
+  String get appReviewType => 'Tipo';
+
+  @override
+  String get appReviewFull => 'Integral do saldo atual';
+
+  @override
+  String get appReviewNoNote => 'Não informada';
+
+  @override
+  String get appReviewExpectedBalance => 'Saldo esperado após o registro';
+
+  @override
+  String get appReviewHelp =>
+      'O saldo esperado será confirmado depois do registro.';
+
+  @override
+  String get appAppearance => 'Aparência';
+
+  @override
+  String get appAppearanceDescription => 'Tema, cores e acessibilidade';
+
+  @override
+  String get appAppearanceContext => 'Preferências de aparência neste aparelho';
+
+  @override
+  String get appFollowDevice => 'Seguir o aparelho';
+
+  @override
+  String get appLight => 'Claro';
+
+  @override
+  String get appDark => 'Escuro';
+
+  @override
+  String get appAccent => 'Cor de destaque';
+
+  @override
+  String get appChooseColor => 'Escolher cor';
+
+  @override
+  String get appAccentHelp =>
+      'Azul original por padrão. A cor é ajustada para manter a leitura.';
+
+  @override
+  String get appColorRed => 'Vermelho';
+
+  @override
+  String get appColorGreen => 'Verde';
+
+  @override
+  String get appColorBlue => 'Azul';
+
+  @override
+  String get appBackground => 'Fundo';
+
+  @override
+  String get appSoftBackground => 'Superfície suave';
+
+  @override
+  String get appPureBackground => 'Branco / preto';
+
+  @override
+  String get appAppearanceSaveError =>
+      'Não foi possível salvar a preferência. Tente novamente.';
+
+  @override
+  String get appServerConnection => 'Conexão com o servidor';
+
+  @override
+  String get appServerDescription => 'Disponibilidade e pareamento';
+
+  @override
+  String appRangeSameMonth(String first, String last, String month) {
+    return '$first a $last de $month';
+  }
+
+  @override
+  String appRangeDifferentMonth(String first, String last) {
+    return '$first a $last';
+  }
+
+  @override
+  String get pdfImportTitle => 'Extratos e faturas';
+
+  @override
+  String get pdfImportEntry => 'Importar PDF e conferir documentos';
+
+  @override
+  String get pdfImportAction => 'Importar PDF';
+
+  @override
+  String get pdfImportChoose => 'Selecionar PDF';
+
+  @override
+  String get pdfImportRead => 'Ler documento';
+
+  @override
+  String get pdfImportHelp =>
+      'Envie um PDF com texto, de até 10 MiB. Layouts testados: faturas Nubank/PicPay e extratos Nubank PF/PJ. PDFs escaneados, protegidos por senha ou de outros formatos podem não ser lidos.';
+
+  @override
+  String get pdfImportEffect =>
+      'A importação guarda o documento e os lançamentos pendentes de revisão. Não cria contas a pagar, pagamentos ou conciliação automática.';
+
+  @override
+  String get pdfImportSource => 'Conta ou cartão do documento';
+
+  @override
+  String get pdfImportSourceCheck =>
+      'Confira a conta/cartão e a titularidade. O leitor não verifica se o documento pertence à origem escolhida.';
+
+  @override
+  String get pdfImportNewSource => 'Cadastrar conta ou cartão';
+
+  @override
+  String get pdfImportSourceName => 'Nome para identificar a conta ou cartão';
+
+  @override
+  String get pdfImportInstitution => 'Instituição financeira';
+
+  @override
+  String get pdfImportBank => 'Conta bancária';
+
+  @override
+  String get pdfImportCard => 'Cartão de crédito';
+
+  @override
+  String get pdfImportHolder => 'Titularidade';
+
+  @override
+  String get pdfImportPF => 'Pessoa física';
+
+  @override
+  String get pdfImportPJ => 'Pessoa jurídica';
+
+  @override
+  String get pdfImportBankLink => 'Vincular conta bancária cadastrada';
+
+  @override
+  String get pdfImportNewBank => 'Criar cadastro bancário para esta origem';
+
+  @override
+  String get pdfImportBankHelp =>
+      'O vínculo identifica a conta do extrato. Um novo cadastro é criado sem saldo de abertura e sem movimentação de dinheiro.';
+
+  @override
+  String get pdfImportNoSources =>
+      'Cadastre a conta ou cartão antes de importar. Use um nome que permita distinguir banco e titularidade.';
+
+  @override
+  String get pdfImportHistory => 'Documentos enviados';
+
+  @override
+  String get pdfImportEmpty => 'Nenhum PDF enviado nesta consulta.';
+
+  @override
+  String get pdfImportMore => 'Carregar mais';
+
+  @override
+  String get pdfImportReady => 'Leitura concluída · conferir antes de guardar';
+
+  @override
+  String get pdfImportBlocked => 'Leitura bloqueada · confirmação indisponível';
+
+  @override
+  String get pdfImportConfirmed => 'Documento guardado · revisão pendente';
+
+  @override
+  String get pdfImportConfirm => 'Guardar para revisão';
+
+  @override
+  String get pdfImportAcknowledged =>
+      'Conferi a origem, os dados extraídos e os avisos.';
+
+  @override
+  String get pdfImportSuccess =>
+      'Documento guardado. Os lançamentos continuam pendentes de revisão, sem criar dívidas ou pagamentos.';
+
+  @override
+  String get pdfImportRetry => 'Consultar novamente';
+
+  @override
+  String get pdfImportBusy => 'Enviando e lendo o PDF…';
+
+  @override
+  String get pdfImportReading => 'Conferência do documento';
+
+  @override
+  String get pdfImportItems => 'Lançamentos extraídos';
+
+  @override
+  String get pdfImportPages => 'Texto das páginas';
+
+  @override
+  String get pdfImportOriginal => 'Visualizar PDF original';
+
+  @override
+  String get pdfImportOriginalTitle => 'Documento original';
+
+  @override
+  String get pdfImportWarnings => 'Avisos e impedimentos';
+
+  @override
+  String get pdfImportControls => 'Conferências de totais do documento';
+
+  @override
+  String get pdfImportControlOk => 'Valores correspondentes';
+
+  @override
+  String get pdfImportControlFail => 'Valores divergentes';
+
+  @override
+  String pdfImportPage(int number) {
+    return 'Página $number';
+  }
+
+  @override
+  String pdfImportCounts(int items, int pages) {
+    return '$items lançamentos · $pages páginas';
+  }
+
+  @override
+  String pdfImportCoverage(int loaded, int total) {
+    return 'Exibindo $loaded de $total lançamentos extraídos.';
+  }
+
+  @override
+  String pdfImportInstallments(int current, int total) {
+    return 'Parcela $current de $total';
+  }
+
+  @override
+  String get pdfImportPartialYear =>
+      'Algumas datas não trazem o ano. O leitor usou o ciclo da fatura para completá-las; confira no original.';
+
+  @override
+  String get pdfImportSignBank =>
+      'Entradas positivas e saídas negativas, conforme o extrato.';
+
+  @override
+  String get pdfImportSignCard =>
+      'Compras positivas e créditos/pagamentos negativos. Pagamento de fatura anterior não quita a atual.';
+
+  @override
+  String get pdfImportPeriodStart => 'Início do período';
+
+  @override
+  String get pdfImportPeriodEnd => 'Fim do período';
+
+  @override
+  String get pdfImportIssued => 'Emissão';
+
+  @override
+  String get pdfImportClosing => 'Fechamento';
+
+  @override
+  String get pdfImportDue => 'Vencimento';
+
+  @override
+  String get pdfImportTotal => 'Total declarado';
+
+  @override
+  String get pdfImportMinimum => 'Pagamento mínimo';
+
+  @override
+  String get pdfImportOpeningBalance => 'Saldo inicial declarado';
+
+  @override
+  String get pdfImportClosingBalance => 'Saldo final declarado';
+
+  @override
+  String get pdfImportInflows => 'Entradas declaradas';
+
+  @override
+  String get pdfImportOutflows => 'Saídas declaradas';
+
+  @override
+  String get pdfImportBillEquation => 'Composição do total da fatura';
+
+  @override
+  String get pdfImportDetailsCheck => 'Detalhes e resumo da fatura';
+
+  @override
+  String get pdfImportSectionCheck => 'Subtotal da seção';
+
+  @override
+  String get pdfImportBalanceCheck => 'Equação dos saldos';
+
+  @override
+  String get pdfImportInflowsCheck => 'Total de entradas';
+
+  @override
+  String get pdfImportOutflowsCheck => 'Total de saídas';
+
+  @override
+  String get pdfImportCandidate =>
+      'Há registros semelhantes no sistema. Essa semelhança não comprova duplicidade; a revisão é separada.';
+
+  @override
+  String get pdfImportServerUpdate =>
+      'O servidor precisa da atualização e da migração financeira antes de receber documentos. Solicite a preparação da instalação.';
+
+  @override
+  String get pdfImportRuntime =>
+      'O leitor de PDF não está disponível nesta instalação do servidor. É necessário preparar o runtime antes de importar.';
+
+  @override
+  String get pdfImportProcessing =>
+      'Não foi possível concluir a leitura agora. Tente novamente com o mesmo arquivo e a mesma origem.';
+
+  @override
+  String get pdfImportSize => 'Selecione um PDF não vazio, com até 10 MiB.';
+
+  @override
+  String get pdfImportInvalidFile =>
+      'Não foi possível ler este PDF. Confira se o arquivo está íntegro e é um PDF válido.';
+
+  @override
+  String get pdfImportPassword =>
+      'Este PDF exige senha. A leitura de arquivos protegidos ainda não está disponível.';
+
+  @override
+  String get pdfImportOcr =>
+      'Há página sem texto extraível. A leitura de PDFs escaneados ainda não está disponível.';
+
+  @override
+  String get pdfImportUnsupported =>
+      'O formato deste documento ainda não tem um leitor confirmado. Use um layout testado ou solicite ampliação do leitor.';
+
+  @override
+  String get pdfImportMismatch =>
+      'Os totais do documento não correspondem aos detalhes. A confirmação está bloqueada; confira o original.';
+
+  @override
+  String get pdfImportUnknownRow =>
+      'Há linha monetária ou data que não pôde ser interpretada com segurança. Confira a página indicada; a confirmação está bloqueada.';
+
+  @override
+  String get pdfImportWrongSource =>
+      'O tipo do documento não corresponde à conta ou cartão escolhido. Importe novamente com a origem correta.';
+
+  @override
+  String get pdfImportLimit =>
+      'O PDF ultrapassa os limites de páginas ou conteúdo do leitor. A confirmação está bloqueada.';
+
+  @override
+  String get pdfImportHeader =>
+      'O cabeçalho, os controles ou os lançamentos estão incompletos ou conflitantes. Confira o original; a confirmação está bloqueada.';
+
+  @override
+  String get pdfImportBlockedHelp =>
+      'Este documento não pode ser confirmado. Confira os impedimentos e o original.';
+
+  @override
+  String get pdfImportSourceExists =>
+      'Esta conta já possui uma origem de importação. Atualize a lista e selecione a origem existente.';
+
+  @override
+  String get pdfImportInvalidSource =>
+      'Confira os dados da origem. O extrato exige uma conta bancária ativa e o leitor atual exige reais.';
+
+  @override
+  String get pdfImportUnknownIssue =>
+      'A leitura identificou um impedimento. Confira o original e solicite análise do formato.';
+
+  @override
+  String get pdfImportUncertain =>
+      'A resposta não foi recebida. Consulte os documentos ou repita com o mesmo PDF e a mesma origem para recuperar o resultado.';
+
+  @override
+  String get pdfImportNoText => 'Esta página não contém texto extraível.';
+
+  @override
+  String get pdfImportDocument => 'Documento financeiro';
+
+  @override
+  String get pdfImportSourceRequired =>
+      'Selecione a conta ou cartão do documento.';
+
+  @override
+  String get pdfImportRequired => 'Preencha de 2 a 100 caracteres.';
 }

@@ -1,0 +1,3508 @@
+{
+  "date": "2026-10-16",
+  "result": "passed",
+  "scope": "Previa com calendario proprio; sem Flutter/API/banco real",
+  "cases": 64,
+  "engines": [
+    {
+      "engine": "edge",
+      "groups": [
+        "32 combinacoes por motor: limites dos glifos, centralizacao, icone, campos vizinhos, temas e modos",
+        "Calendario: selecionar, teclado, Escape, foco devolvido, revisar e editar preservando ISO",
+        "Calendario: navegacao de meses/anos e ano bissexto",
+        "Resumo de hoje, lista coerente, origem, integral sem digitar, uma confirmacao e filtros preservados",
+        "Pagamento parcial atualiza lista e resumo para o saldo restante, sem excluir o titulo em aberto",
+        "Windows: tabela comparavel, detalhe e retorno ao mesmo recorte",
+        "Vazio e indisponivel distintos; sem zero inventado e com recuperacao simulada",
+        "Controles simulados continuam ligados apos restaurar estado; captura abaixo de 16 KiB"
+      ],
+      "cases": [
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 320,
+          "theme": "light",
+          "font": 16,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 443.65625,
+            "bottom": 499.65625,
+            "width": 276,
+            "height": 56
+          },
+          "text": {
+            "left": 60,
+            "right": 222.109375,
+            "top": 460.453125,
+            "bottom": 482.84375,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 549.953125,
+            "bottom": 605.953125,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 463.65625,
+            "bottom": 479.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 222.109375,
+              "top": 460.453125,
+              "bottom": 481.453125
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 320,
+          "theme": "light",
+          "font": 20,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 443.65625,
+            "bottom": 501.65625,
+            "width": 276,
+            "height": 58
+          },
+          "text": {
+            "left": 60,
+            "right": 262.640625,
+            "top": 458.65625,
+            "bottom": 486.65625,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 551.953125,
+            "bottom": 607.953125,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 464.65625,
+            "bottom": 480.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 262.640625,
+              "top": 458.65625,
+              "bottom": 485.65625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 320,
+          "theme": "dark",
+          "font": 16,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 443.65625,
+            "bottom": 499.65625,
+            "width": 276,
+            "height": 56
+          },
+          "text": {
+            "left": 60,
+            "right": 222.109375,
+            "top": 460.453125,
+            "bottom": 482.84375,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 549.953125,
+            "bottom": 605.953125,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 463.65625,
+            "bottom": 479.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 222.109375,
+              "top": 460.453125,
+              "bottom": 481.453125
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 320,
+          "theme": "dark",
+          "font": 20,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 443.65625,
+            "bottom": 501.65625,
+            "width": 276,
+            "height": 58
+          },
+          "text": {
+            "left": 60,
+            "right": 262.640625,
+            "top": 458.65625,
+            "bottom": 486.65625,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 551.953125,
+            "bottom": 607.953125,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 464.65625,
+            "bottom": 480.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 262.640625,
+              "top": 458.65625,
+              "bottom": 485.65625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 360,
+          "theme": "light",
+          "font": 16,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 443.65625,
+            "bottom": 499.65625,
+            "width": 276,
+            "height": 56
+          },
+          "text": {
+            "left": 60,
+            "right": 222.109375,
+            "top": 460.453125,
+            "bottom": 482.84375,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 549.953125,
+            "bottom": 605.953125,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 463.65625,
+            "bottom": 479.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 222.109375,
+              "top": 460.453125,
+              "bottom": 481.453125
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 360,
+          "theme": "light",
+          "font": 20,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 443.65625,
+            "bottom": 501.65625,
+            "width": 276,
+            "height": 58
+          },
+          "text": {
+            "left": 60,
+            "right": 262.640625,
+            "top": 458.65625,
+            "bottom": 486.65625,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 551.953125,
+            "bottom": 607.953125,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 464.65625,
+            "bottom": 480.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 262.640625,
+              "top": 458.65625,
+              "bottom": 485.65625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 360,
+          "theme": "dark",
+          "font": 16,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 443.65625,
+            "bottom": 499.65625,
+            "width": 276,
+            "height": 56
+          },
+          "text": {
+            "left": 60,
+            "right": 222.109375,
+            "top": 460.453125,
+            "bottom": 482.84375,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 549.953125,
+            "bottom": 605.953125,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 463.65625,
+            "bottom": 479.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 222.109375,
+              "top": 460.453125,
+              "bottom": 481.453125
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 360,
+          "theme": "dark",
+          "font": 20,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 443.65625,
+            "bottom": 501.65625,
+            "width": 276,
+            "height": 58
+          },
+          "text": {
+            "left": 60,
+            "right": 262.640625,
+            "top": 458.65625,
+            "bottom": 486.65625,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 551.953125,
+            "bottom": 607.953125,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 464.65625,
+            "bottom": 480.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 262.640625,
+              "top": 458.65625,
+              "bottom": 485.65625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 390,
+          "theme": "light",
+          "font": 16,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 443.65625,
+            "bottom": 499.65625,
+            "width": 276,
+            "height": 56
+          },
+          "text": {
+            "left": 60,
+            "right": 222.109375,
+            "top": 460.453125,
+            "bottom": 482.84375,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 549.953125,
+            "bottom": 605.953125,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 463.65625,
+            "bottom": 479.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 222.109375,
+              "top": 460.453125,
+              "bottom": 481.453125
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 390,
+          "theme": "light",
+          "font": 20,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 443.65625,
+            "bottom": 501.65625,
+            "width": 276,
+            "height": 58
+          },
+          "text": {
+            "left": 60,
+            "right": 262.640625,
+            "top": 458.65625,
+            "bottom": 486.65625,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 551.953125,
+            "bottom": 607.953125,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 464.65625,
+            "bottom": 480.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 262.640625,
+              "top": 458.65625,
+              "bottom": 485.65625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 390,
+          "theme": "dark",
+          "font": 16,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 443.65625,
+            "bottom": 499.65625,
+            "width": 276,
+            "height": 56
+          },
+          "text": {
+            "left": 60,
+            "right": 222.109375,
+            "top": 460.453125,
+            "bottom": 482.84375,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 549.953125,
+            "bottom": 605.953125,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 463.65625,
+            "bottom": 479.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 222.109375,
+              "top": 460.453125,
+              "bottom": 481.453125
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 390,
+          "theme": "dark",
+          "font": 20,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 443.65625,
+            "bottom": 501.65625,
+            "width": 276,
+            "height": 58
+          },
+          "text": {
+            "left": 60,
+            "right": 262.640625,
+            "top": 458.65625,
+            "bottom": 486.65625,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 551.953125,
+            "bottom": 607.953125,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 464.65625,
+            "bottom": 480.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 262.640625,
+              "top": 458.65625,
+              "bottom": 485.65625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 780,
+          "theme": "light",
+          "font": 16,
+          "viewport": 748,
+          "button": {
+            "left": 205,
+            "right": 543,
+            "top": 449.65625,
+            "bottom": 505.65625,
+            "width": 338,
+            "height": 56
+          },
+          "text": {
+            "left": 224,
+            "right": 386.109375,
+            "top": 466.453125,
+            "bottom": 488.84375,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 205,
+            "right": 543,
+            "top": 555.953125,
+            "bottom": 611.953125,
+            "width": 338,
+            "height": 56
+          },
+          "icon": {
+            "left": 508,
+            "right": 524,
+            "top": 469.65625,
+            "bottom": 485.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 224,
+              "right": 386.109375,
+              "top": 466.453125,
+              "bottom": 487.453125
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 780,
+          "theme": "light",
+          "font": 20,
+          "viewport": 748,
+          "button": {
+            "left": 205,
+            "right": 543,
+            "top": 449.65625,
+            "bottom": 507.65625,
+            "width": 338,
+            "height": 58
+          },
+          "text": {
+            "left": 224,
+            "right": 426.640625,
+            "top": 464.65625,
+            "bottom": 492.65625,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 205,
+            "right": 543,
+            "top": 557.953125,
+            "bottom": 613.953125,
+            "width": 338,
+            "height": 56
+          },
+          "icon": {
+            "left": 508,
+            "right": 524,
+            "top": 470.65625,
+            "bottom": 486.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 224,
+              "right": 426.640625,
+              "top": 464.65625,
+              "bottom": 491.65625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 780,
+          "theme": "dark",
+          "font": 16,
+          "viewport": 748,
+          "button": {
+            "left": 205,
+            "right": 543,
+            "top": 449.65625,
+            "bottom": 505.65625,
+            "width": 338,
+            "height": 56
+          },
+          "text": {
+            "left": 224,
+            "right": 386.109375,
+            "top": 466.453125,
+            "bottom": 488.84375,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 205,
+            "right": 543,
+            "top": 555.953125,
+            "bottom": 611.953125,
+            "width": 338,
+            "height": 56
+          },
+          "icon": {
+            "left": 508,
+            "right": 524,
+            "top": 469.65625,
+            "bottom": 485.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 224,
+              "right": 386.109375,
+              "top": 466.453125,
+              "bottom": 487.453125
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Integral",
+          "width": 780,
+          "theme": "dark",
+          "font": 20,
+          "viewport": 748,
+          "button": {
+            "left": 205,
+            "right": 543,
+            "top": 449.65625,
+            "bottom": 507.65625,
+            "width": 338,
+            "height": 58
+          },
+          "text": {
+            "left": 224,
+            "right": 426.640625,
+            "top": 464.65625,
+            "bottom": 492.65625,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 205,
+            "right": 543,
+            "top": 557.953125,
+            "bottom": 613.953125,
+            "width": 338,
+            "height": 56
+          },
+          "icon": {
+            "left": 508,
+            "right": 524,
+            "top": 470.65625,
+            "bottom": 486.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 224,
+              "right": 426.640625,
+              "top": 464.65625,
+              "bottom": 491.65625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 320,
+          "theme": "light",
+          "font": 16,
+          "viewport": 288,
+          "button": {
+            "left": 37,
+            "right": 251,
+            "top": 611.125,
+            "bottom": 685.90625,
+            "width": 214,
+            "height": 74.78125
+          },
+          "text": {
+            "left": 56,
+            "right": 204,
+            "top": 626.125,
+            "bottom": 670.90625,
+            "width": 148,
+            "height": 44.78125
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "top": 736.203125,
+            "bottom": 792.203125,
+            "width": 214,
+            "height": 56
+          },
+          "icon": {
+            "left": 216,
+            "right": 232,
+            "top": 640.515625,
+            "bottom": 656.515625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 179.234375,
+              "top": 626.125,
+              "bottom": 647.125
+            },
+            {
+              "left": 56,
+              "right": 90.5,
+              "top": 648.515625,
+              "bottom": 669.515625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 320,
+          "theme": "light",
+          "font": 20,
+          "viewport": 288,
+          "button": {
+            "left": 37,
+            "right": 251,
+            "top": 611.125,
+            "bottom": 697.125,
+            "width": 214,
+            "height": 86
+          },
+          "text": {
+            "left": 56,
+            "right": 204,
+            "top": 626.125,
+            "bottom": 682.125,
+            "width": 148,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "top": 747.421875,
+            "bottom": 803.421875,
+            "width": 214,
+            "height": 56
+          },
+          "icon": {
+            "left": 216,
+            "right": 232,
+            "top": 646.125,
+            "bottom": 662.125,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 182.328125,
+              "top": 626.125,
+              "bottom": 653.125
+            },
+            {
+              "left": 56,
+              "right": 126.84375,
+              "top": 654.125,
+              "bottom": 681.125
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 320,
+          "theme": "dark",
+          "font": 16,
+          "viewport": 288,
+          "button": {
+            "left": 37,
+            "right": 251,
+            "top": 611.125,
+            "bottom": 685.90625,
+            "width": 214,
+            "height": 74.78125
+          },
+          "text": {
+            "left": 56,
+            "right": 204,
+            "top": 626.125,
+            "bottom": 670.90625,
+            "width": 148,
+            "height": 44.78125
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "top": 736.203125,
+            "bottom": 792.203125,
+            "width": 214,
+            "height": 56
+          },
+          "icon": {
+            "left": 216,
+            "right": 232,
+            "top": 640.515625,
+            "bottom": 656.515625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 179.234375,
+              "top": 626.125,
+              "bottom": 647.125
+            },
+            {
+              "left": 56,
+              "right": 90.5,
+              "top": 648.515625,
+              "bottom": 669.515625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 320,
+          "theme": "dark",
+          "font": 20,
+          "viewport": 288,
+          "button": {
+            "left": 37,
+            "right": 251,
+            "top": 611.125,
+            "bottom": 697.125,
+            "width": 214,
+            "height": 86
+          },
+          "text": {
+            "left": 56,
+            "right": 204,
+            "top": 626.125,
+            "bottom": 682.125,
+            "width": 148,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "top": 747.421875,
+            "bottom": 803.421875,
+            "width": 214,
+            "height": 56
+          },
+          "icon": {
+            "left": 216,
+            "right": 232,
+            "top": 646.125,
+            "bottom": 662.125,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 182.328125,
+              "top": 626.125,
+              "bottom": 653.125
+            },
+            {
+              "left": 56,
+              "right": 126.84375,
+              "top": 654.125,
+              "bottom": 681.125
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 360,
+          "theme": "light",
+          "font": 16,
+          "viewport": 328,
+          "button": {
+            "left": 37,
+            "right": 291,
+            "top": 578.9375,
+            "bottom": 634.9375,
+            "width": 254,
+            "height": 56
+          },
+          "text": {
+            "left": 56,
+            "right": 218.109375,
+            "top": 595.734375,
+            "bottom": 618.125,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "top": 685.234375,
+            "bottom": 741.234375,
+            "width": 254,
+            "height": 56
+          },
+          "icon": {
+            "left": 256,
+            "right": 272,
+            "top": 598.9375,
+            "bottom": 614.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 218.109375,
+              "top": 595.734375,
+              "bottom": 616.734375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 360,
+          "theme": "light",
+          "font": 20,
+          "viewport": 328,
+          "button": {
+            "left": 37,
+            "right": 291,
+            "top": 578.9375,
+            "bottom": 664.9375,
+            "width": 254,
+            "height": 86
+          },
+          "text": {
+            "left": 56,
+            "right": 244,
+            "top": 593.9375,
+            "bottom": 649.9375,
+            "width": 188,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "top": 715.234375,
+            "bottom": 771.234375,
+            "width": 254,
+            "height": 56
+          },
+          "icon": {
+            "left": 256,
+            "right": 272,
+            "top": 613.9375,
+            "bottom": 629.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 210.046875,
+              "top": 593.9375,
+              "bottom": 620.9375
+            },
+            {
+              "left": 56,
+              "right": 99.125,
+              "top": 621.9375,
+              "bottom": 648.9375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 360,
+          "theme": "dark",
+          "font": 16,
+          "viewport": 328,
+          "button": {
+            "left": 37,
+            "right": 291,
+            "top": 578.9375,
+            "bottom": 634.9375,
+            "width": 254,
+            "height": 56
+          },
+          "text": {
+            "left": 56,
+            "right": 218.109375,
+            "top": 595.734375,
+            "bottom": 618.125,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "top": 685.234375,
+            "bottom": 741.234375,
+            "width": 254,
+            "height": 56
+          },
+          "icon": {
+            "left": 256,
+            "right": 272,
+            "top": 598.9375,
+            "bottom": 614.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 218.109375,
+              "top": 595.734375,
+              "bottom": 616.734375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 360,
+          "theme": "dark",
+          "font": 20,
+          "viewport": 328,
+          "button": {
+            "left": 37,
+            "right": 291,
+            "top": 578.9375,
+            "bottom": 664.9375,
+            "width": 254,
+            "height": 86
+          },
+          "text": {
+            "left": 56,
+            "right": 244,
+            "top": 593.9375,
+            "bottom": 649.9375,
+            "width": 188,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "top": 715.234375,
+            "bottom": 771.234375,
+            "width": 254,
+            "height": 56
+          },
+          "icon": {
+            "left": 256,
+            "right": 272,
+            "top": 613.9375,
+            "bottom": 629.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 210.046875,
+              "top": 593.9375,
+              "bottom": 620.9375
+            },
+            {
+              "left": 56,
+              "right": 99.125,
+              "top": 621.9375,
+              "bottom": 648.9375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 390,
+          "theme": "light",
+          "font": 16,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 582.9375,
+            "bottom": 638.9375,
+            "width": 276,
+            "height": 56
+          },
+          "text": {
+            "left": 60,
+            "right": 222.109375,
+            "top": 599.734375,
+            "bottom": 622.125,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 689.234375,
+            "bottom": 745.234375,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 602.9375,
+            "bottom": 618.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 222.109375,
+              "top": 599.734375,
+              "bottom": 620.734375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 390,
+          "theme": "light",
+          "font": 20,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 582.9375,
+            "bottom": 640.9375,
+            "width": 276,
+            "height": 58
+          },
+          "text": {
+            "left": 60,
+            "right": 262.640625,
+            "top": 597.9375,
+            "bottom": 625.9375,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 691.234375,
+            "bottom": 747.234375,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 603.9375,
+            "bottom": 619.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 262.640625,
+              "top": 597.9375,
+              "bottom": 624.9375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 390,
+          "theme": "dark",
+          "font": 16,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 582.9375,
+            "bottom": 638.9375,
+            "width": 276,
+            "height": 56
+          },
+          "text": {
+            "left": 60,
+            "right": 222.109375,
+            "top": 599.734375,
+            "bottom": 622.125,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 689.234375,
+            "bottom": 745.234375,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 602.9375,
+            "bottom": 618.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 222.109375,
+              "top": 599.734375,
+              "bottom": 620.734375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 390,
+          "theme": "dark",
+          "font": 20,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 582.9375,
+            "bottom": 640.9375,
+            "width": 276,
+            "height": 58
+          },
+          "text": {
+            "left": 60,
+            "right": 262.640625,
+            "top": 597.9375,
+            "bottom": 625.9375,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 691.234375,
+            "bottom": 747.234375,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 603.9375,
+            "bottom": 619.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 262.640625,
+              "top": 597.9375,
+              "bottom": 624.9375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 780,
+          "theme": "light",
+          "font": 16,
+          "viewport": 748,
+          "button": {
+            "left": 205,
+            "right": 543,
+            "top": 588.9375,
+            "bottom": 644.9375,
+            "width": 338,
+            "height": 56
+          },
+          "text": {
+            "left": 224,
+            "right": 386.109375,
+            "top": 605.734375,
+            "bottom": 628.125,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 205,
+            "right": 543,
+            "top": 695.234375,
+            "bottom": 751.234375,
+            "width": 338,
+            "height": 56
+          },
+          "icon": {
+            "left": 508,
+            "right": 524,
+            "top": 608.9375,
+            "bottom": 624.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 224,
+              "right": 386.109375,
+              "top": 605.734375,
+              "bottom": 626.734375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 780,
+          "theme": "light",
+          "font": 20,
+          "viewport": 748,
+          "button": {
+            "left": 205,
+            "right": 543,
+            "top": 588.9375,
+            "bottom": 646.9375,
+            "width": 338,
+            "height": 58
+          },
+          "text": {
+            "left": 224,
+            "right": 426.640625,
+            "top": 603.9375,
+            "bottom": 631.9375,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 205,
+            "right": 543,
+            "top": 697.234375,
+            "bottom": 753.234375,
+            "width": 338,
+            "height": 56
+          },
+          "icon": {
+            "left": 508,
+            "right": 524,
+            "top": 609.9375,
+            "bottom": 625.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 224,
+              "right": 426.640625,
+              "top": 603.9375,
+              "bottom": 630.9375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 780,
+          "theme": "dark",
+          "font": 16,
+          "viewport": 748,
+          "button": {
+            "left": 205,
+            "right": 543,
+            "top": 588.9375,
+            "bottom": 644.9375,
+            "width": 338,
+            "height": 56
+          },
+          "text": {
+            "left": 224,
+            "right": 386.109375,
+            "top": 605.734375,
+            "bottom": 628.125,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 205,
+            "right": 543,
+            "top": 695.234375,
+            "bottom": 751.234375,
+            "width": 338,
+            "height": 56
+          },
+          "icon": {
+            "left": 508,
+            "right": 524,
+            "top": 608.9375,
+            "bottom": 624.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 224,
+              "right": 386.109375,
+              "top": 605.734375,
+              "bottom": 626.734375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "edge",
+          "mode": "Parcial",
+          "width": 780,
+          "theme": "dark",
+          "font": 20,
+          "viewport": 748,
+          "button": {
+            "left": 205,
+            "right": 543,
+            "top": 588.9375,
+            "bottom": 646.9375,
+            "width": 338,
+            "height": 58
+          },
+          "text": {
+            "left": 224,
+            "right": 426.640625,
+            "top": 603.9375,
+            "bottom": 631.9375,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 205,
+            "right": 543,
+            "top": 697.234375,
+            "bottom": 753.234375,
+            "width": 338,
+            "height": 56
+          },
+          "icon": {
+            "left": 508,
+            "right": 524,
+            "top": 609.9375,
+            "bottom": 625.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 224,
+              "right": 426.640625,
+              "top": 603.9375,
+              "bottom": 630.9375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        }
+      ],
+      "restored": {
+        "radius": "40px",
+        "snapshots": 40,
+        "size": 1572
+      },
+      "javascriptErrors": []
+    },
+    {
+      "engine": "webkit",
+      "groups": [
+        "32 combinacoes por motor: limites dos glifos, centralizacao, icone, campos vizinhos, temas e modos",
+        "Calendario: selecionar, teclado, Escape, foco devolvido, revisar e editar preservando ISO",
+        "Calendario: navegacao de meses/anos e ano bissexto",
+        "Resumo de hoje, lista coerente, origem, integral sem digitar, uma confirmacao e filtros preservados",
+        "Pagamento parcial atualiza lista e resumo para o saldo restante, sem excluir o titulo em aberto",
+        "Windows: tabela comparavel, detalhe e retorno ao mesmo recorte",
+        "Vazio e indisponivel distintos; sem zero inventado e com recuperacao simulada",
+        "Controles simulados continuam ligados apos restaurar estado; captura abaixo de 16 KiB"
+      ],
+      "cases": [
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 320,
+          "theme": "light",
+          "font": 16,
+          "viewport": 288,
+          "button": {
+            "left": 37,
+            "right": 251,
+            "top": 471.84375,
+            "bottom": 527.84375,
+            "width": 214,
+            "height": 56
+          },
+          "text": {
+            "left": 56,
+            "right": 218.109375,
+            "top": 488.640625,
+            "bottom": 511.03125,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "top": 578.140625,
+            "bottom": 634.140625,
+            "width": 214,
+            "height": 56
+          },
+          "icon": null,
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 218.109375,
+              "top": 489.3359375,
+              "bottom": 510.3359375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 320,
+          "theme": "light",
+          "font": 20,
+          "viewport": 288,
+          "button": {
+            "left": 37,
+            "right": 251,
+            "top": 471.84375,
+            "bottom": 557.84375,
+            "width": 214,
+            "height": 86
+          },
+          "text": {
+            "left": 56,
+            "right": 220,
+            "top": 486.84375,
+            "bottom": 542.84375,
+            "width": 164,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "top": 608.140625,
+            "bottom": 664.140625,
+            "width": 214,
+            "height": 56
+          },
+          "icon": null,
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 210.033203125,
+              "top": 487.34375,
+              "bottom": 514.34375
+            },
+            {
+              "left": 56,
+              "right": 99.125,
+              "top": 515.34375,
+              "bottom": 542.34375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 320,
+          "theme": "dark",
+          "font": 16,
+          "viewport": 288,
+          "button": {
+            "left": 37,
+            "right": 251,
+            "top": 471.84375,
+            "bottom": 527.84375,
+            "width": 214,
+            "height": 56
+          },
+          "text": {
+            "left": 56,
+            "right": 218.109375,
+            "top": 488.640625,
+            "bottom": 511.03125,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "top": 578.140625,
+            "bottom": 634.140625,
+            "width": 214,
+            "height": 56
+          },
+          "icon": null,
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 218.109375,
+              "top": 489.3359375,
+              "bottom": 510.3359375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 320,
+          "theme": "dark",
+          "font": 20,
+          "viewport": 288,
+          "button": {
+            "left": 37,
+            "right": 251,
+            "top": 471.84375,
+            "bottom": 557.84375,
+            "width": 214,
+            "height": 86
+          },
+          "text": {
+            "left": 56,
+            "right": 220,
+            "top": 486.84375,
+            "bottom": 542.84375,
+            "width": 164,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "top": 608.140625,
+            "bottom": 664.140625,
+            "width": 214,
+            "height": 56
+          },
+          "icon": null,
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 210.033203125,
+              "top": 487.34375,
+              "bottom": 514.34375
+            },
+            {
+              "left": 56,
+              "right": 99.125,
+              "top": 515.34375,
+              "bottom": 542.34375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 360,
+          "theme": "light",
+          "font": 16,
+          "viewport": 328,
+          "button": {
+            "left": 37,
+            "right": 291,
+            "top": 439.65625,
+            "bottom": 495.65625,
+            "width": 254,
+            "height": 56
+          },
+          "text": {
+            "left": 56,
+            "right": 218.109375,
+            "top": 456.453125,
+            "bottom": 478.84375,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "top": 545.953125,
+            "bottom": 601.953125,
+            "width": 254,
+            "height": 56
+          },
+          "icon": null,
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 218.109375,
+              "top": 457.1484375,
+              "bottom": 478.1484375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 360,
+          "theme": "light",
+          "font": 20,
+          "viewport": 328,
+          "button": {
+            "left": 37,
+            "right": 291,
+            "top": 439.65625,
+            "bottom": 525.65625,
+            "width": 254,
+            "height": 86
+          },
+          "text": {
+            "left": 56,
+            "right": 244,
+            "top": 454.65625,
+            "bottom": 510.65625,
+            "width": 188,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "top": 575.953125,
+            "bottom": 631.953125,
+            "width": 254,
+            "height": 56
+          },
+          "icon": {
+            "left": 256,
+            "right": 272,
+            "top": 474.65625,
+            "bottom": 490.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 210.033203125,
+              "top": 455.15625,
+              "bottom": 482.15625
+            },
+            {
+              "left": 56,
+              "right": 99.125,
+              "top": 483.15625,
+              "bottom": 510.15625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 360,
+          "theme": "dark",
+          "font": 16,
+          "viewport": 328,
+          "button": {
+            "left": 37,
+            "right": 291,
+            "top": 439.65625,
+            "bottom": 495.65625,
+            "width": 254,
+            "height": 56
+          },
+          "text": {
+            "left": 56,
+            "right": 218.109375,
+            "top": 456.453125,
+            "bottom": 478.84375,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "top": 545.953125,
+            "bottom": 601.953125,
+            "width": 254,
+            "height": 56
+          },
+          "icon": {
+            "left": 256,
+            "right": 272,
+            "top": 459.65625,
+            "bottom": 475.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 218.109375,
+              "top": 457.1484375,
+              "bottom": 478.1484375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 360,
+          "theme": "dark",
+          "font": 20,
+          "viewport": 328,
+          "button": {
+            "left": 37,
+            "right": 291,
+            "top": 439.65625,
+            "bottom": 525.65625,
+            "width": 254,
+            "height": 86
+          },
+          "text": {
+            "left": 56,
+            "right": 244,
+            "top": 454.65625,
+            "bottom": 510.65625,
+            "width": 188,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "top": 575.953125,
+            "bottom": 631.953125,
+            "width": 254,
+            "height": 56
+          },
+          "icon": {
+            "left": 256,
+            "right": 272,
+            "top": 474.65625,
+            "bottom": 490.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 210.033203125,
+              "top": 455.15625,
+              "bottom": 482.15625
+            },
+            {
+              "left": 56,
+              "right": 99.125,
+              "top": 483.15625,
+              "bottom": 510.15625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 390,
+          "theme": "light",
+          "font": 16,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 443.65625,
+            "bottom": 499.65625,
+            "width": 276,
+            "height": 56
+          },
+          "text": {
+            "left": 60,
+            "right": 222.109375,
+            "top": 460.453125,
+            "bottom": 482.84375,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 549.953125,
+            "bottom": 605.953125,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 463.65625,
+            "bottom": 479.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 222.109375,
+              "top": 461.1484375,
+              "bottom": 482.1484375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 390,
+          "theme": "light",
+          "font": 20,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 443.65625,
+            "bottom": 501.65625,
+            "width": 276,
+            "height": 58
+          },
+          "text": {
+            "left": 60,
+            "right": 262.640625,
+            "top": 458.65625,
+            "bottom": 486.65625,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 551.953125,
+            "bottom": 607.953125,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 464.65625,
+            "bottom": 480.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 262.63671875,
+              "top": 459.15625,
+              "bottom": 486.15625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 390,
+          "theme": "dark",
+          "font": 16,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 443.65625,
+            "bottom": 499.65625,
+            "width": 276,
+            "height": 56
+          },
+          "text": {
+            "left": 60,
+            "right": 222.109375,
+            "top": 460.453125,
+            "bottom": 482.84375,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 549.953125,
+            "bottom": 605.953125,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 463.65625,
+            "bottom": 479.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 222.109375,
+              "top": 461.1484375,
+              "bottom": 482.1484375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 390,
+          "theme": "dark",
+          "font": 20,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 443.65625,
+            "bottom": 501.65625,
+            "width": 276,
+            "height": 58
+          },
+          "text": {
+            "left": 60,
+            "right": 262.640625,
+            "top": 458.65625,
+            "bottom": 486.65625,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 551.953125,
+            "bottom": 607.953125,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 464.65625,
+            "bottom": 480.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 262.63671875,
+              "top": 459.15625,
+              "bottom": 486.15625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 780,
+          "theme": "light",
+          "font": 16,
+          "viewport": 748,
+          "button": {
+            "left": 205,
+            "right": 543,
+            "top": 449.65625,
+            "bottom": 505.65625,
+            "width": 338,
+            "height": 56
+          },
+          "text": {
+            "left": 224,
+            "right": 386.109375,
+            "top": 466.453125,
+            "bottom": 488.84375,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 205,
+            "right": 543,
+            "top": 555.953125,
+            "bottom": 611.953125,
+            "width": 338,
+            "height": 56
+          },
+          "icon": {
+            "left": 508,
+            "right": 524,
+            "top": 469.65625,
+            "bottom": 485.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 224,
+              "right": 386.109375,
+              "top": 467.1484375,
+              "bottom": 488.1484375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 780,
+          "theme": "light",
+          "font": 20,
+          "viewport": 748,
+          "button": {
+            "left": 205,
+            "right": 543,
+            "top": 449.65625,
+            "bottom": 507.65625,
+            "width": 338,
+            "height": 58
+          },
+          "text": {
+            "left": 224,
+            "right": 426.640625,
+            "top": 464.65625,
+            "bottom": 492.65625,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 205,
+            "right": 543,
+            "top": 557.953125,
+            "bottom": 613.953125,
+            "width": 338,
+            "height": 56
+          },
+          "icon": {
+            "left": 508,
+            "right": 524,
+            "top": 470.65625,
+            "bottom": 486.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 224,
+              "right": 426.63671875,
+              "top": 465.15625,
+              "bottom": 492.15625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 780,
+          "theme": "dark",
+          "font": 16,
+          "viewport": 748,
+          "button": {
+            "left": 205,
+            "right": 543,
+            "top": 449.65625,
+            "bottom": 505.65625,
+            "width": 338,
+            "height": 56
+          },
+          "text": {
+            "left": 224,
+            "right": 386.109375,
+            "top": 466.453125,
+            "bottom": 488.84375,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 205,
+            "right": 543,
+            "top": 555.953125,
+            "bottom": 611.953125,
+            "width": 338,
+            "height": 56
+          },
+          "icon": {
+            "left": 508,
+            "right": 524,
+            "top": 469.65625,
+            "bottom": 485.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 224,
+              "right": 386.109375,
+              "top": 467.1484375,
+              "bottom": 488.1484375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Integral",
+          "width": 780,
+          "theme": "dark",
+          "font": 20,
+          "viewport": 748,
+          "button": {
+            "left": 205,
+            "right": 543,
+            "top": 449.65625,
+            "bottom": 507.65625,
+            "width": 338,
+            "height": 58
+          },
+          "text": {
+            "left": 224,
+            "right": 426.640625,
+            "top": 464.65625,
+            "bottom": 492.65625,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 205,
+            "right": 543,
+            "top": 557.953125,
+            "bottom": 613.953125,
+            "width": 338,
+            "height": 56
+          },
+          "icon": {
+            "left": 508,
+            "right": 524,
+            "top": 470.65625,
+            "bottom": 486.65625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 224,
+              "right": 426.63671875,
+              "top": 465.15625,
+              "bottom": 492.15625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 320,
+          "theme": "light",
+          "font": 16,
+          "viewport": 288,
+          "button": {
+            "left": 37,
+            "right": 251,
+            "top": 611.125,
+            "bottom": 685.90625,
+            "width": 214,
+            "height": 74.78125
+          },
+          "text": {
+            "left": 56,
+            "right": 204,
+            "top": 626.125,
+            "bottom": 670.90625,
+            "width": 148,
+            "height": 44.78125
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "top": 736.203125,
+            "bottom": 792.203125,
+            "width": 214,
+            "height": 56
+          },
+          "icon": {
+            "left": 216,
+            "right": 232,
+            "top": 640.515625,
+            "bottom": 656.515625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 179.2265625,
+              "top": 626.8203125,
+              "bottom": 647.8203125
+            },
+            {
+              "left": 56,
+              "right": 90.5,
+              "top": 649.2109375,
+              "bottom": 670.2109375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 320,
+          "theme": "light",
+          "font": 20,
+          "viewport": 288,
+          "button": {
+            "left": 37,
+            "right": 251,
+            "top": 611.125,
+            "bottom": 697.125,
+            "width": 214,
+            "height": 86
+          },
+          "text": {
+            "left": 56,
+            "right": 204,
+            "top": 626.125,
+            "bottom": 682.125,
+            "width": 148,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "top": 747.421875,
+            "bottom": 803.421875,
+            "width": 214,
+            "height": 56
+          },
+          "icon": {
+            "left": 216,
+            "right": 232,
+            "top": 646.125,
+            "bottom": 662.125,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 182.318359375,
+              "top": 626.625,
+              "bottom": 653.625
+            },
+            {
+              "left": 56,
+              "right": 126.83984375,
+              "top": 654.625,
+              "bottom": 681.625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 320,
+          "theme": "dark",
+          "font": 16,
+          "viewport": 288,
+          "button": {
+            "left": 37,
+            "right": 251,
+            "top": 611.125,
+            "bottom": 685.90625,
+            "width": 214,
+            "height": 74.78125
+          },
+          "text": {
+            "left": 56,
+            "right": 204,
+            "top": 626.125,
+            "bottom": 670.90625,
+            "width": 148,
+            "height": 44.78125
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "top": 736.203125,
+            "bottom": 792.203125,
+            "width": 214,
+            "height": 56
+          },
+          "icon": {
+            "left": 216,
+            "right": 232,
+            "top": 640.515625,
+            "bottom": 656.515625,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 179.2265625,
+              "top": 626.8203125,
+              "bottom": 647.8203125
+            },
+            {
+              "left": 56,
+              "right": 90.5,
+              "top": 649.2109375,
+              "bottom": 670.2109375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 320,
+          "theme": "dark",
+          "font": 20,
+          "viewport": 288,
+          "button": {
+            "left": 37,
+            "right": 251,
+            "top": 611.125,
+            "bottom": 697.125,
+            "width": 214,
+            "height": 86
+          },
+          "text": {
+            "left": 56,
+            "right": 204,
+            "top": 626.125,
+            "bottom": 682.125,
+            "width": 148,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 251,
+            "top": 747.421875,
+            "bottom": 803.421875,
+            "width": 214,
+            "height": 56
+          },
+          "icon": {
+            "left": 216,
+            "right": 232,
+            "top": 646.125,
+            "bottom": 662.125,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 182.318359375,
+              "top": 626.625,
+              "bottom": 653.625
+            },
+            {
+              "left": 56,
+              "right": 126.83984375,
+              "top": 654.625,
+              "bottom": 681.625
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 360,
+          "theme": "light",
+          "font": 16,
+          "viewport": 328,
+          "button": {
+            "left": 37,
+            "right": 291,
+            "top": 578.9375,
+            "bottom": 634.9375,
+            "width": 254,
+            "height": 56
+          },
+          "text": {
+            "left": 56,
+            "right": 218.109375,
+            "top": 595.734375,
+            "bottom": 618.125,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "top": 685.234375,
+            "bottom": 741.234375,
+            "width": 254,
+            "height": 56
+          },
+          "icon": {
+            "left": 256,
+            "right": 272,
+            "top": 598.9375,
+            "bottom": 614.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 218.109375,
+              "top": 596.4296875,
+              "bottom": 617.4296875
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 360,
+          "theme": "light",
+          "font": 20,
+          "viewport": 328,
+          "button": {
+            "left": 37,
+            "right": 291,
+            "top": 578.9375,
+            "bottom": 664.9375,
+            "width": 254,
+            "height": 86
+          },
+          "text": {
+            "left": 56,
+            "right": 244,
+            "top": 593.9375,
+            "bottom": 649.9375,
+            "width": 188,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "top": 715.234375,
+            "bottom": 771.234375,
+            "width": 254,
+            "height": 56
+          },
+          "icon": {
+            "left": 256,
+            "right": 272,
+            "top": 613.9375,
+            "bottom": 629.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 210.033203125,
+              "top": 594.4375,
+              "bottom": 621.4375
+            },
+            {
+              "left": 56,
+              "right": 99.125,
+              "top": 622.4375,
+              "bottom": 649.4375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 360,
+          "theme": "dark",
+          "font": 16,
+          "viewport": 328,
+          "button": {
+            "left": 37,
+            "right": 291,
+            "top": 578.9375,
+            "bottom": 634.9375,
+            "width": 254,
+            "height": 56
+          },
+          "text": {
+            "left": 56,
+            "right": 218.109375,
+            "top": 595.734375,
+            "bottom": 618.125,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "top": 685.234375,
+            "bottom": 741.234375,
+            "width": 254,
+            "height": 56
+          },
+          "icon": {
+            "left": 256,
+            "right": 272,
+            "top": 598.9375,
+            "bottom": 614.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 218.109375,
+              "top": 596.4296875,
+              "bottom": 617.4296875
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 360,
+          "theme": "dark",
+          "font": 20,
+          "viewport": 328,
+          "button": {
+            "left": 37,
+            "right": 291,
+            "top": 578.9375,
+            "bottom": 664.9375,
+            "width": 254,
+            "height": 86
+          },
+          "text": {
+            "left": 56,
+            "right": 244,
+            "top": 593.9375,
+            "bottom": 649.9375,
+            "width": 188,
+            "height": 56
+          },
+          "reference": {
+            "left": 37,
+            "right": 291,
+            "top": 715.234375,
+            "bottom": 771.234375,
+            "width": 254,
+            "height": 56
+          },
+          "icon": {
+            "left": 256,
+            "right": 272,
+            "top": 613.9375,
+            "bottom": 629.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 56,
+              "right": 210.033203125,
+              "top": 594.4375,
+              "bottom": 621.4375
+            },
+            {
+              "left": 56,
+              "right": 99.125,
+              "top": 622.4375,
+              "bottom": 649.4375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 390,
+          "theme": "light",
+          "font": 16,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 582.9375,
+            "bottom": 638.9375,
+            "width": 276,
+            "height": 56
+          },
+          "text": {
+            "left": 60,
+            "right": 222.109375,
+            "top": 599.734375,
+            "bottom": 622.125,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 689.234375,
+            "bottom": 745.234375,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 602.9375,
+            "bottom": 618.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 222.109375,
+              "top": 600.4296875,
+              "bottom": 621.4296875
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 390,
+          "theme": "light",
+          "font": 20,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 582.9375,
+            "bottom": 640.9375,
+            "width": 276,
+            "height": 58
+          },
+          "text": {
+            "left": 60,
+            "right": 262.640625,
+            "top": 597.9375,
+            "bottom": 625.9375,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 691.234375,
+            "bottom": 747.234375,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 603.9375,
+            "bottom": 619.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 262.63671875,
+              "top": 598.4375,
+              "bottom": 625.4375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 390,
+          "theme": "dark",
+          "font": 16,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 582.9375,
+            "bottom": 638.9375,
+            "width": 276,
+            "height": 56
+          },
+          "text": {
+            "left": 60,
+            "right": 222.109375,
+            "top": 599.734375,
+            "bottom": 622.125,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 689.234375,
+            "bottom": 745.234375,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 602.9375,
+            "bottom": 618.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 222.109375,
+              "top": 600.4296875,
+              "bottom": 621.4296875
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 390,
+          "theme": "dark",
+          "font": 20,
+          "viewport": 358,
+          "button": {
+            "left": 41,
+            "right": 317,
+            "top": 582.9375,
+            "bottom": 640.9375,
+            "width": 276,
+            "height": 58
+          },
+          "text": {
+            "left": 60,
+            "right": 262.640625,
+            "top": 597.9375,
+            "bottom": 625.9375,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 41,
+            "right": 317,
+            "top": 691.234375,
+            "bottom": 747.234375,
+            "width": 276,
+            "height": 56
+          },
+          "icon": {
+            "left": 282,
+            "right": 298,
+            "top": 603.9375,
+            "bottom": 619.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 60,
+              "right": 262.63671875,
+              "top": 598.4375,
+              "bottom": 625.4375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 780,
+          "theme": "light",
+          "font": 16,
+          "viewport": 748,
+          "button": {
+            "left": 205,
+            "right": 543,
+            "top": 588.9375,
+            "bottom": 644.9375,
+            "width": 338,
+            "height": 56
+          },
+          "text": {
+            "left": 224,
+            "right": 386.109375,
+            "top": 605.734375,
+            "bottom": 628.125,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 205,
+            "right": 543,
+            "top": 695.234375,
+            "bottom": 751.234375,
+            "width": 338,
+            "height": 56
+          },
+          "icon": {
+            "left": 508,
+            "right": 524,
+            "top": 608.9375,
+            "bottom": 624.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 224,
+              "right": 386.109375,
+              "top": 606.4296875,
+              "bottom": 627.4296875
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 780,
+          "theme": "light",
+          "font": 20,
+          "viewport": 748,
+          "button": {
+            "left": 205,
+            "right": 543,
+            "top": 588.9375,
+            "bottom": 646.9375,
+            "width": 338,
+            "height": 58
+          },
+          "text": {
+            "left": 224,
+            "right": 426.640625,
+            "top": 603.9375,
+            "bottom": 631.9375,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 205,
+            "right": 543,
+            "top": 697.234375,
+            "bottom": 753.234375,
+            "width": 338,
+            "height": 56
+          },
+          "icon": {
+            "left": 508,
+            "right": 524,
+            "top": 609.9375,
+            "bottom": 625.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 224,
+              "right": 426.63671875,
+              "top": 604.4375,
+              "bottom": 631.4375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 780,
+          "theme": "dark",
+          "font": 16,
+          "viewport": 748,
+          "button": {
+            "left": 205,
+            "right": 543,
+            "top": 588.9375,
+            "bottom": 644.9375,
+            "width": 338,
+            "height": 56
+          },
+          "text": {
+            "left": 224,
+            "right": 386.109375,
+            "top": 605.734375,
+            "bottom": 628.125,
+            "width": 162.109375,
+            "height": 22.390625
+          },
+          "reference": {
+            "left": 205,
+            "right": 543,
+            "top": 695.234375,
+            "bottom": 751.234375,
+            "width": 338,
+            "height": 56
+          },
+          "icon": {
+            "left": 508,
+            "right": 524,
+            "top": 608.9375,
+            "bottom": 624.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 224,
+              "right": 386.109375,
+              "top": 606.4296875,
+              "bottom": 627.4296875
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        },
+        {
+          "engine": "webkit",
+          "mode": "Parcial",
+          "width": 780,
+          "theme": "dark",
+          "font": 20,
+          "viewport": 748,
+          "button": {
+            "left": 205,
+            "right": 543,
+            "top": 588.9375,
+            "bottom": 646.9375,
+            "width": 338,
+            "height": 58
+          },
+          "text": {
+            "left": 224,
+            "right": 426.640625,
+            "top": 603.9375,
+            "bottom": 631.9375,
+            "width": 202.640625,
+            "height": 28
+          },
+          "reference": {
+            "left": 205,
+            "right": 543,
+            "top": 697.234375,
+            "bottom": 753.234375,
+            "width": 338,
+            "height": 56
+          },
+          "icon": {
+            "left": 508,
+            "right": 524,
+            "top": 609.9375,
+            "bottom": 625.9375,
+            "width": 16,
+            "height": 16
+          },
+          "glyphs": [
+            {
+              "left": 224,
+              "right": 426.63671875,
+              "top": 604.4375,
+              "bottom": 631.4375
+            }
+          ],
+          "overflow": false,
+          "centered": true,
+          "bounded": true,
+          "clipped": false,
+          "textContent": "16 de outubro de 2026"
+        }
+      ],
+      "restored": {
+        "radius": "40px",
+        "snapshots": 40,
+        "size": 1572
+      },
+      "javascriptErrors": []
+    }
+  ],
+  "limits": [
+    "WebKit instalado no Windows; nao e Safari no iPhone. O calendario usa botoes reais e nao depende do input date nativo.",
+    "Tweak e persistencia instrumentados para isolar a logica local; painel nativo e restauracao real do hospedeiro nao automatizados.",
+    "Retorno conserva filtros e recorte; rolagem externa da conversa e resultado desconhecido de gravacao nao cobertos."
+  ]
+}

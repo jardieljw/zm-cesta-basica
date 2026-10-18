@@ -1,15 +1,26 @@
 import '../core/api_client.dart';
 import '../models/sales_receivable.dart';
+import '../models/sale.dart';
+import 'sale_service.dart';
 
 class ReceivableService {
   final ApiClient _client;
 
   ReceivableService({ApiClient? client}) : _client = client ?? ApiClient();
 
+  Future<ApiOrigin> readOrigin() => _client.readOrigin();
+  void close() => _client.close();
+  ReceivableService bindOrigin(ApiOrigin origin) =>
+      ReceivableService(client: _client.bindOrigin(origin));
+
+  Future<Sale> getOriginSale(String saleId) =>
+      SaleService(client: _client).getSale(saleId);
+
   Future<List<SalesReceivable>> getReceivables({
     String? customerId,
     String? status,
     bool overdueOnly = false,
+    bool openOnly = false,
     DateTime? saleDateFrom,
     DateTime? saleDateTo,
     DateTime? dueDateFrom,
@@ -20,10 +31,7 @@ class ReceivableService {
     int limit = 100,
     int offset = 0,
   }) async {
-    final queryParams = <String>[
-      'limit=$limit',
-      'offset=$offset',
-    ];
+    final queryParams = <String>['limit=$limit', 'offset=$offset'];
     if (customerId != null && customerId.isNotEmpty) {
       queryParams.add('customer_id=${Uri.encodeComponent(customerId)}');
     }
@@ -33,17 +41,28 @@ class ReceivableService {
     if (overdueOnly) {
       queryParams.add('overdue_only=true');
     }
+    if (openOnly) {
+      queryParams.add('open_only=true');
+    }
     if (saleDateFrom != null) {
-      queryParams.add('sale_date_from=${Uri.encodeComponent(saleDateFrom.toIso8601String())}');
+      queryParams.add(
+        'sale_date_from=${Uri.encodeComponent(saleDateFrom.toIso8601String())}',
+      );
     }
     if (saleDateTo != null) {
-      queryParams.add('sale_date_to=${Uri.encodeComponent(saleDateTo.toIso8601String())}');
+      queryParams.add(
+        'sale_date_to=${Uri.encodeComponent(saleDateTo.toIso8601String())}',
+      );
     }
     if (dueDateFrom != null) {
-      queryParams.add('due_date_from=${Uri.encodeComponent(dueDateFrom.toIso8601String())}');
+      queryParams.add(
+        'due_date_from=${Uri.encodeComponent(dueDateFrom.toIso8601String())}',
+      );
     }
     if (dueDateTo != null) {
-      queryParams.add('due_date_to=${Uri.encodeComponent(dueDateTo.toIso8601String())}');
+      queryParams.add(
+        'due_date_to=${Uri.encodeComponent(dueDateTo.toIso8601String())}',
+      );
     }
     if (basketTypeId != null && basketTypeId.isNotEmpty) {
       queryParams.add('basket_type_id=${Uri.encodeComponent(basketTypeId)}');

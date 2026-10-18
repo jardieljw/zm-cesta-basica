@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
+from app.core.business_dates import as_utc, business_today
 from app.core.idempotency import process_transactional_idempotency
 from app.api.deps import get_current_device, get_idempotency_key
 from app.models.auth import PairedDevice
@@ -30,10 +31,7 @@ router = APIRouter()
 
 def serialize_receivable(r: SalesReceivable) -> SalesReceivableResponse:
     now = utc_now()
-    due = r.due_date
-    if due.tzinfo is None and now.tzinfo is not None:
-        due = due.replace(tzinfo=datetime.timezone.utc)
-    is_overdue = due < now and r.status in ["OPEN", "PARTIAL"]
+    is_overdue = r.due_date.date() < business_today(now) and r.status in ["OPEN", "PARTIAL"]
 
     basket_summary = None
     if r.sale and r.sale.items:
@@ -71,7 +69,7 @@ def serialize_receivable_detail(r: SalesReceivable, db: Session) -> SalesReceiva
             dispatch_id=p.dispatch_id,
             account_id=p.account_id,
             account_name=p.financial_account.name if p.financial_account else None,
-            payment_date=p.payment_date,
+            payment_date=as_utc(p.payment_date),
             amount_cents=p.amount_cents,
             payment_method=p.payment_method,
             status=p.status,
@@ -80,7 +78,7 @@ def serialize_receivable_detail(r: SalesReceivable, db: Session) -> SalesReceiva
             reversal_reason=p.reversal_reason,
             reversal_of_id=p.reversal_of_id,
             notes=p.notes,
-            created_at=p.created_at,
+            created_at=as_utc(p.created_at),
         )
         for p in r.payments
     ]
@@ -95,6 +93,7 @@ def get_receivables(
     customer_id: Optional[str] = Query(None, description="Filtrar por cliente"),
     status: Optional[str] = Query(None, description="Filtrar por situacao (OPEN, PARTIAL, PAID)"),
     overdue_only: bool = Query(False, description="Apenas titulos vencidos"),
+    open_only: bool = Query(False, description="Apenas titulos em aberto, incluindo parciais"),
     sale_date_from: Optional[datetime.datetime] = Query(None, description="Data da venda inicial"),
     sale_date_to: Optional[datetime.datetime] = Query(None, description="Data da venda final"),
     due_date_from: Optional[datetime.datetime] = Query(None, description="Data de vencimento inicial"),
@@ -113,6 +112,7 @@ def get_receivables(
         customer_id=customer_id,
         status_filter=status,
         overdue_only=overdue_only,
+        open_only=open_only,
         sale_date_from=sale_date_from,
         sale_date_to=sale_date_to,
         due_date_from=due_date_from,
@@ -158,7 +158,7 @@ def post_receivable_payment(
             dispatch_id=payment.dispatch_id,
             account_id=payment.account_id,
             account_name=payment.financial_account.name if payment.financial_account else None,
-            payment_date=payment.payment_date,
+            payment_date=as_utc(payment.payment_date),
             amount_cents=payment.amount_cents,
             payment_method=payment.payment_method,
             status=payment.status,
@@ -167,15 +167,22 @@ def post_receivable_payment(
             reversal_reason=payment.reversal_reason,
             reversal_of_id=payment.reversal_of_id,
             notes=payment.notes,
-            created_at=payment.created_at,
+            created_at=as_utc(payment.created_at),
         ).model_dump(mode="json")
         return status.HTTP_201_CREATED, resp
+
+    # Keep the historical defaults in the hash and exclude only new null fields.
+    # Existing keys can therefore replay before the balance precondition executes.
+    payment_payload = data.model_dump(mode="json")
+    for new_field in ("expected_balance_cents", "payment_business_date"):
+        if payment_payload[new_field] is None:
+            payment_payload.pop(new_field)
 
     result = process_transactional_idempotency(
         db=db,
         idempotency_key=idempotency_key,
         operation_type="RECEIVABLE_PAYMENT_CREATE",
-        payload={"receivable_id": receivable_id, **data.model_dump(mode="json")},
+        payload={"receivable_id": receivable_id, **payment_payload},
         business_callback=callback,
     )
 
@@ -202,7 +209,7 @@ def post_cancel_payment(
             dispatch_id=payment.dispatch_id,
             account_id=payment.account_id,
             account_name=payment.financial_account.name if payment.financial_account else None,
-            payment_date=payment.payment_date,
+            payment_date=as_utc(payment.payment_date),
             amount_cents=payment.amount_cents,
             payment_method=payment.payment_method,
             status=payment.status,
@@ -211,7 +218,7 @@ def post_cancel_payment(
             reversal_reason=payment.reversal_reason,
             reversal_of_id=payment.reversal_of_id,
             notes=payment.notes,
-            created_at=payment.created_at,
+            created_at=as_utc(payment.created_at),
         ).model_dump(mode="json")
         return status.HTTP_200_OK, resp
 

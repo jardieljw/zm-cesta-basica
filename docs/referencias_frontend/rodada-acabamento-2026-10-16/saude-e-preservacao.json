@@ -1,0 +1,55 @@
+{
+  "date": "2026-10-16",
+  "decision": "FE-052",
+  "productionImplementation": false,
+  "checks": {
+    "originalStructuralStylesheet": true,
+    "navigationMarkup": true,
+    "accountFormReviewCalendarFunctions": true
+  },
+  "previousManifestFilesUnchanged": 18,
+  "reproductionMatches": true,
+  "sourceSha256": "774f5bbce0ccbc8048818a2daa24531804619551432113795a00a6dbe4eaf53f",
+  "browserLayouts": 324,
+  "homeMaxHeightReference": 835.953125,
+  "tests": [
+    {
+      "path": "tmp/fe-052-backend.log",
+      "sha256": "c0a7ce27dcfa0bb836066a2c6cfec15034278a69f7ee4ff6ba32eb515e5c9677",
+      "result": {
+        "passed": 408,
+        "warnings": 14,
+        "seconds": 130.97
+      }
+    },
+    {
+      "path": "tmp/fe-052-flutter.log",
+      "sha256": "72bb65b6b586204c2dbc66e27b998626c5b868c9f0bc13efdc6aca25c360ea53",
+      "result": {
+        "passed": 238
+      }
+    },
+    {
+      "path": "tmp/fe-052-backend-final.log",
+      "sha256": "e075c4cbd40ae4fea0b049c9fc622094710992e3b9ab47daee70642e15f53091",
+      "result": {
+        "passed": 410,
+        "warnings": 14,
+        "seconds": 120.02
+      }
+    },
+    {
+      "path": "tmp/fe-052-flutter-final.log",
+      "sha256": "0e4f11c4620ecc7bae4605ce12bd795e3fa931ddf35937a86fd7e20ba7b3803d",
+      "result": {
+        "passed": 238
+      }
+    }
+  ],
+  "note": "408 backend tests at baseline and 410 at final verification in shared workspace; no production code or product tests changed by this round. Flutter 238 in both runs. Isolated databases only.",
+  "limits": [
+    "HTML fixtures only; no real financial submission, native accessibility or installed-app validation.",
+    "Calculated contrast of default layers, not all pixels, states or custom colors.",
+    "No Git commit or distribution."
+  ]
+}

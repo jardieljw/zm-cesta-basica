@@ -4,7 +4,10 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select, or_
 from sqlalchemy.orm import Session, selectinload
 from app.core.database import get_db
-from app.api.deps import get_current_device
+from app.api.deps import get_current_device, get_idempotency_key
+from app.core.idempotency import process_transactional_idempotency
+from fastapi.responses import JSONResponse
+from app.services.product_catalog import check_product_deletion, delete_unused_product
 from app.models.auth import PairedDevice
 from app.models.products import Product, ProductPackaging, BasketType, RecipeVersion, RecipeItem
 from app.models.base import utc_now
@@ -13,6 +16,8 @@ from app.schemas.products import (
     ProductUpdate,
     ProductResponse,
     ProductInactivationResponse,
+    ProductDeletionCheck,
+    ProductDeletionResponse,
 )
 from app.schemas.packagings import (
     PackagingCreate,
@@ -21,6 +26,32 @@ from app.schemas.packagings import (
 )
 
 router = APIRouter()
+
+
+@router.get("/products/{product_id}/deletion-check", response_model=ProductDeletionCheck)
+def product_deletion_check(
+    product_id: str,
+    db: Session = Depends(get_db),
+    current_device: PairedDevice = Depends(get_current_device),
+):
+    return check_product_deletion(db, product_id)
+
+
+@router.delete("/products/{product_id}/permanent", response_model=ProductDeletionResponse)
+def permanently_delete_unused_product(
+    product_id: str,
+    db: Session = Depends(get_db),
+    current_device: PairedDevice = Depends(get_current_device),
+    idempotency_key: Optional[str] = Depends(get_idempotency_key),
+):
+    def callback(session):
+        response = delete_unused_product(session, product_id)
+        return status.HTTP_200_OK, response.model_dump(mode="json")
+
+    result = process_transactional_idempotency(
+        db, idempotency_key, "PRODUCT_PERMANENT_DELETE", {"product_id": product_id}, callback,
+    )
+    return JSONResponse(status_code=result.status_code, content=result.to_json_dict())
 
 # --- PRODUTOS E INSUMOS ---
 
@@ -246,7 +277,8 @@ def inactivate_product(
 ):
     """
     Inativa (soft delete) um produto.
-    A exclusao fisica e estritamente proibida para preservar a integridade historica transacional.
+    Preserva vínculos e histórico. Exclusão definitiva de produtos nunca usados
+    existe em /products/{product_id}/permanent.
     Rejeita a inativacao se o produto estiver em uso na receita ativa de qualquer cesta ativa.
     """
     product = db.execute(
@@ -289,7 +321,7 @@ def inactivate_product(
         id=product.id,
         name=product.name,
         is_active=False,
-        message="Produto inativado com sucesso. A exclusao fisica e proibida para preservar o historico transacional.",
+        message="Produto inativado com sucesso. O cadastro e seu histórico foram preservados.",
     )
 
 

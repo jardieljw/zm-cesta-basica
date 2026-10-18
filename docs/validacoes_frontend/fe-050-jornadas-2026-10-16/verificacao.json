@@ -1,0 +1,43 @@
+{
+  "decision": "FE-050",
+  "date": "2026-10-16",
+  "backend": {
+    "passed": 363,
+    "warnings": 14,
+    "elapsedSeconds": 103.68,
+    "exitCode": 0,
+    "command": "pytest backend/tests -q --basetemp tmp/fe-050-baseline-20261016"
+  },
+  "flutter": {
+    "passed": 238,
+    "exitCode": 0,
+    "command": "flutter test",
+    "workingDirectory": "client"
+  },
+  "logs": [
+    {
+      "path": "tmp/fe-050-backend.log",
+      "sha256": "8bd3622e15cbb51369930b763e804ce132bbea66507da42854ca45f6a52b9fff",
+      "expectedResultFound": "363 passed"
+    },
+    {
+      "path": "tmp/fe-050-flutter.log",
+      "sha256": "412205394433d6f73cb2fea68322824e0ac7ab15590dec42d09da319f5ef305b",
+      "expectedResultFound": "238: All tests passed!"
+    }
+  ],
+  "preservedVisualReference": {
+    "decision": "FE-049",
+    "path": "docs/referencias_frontend/rodada-organizacao-2026-10-16/organizacao-integrada-zm.html",
+    "sha256": "613beab1e444448ba69c46dc26fbc4ab1072661915c1aa695a8f6b53314a6a6d",
+    "manifestEntriesChecked": 18,
+    "allMatched": true
+  },
+  "newBrowserVerification": false,
+  "productionCodeChangedByThisRound": false,
+  "limits": [
+    "Existing suites only; no proposed-contract tests.",
+    "No company database access or installed-app validation.",
+    "No new visual preview; FE-049 evidence remains prior evidence."
+  ]
+}

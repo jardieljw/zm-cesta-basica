@@ -1,0 +1,174 @@
+{
+  "consolidado_em": "2026-10-16",
+  "rodada": "Espaco confirmado e ajustes revisados",
+  "situacao": "Decisoes registradas; correcao local verificada",
+  "dependencia_verificacao": {
+    "arquivo": "C:\\Users\\jardi\\.codex\\plugins\\cache\\openai-bundled\\visualize\\1.0.50\\assets\\tweak.js",
+    "sha256": "2c5a78aaffb4a2b5e7c05782e953533669fe8485178c5124c87b4f7909ae4934",
+    "observacao": "Helper original usado no teste, nao copiado ou alterado"
+  },
+  "arquivos": [
+    {
+      "arquivo": "fundamentos-visuais-revisados-zm.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-visuais-revisados-zm.html",
+      "sha256": "c145b49a5c0c44495ff014af1ea424b91f9dd4a540cc9ef86861a068b1bff384",
+      "bytes": 49924
+    },
+    {
+      "arquivo": "fundamentos-visuais-revisados-zm-preview.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-visuais-revisados-zm-preview.html",
+      "sha256": "1a5dda8f0b985de0b3b5fd78bc37a7deef75e936375616710ff7ee1f05fcf198",
+      "bytes": 141029
+    },
+    {
+      "arquivo": "check-ajustes-reais-zm.cjs",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\check-ajustes-reais-zm.cjs",
+      "sha256": "6046b3b12538fe93aa9d48f26a80f226ce808c880ed8422ad78c7b5dbe122a81",
+      "bytes": 9287
+    },
+    {
+      "arquivo": "ajustes-reais-verificacao.json",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\ajustes-reais-verificacao.json",
+      "sha256": "70fbd65a20f8a32143df03404afac2e3e90102583f7150ec5b74dd72f92c2b86",
+      "bytes": 5126
+    },
+    {
+      "arquivo": "check-fundamentos-revisados.cjs",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\check-fundamentos-revisados.cjs",
+      "sha256": "d7adbd171eebafd79778fe99c53bfae9f8984b3098f84dd403d447552fbef069",
+      "bytes": 14912
+    },
+    {
+      "arquivo": "fundamentos-revisados-verificacao.json",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-verificacao.json",
+      "sha256": "b1c041090b32dde1eca21e7740a9ddf64094aa91cfca4d493fb5ccef8cf9a5a3",
+      "bytes": 213869
+    },
+    {
+      "arquivo": "fundamentos-revisados-edge-confirmacao-pendente.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-edge-confirmacao-pendente.png",
+      "sha256": "a77191d50759d6e38f7e015789871a8e2424fcf408f63566f7030deb7ef2c41c",
+      "bytes": 35520
+    },
+    {
+      "arquivo": "fundamentos-revisados-edge-destaque-ametista.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-edge-destaque-ametista.png",
+      "sha256": "5b43ab293918ee465b55099d014061357851829018db9701a9716511a2a9ad26",
+      "bytes": 52328
+    },
+    {
+      "arquivo": "fundamentos-revisados-edge-destaque-petroleo.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-edge-destaque-petroleo.png",
+      "sha256": "0249b1d10abff17910cc05a66b68e6a238c3656b0b575c61251ad5625a43e589",
+      "bytes": 49126
+    },
+    {
+      "arquivo": "fundamentos-revisados-edge-formulario-claro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-edge-formulario-claro.png",
+      "sha256": "62ff54680c21321e28171f0ca898ae3e335dce381861ad812afea6b790711506",
+      "bytes": 52036
+    },
+    {
+      "arquivo": "fundamentos-revisados-edge-formulario-escuro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-edge-formulario-escuro.png",
+      "sha256": "643896284ec88822548662f8b54ccdb3949c7c4391c6996b9bfaa33726619238",
+      "bytes": 51087
+    },
+    {
+      "arquivo": "fundamentos-revisados-edge-lista-ampla.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-edge-lista-ampla.png",
+      "sha256": "ceab51e14f3bd0469ce3b2eb07cefc9ce8b403f195ce89a9552cf5005929851f",
+      "bytes": 34872
+    },
+    {
+      "arquivo": "fundamentos-revisados-edge-lista-celular-escura.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-edge-lista-celular-escura.png",
+      "sha256": "2a588bdcf5441ffe66e5a9011e07b00ca3295c8e31252615773d176ba5eedf6b",
+      "bytes": 32697
+    },
+    {
+      "arquivo": "fundamentos-revisados-edge-validacao.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-edge-validacao.png",
+      "sha256": "f5de593f2c9ed076b932448dcd509d398bdeaf92aeb3eeff0bf924215ce0b6f3",
+      "bytes": 65777
+    },
+    {
+      "arquivo": "fundamentos-revisados-webkit-confirmacao-pendente.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-webkit-confirmacao-pendente.png",
+      "sha256": "97463e57e85e54aa7af7b5b5b4e99eae1107ec4e8108053085b9f74dbf5736dd",
+      "bytes": 31025
+    },
+    {
+      "arquivo": "fundamentos-revisados-webkit-destaque-ametista.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-webkit-destaque-ametista.png",
+      "sha256": "e20b1ddb7a5fd19ef2689cf881bfd247b2fca9f915cc1941c30a22cbe938e393",
+      "bytes": 45711
+    },
+    {
+      "arquivo": "fundamentos-revisados-webkit-destaque-petroleo.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-webkit-destaque-petroleo.png",
+      "sha256": "c4556419e649f65ed729541ca1abff77b7cb8e8d677c657878b2b73f554033cf",
+      "bytes": 43382
+    },
+    {
+      "arquivo": "fundamentos-revisados-webkit-formulario-claro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-webkit-formulario-claro.png",
+      "sha256": "5e4401f2c6a2ecbb074d08bf56bb27e9b505da9c1e41e594819e9272a499e0d6",
+      "bytes": 45730
+    },
+    {
+      "arquivo": "fundamentos-revisados-webkit-formulario-escuro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-webkit-formulario-escuro.png",
+      "sha256": "d207ccc014fe6d0578caabff8ca43b47f3cb27b5c26a91ae04f9afcfb1a624d7",
+      "bytes": 45675
+    },
+    {
+      "arquivo": "fundamentos-revisados-webkit-lista-ampla.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-webkit-lista-ampla.png",
+      "sha256": "13562d1f45b2c867c29941c073dcc2b66e2c30a2487f135f0d54c507da9ca052",
+      "bytes": 29208
+    },
+    {
+      "arquivo": "fundamentos-revisados-webkit-lista-celular-escura.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-webkit-lista-celular-escura.png",
+      "sha256": "df957d697ec892f1e458ad15d48fe3c74da3ac80a6085b1846fa5acfc9e3d181",
+      "bytes": 27979
+    },
+    {
+      "arquivo": "fundamentos-revisados-webkit-validacao.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\fundamentos-revisados-webkit-validacao.png",
+      "sha256": "99b77c9e09e380ba09050c85319b0b6156bcabdbaaaa1711695557280603bf42",
+      "bytes": 56785
+    },
+    {
+      "arquivo": "ajustes-reais-edge-claro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\ajustes-reais-edge-claro.png",
+      "sha256": "01a9efb930cd690e9f625eca43e755dc44232f15c546a94f8eed5bcfc5b0c1d6",
+      "bytes": 50187
+    },
+    {
+      "arquivo": "ajustes-reais-edge-escuro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\ajustes-reais-edge-escuro.png",
+      "sha256": "34a89e92885e361274155032a5fd23f22f4ecb2294ff299a848af3b9848b9cc7",
+      "bytes": 56808
+    },
+    {
+      "arquivo": "ajustes-reais-webkit-claro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\ajustes-reais-webkit-claro.png",
+      "sha256": "bc132f66bdef9289df94e4ac6822b40781213cd8b4955f2c72951c1f6549b669",
+      "bytes": 43764
+    },
+    {
+      "arquivo": "ajustes-reais-webkit-escuro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\ajustes-reais-webkit-escuro.png",
+      "sha256": "e1bb3df97fccbcd6d37631e0192e96edf7fb757cc7c9ec7a06a83c44b5914feb",
+      "bytes": 51883
+    },
+    {
+      "arquivo": "espacamento-20-enviado.png",
+      "origem": "C:\\Users\\jardi\\AppData\\Local\\Temp\\codex-clipboard-ccb1b24a-4aee-4f9f-9bf1-1479a3827f0f.png",
+      "sha256": "2dfd362746f10296e43bacea597e08f53b59d78c551cc4010b257e213a0430b3",
+      "bytes": 3127
+    }
+  ]
+}

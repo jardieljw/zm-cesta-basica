@@ -221,7 +221,7 @@ def test_soft_delete_preserves_product_and_sets_inactive(client, authenticated_d
     data = del_resp.json()
     assert data["id"] == prod_id
     assert data["is_active"] is False
-    assert "proibida" in data["message"].lower()
+    assert "preservados" in data["message"].lower()
 
     # Confirmar que produto continua existindo no banco de dados porem inativo
     get_resp = client.get(f"/api/v1/products/{prod_id}", headers=headers)

@@ -1,0 +1,39 @@
+--- a/docs/MANUAL_OPERACIONAL.md
++++ b/docs/MANUAL_OPERACIONAL.md
+@@ -76,7 +76,7 @@
+ 
+ ---
+ 
+-## 11. Contas a Pagar e Livro-Caixa da Tesouraria
++## 11. Contas a Pagar e Confirmações de Pagamento
+ 
+ 1. **Contas a Pagar:** Registro de obrigações com fornecedores de insumos e contas fixas (aluguel, energia, água, internet, manutenção).
+ 2. **Classificação entre Empresa e Sócios:**
+@@ -92,7 +92,9 @@
+ Apresenta em tempo real:
+ - Total de cestas vendidas no dia/mês.
+ - Alertas de produtos abaixo do estoque mínimo.
+-- Saldo atual e saldo projetado da tesouraria (considerando contas a pagar e receber nos próximos 30 dias).
++- Recebimentos e pagamentos confirmados, pendências e vencimentos.
++- Custo das cestas vendidas, lucro bruto e resultado gerencial após outras despesas pagas.
++- Compras confirmadas no período, pagas ou a prazo.
+ 
+ ### 12.2. Exportação de Planilhas e Relatórios Preenchidos
+ Os 6 relatórios ativos do aplicativo podem ser visualizados na tela, baixados em formato de planilha digital (CSV e XLSX) ou gerados em PDF paginado formatado para papel A4.
+@@ -102,3 +104,16 @@
+ - **Formulário A:** Vendas Fiadas, Pagamentos e Quitação.
+ - **Formulário B:** Contas a Pagar e Despesas.
+ - **Formulário D:** Balanço Físico de Estoque (Inventário / Prancheta).
++
++### Controle financeiro simplificado
++
++Ao confirmar um recebimento de fiado ou um pagamento de obrigação, informar
++valor e forma de pagamento. Não é necessário selecionar uma conta com saldo.
++As confirmações aparecem no dashboard; pagamentos parciais mantêm o restante
++pendente. Estornos também são considerados, sem apagar registros históricos.
++
++O valor das vendas inclui vendas a prazo ainda não recebidas. O lucro bruto é
++esse valor menos o custo das cestas vendidas. O resultado gerencial desconta as
++outras despesas pagas no período. Compras de estoque vinculadas não são
++novamente descontadas do lucro bruto. A diferença entre recebido e pago é uma
++comparação do período, não dinheiro depositado no aplicativo.

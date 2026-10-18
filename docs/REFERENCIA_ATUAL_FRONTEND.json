@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-10-17",
+  "decision": "FE-055",
+  "phase": "main_integration_verified_windows_release_built",
+  "productionImplementation": true,
+  "acceptedOrganizationalReference": {
+    "decision": "FE-008",
+    "path": "docs/referencias_frontend/mapa-navegavel-zm.html",
+    "sha256": "79388750430b1f39a50aafedb804053526db77524b11f46cefc5c72b7ae55758",
+    "scope": "Original navigation, hierarchy and destinations accepted as a basis; individual fixture values are not business requirements."
+  },
+  "currentIntegratedCandidate": {
+    "path": "docs/referencias_frontend/rodada-acabamento-2026-10-16/acabamento-integrado-zm.html",
+    "sha256": "774f5bbce0ccbc8048818a2daa24531804619551432113795a00a6dbe4eaf53f",
+    "rootId": "zm-finish-demo",
+    "status": "preserved_visual_reference_implemented_in_native_main_integration",
+    "review": "Recovered reading, five-area organization, glass/colors and compact filters integrated in FE-055. Reference source unchanged; full all-screen raster equivalence is not certified.",
+    "inspectionWrapper": "docs/referencias_frontend/rodada-acabamento-2026-10-16/acabamento-integrado-zm-preview.html",
+    "provenance": "docs/referencias_frontend/rodada-acabamento-2026-10-16/origem-e-alteracoes.json",
+    "verification": "docs/referencias_frontend/rodada-acabamento-2026-10-16/acabamento-verificacao.json",
+    "regression": "docs/referencias_frontend/rodada-acabamento-2026-10-16/acabamento-regressao.json",
+    "manifest": "docs/referencias_frontend/rodada-acabamento-2026-10-16/manifesto.json"
+  },
+  "confirmedDesignRoles": {
+    "fieldGroupSpacing": 20,
+    "fieldRadius": 24,
+    "panelRadius": 32,
+    "accentDefault": "#2866ae",
+    "accentUserConfigurable": true,
+    "decisions": [
+      "FE-028",
+      "FE-030"
+    ],
+    "limit": "These field/panel choices do not change navigation geometry.",
+    "reading": "recovered",
+    "readingDecision": "FE-049"
+  },
+  "navigationBaseline": {
+    "desktopColumnWidth": 140,
+    "navigationButtonRadius": 12,
+    "areas": [
+      "inicio",
+      "financeiro",
+      "vendas",
+      "estoque",
+      "mais"
+    ],
+    "preserveAreaContext": true,
+    "labels": [
+      "Início",
+      "Financeiro",
+      "Negócio",
+      "Estoque",
+      "Mais"
+    ],
+    "labelDecision": "FE-049"
+  },
+  "partialStudies": [
+    {
+      "path": "docs/referencias_frontend/rodada-negocio-em-foco-2026-10-16/negocio-em-foco-zm.html",
+      "use": "Useful-information and financial-journey study; not the complete application shell or a replacement for the original sidebar."
+    }
+  ],
+  "workingIntegration": {
+    "guide": "docs/INTEGRACAO_INTERFACE_APROVADA.md",
+    "status": "main_integration_verified_windows_release_built",
+    "visualTarget": "FE-052 preserved source and user screenshot; compare every interface at matching viewport/theme/text scale/data/state",
+    "publishing": "Sites request revoked; no Site, saved version or deployment created",
+    "validationLimit": "Final: 334 Flutter tests, 436 backend tests, clean analysis and Windows Release succeeded. Ten primary Receber block measurements differ by less than one pixel in the matched fixture; this does not certify every screen or physical mobile device.",
+    "installedApplicationUpdated": false,
+    "visualEquivalenceConfirmed": false,
+    "evidence": "docs/validacoes_frontend/fe-055-integracao-2026-10-17/README.md"
+  },
+  "nextStep": "Open the updated Windows Release executable. Keep its DLLs and data directory together. Full visual acceptance across all operational screens and physical mobile devices remains distinct from this verified native integration.",
+  "handoffDecision": "FE-047: user acknowledged the recovered preview, asked the next step and requested continuation in another chat. This does not approve every proposed visual detail or authorize Flutter/API implementation.",
+  "continuationRules": [
+    "Use the current integrated candidate as the technical starting point; preserve the accepted organizational reference for comparison.",
+    "Keep original archives immutable; a later source change requires a new named revision and an updated candidate pointer.",
+    "Record user feedback and distinguish accepted, proposed, locally verified and implemented behavior.",
+    "Do not infer Flutter/API authorization or Git commit from this registry.",
+    "FE-055 supersedes the earlier planning-only authorization boundary: user explicitly requested integrating the approved frontend with the existing backend. No publication or Git commit was requested."
+  ],
+  "earlierIntegratedCandidates": [
+    {
+      "path": "docs/referencias_frontend/rodada-tipografia-2026-10-16/hierarquia-integrada-zm.html",
+      "sha256": "01f28ece47a54fdd2f989caf351550ff5d6742b6d520799ec97b79e2b4abd071",
+      "rootId": "zm-typography-demo",
+      "status": "reviewed_recovered_variant_selected_oriented_default_rejected",
+      "review": "Compare recovered and proposed typography/information hierarchy in the preserved integrated shell",
+      "inspectionWrapper": "docs/referencias_frontend/rodada-tipografia-2026-10-16/hierarquia-integrada-zm-preview.html",
+      "provenance": "docs/referencias_frontend/rodada-tipografia-2026-10-16/origem-e-alteracoes.json",
+      "verification": "docs/referencias_frontend/rodada-tipografia-2026-10-16/hierarquia-verificacao.json",
+      "manifest": "docs/referencias_frontend/rodada-tipografia-2026-10-16/manifesto.json",
+      "decision": "FE-048"
+    },
+    {
+      "path": "docs/referencias_frontend/rodada-recuperacao-integrada-2026-10-16/mapa-integrado-recuperado-zm.html",
+      "sha256": "e3c688890506c3cf37a83793d811d9eb26f3c6b4b8b6aaa92a2f8fe597b57375",
+      "rootId": "zm-recovery-demo",
+      "status": "presented_user_allowed_continuation_not_blanket_visual_approval",
+      "review": "Recovery of original shell and navigation with confirmed form/payment improvements",
+      "inspectionWrapper": "docs/referencias_frontend/rodada-recuperacao-integrada-2026-10-16/mapa-integrado-recuperado-zm-preview.html",
+      "provenance": "docs/referencias_frontend/rodada-recuperacao-integrada-2026-10-16/origem-e-alteracoes.json",
+      "verification": "docs/referencias_frontend/rodada-recuperacao-integrada-2026-10-16/mapa-integrado-recuperado-verificacao.json",
+      "manifest": "docs/referencias_frontend/rodada-recuperacao-integrada-2026-10-16/manifesto.json",
+      "decision": "FE-046"
+    }
+  ],
+  "acceptedReadingReference": {
+    "decision": "FE-049",
+    "variant": "Leitura recuperada",
+    "sourceDecision": "FE-048",
+    "sourcePath": "docs/referencias_frontend/rodada-tipografia-2026-10-16/hierarquia-integrada-zm.html",
+    "scope": "Reading balance accepted; native font metrics remain to validate. Oriented default rejected, not the integrated organization."
+  },
+  "visualFeedback": {
+    "decision": "FE-051",
+    "source": "User-attached initial Contas a Receber screenshot; related preserved glass-direction study",
+    "expressedPreference": "Colors, glasslike finish and bank-like presentation of customer receivables",
+    "analysis": "docs/BASE_VISUAL_FRONTEND.md#8-aproveitar-o-acabamento-da-referência-inicial--fe-051",
+    "relatedPreservedStudy": "docs/referencias_frontend/direcoes-design-zm-ajustavel.html",
+    "proposal": "Bring subtle blue/warm backdrop, soft glass panels and statement-style financial rows into FE-049 while preserving recovered reading, navigation and confirmed dimensions.",
+    "status": "FE052_preserved_FE055_native_main_integration_and_shared_finish_implemented",
+    "nextVisualStep": "Use FE-052 as continuation source; do not repeat typography, navigation or discovery. Large filter blocks explicitly rejected; keep scope disclosure compact."
+  },
+  "journeyContract": {
+    "decision": "FE-050",
+    "path": "docs/JORNADAS_FINANCEIRAS_E_PRONTIDAO_DO_PILOTO.md",
+    "evidence": "docs/validacoes_frontend/fe-050-jornadas-2026-10-16/README.md",
+    "status": "payable_receivable_and_five_area_main_integration_implemented",
+    "firstPilot": "Pagar on an existing title, authorized and implemented in FE-053"
+  },
+  "previousIntegratedCandidate": {
+    "path": "docs/referencias_frontend/rodada-organizacao-2026-10-16/organizacao-integrada-zm.html",
+    "sha256": "613beab1e444448ba69c46dc26fbc4ab1072661915c1aa695a8f6b53314a6a6d",
+    "rootId": "zm-organization-demo",
+    "status": "accepted_reference_for_incremental_planning",
+    "review": "After FE-049 the user replied SHOW, VAMOS PROSSEGUIR. Recovered reading and integrated organization accepted as the reference for continuing planning; no blanket approval of fixtures or implementation.",
+    "inspectionWrapper": "docs/referencias_frontend/rodada-organizacao-2026-10-16/organizacao-integrada-zm-preview.html",
+    "provenance": "docs/referencias_frontend/rodada-organizacao-2026-10-16/origem-e-alteracoes.json",
+    "verification": "docs/referencias_frontend/rodada-organizacao-2026-10-16/organizacao-verificacao.json",
+    "manifest": "docs/referencias_frontend/rodada-organizacao-2026-10-16/manifesto.json",
+    "feedbackDecision": "FE-050",
+    "decision": "FE-049"
+  },
+  "productionImplementationScope": "Five-area native shell, live overview and financial lists, reviewed Pagar/Receber journeys, shared approved presentation, device appearance and operational dark-theme compatibility. New Windows Release generated; external installed deployment unchanged.",
+  "fullFrontendImplemented": false,
+  "scopedImplementation": {
+    "decision": "FE-055",
+    "scope": "Five-area native shell, live overview and financial lists, reviewed Pagar/Receber journeys, shared approved presentation, device appearance and operational dark-theme compatibility. New Windows Release generated; external installed deployment unchanged.",
+    "authorization": "Explicit user requests to finish integrating the already approved frontend with the backend, preserving architecture and appearance.",
+    "guide": "docs/INTEGRACAO_INTERFACE_APROVADA.md",
+    "evidence": "docs/validacoes_frontend/fe-055-integracao-2026-10-17/README.md",
+    "view": "client/lib/views/app_shell_view.dart",
+    "installedUpdated": false,
+    "validationStatus": "main_integration_verified_windows_release_built",
+    "backendTestsPassed": 436,
+    "flutterTestsPassed": 334,
+    "staticAnalysis": "no issues",
+    "windowsBuild": "release succeeded"
+  },
+  "previousScopedImplementations": [
+    {
+      "decision": "FE-054",
+      "scope": "Receber sobre título existente e componentes comuns com Pagar",
+      "authorization": "Vambora uhuuu and subsequent continuation requests after the preview/source/installation distinction.",
+      "guide": "docs/PILOTO_RECEBER_REVISADO.md",
+      "evidence": "docs/validacoes_frontend/fe-054-receber-2026-10-17/README.md",
+      "view": "client/lib/views/receivable_payment_view.dart",
+      "sharedView": "client/lib/widgets/shared/reviewed_payment_view.dart",
+      "sharedEngine": "client/lib/services/reviewed_payment_coordinator.dart",
+      "installedUpdated": false,
+      "validationStatus": "complete_in_source_tests_and_debug_build",
+      "backendTestsPassed": 436,
+      "flutterTestsPassed": 319,
+      "staticAnalysis": "no issues",
+      "windowsBuild": "debug succeeded"
+    },
+    {
+      "decision": "FE-053",
+      "scope": "Pagar sobre título existente",
+      "authorization": "Show vamo embora after next concrete delivery was stated as real Pagar flow.",
+      "guide": "docs/PILOTO_PAGAR_REVISADO.md",
+      "evidence": "docs/validacoes_frontend/fe-053-piloto-pagar-2026-10-16/README.md",
+      "view": "client/lib/views/payable_payment_view.dart",
+      "backendTestsPassed": 420,
+      "flutterTestsPassed": 274,
+      "staticAnalysis": "no issues",
+      "windowsBuild": "debug succeeded",
+      "installedUpdated": false
+    }
+  ],
+  "nativeDelivery": {
+    "directory": "C:/Users/jardi/Desktop/ZM CESTA BASICA/client/build/windows/x64/runner/Release",
+    "files": [
+      {
+        "path": "client/build/windows/x64/runner/Release/zm_cesta_basica_client.exe",
+        "sha256": "6561954208c01df6d5aa4d9832a0b323b830c3c4510beb968e6b019947160a50"
+      },
+      {
+        "path": "client/build/windows/x64/runner/Release/data/app.so",
+        "sha256": "699323c4a548ec545cda386df0d1f00f1dc9ce3c3ab7f44c50dc5601b4d5b2af"
+      }
+    ],
+    "requires": "Keep the complete Release directory, including DLLs and data.",
+    "automaticallyLaunched": false
+  }
+}

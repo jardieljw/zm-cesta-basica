@@ -1,5 +1,21 @@
 # Especificação do projeto — Sistema de Estoque, Montagem e Vendas de Cestas
 
+> **Atualização implementada em 14/10/2026:** registro de montagem padrão/personalizada e
+> histórico por tipo estão acessíveis em Tipos de Cesta → Montagens. Essa
+> integração nova não restaura todas as telas originais descritas abaixo. Ver
+> [Montagens e histórico](docs/MONTAGENS_E_HISTORICO.md).
+
+> **Documento de planejamento histórico — escopo esclarecido em 14/10/2026.**
+> Esta especificação conserva o projeto original; não é a lista atual de menus.
+> As telas de produção em lote, desmontagem separada, responsáveis, expedição,
+> conferência/acerto de rota e tesouraria foram arquivadas em 13/10/2026, assim
+> como seus relatórios exclusivos e o formulário C. Backend, tabelas e dados
+> foram preservados. Montagem durante a venda segue ativa; dashboard e financeiro
+> usam o escopo simplificado. Consultar [mecânicas atuais](docs/README.md),
+> [funções arquivadas](docs/FUNCOES_ARQUIVADAS.md) e
+> [arquivo do cliente](client/_archive/README.md). As instruções históricas
+> deste documento não autorizam restaurar funções arquivadas.
+
 **Versão:** 1.0 — planejamento inicial  
 **Idioma da interface:** português brasileiro (pt-BR)  
 **Plataformas:** Android e Windows  
@@ -220,6 +236,9 @@ Permitir consultar histórico de compras por período e por produto. O custo his
 
 ### 5.6 Montagem/produção de cestas
 
+> **Tela separada arquivada:** o fluxo descrito abaixo é referência original.
+> O motor de montagem continua atendendo a montagem durante a venda.
+
 Registrar:
 
 - data e hora;
@@ -235,6 +254,10 @@ A montagem confirmada diminui os ingredientes e aumenta o estoque de cestas pron
 Se for útil na operação, oferecer modo de montagem rápida: escolher tipo e quantidade, revisar os itens a consumir e confirmar. Não esconder uma falta de estoque atrás de uma confirmação genérica.
 
 ### 5.7 Cestas personalizadas
+
+> **Escopo atual:** Registrar montagem oferece personalização, preservando a receita.
+> A Nova Venda ainda não possui editor de composição nem seletor de lote personalizado.
+> Não interpretar a descrição original abaixo como função já disponível na venda.
 
 A personalização é uma exceção ao padrão, não uma edição da receita principal.
 
@@ -298,6 +321,9 @@ Para cada ingrediente de uma receita, calcular `cestas possíveis = piso(saldo d
 A primeira versão não precisa prever demanda futura. Essa estimativa pode ser adicionada depois usando histórico de vendas e prazo de reposição de fornecedores.
 
 ### 5.11 Relatórios e planilhas
+
+> **Escopo simplificado:** consultar [os seis relatórios e formulários ativos](docs/RELATORIOS_E_IMPRESSAO.md).
+> Relatórios exclusivos dos fluxos arquivados não aparecem na interface atual.
 
 Relatórios mínimos:
 
@@ -737,6 +763,9 @@ A IA não deve tentar gerar todo o projeto em uma única resposta. Implementar p
 **Critério de saída:** compras e ajustes geram saldos rastreáveis e sobreviverem ao reinício.
 
 ### Fase 4 — produção/montagem
+
+> **Marco histórico:** telas de produção em lote/desmontagem arquivadas;
+> backend compartilhado e montagem durante a venda permanecem ativos.
 
 - Montagem de cestas padrão.
 - Baixa de ingredientes e entrada de cestas prontas.

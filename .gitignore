@@ -38,3 +38,6 @@ build/
 # OS artifacts
 .DS_Store
 Thumbs.db
+
+# Temporary files and scratch logs
+tmp/

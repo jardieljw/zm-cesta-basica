@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "scope": "populated_company_copy_only",
+  "source_revision": "fc2f3a4b6512",
+  "copy_revision": "fd3a4b5c7613",
+  "existing_tables_preserved": 41,
+  "old_rows_preserved": true,
+  "old_indexes_triggers_preserved": true,
+  "integrity_ok": true,
+  "foreign_keys_ok": true,
+  "source_opened_read_only": true,
+  "production_migrated": false,
+  "temporary_copy_cleaned": true
+}

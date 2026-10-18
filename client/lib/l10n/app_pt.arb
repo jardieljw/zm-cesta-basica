@@ -10,7 +10,6 @@
   "commonClose": "Fechar",
   "commonBack": "Voltar",
   "commonSearch": "Buscar",
-  "commonFilter": "Filtrar",
   "commonClear": "Limpar",
   "commonLoading": "Carregando...",
   "commonRefresh": "Atualizar",
@@ -20,11 +19,9 @@
   "commonOptional": "Opcional",
   "commonRequired": "Obrigatório",
   "commonYes": "Sim",
-  "commonNo": "Não",
   "commonSuccess": "Operação realizada com sucesso",
   "commonError": "Ocorreu um erro",
   "commonWarning": "Atenção",
-  "commonUnit": "un",
   "commonViewDetails": "Ver Detalhes",
   "statusOnline": "Conectado",
   "statusOffline": "Desconectado",
@@ -47,7 +44,6 @@
   "productName": "Nome do Produto",
   "productCategory": "Categoria",
   "productBaseUnit": "Unidade Base",
-  "productCostPrice": "Preço de Custo",
   "productMinStock": "Estoque Mínimo",
   "productActive": "Ativo",
   "productInactive": "Inativo",
@@ -63,11 +59,8 @@
   "basketTypeCode": "Código da Cesta",
   "basketTypeName": "Nome da Cesta",
   "basketTypeAllowsCustom": "Permite Personalização",
-  "recipesTitle": "Ficha Técnica / Receita",
   "recipeVersionLabel": "Versão da Receita",
   "recipeAddIngredient": "Adicionar Insumo",
-  "recipeQuantityPerBasket": "Quantidade por Cesta",
-  "recipeSection": "Seção do Insumo",
   "purchasesTitle": "Entrada de Compras",
   "purchaseNew": "Registrar Compra",
   "purchaseInvoiceNumber": "Número da NF",
@@ -78,7 +71,6 @@
   "purchaseUnitCost": "Preço Unitário",
   "purchaseTotalCost": "Custo Total",
   "productionBatchesTitle": "Lotes de Produção",
-  "productionBatchNew": "Nova Montagem de Cestas",
   "productionBatchNumber": "Lote #{number}",
   "@productionBatchNumber": {
     "placeholders": {
@@ -87,14 +79,6 @@
       }
     }
   },
-  "productionQuantityProduced": "Qtd. Produzida",
-  "productionQuantityDisassembled": "Qtd. Desmontada",
-  "productionCurrentStock": "Saldo em Estoque",
-  "productionUnitCost": "Custo Unitário",
-  "productionTotalCost": "Custo Total do Lote",
-  "productionStatusConfirmed": "Confirmado",
-  "productionStatusDisassembled": "Desmontado",
-  "productionStatusCanceled": "Cancelado",
   "productionDirectSale": "Venda Direta",
   "productionCustom": "Cesta Personalizada",
   "productionDisassembleTitle": "Desmontar Lote #{number}",
@@ -108,7 +92,6 @@
   "productionDisassembleConfirm": "Confirmar Desmontagem",
   "productionDisassembleQtyLabel": "Qtd. a Desmontar",
   "productionDisassembleReasonLabel": "Motivo da Desmontagem",
-  "productionDisassembleReasonHint": "Ex: Avaria em embalagem, readequação",
   "productionDisassembleTriageTitle": "Triagem Física dos Insumos",
   "productionDisassembleAllIntact": "100% Intacto (Sem Avarias)",
   "productionIntactQtyLabel": "Intacto ({unit})",
@@ -127,16 +110,7 @@
       }
     }
   },
-  "productionLossReasonLabel": "Motivo da Perda",
-  "productionDisassembleDescription": "A desmontagem realiza triagem física: itens intactos retornam ao estoque e avarias são registradas como perda sem inflar o estoque fisicamente.",
   "productionDisassembledSuccess": "Lote desmontado com sucesso!",
-  "productionBatchSearchHint": "Buscar por lote (#1), tipo ou observações...",
-  "productionBatchFilterAllStatus": "Todos os Status",
-  "productionBatchFilterConfirmed": "Confirmados",
-  "productionBatchFilterDisassembled": "Desmontados",
-  "productionBatchFilterAllTypes": "Todos os Tipos",
-  "productionBatchFilterStandard": "Cesta Padrão",
-  "productionBatchFilterCustom": "Personalizada",
   "productionBatchEmpty": "Nenhum lote de produção encontrado.",
   "productionBatchMountFirst": "Montar Primeira Cesta",
   "productionBatchCancelTitle": "Estorno Total do Lote #{number}",
@@ -147,82 +121,8 @@
       }
     }
   },
-  "productionBatchCancelDescription": "Esta operação cancela a ordem de produção, deduz o saldo das cestas acabadas e retorna 100% dos insumos consumidos ao estoque fisicamente.\\n\\nRequer que todas as cestas acabadas estejam disponíveis em estoque.",
-  "productionBatchCancelReasonLabel": "Motivo do Estorno",
-  "productionBatchCancelReasonHint": "Ex: Ordem gerada em duplicidade",
   "productionBatchCancelConfirm": "Confirmar Estorno",
   "productionBatchCancelSuccess": "Lote estornado com sucesso!",
-  "productionBatchSnapshotTitle": "Snapshot Imutável de Insumos Consumidos",
-  "productionBatchSectionLabel": "Seção: {section} | Custo un: {cost}",
-  "@productionBatchSectionLabel": {
-    "placeholders": {
-      "section": {
-        "type": "String"
-      },
-      "cost": {
-        "type": "String"
-      }
-    }
-  },
-  "productionBatchTotalItemCost": "Total: {cost}",
-  "@productionBatchTotalItemCost": {
-    "placeholders": {
-      "cost": {
-        "type": "String"
-      }
-    }
-  },
-  "productionBatchDisassembleButton": "Desmontar Lote",
-  "productionBatchCancelButton": "Estorno Total",
-  "productionBatchDetailProduced": "Quantidade Produzida",
-  "productionBatchDetailStock": "Saldo Disponível",
-  "productionBatchDetailDisassembled": "Quantidade Desmontada",
-  "productionBatchDetailUnitCost": "Custo Unitário",
-  "productionBatchDetailTotalCost": "Custo Total",
-  "productionBatchDetailDate": "Data: {date}",
-  "@productionBatchDetailDate": {
-    "placeholders": {
-      "date": {
-        "type": "String"
-      }
-    }
-  },
-  "productionBatchDetailNotes": "Observações: {notes}",
-  "@productionBatchDetailNotes": {
-    "placeholders": {
-      "notes": {
-        "type": "String"
-      }
-    }
-  },
-  "productionBatchDetailDisassembledAt": "Desmontado em: {date} ({reason})",
-  "@productionBatchDetailDisassembledAt": {
-    "placeholders": {
-      "date": {
-        "type": "String"
-      },
-      "reason": {
-        "type": "String"
-      }
-    }
-  },
-  "productionBatchDescriptionLabel": "Descrição: {description}",
-  "@productionBatchDescriptionLabel": {
-    "placeholders": {
-      "description": {
-        "type": "String"
-      }
-    }
-  },
-  "productionBatchConsumedTotal": "Consumido total: {quantity}",
-  "@productionBatchConsumedTotal": {
-    "placeholders": {
-      "quantity": {
-        "type": "String"
-      }
-    }
-  },
-  "validationInvalid": "Inválido",
   "validationMinChars": "Mínimo de {min} caracteres",
   "@validationMinChars": {
     "placeholders": {
@@ -232,14 +132,6 @@
     }
   },
   "validationMustBePositive": "A quantidade a desmontar deve ser maior que zero.",
-  "validationInsufficientStockForDisassembly": "Saldo insuficiente para desmontagem: máximo permitido é de {max} unidade(s).",
-  "@validationInsufficientStockForDisassembly": {
-    "placeholders": {
-      "max": {
-        "type": "int"
-      }
-    }
-  },
   "commonTryAgain": "Tentar Novamente",
   "homePhase2Header": "Cadastros e Receitas",
   "homeProductsDescription": "Catálogo de itens, embalagens comerciais e estoque mínimo.",
@@ -248,9 +140,6 @@
   "homePurchasesDescription": "Entrada de notas, conversão de fardos/caixas e cancelamento seguro.",
   "homeInventorySummaryDescription": "Posição consolidada e alerta de ruptura de estoque.",
   "homeInventoryMovementsDescription": "Histórico auditável e imutável de todas as movimentações.",
-  "homePhase4Header": "Produção e Desmontagem",
-  "homeProductionBatchesDescription": "Histórico de ordens, desmontagem com triagem e estorno total.",
-  "homeProductionAssemblyDescription": "Simulação de viabilidade com CMPM e baixa atômica.",
   "homeServerStatusTitle": "Status do Servidor",
   "homeCentralServer": "Servidor Central",
   "homeCheckConnection": "Verificar Conexão",
@@ -283,7 +172,7 @@
   "productSearchHint": "Buscar por nome, SKU ou código de barras...",
   "productEmpty": "Nenhum produto encontrado com os filtros selecionados.",
   "productInactivateTitle": "Inativar Produto",
-  "productInactivateConfirm": "Deseja inativar o produto \"{name}\"?\n\nA exclusão física é proibida para preservar a integridade das transações anteriores. O produto deixará de aparecer em novas composições.",
+  "productInactivateConfirm": "Deseja inativar o produto \"{name}\"?\n\nO cadastro e o histórico serão preservados. Ele deixará de aparecer em novas compras e composições. Produtos nunca utilizados também podem ser excluídos definitivamente pela ação de excluir.",
   "@productInactivateConfirm": {
     "placeholders": {
       "name": {
@@ -311,7 +200,7 @@
   },
   "productCostPriceRef": "Custo Ref.:",
   "productSalePriceRef": "Venda Ref.:",
-  "productPackagingsCount": "Embalagens ({count})",
+  "productPackagingsCount": "Formas de compra ({count})",
   "@productPackagingsCount": {
     "placeholders": {
       "count": {
@@ -370,7 +259,7 @@
       }
     }
   },
-  "packagingsTitle": "Embalagens Comerciais",
+  "packagingsTitle": "Formas de compra (embalagens)",
   "packagingProductSubtitle": "{name} (Base: {unit})",
   "@packagingProductSubtitle": {
     "placeholders": {
@@ -403,7 +292,7 @@
   "packagingDialogNewTitle": "Nova Embalagem Comercial",
   "packagingDialogNameLabel": "Nome da Embalagem *",
   "packagingDialogNameHint": "Ex: Fardo c/ 10 un, Caixa c/ 12",
-  "packagingDialogQtyLabel": "Quantidade na Unidade Base * ({unit})",
+  "packagingDialogQtyLabel": "Conteúdo de uma embalagem ({unit}) *",
   "@packagingDialogQtyLabel": {
     "placeholders": {
       "unit": {
@@ -486,8 +375,8 @@
   "basketTypeFormDescLabel": "Descrição / Apresentação",
   "basketTypeFormAllowsCustom": "Permite Personalização",
   "basketTypeFormAllowsCustomSubtitle": "Permite que operadores alterem itens durante a montagem física.",
-  "basketTypeFormTracksStock": "Controla Estoque de Cesta Acabada",
-  "basketTypeFormTracksStockSubtitle": "Mantém saldo da cesta como produto acabado no inventário.",
+  "basketTypeFormTracksStock": "Estoque de cestas prontas",
+  "basketTypeFormTracksStockSubtitle": "Mantém o saldo de cestas prontas no estoque. Na venda, permite escolher Pronta ou Montar.",
   "basketTypeFormStatusActive": "Status Ativo",
   "basketTypeFormSaveCreate": "Cadastrar Tipo de Cesta",
   "basketTypeFormSaveUpdate": "Atualizar Tipo de Cesta",
@@ -691,8 +580,8 @@
   "purchaseFormItemsHeader": "Itens da Compra",
   "purchaseFormAddItem": "Adicionar Item",
   "purchaseFormProductLabel": "Produto *",
-  "purchaseFormPackagingLabel": "Embalagem",
-  "purchaseFormBaseUnitPackaging": "Unidade Base ({unit})",
+  "purchaseFormPackagingLabel": "Forma de compra",
+  "purchaseFormBaseUnitPackaging": "Sem embalagem: comprar em {unit}",
   "@purchaseFormBaseUnitPackaging": {
     "placeholders": {
       "unit": {
@@ -870,74 +759,6 @@
   "stockAdjustmentReasonRequired": "A justificativa é obrigatória para auditoria contábil",
   "stockAdjustmentConfirmButton": "Confirmar Ajuste",
   "stockAdjustmentSelectProductError": "Selecione um produto.",
-  "assemblyHeaderTitle": "Montagem de Cestas (Ordem de Produção)",
-  "assemblyTabStandard": "Cesta Padrão",
-  "assemblyTabCustom": "Cesta Personalizada",
-  "assemblyStandardBasketLabel": "Tipo de Cesta *",
-  "assemblyStandardQtyLabel": "Quantidade a Montar *",
-  "assemblyStandardQtyValidation": "Informe uma quantidade válida maior que zero",
-  "assemblyStandardDirectSale": "Venda Direta (Não adiciona ao estoque acabado)",
-  "assemblyStandardDirectSaleSubtitle": "Baixa os insumos consumidos sem criar saldo da cesta montada no inventário.",
-  "assemblyStandardNotesLabel": "Observações da Ordem",
-  "assemblyStandardNotesHint": "Ex: Pedido especial cliente XPTO",
-  "assemblyFeasibilityTitle": "Simulação de Viabilidade e Custo Médio (CMPM)",
-  "assemblyFeasibleOk": "Estoque Suficiente para Montagem",
-  "assemblyFeasibleFail": "Estoque Insuficiente para Montagem",
-  "assemblyTotalCostPreview": "Custo Total do Lote: {cost}",
-  "@assemblyTotalCostPreview": {
-    "placeholders": {
-      "cost": {
-        "type": "String"
-      }
-    }
-  },
-  "assemblyUnitCostPreview": "Custo Unitário da Cesta: {cost}",
-  "@assemblyUnitCostPreview": {
-    "placeholders": {
-      "cost": {
-        "type": "String"
-      }
-    }
-  },
-  "assemblyConfirmDialogTitle": "Confirmar Montagem de Cestas",
-  "assemblyConfirmDialogContent": "Deseja confirmar a montagem de {qty} cesta(s) \"{name}\"?\n\nOs insumos serão baixados e o lote de cestas acabadas será adicionado ao estoque imediatamente.",
-  "@assemblyConfirmDialogContent": {
-    "placeholders": {
-      "qty": {
-        "type": "int"
-      },
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "assemblyConfirmSuccess": "Lote #{number} montado com sucesso! Custo unitário: {cost}",
-  "@assemblyConfirmSuccess": {
-    "placeholders": {
-      "number": {
-        "type": "int"
-      },
-      "cost": {
-        "type": "String"
-      }
-    }
-  },
-  "assemblySubmitStandard": "Confirmar Montagem da Cesta Padrão",
-  "assemblySubmitCustom": "Confirmar Montagem da Cesta Personalizada",
-  "assemblyCustomBaseBasket": "Modelo Base da Cesta",
-  "assemblyCustomDescLabel": "Descrição da Cesta Personalizada *",
-  "assemblyCustomDescHint": "Ex: Cesta Natalina Especial para Empresa Alpha",
-  "assemblyCustomDescRequired": "Informe a descrição da cesta personalizada",
-  "assemblyCustomItemsHeader": "Composição Customizada de Insumos ({count})",
-  "@assemblyCustomItemsHeader": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "assemblyCustomAddItem": "Adicionar Insumo",
-  "assemblyCustomQtyValidation": "Quantidade inválida",
   "pairingViewTitle": "Pareamento do Dispositivo",
   "pairingTabManual": "Código PIN",
   "pairingTabQr": "Escanear QR",
@@ -986,10 +807,11 @@
   "settingsPairNewButton": "Novo Pareamento",
   "settingsGenerateQrTitle": "Pareamento de Celulares / Tablets",
   "settingsGenerateQrButton": "Gerar QR Code para Celular",
-  "settingsQrDialogTitle": "QR Code de Pareamento (Rede Local)",
-  "settingsQrDialogInstructions": "No celular Android, abra Configurações > Parear Dispositivo > Escanear QR e aponte para esta tela.",
-  "settingsPinExpiresLabel": "PIN Válido por 5 minutos: {pin}",
+  "settingsQrDialogTitle": "Conectar Celular / Tablet",
+  "settingsQrDialogInstructions": "No celular Android, abra o aplicativo, toque em 'Parear Dispositivo' > aba 'Escanear QR' e aponte a câmera para a imagem abaixo:",
+  "settingsPinExpiresLabel": "PIN válido por 5 minutos: {pin}",
   "@settingsPinExpiresLabel": {
+    "description": "PIN temporário de validação",
     "placeholders": {
       "pin": {
         "type": "String"
@@ -997,8 +819,10 @@
     }
   },
   "settingsQrClose": "Fechar",
-  "cameraPermissionDenied": "Permissão da câmera necessária para escanear QR Code.",
-  "cameraPermissionRequest": "Conceder Permissão",
+  "cameraPermissionDenied": "O acesso à câmera não foi permitido.",
+  "pairingCameraPermissionHint": "Permita o acesso à câmera para ler o QR Code. Se o Android não perguntar novamente, habilite a câmera nas configurações de permissões deste aplicativo e volte para esta tela.",
+  "pairingCameraUnavailable": "Não foi possível abrir a câmera. Feche outros aplicativos que estejam usando a câmera e tente novamente.",
+  "cameraPermissionRequest": "Ativar Câmera",
   "purchaseDetailUnitCost": "Unit.: {cost}",
   "@purchaseDetailUnitCost": {
     "placeholders": {
@@ -1021,7 +845,6 @@
   "categoryFood": "Alimentação",
   "categoryCleaning": "Limpeza",
   "categoryMeat": "Carnes & Frios",
-  "categoryHygiene": "Higiene",
   "categoryOthers": "Outros",
   "categoryInput": "Insumo",
   "categoryAll": "Todas",
@@ -1037,7 +860,6 @@
     }
   },
   "productionBatchViewIngredients": "Ver Insumos",
-  "productionDisassemble": "Desmontar",
   "productionDisassembleNoIngredients": "Nenhum insumo registrado neste lote.",
   "homeLocalConnectionInfo": "Informações da Conexão Local",
   "homeApiVersionLabel": "Versão da API",
@@ -1122,8 +944,8 @@
   "saleDiscount": "Desconto",
   "saleSubtotal": "Subtotal",
   "saleAssemblyMode": "Origem da Cesta",
-  "saleAssemblyModeStock": "Estoque Acabado",
-  "saleAssemblyModeDemand": "Montar Imediatamente",
+  "saleAssemblyModeStock": "Pronta",
+  "saleAssemblyModeDemand": "Montar",
   "saleGrossTotal": "Total Bruto",
   "saleTotalDiscount": "Total de Descontos",
   "saleNetTotal": "Total Líquido",
@@ -1154,7 +976,7 @@
     }
   },
   "saleCreditLimitAuthorize": "Autorizar e Concluir Venda",
-  "saleStockAvailable": "Saldo disponível: {qty}",
+  "saleStockAvailable": "Cestas prontas disponíveis: {qty}",
   "@saleStockAvailable": {
     "placeholders": {
       "qty": {
@@ -1233,31 +1055,12 @@
   "receivablePaymentAmountExceedsBalance": "Valor informado excede o saldo devedor.",
   "homePhase6Header": "Fase 6: Expedição, Conferência e Custódia",
   "moduleDispatches": "Saídas e Conferências",
-  "homeDispatchesDescription": "Controle de saídas físicas, conferência e repasses",
   "moduleResponsiblePersons": "Pessoas Responsáveis",
   "homeResponsiblePersonsDescription": "Cadastro de entregadores, vendedores externos e motoristas",
   "responsiblePersonsTitle": "Pessoas Responsáveis",
-  "responsiblePersonNew": "Novo Responsável",
-  "responsiblePersonEdit": "Editar Responsável",
   "responsiblePersonName": "Nome",
-  "responsiblePersonPhone": "Telefone / WhatsApp",
-  "responsiblePersonNotes": "Observações",
-  "responsiblePersonActive": "Ativo",
-  "responsiblePersonInactive": "Inativo",
-  "responsiblePersonsEmpty": "Nenhuma pessoa responsável cadastrada.",
   "responsiblePersonCustodyTitle": "Custódia Atual de Cestas",
-  "responsiblePersonTotalInCustody": "Total sob custódia: {qty} cestas",
-  "@responsiblePersonTotalInCustody": {
-    "placeholders": {
-      "qty": {
-        "type": "int"
-      }
-    }
-  },
-  "responsiblePersonNoCustody": "Nenhuma cesta sob custódia no momento.",
-  "responsiblePersonSavedSuccess": "Responsável salvo com sucesso.",
   "dispatchesTitle": "Saídas Físicas e Conferência",
-  "dispatchNew": "Nova Saída de Cestas",
   "dispatchNumber": "Saída #{number}",
   "@dispatchNumber": {
     "placeholders": {
@@ -1266,81 +1069,9 @@
       }
     }
   },
-  "dispatchResponsible": "Responsável",
   "dispatchDate": "Data da Saída",
-  "dispatchTotalBaskets": "Total de Cestas",
-  "dispatchTotalReference": "Valor de Referência",
-  "dispatchStatusOpen": "Aberta",
-  "dispatchStatusConcluded": "Concluída",
-  "dispatchStatusPendingInvestigation": "Sob Investigação",
-  "dispatchStatusCanceled": "Cancelada",
   "dispatchStatusResolved": "Resolvido",
-  "dispatchesEmpty": "Nenhuma saída física registrada.",
-  "dispatchCancel": "Cancelar Saída",
-  "dispatchCancelConfirm": "Deseja realmente cancelar a saída #{number}?",
-  "@dispatchCancelConfirm": {
-    "placeholders": {
-      "number": {
-        "type": "int"
-      }
-    }
-  },
-  "dispatchCancelReason": "Motivo do cancelamento",
-  "dispatchCancelSuccess": "Saída cancelada com sucesso. Cestas retornadas ao estoque da loja.",
-  "dispatchCreatedSuccess": "Saída registrada com sucesso.",
-  "dispatchFormTitle": "Registrar Saída Física",
-  "dispatchSelectResponsible": "Selecione o Responsável",
-  "dispatchItemsTitle": "Cestas a Retirar",
-  "dispatchAddItem": "Adicionar Cesta",
-  "dispatchItemBasket": "Tipo de Cesta",
-  "dispatchItemQuantity": "Quantidade",
-  "dispatchItemUnitPrice": "Preço de Referência",
-  "dispatchItemSubtotal": "Subtotal",
-  "dispatchItemNotes": "Personalizações / Observações",
-  "dispatchAvailableStoreStock": "Estoque loja: {qty}",
-  "@dispatchAvailableStoreStock": {
-    "placeholders": {
-      "qty": {
-        "type": "int"
-      }
-    }
-  },
-  "dispatchInsufficientStoreStock": "Estoque insuficiente na loja para \"{name}\". Disponível: {stock}, Solicitado: {qty}.",
-  "@dispatchInsufficientStoreStock": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      },
-      "stock": {
-        "type": "int"
-      },
-      "qty": {
-        "type": "int"
-      }
-    }
-  },
   "dispatchDuplicateBasketConsolidatedNotice": "Cesta repetida: será consolidada automaticamente no despacho.",
-  "dispatchSubmit": "Confirmar Saída Física",
-  "conferenceTitle": "Conferência da Saída #{number}",
-  "@conferenceTitle": {
-    "placeholders": {
-      "number": {
-        "type": "int"
-      }
-    }
-  },
-  "conferenceScreenTitle": "Conferência de Saída",
-  "@conferenceScreenTitle": {
-    "description": "Título genérico da tela de conferência de saída durante carregamento ou erro"
-  },
-  "conferenceStatusLabel": "Status da Saída: {status}",
-  "@conferenceStatusLabel": {
-    "placeholders": {
-      "status": {
-        "type": "String"
-      }
-    }
-  },
   "conferencePhysicalEquationTitle": "Equação Física de Custódia (4 Termos)",
   "conferenceDispatchedLabel": "1. Retiradas: {qty}",
   "@conferenceDispatchedLabel": {
@@ -1374,83 +1105,10 @@
       }
     }
   },
-  "conferenceCustodyRemainingLabel": "Em Trânsito / Custódia: {qty}",
-  "@conferenceCustodyRemainingLabel": {
-    "placeholders": {
-      "qty": {
-        "type": "int"
-      }
-    }
-  },
-  "conferenceDiscrepancyLabel": "Divergência Física: {qty} cestas",
-  "@conferenceDiscrepancyLabel": {
-    "placeholders": {
-      "qty": {
-        "type": "int"
-      }
-    }
-  },
   "conferencePhysicalEquationBalanced": "Equação Física Bateu (Sem divergências)",
   "conferencePhysicalEquationDivergent": "Divergência Física Detectada!",
-  "conferenceFinancialTitle": "Controle Financeiro de Rota e Repasses",
   "conferenceExpectedCashLabel": "Dinheiro em Mãos Esperado: {amount}",
   "@conferenceExpectedCashLabel": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
-  "conferenceActualRepaidLabel": "Repasses Realizados: {amount}",
-  "@conferenceActualRepaidLabel": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
-  "conferencePendingCashLabel": "Saldo a Repassar: {amount}",
-  "@conferencePendingCashLabel": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
-  "conferenceCashSalesLabel": "Vendas à Vista (Dinheiro): {amount}",
-  "@conferenceCashSalesLabel": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
-  "conferenceDirectCompanyLabel": "Pix / Cartão Direto à Empresa: {amount}",
-  "@conferenceDirectCompanyLabel": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
-  "conferenceCreditSalesLabel": "Vendas a Prazo (Fiado na rota): {amount}",
-  "@conferenceCreditSalesLabel": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
-  "conferenceDebtCollectedLabel": "Cobrança de Fiados em Rota: {amount}",
-  "@conferenceDebtCollectedLabel": {
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
-  "conferenceExpensesLabel": "Despesas Autorizadas Abatidas: {amount}",
-  "@conferenceExpensesLabel": {
     "placeholders": {
       "amount": {
         "type": "String"
@@ -1461,55 +1119,6 @@
   "conferenceFinancialBalanced": "Financeiro Bateu (Repasse integral)",
   "conferenceDirectNotice": "* Pix e cartões recebidos diretamente na conta da empresa NÃO são devidos pelo motorista/entregador.",
   "conferenceExpenseExceedsNotice": "As despesas autorizadas superaram as vendas em dinheiro da rota. Saldo credor ao entregador / ressarcimento pela empresa.",
-  "conferenceActionReturn": "Devolução Intacta",
-  "conferenceActionLoss": "Avaria / Perda",
-  "conferenceActionExpense": "Despesa Autorizada",
-  "conferenceActionRepayment": "Repasse de Dinheiro",
-  "conferenceActionSettle": "Concluir Acerto / Fechamento",
-  "conferenceActionInvestigation": "Documentar Investigação",
-  "conferenceSettledSuccess": "Conferência registrada com sucesso.",
-  "conferenceInvestigationUpdatedSuccess": "Notas de investigação atualizadas com sucesso.",
-  "conferenceReturnsListTitle": "Devoluções de Cestas Intactas",
-  "conferenceLossesListTitle": "Avarias e Perdas Físicas",
-  "conferenceExpensesListTitle": "Despesas Autorizadas",
-  "conferenceRepaymentsListTitle": "Repasses Financeiros Registrados",
-  "conferenceNoReturns": "Nenhuma devolução intacta registrada.",
-  "conferenceNoLosses": "Nenhuma avaria ou perda registrada.",
-  "conferenceNoExpenses": "Nenhuma despesa autorizada registrada.",
-  "conferenceNoRepayments": "Nenhum repasse de dinheiro registrado.",
-  "dialogReturnTitle": "Registrar Devolução Intacta",
-  "dialogReturnQty": "Quantidade Devolvida",
-  "dialogReturnNotes": "Observações",
-  "dialogLossTitle": "Registrar Avaria ou Perda",
-  "dialogLossQty": "Quantidade Avariada/Perdida",
-  "dialogLossReason": "Justificativa Obrigatória da Perda",
-  "dialogLossReasonRequired": "A justificativa da perda é obrigatória (mínimo 3 caracteres).",
-  "dialogExpenseTitle": "Registrar Despesa Autorizada",
-  "dialogExpenseAmount": "Valor da Despesa",
-  "dialogExpenseDesc": "Descrição (ex: Combustível, Borracharia)",
-  "dialogExpenseReceipt": "Nº do Comprovante / Cupom",
-  "dialogExpenseAuthorizedBy": "Autorizado por",
-  "dialogRepaymentTitle": "Registrar Repasse Financeiro",
-  "dialogRepaymentAmount": "Valor Repassado",
-  "dialogRepaymentMethod": "Forma do Repasse",
-  "dialogRepaymentReceivedBy": "Recebido na Empresa por",
-  "dialogRepaymentNotes": "Observações",
-  "dialogSettleTitle": "Fechamento Operacional / Acerto",
-  "dialogSettleAuditedBy": "Auditor / Responsável pelo Fechamento",
-  "dialogSettleAuditedByRequired": "Informe o nome do responsável pelo fechamento.",
-  "dialogSettleNotes": "Observações do Fechamento",
-  "dialogSettleWarningDivergent": "Atenção: Existem divergências físicas ou financeiras. O fechamento será registrado como SOB INVESTIGAÇÃO.",
-  "dialogSettleInvestigationNotes": "Notas Iniciais da Investigação",
-  "dialogInvestigationTitle": "Investigação de Divergências",
-  "dialogInvestigationNotes": "Parecer da Investigação / Justificativas",
-  "dialogInvestigationMarkResolved": "Marcar como Resolvido (Divergências apuradas/justificadas)",
-  "dialogInvestigationSave": "Salvar Parecer",
-  "saleModeLabel": "Modalidade da Venda",
-  "saleModeDirectStore": "Balcão / Loja",
-  "saleModeCommercialRoute": "Rota / Venda Externa",
-  "saleRouteSelectDispatch": "Vincular à Saída / Rota Ativa",
-  "saleRouteNoDispatches": "Nenhuma saída aberta disponível para este responsável.",
-  "saleRouteResponsibleLabel": "Responsável pela Rota",
   "saleCustodyStockAvailable": "Saldo sob custódia: {qty}",
   "@saleCustodyStockAvailable": {
     "placeholders": {
@@ -1518,11 +1127,9 @@
       }
     }
   },
-  "homePhase7Header": "Fase 7: Gestão Financeira & Tesouraria",
+  "homePhase7Header": "Financeiro",
   "modulePayables": "Contas a Pagar",
   "homePayablesDescription": "Boletos, cheques, empréstimos, fornecedores e parcelamentos",
-  "moduleTreasury": "Tesouraria & Livro-Caixa",
-  "homeTreasuryDescription": "Caixa físico, contas bancárias, transferências e conciliação",
   "payablesTitle": "Contas a Pagar",
   "payablesNew": "Nova Obrigação a Pagar",
   "payableDescription": "Descrição",
@@ -1568,53 +1175,11 @@
   "payableReversePaymentSuccess": "Pagamento estornado com sucesso",
   "payablePaymentAmountExceedsBalance": "O valor informado excede o saldo devedor.",
   "payablePaymentAmountMustBePositive": "O valor do pagamento deve ser maior que zero.",
-  "payableSelectAccount": "Conta Financeira de Saída",
   "payableNoPayables": "Nenhuma obrigação a pagar encontrada.",
   "payableFilterMonth": "Mês",
   "payableFilterYear": "Ano",
-  "treasuryTitle": "Tesouraria & Conciliação",
-  "treasuryTabAccounts": "Saldos & Contas",
-  "treasuryTabLedger": "Livro-Caixa (Extrato)",
-  "treasuryTabSummary": "Visão Gerencial",
-  "treasuryTotalAvailable": "Saldo Disponível (Caixa e Bancos)",
-  "treasuryCashBalance": "Caixa Físico da Loja",
-  "treasuryBankBalance": "Contas Bancárias",
-  "treasuryRouteCashPending": "Dinheiro em Rota (em trânsito)",
-  "treasuryProjectedNet": "Saldo Líquido Projetado",
-  "treasuryOpenReceivables": "A Receber (Fiados Pendentes)",
-  "treasuryOverdueReceivables": "A Receber Vencidos",
   "treasuryOpenPayables": "A Pagar (Obrigações Abertas)",
   "treasuryOverduePayables": "A Pagar Vencidos",
-  "treasuryBusinessExpenses": "Despesas Operacionais (Mês)",
-  "treasuryPersonalWithdrawals": "Retiradas de Sócios (Mês)",
-  "treasuryNewAccount": "Nova Conta Financeira",
-  "treasuryEditAccount": "Editar Conta Financeira",
-  "treasuryAccountName": "Nome da Conta",
-  "treasuryAccountType": "Tipo de Conta",
-  "treasuryTypeCash": "Caixa Físico",
-  "treasuryTypeBank": "Conta Bancária",
-  "treasuryTypeOther": "Outra Conta / Cofre",
-  "treasuryBankName": "Instituição Financeira / Banco",
-  "treasuryAccountNumber": "Agência e Conta",
-  "treasuryInitialBalance": "Saldo Inicial de Abertura",
-  "treasuryIsDefault": "Conta Padrão",
-  "treasuryTransferTitle": "Transferência entre Contas",
-  "treasurySourceAccount": "Conta de Origem (Saída)",
-  "treasuryDestinationAccount": "Conta de Destino (Entrada)",
-  "treasuryTransferAmount": "Valor da Transferência",
-  "treasuryTransferSuccess": "Transferência realizada com sucesso",
-  "treasuryManualEntryTitle": "Lançamento no Livro-Caixa",
-  "treasuryEntryType": "Tipo de Lançamento",
-  "treasuryEntryCredit": "Crédito (Entrada)",
-  "treasuryEntryDebit": "Débito (Saída)",
-  "treasuryEntryCategory": "Categoria",
-  "treasuryEntryDescription": "Descrição do Lançamento",
-  "treasuryEntryAmount": "Valor",
-  "treasuryEntrySuccess": "Lançamento registrado com sucesso",
-  "treasuryNoEntries": "Nenhuma movimentação registrada no livro-caixa.",
-  "treasuryNoAccounts": "Nenhuma conta financeira cadastrada.",
-  "treasuryReversalBadge": "ESTORNO",
-  "treasuryImmutableNote": "Livro-Caixa imutável: todas as operações são estritamente append-only.",
   "receivableRepassDirect": "Direto na Empresa / Loja",
   "receivableRepassPending": "Pendente de Repasse (Dinheiro em Rota)",
   "receivableRepassDone": "Repassado e Liquidado",
@@ -1637,7 +1202,7 @@
   "receivableFilterApply": "Aplicar Filtros",
   "homePhase8Header": "Fase 8: Dashboard, Relatórios, Planilhas e Impressão",
   "moduleDashboard": "Dashboard Geral",
-  "homeDashboardDescription": "Visão consolidada operacional, faturamento e livro-caixa",
+  "homeDashboardDescription": "Vendas, estoque, recebimentos, pagamentos e resultado",
   "moduleReports": "Relatórios & Planilhas",
   "homeReportsDescription": "Consultas analíticas, exportação CSV/XLSX e impressão PDF",
   "moduleBlankForms": "Formulários A4 & Impressão",
@@ -1661,18 +1226,11 @@
   "dashboardSectionInventory": "Estoque & Alertas",
   "dashboardLowStockAlert": "Itens Abaixo do Mínimo",
   "dashboardStockNormal": "Estoque em Nível Regular",
-  "dashboardSectionFinancial": "Financeiro & Tesouraria",
-  "dashboardOpenReceivables": "A Receber (Em Aberto)",
   "dashboardOverdueReceivables": "A Receber Vencidos",
-  "dashboardEffectiveReceived": "Recebimentos Efetivos",
-  "dashboardOpenPayables": "A Pagar (Em Aberto)",
   "dashboardOverduePayables": "A Pagar Vencidos",
-  "dashboardEffectivePaid": "Pagamentos Efetuados",
   "dashboardCashInflow": "Entradas de Caixa",
   "dashboardCashOutflow": "Saídas de Caixa",
   "dashboardTreasuryBalance": "Saldo Disponível (Tesouraria)",
-  "dashboardProjectedCash": "Saldo de Caixa Projetado",
-  "dashboardProjectionNotice": "Atenção: Valores projetados são estimativas futuras e NÃO constituem dinheiro disponível em caixa.",
   "reportsTitle": "Relatórios Gerenciais e Planilhas",
   "reportSalesDispatches": "Vendas e Saídas de Cestas",
   "reportAssembly": "Montagem e Produção de Cestas",
@@ -1976,27 +1534,6 @@
   "@dashboardNoOpenPayables": {
     "description": "Estado vazio de contas a pagar"
   },
-  "conferenceMethodCashHand": "Dinheiro em Mãos",
-  "@conferenceMethodCashHand": {
-    "description": "Forma de repasse: Dinheiro em Mãos"
-  },
-  "conferenceMethodPixSettled": "PIX Repassado",
-  "@conferenceMethodPixSettled": {
-    "description": "Forma de repasse: PIX Repassado"
-  },
-  "conferenceMethodBankTransfer": "Transferência Bancária",
-  "@conferenceMethodBankTransfer": {
-    "description": "Forma de repasse: Transferência Bancária"
-  },
-  "commonObservationsPrefix": "Observações: {notes}",
-  "@commonObservationsPrefix": {
-    "description": "Prefixo de observações completas",
-    "placeholders": {
-      "notes": {
-        "type": "String"
-      }
-    }
-  },
   "payableCategorySupplier": "Fornecedor",
   "@payableCategorySupplier": {
     "description": "Categoria de conta: Fornecedor"
@@ -2145,132 +1682,6 @@
   "@filterAllOption": {
     "description": "Opção Todos em filtros suspensos"
   },
-  "treasuryNeedTwoAccountsForTransfer": "São necessárias ao menos 2 contas para realizar transferências.",
-  "@treasuryNeedTwoAccountsForTransfer": {
-    "description": "Alerta de contas insuficientes para transferência"
-  },
-  "treasuryAccountLabel": "Conta Financeira",
-  "@treasuryAccountLabel": {
-    "description": "Rótulo do seletor de conta financeira"
-  },
-  "treasuryAccountFilterLabel": "Conta",
-  "@treasuryAccountFilterLabel": {
-    "description": "Filtro de conta"
-  },
-  "treasuryLaunchEntry": "Lançamento",
-  "@treasuryLaunchEntry": {
-    "description": "Botão de novo lançamento na tesouraria"
-  },
-  "treasuryConsolidatedPosition": "Posição Consolidada da Empresa",
-  "@treasuryConsolidatedPosition": {
-    "description": "Título do quadro consolidado da tesouraria"
-  },
-  "treasuryCashPhysicalLabel": "Caixa Físico: {amount}",
-  "@treasuryCashPhysicalLabel": {
-    "description": "Saldo em espécie/caixa físico",
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
-  "treasuryBankLabel": "Bancos: {amount}",
-  "@treasuryBankLabel": {
-    "description": "Saldo em contas bancárias",
-    "placeholders": {
-      "amount": {
-        "type": "String"
-      }
-    }
-  },
-  "treasuryFormulaExplanation": "Fórmula: Disponível + A Receber - A Pagar",
-  "@treasuryFormulaExplanation": {
-    "description": "Legenda explicativa do cálculo de previsão"
-  },
-  "treasuryFutureCommitmentsTitle": "Compromissos Futuros & Fiados",
-  "@treasuryFutureCommitmentsTitle": {
-    "description": "Título do quadro de compromissos futuros"
-  },
-  "treasuryCustodyCouriers": "Em custódia de entregadores",
-  "@treasuryCustodyCouriers": {
-    "description": "Subtítulo de valores em custódia externa"
-  },
-  "treasuryExpenseSegregationTitle": "Segregação de Despesas (Mês)",
-  "@treasuryExpenseSegregationTitle": {
-    "description": "Título do quadro de segregação de despesas"
-  },
-  "treasuryBusinessExpensesDesc": "Gastos operacionais da atividade",
-  "@treasuryBusinessExpensesDesc": {
-    "description": "Descrição de despesas empresariais"
-  },
-  "treasuryPersonalWithdrawalsDesc": "Não misturar com contas da empresa",
-  "@treasuryPersonalWithdrawalsDesc": {
-    "description": "Descrição de retiradas de sócios"
-  },
-  "treasuryCatCapitalContribution": "Aporte de Capital",
-  "@treasuryCatCapitalContribution": {
-    "description": "Categoria: Aporte de Capital"
-  },
-  "treasuryCatSalesRevenue": "Receita de Vendas",
-  "@treasuryCatSalesRevenue": {
-    "description": "Categoria: Receita de Vendas"
-  },
-  "treasuryCatCustomerReceipt": "Recebimento de Cliente",
-  "@treasuryCatCustomerReceipt": {
-    "description": "Categoria: Recebimento de Cliente"
-  },
-  "treasuryCatOtherCredits": "Outros Créditos",
-  "@treasuryCatOtherCredits": {
-    "description": "Categoria: Outros Créditos"
-  },
-  "treasuryCatPartnerWithdrawal": "Retirada de Sócios / Pró-labore",
-  "@treasuryCatPartnerWithdrawal": {
-    "description": "Categoria: Retirada de Sócios / Pró-labore"
-  },
-  "treasuryCatSupplierPayment": "Pagamento Fornecedor",
-  "@treasuryCatSupplierPayment": {
-    "description": "Categoria: Pagamento Fornecedor"
-  },
-  "treasuryCatElectricity": "Energia Elétrica",
-  "@treasuryCatElectricity": {
-    "description": "Categoria: Energia Elétrica"
-  },
-  "treasuryCatRent": "Aluguel",
-  "@treasuryCatRent": {
-    "description": "Categoria: Aluguel"
-  },
-  "treasuryCatFreightFuel": "Frete / Combustível",
-  "@treasuryCatFreightFuel": {
-    "description": "Categoria: Frete / Combustível"
-  },
-  "treasuryCatMaintenance": "Manutenção",
-  "@treasuryCatMaintenance": {
-    "description": "Categoria: Manutenção"
-  },
-  "treasuryCatOtherExpenses": "Outras Despesas",
-  "@treasuryCatOtherExpenses": {
-    "description": "Categoria: Outras Despesas"
-  },
-  "treasuryMethodPix": "PIX",
-  "@treasuryMethodPix": {
-    "description": "Método de pagamento: PIX"
-  },
-  "treasuryMethodCash": "Dinheiro",
-  "@treasuryMethodCash": {
-    "description": "Método de pagamento: Dinheiro"
-  },
-  "treasuryMethodTransfer": "Transferência",
-  "@treasuryMethodTransfer": {
-    "description": "Método de pagamento: Transferência"
-  },
-  "treasuryMethodCard": "Cartão",
-  "@treasuryMethodCard": {
-    "description": "Método de pagamento: Cartão"
-  },
-  "treasuryMethodOther": "Outro",
-  "@treasuryMethodOther": {
-    "description": "Método de pagamento: Outro"
-  },
   "receivablesBasketsPrefix": "Cestas: {summary}",
   "@receivablesBasketsPrefix": {
     "description": "Resumo de cestas do recebível",
@@ -2289,7 +1700,7 @@
       }
     }
   },
-  "tooltipPrintSelectPrinter": "Imprimir / Selecionar Impressora (Epson Wi-Fi)",
+  "tooltipPrintSelectPrinter": "Imprimir / Selecionar impressora",
   "@tooltipPrintSelectPrinter": {
     "description": "Tooltip do botão de seleção de impressoras e Epson"
   },
@@ -2305,68 +1716,24 @@
   "@payableRevertPaymentTooltip": {
     "description": "Tooltip do botão de estorno de pagamento"
   },
-  "dispatchPhysicalNotesHint": "Observações da saída física (opcional)",
-  "@dispatchPhysicalNotesHint": {
-    "description": "Dica de preenchimento para observações de saída física"
-  },
-  "dispatchCustomizationHint": "Ex: Cesta personalizada, lote específico",
-  "@dispatchCustomizationHint": {
-    "description": "Dica de personalização de cesta na saída"
-  },
-  "conferenceLossReasonHint": "Ex: Caixa molhou na chuva durante entrega",
-  "@conferenceLossReasonHint": {
-    "description": "Dica de justificativa para avaria ou perda na conferência"
-  },
-  "conferenceReceivedByHint": "Colaborador que conferiu e recebeu",
-  "@conferenceReceivedByHint": {
-    "description": "Dica do conferente que recebeu o repasse"
-  },
-  "conferenceAuditorNameHint": "Nome do conferente / auditor",
-  "@conferenceAuditorNameHint": {
-    "description": "Dica do nome do auditor na finalização do acerto"
-  },
-  "conferenceInitialJustificationHint": "Justificativa inicial das divergências",
-  "@conferenceInitialJustificationHint": {
-    "description": "Dica para justificativa inicial de pendências"
-  },
-  "conferenceInvestigationHint": "Descreva a apuração, se foi justificado, perdas aceitas ou ressarcimento",
-  "@conferenceInvestigationHint": {
-    "description": "Dica para investigação de divergência"
-  },
-  "settingsGenerateQrTitle": "Pareamento de Celulares / Tablets",
   "@settingsGenerateQrTitle": {
     "description": "Título da seção de geração de QR Code para celular"
   },
-  "settingsGenerateQrButton": "Gerar QR Code para Celular",
   "@settingsGenerateQrButton": {
     "description": "Botão para gerar QR Code de pareamento"
   },
-  "settingsQrDialogTitle": "Conectar Celular / Tablet",
   "@settingsQrDialogTitle": {
     "description": "Título do diálogo de QR Code gerado"
   },
-  "settingsQrDialogInstructions": "No celular Android, abra o aplicativo, toque em 'Parear Dispositivo' > aba 'Escanear QR' e aponte a câmera para a imagem abaixo:",
   "@settingsQrDialogInstructions": {
     "description": "Instruções do diálogo de QR Code"
   },
-  "settingsPinExpiresLabel": "PIN válido por 5 minutos: {pin}",
-  "@settingsPinExpiresLabel": {
-    "description": "PIN temporário de validação",
-    "placeholders": {
-      "pin": {
-        "type": "String"
-      }
-    }
-  },
-  "settingsQrClose": "Fechar",
   "@settingsQrClose": {
     "description": "Botão fechar do diálogo QR"
   },
-  "cameraPermissionDenied": "Câmera aguardando permissão ou reinicialização.",
   "@cameraPermissionDenied": {
     "description": "Mensagem quando a câmera precisa ser ativada"
   },
-  "cameraPermissionRequest": "Ativar Câmera",
   "@cameraPermissionRequest": {
     "description": "Botão para solicitar permissão de câmera"
   },
@@ -2458,7 +1825,6 @@
   "purchasePaymentAmountDueLabel": "Valor Devido / Total Financeiro",
   "purchasePaymentDueDateLabel": "Data de Vencimento",
   "purchasePaymentDueDateRequired": "A data de vencimento é obrigatória para compras pendentes.",
-  "purchasePaymentFinancialAccountLabel": "Conta Financeira de Liquidação",
   "purchasePaymentPendingNotice": "Esta compra gerará uma obrigação em aberto no módulo de Contas a Pagar com vencimento em {date}.",
   "@purchasePaymentPendingNotice": {
     "placeholders": {
@@ -2541,5 +1907,1034 @@
         "type": "String"
       }
     }
-  }
+  },
+  "companyFinanceTitle": "Recebimentos, pagamentos e resultado",
+  "companyFinancialReportTitle": "Resultado, recebimentos e pagamentos",
+  "companyPaymentsScope": "Valores confirmados no período selecionado, incluindo os estornos registrados nesse período.",
+  "companyReceived": "Recebimentos confirmados",
+  "companyPaid": "Pagamentos confirmados",
+  "companyPaymentDifference": "Diferença entre recebido e pago",
+  "companyDifferenceExplanation": "Compara os movimentos do período. Não representa saldo bancário nem lucro.",
+  "companyResultTitle": "Resultado das vendas no período",
+  "companyResultExplanation": "As vendas a prazo entram no valor vendido, mesmo antes do recebimento. As outras despesas são consideradas quando pagas.",
+  "companySalesRevenue": "Valor das vendas",
+  "companySoldCost": "Custo das cestas vendidas",
+  "companyGrossProfit": "Lucro bruto das vendas",
+  "companyOperatingExpenses": "Outras despesas do negócio pagas",
+  "companyOperatingResult": "Resultado gerencial do período",
+  "companyCostExplanation": "O custo dos insumos vendidos já está no custo das cestas. As compras de estoque não são descontadas novamente do lucro bruto. Retiradas pessoais são mostradas separadamente.",
+  "companyPendingTitle": "Contas ainda pendentes",
+  "companyPendingScope": "Totais atuais de todas as contas em aberto. Os vencimentos no período aparecem abaixo.",
+  "companyPendingReceivable": "Total pendente a receber",
+  "companyPendingPayable": "Total pendente a pagar",
+  "companyReceivableDueInPeriod": "A receber com vencimento no período",
+  "companyPayableDueInPeriod": "A pagar com vencimento no período",
+  "companyReceivedDetails": "Recebimentos confirmados no período",
+  "companyPaidDetails": "Pagamentos confirmados no período",
+  "companyNoPayments": "Nenhum registro confirmado neste período.",
+  "companyPaidStatus": "Recebida",
+  "companyPartialStatus": "Recebida parcialmente",
+  "companyPendingStatus": "A receber",
+  "companyStockAvailable": "Disponível",
+  "companyMissingCost": "Há {count} venda(s) com custo incompleto. O resultado gerencial precisa ser conferido.",
+  "@companyMissingCost": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "companyStockPaid": "Compras de estoque pagas: {value}",
+  "@companyStockPaid": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "companyWithdrawalsPaid": "Retiradas pessoais pagas: {value}",
+  "@companyWithdrawalsPaid": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "companyOverdueAmount": "Vencido: {value}",
+  "@companyOverdueAmount": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "companyPaymentDescription": "{method} · {date}",
+  "@companyPaymentDescription": {
+    "placeholders": {
+      "method": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "companyPurchasesTitle": "Compras registradas no período",
+  "companyPurchaseCount": "{count} compra(s) confirmada(s)",
+  "@companyPurchaseCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "companyPurchasesExplanation": "Inclui compras pagas e a prazo. Os pagamentos confirmados aparecem separadamente no financeiro.",
+  "productDeleteButton": "Excluir definitivamente",
+  "productDeleteTitle": "Excluir produto nunca utilizado?",
+  "productDeleteConfirm": "Excluir definitivamente \"{name}\"? O cadastro e suas embalagens nunca usadas serão removidos. Essa ação não pode ser desfeita.",
+  "@productDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "productDeletedSuccess": "Produto nunca utilizado excluído definitivamente.",
+  "productDeleteBlockedTitle": "Este produto tem vínculos ou histórico",
+  "productDeleteBlocked": "\"{name}\" não pode ser excluído definitivamente porque possui registros em:\n\n{reasons}\n\nPara deixar de utilizá-lo, você pode inativar o cadastro. Se ele estiver em uma receita ativa, retire-o dessa composição antes de inativar.",
+  "@productDeleteBlocked": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "reasons": {
+        "type": "String"
+      }
+    }
+  },
+  "productDeleteHistoryError": "O produto possui vínculos ou histórico. A exclusão definitiva foi bloqueada para preservar esses registros.",
+  "productUsageRecipes": "• Receitas de cestas, incluindo versões anteriores",
+  "productUsagePurchases": "• Compras, incluindo rascunhos e compras canceladas",
+  "productUsageProduction": "• Montagens ou composições já registradas",
+  "productUsageMovements": "• Movimentações de estoque, mesmo com estoque zerado",
+  "productUsageHistory": "• Outros registros anteriores",
+  "packagingHelpExplanation": "A embalagem comercial é a forma como você compra este produto: pacote, saco, fardo, caixa ou unidade. Ela informa quanto uma embalagem acrescenta ao estoque. Não é a embalagem vazia usada para montar a cesta.\n\nExemplo: se o arroz é controlado em gramas, um saco de 5 kg contém 5.000 g. Ao comprar 3 sacos, entram 15.000 g no estoque. Sem uma embalagem cadastrada, a compra é informada diretamente na unidade-base do produto.",
+  "packagingContentHelp": "Informe o conteúdo de uma única embalagem na unidade-base {unit}. Exemplos: caixa com 12 unidades = 12 UNIT; saco de 5 kg = 5.000 G; frasco de 500 ml = 500 ML. Use o exemplo que corresponde à unidade deste produto.",
+  "@packagingContentHelp": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "purchasePackagingHelpTitle": "Como informar quantidade e preço?",
+  "purchasePackagingHelpExplanation": "Escolha a forma como comprou o produto. A quantidade indica quantas embalagens você comprou, e o preço é o valor de uma delas.\n\nExemplo: 3 sacos de arroz de 5 kg a R$ 25 por saco = 15 kg no estoque e R$ 75 na compra. Caixa com 12 unidades: 2 caixas = 24 unidades.\n\nSe escolher \"Sem embalagem\", informe a quantidade e o preço na unidade-base exibida. Para comprar por kg ou litro com preço por kg/litro, cadastre essa forma de compra antes: 1 kg = 1.000 g; 1 litro = 1.000 ml.",
+  "purchaseQuantityPackages": "Quantidade de embalagens",
+  "purchaseQuantityBaseUnits": "Quantidade em {unit}",
+  "@purchaseQuantityBaseUnits": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "purchasePricePerPackage": "Preço de uma embalagem (R$)",
+  "purchasePricePerBaseUnit": "Preço por {unit} (R$)",
+  "@purchasePricePerBaseUnit": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "purchasePackageCountHelp": "Ex.: para 3 sacos ou 3 caixas, informe 3.",
+  "purchaseBaseCountHelp": "Quantidade diretamente na unidade-base exibida.",
+  "purchasePackagePriceHelp": "Valor de um saco, pacote ou caixa da forma de compra escolhida.",
+  "purchaseBasePriceHelp": "Preço de uma única unidade-base. Para preço por kg/litro, cadastre a forma de compra.",
+  "purchasePackagingContents": "Cada \"{name}\" acrescenta {quantity} ao estoque.",
+  "@purchasePackagingContents": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "quantity": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsHttpsUrlRequired": "Informe uma URL HTTPS válida do servidor, sem usuário ou senha no endereço.",
+  "settingsTokenEntryHelp": "Opcional: cole um token já emitido pelo servidor. Deixe vazio para manter a autenticação atual ou autenticar automaticamente no servidor deste computador (localhost).",
+  "settingsSaveAuthenticate": "Salvar e autenticar este computador",
+  "settingsPairComputer": "Parear este computador por PIN",
+  "settingsAuthenticatedSuccess": "Computador autenticado no servidor.",
+  "settingsSavedNeedsAuthentication": "Configurações salvas. O servidor ainda não confirmou a autenticação. Confira a conexão, informe um token válido ou faça o pareamento por PIN.",
+  "newDatabaseTitle": "Criar e usar um novo banco",
+  "newDatabaseCreating": "Criando e ativando o novo banco...",
+  "newDatabaseHelp": "Gera um backup verificado do banco atual e começa com um banco vazio. Os pareamentos dos dispositivos são mantidos.",
+  "newDatabaseConfirmationBody": "Esta ação troca o banco usado por toda a empresa, incluindo computadores, celulares e tablets. Produtos, receitas, clientes, compras, vendas, estoque e contas começarão vazios. Um backup obrigatório do banco atual será criado e verificado antes da troca. Os dispositivos continuam pareados. Para recuperar os dados anteriores, use Restaurar no backup de segurança. Para confirmar, digite NOVO BANCO.",
+  "newDatabaseConfirmationLabel": "Digite NOVO BANCO",
+  "newDatabaseConfirmAction": "Gerar backup e ativar banco novo",
+  "newDatabaseSuccess": "Novo banco ativado. Backup anterior: {filename}. Recarregue as páginas nos demais dispositivos.",
+  "@newDatabaseSuccess": {
+    "placeholders": {
+      "filename": {
+        "type": "String"
+      }
+    }
+  },
+  "newDatabaseFailed": "Não foi possível concluir a criação do banco. Confira a conexão e tente novamente; a mesma operação será retomada com segurança.",
+  "newDatabaseAlreadyProcessed": "Esta solicitação já foi concluída anteriormente. O banco atual foi mantido. Para criar outro banco, inicie uma nova solicitação.",
+  "payableFiltersTitle": "Filtros",
+  "payableCreateShort": "Criar conta a pagar",
+  "payableOpenShort": "A pagar",
+  "payableDisplayedSummary": "Resumo das contas exibidas",
+  "payableSearch": "Buscar favorecido",
+  "saleCancelAssemblyHelp": "Informe o que aconteceu fisicamente com cada item montado nesta venda. Cestas vendidas de estoque pronto voltam como cestas prontas.",
+  "saleCancelAssemblyQuestion": "Situação da montagem",
+  "saleCancelKeepBaskets": "As cestas continuam montadas",
+  "saleCancelReturnIngredients": "A montagem não aconteceu",
+  "saleCancelAssemblyRequired": "Informe a situação de todas as montagens antes de cancelar.",
+  "saleAssemblyStockHelp": "Usa cestas já montadas e desconta do estoque de cestas prontas.",
+  "saleAssemblyDemandHelp": "Consome os produtos da composição e registra a montagem ao confirmar a venda.",
+  "saleStockSelectBasket": "Selecione uma cesta para consultar o saldo.",
+  "saleStockLoading": "Consultando saldo…",
+  "saleStockQueryFailed": "Não foi possível consultar o saldo. Tente novamente.",
+  "basketTypeFormNoStockSubtitle": "As cestas são montadas na venda, com baixa dos produtos da composição.",
+  "saleAssemblyAutomatic": "Montar na venda",
+  "basketStockDisabledError": "Esta cesta está configurada para montagem na venda. Para usar cestas prontas, ative Estoque de cestas prontas no cadastro.",
+  "basketStockRemainsError": "Ainda existem cestas prontas deste tipo em estoque. Resolva esse saldo antes de desativar a opção.",
+  "assemblyRegister": "Registrar montagem",
+  "assemblyRegisterHelp": "Informe a quantidade e quando as cestas foram fabricadas. Revise a composição antes de confirmar: os produtos serão consumidos e as cestas prontas entrarão no estoque.",
+  "assemblyHistory": "Montagens",
+  "assemblyHistoryTitle": "Montagens — {name}",
+  "@assemblyHistoryTitle": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "assemblyStandardStock": "Cestas padrão prontas: {qty}",
+  "@assemblyStandardStock": {
+    "placeholders": {
+      "qty": {
+        "type": "int"
+      }
+    }
+  },
+  "assemblyOccurredAt": "Data e horário da fabricação",
+  "assemblyReview": "Revisar montagem",
+  "assemblyConfirm": "Confirmar montagem",
+  "assemblyRetry": "Retomar confirmação",
+  "assemblySaved": "Montagem registrada e estoque atualizado.",
+  "assemblyComposition": "Produtos a consumir",
+  "assemblyEstimatedCost": "Custo total estimado: {value}",
+  "@assemblyEstimatedCost": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "assemblyRecordedCost": "Custo total registrado: {value}",
+  "@assemblyRecordedCost": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "assemblyRequiredAvailable": "Necessário: {required} · Disponível: {available}",
+  "@assemblyRequiredAvailable": {
+    "placeholders": {
+      "required": {
+        "type": "String"
+      },
+      "available": {
+        "type": "String"
+      }
+    }
+  },
+  "assemblyMissing": "Faltam: {qty}",
+  "@assemblyMissing": {
+    "placeholders": {
+      "qty": {
+        "type": "String"
+      }
+    }
+  },
+  "assemblyInsufficientHelp": "Faltam produtos para esta montagem. Reponha o estoque ou altere a quantidade e revise novamente.",
+  "assemblyPendingHelp": "Existe uma montagem aguardando confirmação do servidor. Retome a mesma solicitação para verificar o resultado sem registrar as cestas novamente.",
+  "assemblyRecipeChanged": "A receita mudou desde a revisão. Confira a composição novamente antes de confirmar.",
+  "assemblyInactiveHelp": "Este tipo de cesta está inativo. O histórico continua disponível.",
+  "assemblyNoStockHelp": "Este tipo está configurado para montar na venda. Ative Estoque de cestas prontas no cadastro para registrar fabricação antecipada.",
+  "assemblyNoRecipeHelp": "Cadastre uma receita ativa antes de registrar a montagem.",
+  "assemblyHistoryHelp": "Inclui montagens antecipadas e realizadas na venda. A quantidade fabricada é histórica; não representa o saldo atual de cada lote.",
+  "assemblyHistoryEmpty": "Nenhuma montagem registrada para este tipo de cesta.",
+  "assemblyOriginSale": "Montada na venda",
+  "assemblyOriginAdvance": "Montagem antecipada",
+  "assemblyRecorded": "Montagem registrada",
+  "assemblyUndone": "Montagem desfeita",
+  "assemblyCustom": "Composição personalizada",
+  "assemblyBatch": "Montagem #{number} · {qty} cestas",
+  "@assemblyBatch": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "qty": {
+        "type": "int"
+      }
+    }
+  },
+  "assemblyPage": "Página {page} de {total}",
+  "@assemblyPage": {
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "assemblyPreviousPage": "Página anterior",
+  "assemblyNextPage": "Próxima página",
+  "assemblyCustomize": "Personalizar esta montagem",
+  "assemblyCustomizeHelp": "Altere os produtos destas cestas sem mudar a receita cadastrada.",
+  "assemblyCustomDescription": "Identificação da montagem personalizada",
+  "assemblyCustomDescriptionRequired": "Informe uma identificação para diferenciar estas cestas.",
+  "assemblyCustomItemsHelp": "Composição por cesta. Todas as cestas desta montagem terão os mesmos produtos e quantidades.",
+  "assemblyProduct": "Produto",
+  "assemblyQuantityPerBasket": "Quantidade por cesta",
+  "assemblyBaseUnitsHelp": "Use números inteiros na unidade indicada: G = gramas, ML = mililitros e UN = unidades. Ao trocar o produto, informe a quantidade novamente.",
+  "assemblyAddProduct": "Adicionar produto",
+  "assemblyRemoveProduct": "Remover produto",
+  "assemblyCustomItemsRequired": "Inclua ao menos um produto na montagem personalizada.",
+  "assemblyCustomizationDisabled": "Este tipo de cesta não permite personalização. Confira seu cadastro.",
+  "assemblyCustomStock": "Prontas desta montagem: {quantity}",
+  "@assemblyCustomStock": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      }
+    }
+  },
+  "basketDeleteButton": "Excluir cesta",
+  "basketDeleteBlockedTitle": "Cesta ainda em uso",
+  "basketDeleteBlockedHelp": "A cesta tem vendas não canceladas, estoque ou operações pendentes. Confira esses registros antes de tentar excluir novamente.",
+  "basketDeleteActiveSales": "Há venda não cancelada com esta cesta. Cancele a operação incorreta antes de excluir o cadastro.",
+  "basketDeleteStockRemains": "Ainda há cestas em estoque. Cancelar uma venda pode devolver cestas prontas; confira o destino físico antes de excluir o cadastro.",
+  "basketDeleteActiveDispatches": "Há uma saída/conferência ainda aberta vinculada a esta cesta.",
+  "basketDeleteUnusedConfirm": "Excluir definitivamente “{name}” e suas receitas nunca utilizadas? Os produtos da receita serão preservados.",
+  "@basketDeleteUnusedConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "basketDeleteCatalogConfirm": "Excluir “{name}” do catálogo? A cesta deixará de aparecer na lista e nas novas operações. Seu cadastro e suas receitas permanecerão no banco para preservar vendas canceladas, montagens e movimentações. Essa ação não apaga o histórico.",
+  "@basketDeleteCatalogConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "basketDeletedPermanently": "Cesta nunca utilizada excluída definitivamente.",
+  "basketRemovedFromCatalog": "Cesta excluída do catálogo. Histórico preservado.",
+  "basketRemovedError": "Esta cesta foi excluída do catálogo e permanece somente no histórico.",
+  "formDocumentType": "Documento",
+  "formSelectColumns": "Campos do documento",
+  "formColumnsHelp": "Marque as colunas que devem aparecer no PDF e na planilha. Mantenha pelo menos uma.",
+  "formAllColumns": "Selecionar todas",
+  "printerDialogTitle": "Impressão e impressoras",
+  "printerSettingsEntryHelp": "Configurar a impressão e testar uma página A4, mesmo sem conexão com o servidor.",
+  "printerAndroidDiscovery": "No Android, a procura e a seleção da impressora acontecem na janela de impressão do sistema, usando os serviços ativados no celular.",
+  "printerDesktopDiscovery": "Use a janela de impressão do sistema ou uma impressora cadastrada abaixo. Impressoras de rede precisam estar instaladas no computador.",
+  "printerSystemPrint": "Procurar impressora e imprimir",
+  "printerTestAction": "Imprimir página de teste A4",
+  "printerOpenSettings": "Configurar impressão no Android",
+  "printerSettingsHelp": "Ative um serviço de impressão compatível nas configurações. Ao voltar ao app, tente imprimir novamente.",
+  "printerSettingsUnavailable": "Não foi possível abrir as configurações. Procure Impressão nas configurações do Android.",
+  "printerInstalledTitle": "Impressoras cadastradas no sistema",
+  "printerNoInstalled": "Nenhuma impressora cadastrada foi retornada. Instale a impressora nas configurações do computador e atualize esta lista.",
+  "printerNotAvailable": "Indisponível segundo o sistema",
+  "printerDiscoveryError": "Não foi possível consultar as impressoras. Você ainda pode tentar a janela de impressão do sistema ou atualizar a consulta.",
+  "printerUnsupported": "O serviço de impressão não está disponível neste dispositivo. Você pode salvar o PDF e imprimir em outro dispositivo.",
+  "printerWaiting": "Aguardando retorno do sistema de impressão. Você pode fechar esta janela; acompanhe também a fila de impressão do sistema.",
+  "printerJobBusy": "Já existe uma impressão em andamento nesta tela. Acompanhe a fila do sistema antes de tentar novamente.",
+  "printerJobSubmitted": "O sistema retornou a conclusão do trabalho. Confira se a folha saiu corretamente; o app não verifica papel ou tinta.",
+  "printerJobCanceled": "Impressão cancelada.",
+  "printerJobError": "Não foi possível concluir a impressão. Confira a conexão, a impressora e a fila do sistema. Você também pode salvar o PDF.",
+  "printerPreviewError": "Não foi possível carregar a prévia deste PDF. Tente gerar o documento novamente.",
+  "printerHelpTitle": "A impressora não apareceu?",
+  "printerHelpNetwork": "Confira se a impressora está ligada e acessível na mesma rede local do dispositivo. Redes de visitantes, isolamento entre aparelhos e VPN podem impedir a descoberta.",
+  "printerHelpAndroid": "No Android, ative o serviço padrão de impressão, Mopria ou um serviço do fabricante compatível com o modelo. A busca de impressoras é feita por esse serviço na janela do sistema.",
+  "printerHelpWindows": "No Windows, adicione a impressora em Configurações > Impressoras e scanners e confira o driver do modelo. Depois atualize esta lista.",
+  "printerHelpIp": "Se a busca automática falhar, verifique se o serviço de impressão ou as configurações do sistema permitem adicionar a impressora pelo endereço IP.",
+  "printerHelpDirect": "Wi-Fi Direct depende do suporte do celular e da impressora. Essa conexão pode interromper o acesso ao servidor da loja; carregue o documento antes de mudar de rede.",
+  "printerHelpQueue": "Se houver trabalho bloqueado, confira papel, tinta, estado da impressora e fila de impressão. Evite reenviar sem verificar a fila para não duplicar folhas.",
+  "printerCompatibility": "Ter Wi-Fi não garante compatibilidade. O modelo precisa ser atendido pelo serviço de impressão do Android ou pelo driver do Windows.",
+  "printerTestTitle": "Página de teste de impressão A4",
+  "printerTestInstructions": "Selecione papel A4 e escala de 100% quando disponível. Confira texto, bordas, proporções e alinhamento nesta folha antes de imprimir documentos da loja.",
+  "printerTestCharacters": "Teste de acentos: ação, quitação, descrição, café, açúcar.",
+  "printerTestScale": "A referência abaixo deve medir 100 mm de largura e 20 mm de altura, sem redimensionamento.",
+  "printerTestLine": "Espaço para escrita: {height} mm",
+  "@printerTestLine": {
+    "placeholders": {
+      "height": {
+        "type": "int"
+      }
+    }
+  },
+  "printerTestFooter": "Documento de teste sem dados comerciais. Confira também orientação, escala e margens nas configurações da impressora.",
+  "formColumnOrder": "Ordem das colunas",
+  "formColumnOrderHelp": "Use as setas para mover os campos. A lista de cima para baixo define a ordem da esquerda para a direita no PDF e no XLSX.",
+  "formColumnMoveUp": "Mover para cima",
+  "formColumnMoveDown": "Mover para baixo",
+  "formColumnOrderReset": "Restaurar ordem padrão",
+  "formPrintSettings": "Configuração da impressão",
+  "formOrientation": "Orientação da folha",
+  "formOrientationAuto": "Automática",
+  "formPortrait": "Vertical (retrato)",
+  "formLandscape": "Horizontal (paisagem)",
+  "formRowHeight": "Altura mínima da linha (mm)",
+  "formFontSize": "Tamanho da fonte (pt)",
+  "formPageMargins": "Margens da folha (mm)",
+  "formMarginTop": "Superior (mm)",
+  "formMarginBottom": "Inferior (mm)",
+  "formMarginLeft": "Esquerda (mm)",
+  "formMarginRight": "Direita (mm)",
+  "formMarginHelp": "O padrão usa 15 mm. Margens menores dependem da área imprimível da sua impressora. Confira a prévia.",
+  "formAutoRows": "Ajustar linhas em branco para uma página",
+  "formBlankRows": "Total de linhas em branco",
+  "formShowSignatures": "Incluir espaços de assinatura no rodapé",
+  "formColumnWidths": "Ajustar larguras das colunas",
+  "formColumnWidthHelp": "Larguras proporcionais: um valor maior reserva mais espaço para a coluna dentro da folha.",
+  "formResetDefaults": "Restaurar padrão automático",
+  "formNoRecords": "Nenhum registro encontrado para este documento.",
+  "formPaperOnly": "Anotações no papel e alterações na planilha não atualizam os pagamentos ou o estoque do sistema.",
+  "formPreparing": "Calculando páginas do documento…",
+  "formSavePdf": "Salvar PDF",
+  "formSaveXlsx": "Salvar planilha XLSX",
+  "formPreview": "Prévia do documento",
+  "formInvalidNumber": "Informe um número dentro do intervalo.",
+  "formFileSaved": "Arquivo salvo no local escolhido.",
+  "formExportFailure": "Não foi possível gerar ou salvar o documento. Confira as opções e tente novamente.",
+  "formPaymentsHelp": "Conferência de fiados: valor original, total recebido, data do pagamento e saldo restante.",
+  "formPayablesHelp": "Conferência de obrigações e pagamentos, com valor pago e saldo em colunas próprias.",
+  "formInventoryHelp": "Contagem de produtos e cestas da loja, com espaços para quantidade física, diferença e conferência.",
+  "formDocumentSummary": "{columns} colunas · {rows} linhas · {pages} página(s) no PDF",
+  "@formDocumentSummary": {
+    "placeholders": {
+      "columns": {
+        "type": "int"
+      },
+      "rows": {
+        "type": "int"
+      },
+      "pages": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentFlowDetail": "Conta a pagar",
+  "paymentFlowRegister": "Registrar pagamento",
+  "paymentFlowBalance": "Saldo em aberto",
+  "paymentFlowTitleRef": "Conta #{number}",
+  "paymentFlowSituation": "Situação",
+  "paymentFlowNoHistory": "Nenhum pagamento registrado nesta conta.",
+  "paymentFlowNotOpen": "Esta conta não está aberta para pagamento.",
+  "paymentFlowReversed": "Estornado",
+  "paymentFlowKind": "Tipo de pagamento",
+  "paymentFlowFull": "Integral",
+  "paymentFlowPartial": "Parcial",
+  "paymentFlowAmount": "Quanto você pagou?",
+  "paymentFlowAmountLimit": "Informe um valor entre R$ 0,01 e {amount}.",
+  "paymentFlowDate": "Data do pagamento",
+  "paymentFlowMethod": "Como você pagou?",
+  "paymentFlowSelectMethod": "Selecione a forma de pagamento",
+  "paymentFlowRemaining": "Restará em aberto após este registro",
+  "paymentFlowReview": "Revisar pagamento",
+  "paymentFlowSending": "Registrando…",
+  "paymentFlowRecordedOnly": "Registre um pagamento que você já realizou. A confirmação lança o registro no aplicativo.",
+  "paymentFlowBalanceChanged": "O saldo mudou. Confira o valor atualizado e revise novamente.",
+  "paymentFlowUncertain": "Esta tentativa aguarda confirmação.",
+  "paymentFlowResumeHelp": "Retomar usa os mesmos dados e pode concluir o pagamento original. Aguarde a confirmação desta tentativa antes de criar outro registro.",
+  "paymentFlowResume": "Retomar registro",
+  "paymentFlowConfirmed": "Pagamento registrado",
+  "paymentFlowReference": "Referência do registro",
+  "paymentFlowRefreshing": "Pagamento registrado. Atualizando a conta…",
+  "paymentFlowConfirmedRefreshFailed": "O pagamento está registrado. Falta atualizar a consulta da conta.",
+  "paymentFlowCurrentBalance": "Saldo atual consultado",
+  "paymentFlowFinish": "Voltar às contas",
+  "paymentFlowUnexpected": "Não foi possível concluir esta etapa. Tente atualizar a consulta.",
+  "paymentFlowLocalStorage": "Não foi possível conservar os dados da tentativa neste aparelho. Atualize antes de continuar.",
+  "paymentFlowConnectionChanged": "A conexão foi alterada. Para retomar este registro, volte à conexão original.",
+  "paymentFlowInvalidConfirmation": "A resposta não permitiu confirmar o registro. Retome a mesma tentativa.",
+  "paymentFlowServerUpdate": "Atualize o servidor para usar o pagamento com revisão e recuperação.",
+  "paymentFlowPendingTitle": "Registros para acompanhar",
+  "paymentFlowPendingItem": "{beneficiary} · conta #{number}",
+  "paymentFlowPendingReadError": "Não foi possível consultar os registros pendentes deste aparelho.",
+  "paymentFlowMore": "Carregar mais contas",
+  "paymentFlowMoreFailed": "Não foi possível carregar as próximas contas.",
+  "@paymentFlowTitleRef": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "@paymentFlowAmountLimit": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "@paymentFlowPendingItem": {
+    "placeholders": {
+      "beneficiary": {
+        "type": "String"
+      },
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "paymentFlowValue": "Valor deste registro",
+  "paymentFlowRecordedRemaining": "Saldo após este registro",
+  "receiptFlowDetail": "Conta a receber",
+  "receiptFlowRegister": "Registrar recebimento",
+  "receiptFlowReview": "Revisar recebimento",
+  "receiptFlowConfirmed": "Recebimento registrado",
+  "receiptFlowNoHistory": "Nenhum recebimento registrado nesta conta.",
+  "receiptFlowNotOpen": "Esta conta não está aberta para recebimento.",
+  "receiptFlowKind": "Tipo de recebimento",
+  "receiptFlowAmount": "Quanto você recebeu?",
+  "receiptFlowDate": "Data do recebimento",
+  "receiptFlowMethod": "Como você recebeu?",
+  "receiptFlowSelectMethod": "Selecione a forma de recebimento",
+  "receiptFlowRecordedOnly": "Registre um valor que você já recebeu. A confirmação lança o registro no aplicativo.",
+  "receiptFlowResumeHelp": "Retomar usa os mesmos dados e pode concluir o recebimento original. Aguarde a confirmação desta tentativa antes de criar outro registro.",
+  "receiptFlowRefreshing": "Recebimento registrado. Atualizando a conta…",
+  "receiptFlowConfirmedRefreshFailed": "O recebimento está registrado. Falta atualizar a consulta da conta.",
+  "receiptFlowServerUpdate": "Atualize o servidor para usar o recebimento com revisão e recuperação.",
+  "receiptFlowCash": "Dinheiro",
+  "receiptFlowReceived": "Já recebido",
+  "receiptFlowSaleRef": "Venda #{number}",
+  "@receiptFlowSaleRef": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "receiptFlowPendingItem": "{customer} · venda #{number}",
+  "@receiptFlowPendingItem": {
+    "placeholders": {
+      "customer": {
+        "type": "String"
+      },
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "receiptFlowOrigin": "Ver venda de origem",
+  "receiptFlowOriginHelp": "O recebimento reduz ou quita a dívida desta venda.",
+  "receiptFlowSaleTotal": "Valor original da venda",
+  "receiptFlowSaleItem": "{quantity} × {name}",
+  "@receiptFlowSaleItem": {
+    "placeholders": {
+      "quantity": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptFlowBasketFallback": "Tipo de cesta {id}",
+  "@receiptFlowBasketFallback": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptFlowOriginUnavailable": "Não foi possível conferir a venda de origem. Atualize a consulta.",
+  "receiptFlowSummary": "Resumo das contas exibidas",
+  "receiptFlowFilters": "Filtros",
+  "receiptFlowFilterAll": "Todas as situações",
+  "receiptFlowFilterOpen": "Em aberto, incluindo parciais",
+  "receiptFlowFilterScope": "{status} · {overdue}",
+  "@receiptFlowFilterScope": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "overdue": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptFlowFilterAnyDue": "Todos os vencimentos",
+  "receiptFlowFilterApplied": "Filtros adicionais aplicados",
+  "receiptFlowSaleDate": "Venda em {date}",
+  "@receiptFlowSaleDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "receiptFlowReversalReason": "Motivo do estorno: {reason}",
+  "@receiptFlowReversalReason": {
+    "placeholders": {
+      "reason": {
+        "type": "String"
+      }
+    }
+  },
+  "appBrand": "ZM Cesta Básica",
+  "appOverview": "Visão geral",
+  "appHome": "Início",
+  "appFinance": "Financeiro",
+  "appBusiness": "Negócio",
+  "appInventory": "Estoque",
+  "appMore": "Mais",
+  "appDay": "Dia",
+  "appWeek": "Semana",
+  "appMonth": "Mês",
+  "appTodayWhen": "hoje",
+  "appWeekWhen": "nesta semana",
+  "appMonthWhen": "neste mês",
+  "appSummary": "Resumo",
+  "appPay": "A pagar",
+  "appReceive": "A receber",
+  "appPayTab": "Pagar",
+  "appReceiveTab": "Receber",
+  "appFilter": "Filtrar",
+  "appThisWeek": "Nesta semana",
+  "appThisMonth": "Neste mês",
+  "appDueToday": "Vencem hoje",
+  "appOverdue": "Vencidas",
+  "appNextThree": "Próximos 3 dias",
+  "appAllOpen": "Todas em aberto",
+  "appCurrentPosition": "Posição atual",
+  "appBeforeDate": "Vencidas · antes de {date}",
+  "@appBeforeDate": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appDueScope": "Vencimento das contas",
+  "appBalancePay": "Saldo a pagar",
+  "appBalanceReceive": "Saldo a receber",
+  "appOpenCount": "{count, plural, one{1 conta em aberto} other{{count} contas em aberto}}",
+  "@appOpenCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appPartialCount": "{count, plural, one{1 parcial} other{{count} parciais}}",
+  "@appPartialCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appOriginDue": "{origin} · Vence {date}",
+  "@appOriginDue": {
+    "placeholders": {
+      "origin": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "appPurchaseOrigin": "Compra de produtos",
+  "appSaleOrigin": "Venda de cestas",
+  "appPartial": "Parcial",
+  "appOpen": "Em aberto",
+  "appDueTodayShort": "Vence hoje",
+  "appPaid": "Pago",
+  "appReceived": "Recebido",
+  "appOriginalPaid": "Original {original} · {kind} {paid}",
+  "@appOriginalPaid": {
+    "placeholders": {
+      "original": {
+        "type": "String"
+      },
+      "kind": {
+        "type": "String"
+      },
+      "paid": {
+        "type": "String"
+      }
+    }
+  },
+  "appFinanceContext": "Pagar, receber e acompanhar vencimentos",
+  "appOpenInPeriod": "Em aberto · vencimentos do período",
+  "appCurrentDeadlines": "Vencimentos atuais",
+  "appAccountAmount": "{count, plural, one{1 conta} other{{count} contas}} · {amount}",
+  "@appAccountAmount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "appPendingNotBank": "Pendências cadastradas não são saldo bancário. Próximos três dias são separados de hoje.",
+  "appOrganizeFinance": "Organizar seu financeiro",
+  "appAccountsCards": "Contas e cartões",
+  "appStatements": "Extratos e faturas",
+  "appFutureFeature": "Proposta futura. Esta função ainda não está disponível no aplicativo.",
+  "appAccounts": "Contas",
+  "appResults": "{count, plural, one{1 resultado} other{{count} resultados}}",
+  "@appResults": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appNoOpenAccounts": "Nenhuma conta em aberto neste recorte. Você pode consultar outros vencimentos.",
+  "appHistoryAndRecords": "Histórico e cadastros",
+  "appYourFinance": "Seu financeiro {when}",
+  "@appYourFinance": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "appYourBusiness": "Seu negócio {when}",
+  "@appYourBusiness": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "appOpenDueInPeriod": "Em aberto · vencimentos do período",
+  "appOpenFinance": "Abrir Financeiro",
+  "appBasketsSold": "Cestas vendidas",
+  "appSalesValue": "Valor das vendas",
+  "appAttention": "Precisa da sua atenção",
+  "appNow": "Agora",
+  "appLateAccounts": "{count, plural, one{1 conta atrasada} other{{count} contas atrasadas}}",
+  "@appLateAccounts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appTodayPay": "Hoje: {amount} a pagar",
+  "@appTodayPay": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "appTodayAmounts": "Hoje: pagar {pay} · receber {receive}",
+  "@appTodayAmounts": {
+    "placeholders": {
+      "pay": {
+        "type": "String"
+      },
+      "receive": {
+        "type": "String"
+      }
+    }
+  },
+  "appNoLowStock": "Nenhum produto abaixo do mínimo",
+  "appCheckInventory": "Conferir produtos e reposição",
+  "appLowStockProduct": "{name} abaixo do mínimo",
+  "@appLowStockProduct": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "appStockMinimum": "{current} disponíveis · mínimo cadastrado {minimum}",
+  "@appStockMinimum": {
+    "placeholders": {
+      "current": {
+        "type": "String"
+      },
+      "minimum": {
+        "type": "String"
+      }
+    }
+  },
+  "appBusinessContext": "Vendas, clientes e resultado · {range}",
+  "@appBusinessContext": {
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "appSalesWhen": "Vendas {when}",
+  "@appSalesWhen": {
+    "placeholders": {
+      "when": {
+        "type": "String"
+      }
+    }
+  },
+  "appBasketsCount": "{count, plural, one{1 cesta vendida} other{{count} cestas vendidas}}",
+  "@appBasketsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appBusinessResult": "Resultado do negócio · {range}",
+  "@appBusinessResult": {
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "appResultExplanation": "Vendas menos custos registrados e outras despesas pagas no período.",
+  "appIncompleteCost": "{count, plural, one{1 venda com custo incompleto} other{{count} vendas com custo incompleto}}",
+  "@appIncompleteCost": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appUnderstandResult": "Entender o resultado",
+  "appSaleRow": "{amount} · Conferir itens, cliente e pagamento",
+  "@appSaleRow": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "appSales": "Vendas",
+  "appSalesDescription": "Registrar e consultar vendas",
+  "appCustomers": "Clientes",
+  "appCustomersDescription": "Cadastros e histórico",
+  "appInventoryContext": "Produtos, compras e cestas",
+  "appProducts": "Produtos",
+  "appProductsDescription": "Cadastros e posição de estoque",
+  "appPurchases": "Compras",
+  "appPurchasesDescription": "Entradas e fornecedores",
+  "appBasketsAssembly": "Cestas e montagens",
+  "appBasketsDescription": "Tipos, composição e histórico de montagem",
+  "appMovements": "Movimentações",
+  "appMovementsDescription": "O que entrou e saiu do estoque",
+  "appStockPosition": "Posição do estoque",
+  "appMoreContext": "Documentos e ferramentas do aplicativo",
+  "appReports": "Relatórios",
+  "appReportsDescription": "Consultar e exportar os dados",
+  "appPrinting": "Impressão e formulários",
+  "appPrintingDescription": "PDF e folhas para preencher à caneta",
+  "appSettingsConnection": "Configurações e conexão",
+  "appSettingsDescription": "Aparência, servidor e pareamento",
+  "appBackup": "Backup",
+  "appBackupDescription": "Cópias de segurança e recuperação",
+  "appConfirmedSales": "Vendas confirmadas",
+  "appSoldCosts": "Custos registrados nas vendas",
+  "appGrossProfit": "Lucro bruto calculado",
+  "appPaidExpenses": "Outras despesas pagas",
+  "appResult": "Resultado do negócio",
+  "appResultHow": "Como este valor é calculado",
+  "appResultNotBank": "As vendas podem ainda não ter sido recebidas. Este resultado não representa saldo bancário.",
+  "appReviewType": "Tipo",
+  "appReviewFull": "Integral do saldo atual",
+  "appReviewNoNote": "Não informada",
+  "appReviewExpectedBalance": "Saldo esperado após o registro",
+  "appReviewHelp": "O saldo esperado será confirmado depois do registro.",
+  "appAppearance": "Aparência",
+  "appAppearanceDescription": "Tema, cores e acessibilidade",
+  "appAppearanceContext": "Preferências de aparência neste aparelho",
+  "appFollowDevice": "Seguir o aparelho",
+  "appLight": "Claro",
+  "appDark": "Escuro",
+  "appAccent": "Cor de destaque",
+  "appChooseColor": "Escolher cor",
+  "appAccentHelp": "Azul original por padrão. A cor é ajustada para manter a leitura.",
+  "appColorRed": "Vermelho",
+  "appColorGreen": "Verde",
+  "appColorBlue": "Azul",
+  "appBackground": "Fundo",
+  "appSoftBackground": "Superfície suave",
+  "appPureBackground": "Branco / preto",
+  "appAppearanceSaveError": "Não foi possível salvar a preferência. Tente novamente.",
+  "appServerConnection": "Conexão com o servidor",
+  "appServerDescription": "Disponibilidade e pareamento",
+  "appRangeSameMonth": "{first} a {last} de {month}",
+  "@appRangeSameMonth": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "appRangeDifferentMonth": "{first} a {last}",
+  "@appRangeDifferentMonth": {
+    "placeholders": {
+      "first": {
+        "type": "String"
+      },
+      "last": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfImportTitle": "Extratos e faturas",
+  "pdfImportEntry": "Importar PDF e conferir documentos",
+  "pdfImportAction": "Importar PDF",
+  "pdfImportChoose": "Selecionar PDF",
+  "pdfImportRead": "Ler documento",
+  "pdfImportHelp": "Envie um PDF com texto, de até 10 MiB. Layouts testados: faturas Nubank/PicPay e extratos Nubank PF/PJ. PDFs escaneados, protegidos por senha ou de outros formatos podem não ser lidos.",
+  "pdfImportEffect": "A importação guarda o documento e os lançamentos pendentes de revisão. Não cria contas a pagar, pagamentos ou conciliação automática.",
+  "pdfImportSource": "Conta ou cartão do documento",
+  "pdfImportSourceCheck": "Confira a conta/cartão e a titularidade. O leitor não verifica se o documento pertence à origem escolhida.",
+  "pdfImportNewSource": "Cadastrar conta ou cartão",
+  "pdfImportSourceName": "Nome para identificar a conta ou cartão",
+  "pdfImportInstitution": "Instituição financeira",
+  "pdfImportBank": "Conta bancária",
+  "pdfImportCard": "Cartão de crédito",
+  "pdfImportHolder": "Titularidade",
+  "pdfImportPF": "Pessoa física",
+  "pdfImportPJ": "Pessoa jurídica",
+  "pdfImportBankLink": "Vincular conta bancária cadastrada",
+  "pdfImportNewBank": "Criar cadastro bancário para esta origem",
+  "pdfImportBankHelp": "O vínculo identifica a conta do extrato. Um novo cadastro é criado sem saldo de abertura e sem movimentação de dinheiro.",
+  "pdfImportNoSources": "Cadastre a conta ou cartão antes de importar. Use um nome que permita distinguir banco e titularidade.",
+  "pdfImportHistory": "Documentos enviados",
+  "pdfImportEmpty": "Nenhum PDF enviado nesta consulta.",
+  "pdfImportMore": "Carregar mais",
+  "pdfImportReady": "Leitura concluída · conferir antes de guardar",
+  "pdfImportBlocked": "Leitura bloqueada · confirmação indisponível",
+  "pdfImportConfirmed": "Documento guardado · revisão pendente",
+  "pdfImportConfirm": "Guardar para revisão",
+  "pdfImportAcknowledged": "Conferi a origem, os dados extraídos e os avisos.",
+  "pdfImportSuccess": "Documento guardado. Os lançamentos continuam pendentes de revisão, sem criar dívidas ou pagamentos.",
+  "pdfImportRetry": "Consultar novamente",
+  "pdfImportBusy": "Enviando e lendo o PDF…",
+  "pdfImportReading": "Conferência do documento",
+  "pdfImportItems": "Lançamentos extraídos",
+  "pdfImportPages": "Texto das páginas",
+  "pdfImportOriginal": "Visualizar PDF original",
+  "pdfImportOriginalTitle": "Documento original",
+  "pdfImportWarnings": "Avisos e impedimentos",
+  "pdfImportControls": "Conferências de totais do documento",
+  "pdfImportControlOk": "Valores correspondentes",
+  "pdfImportControlFail": "Valores divergentes",
+  "pdfImportPage": "Página {number}",
+  "@pdfImportPage": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "pdfImportCounts": "{items} lançamentos · {pages} páginas",
+  "@pdfImportCounts": {
+    "placeholders": {
+      "items": {
+        "type": "int"
+      },
+      "pages": {
+        "type": "int"
+      }
+    }
+  },
+  "pdfImportCoverage": "Exibindo {loaded} de {total} lançamentos extraídos.",
+  "@pdfImportCoverage": {
+    "placeholders": {
+      "loaded": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pdfImportInstallments": "Parcela {current} de {total}",
+  "@pdfImportInstallments": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pdfImportPartialYear": "Algumas datas não trazem o ano. O leitor usou o ciclo da fatura para completá-las; confira no original.",
+  "pdfImportSignBank": "Entradas positivas e saídas negativas, conforme o extrato.",
+  "pdfImportSignCard": "Compras positivas e créditos/pagamentos negativos. Pagamento de fatura anterior não quita a atual.",
+  "pdfImportPeriodStart": "Início do período",
+  "pdfImportPeriodEnd": "Fim do período",
+  "pdfImportIssued": "Emissão",
+  "pdfImportClosing": "Fechamento",
+  "pdfImportDue": "Vencimento",
+  "pdfImportTotal": "Total declarado",
+  "pdfImportMinimum": "Pagamento mínimo",
+  "pdfImportOpeningBalance": "Saldo inicial declarado",
+  "pdfImportClosingBalance": "Saldo final declarado",
+  "pdfImportInflows": "Entradas declaradas",
+  "pdfImportOutflows": "Saídas declaradas",
+  "pdfImportBillEquation": "Composição do total da fatura",
+  "pdfImportDetailsCheck": "Detalhes e resumo da fatura",
+  "pdfImportSectionCheck": "Subtotal da seção",
+  "pdfImportBalanceCheck": "Equação dos saldos",
+  "pdfImportInflowsCheck": "Total de entradas",
+  "pdfImportOutflowsCheck": "Total de saídas",
+  "pdfImportCandidate": "Há registros semelhantes no sistema. Essa semelhança não comprova duplicidade; a revisão é separada.",
+  "pdfImportServerUpdate": "O servidor precisa da atualização e da migração financeira antes de receber documentos. Solicite a preparação da instalação.",
+  "pdfImportRuntime": "O leitor de PDF não está disponível nesta instalação do servidor. É necessário preparar o runtime antes de importar.",
+  "pdfImportProcessing": "Não foi possível concluir a leitura agora. Tente novamente com o mesmo arquivo e a mesma origem.",
+  "pdfImportSize": "Selecione um PDF não vazio, com até 10 MiB.",
+  "pdfImportInvalidFile": "Não foi possível ler este PDF. Confira se o arquivo está íntegro e é um PDF válido.",
+  "pdfImportPassword": "Este PDF exige senha. A leitura de arquivos protegidos ainda não está disponível.",
+  "pdfImportOcr": "Há página sem texto extraível. A leitura de PDFs escaneados ainda não está disponível.",
+  "pdfImportUnsupported": "O formato deste documento ainda não tem um leitor confirmado. Use um layout testado ou solicite ampliação do leitor.",
+  "pdfImportMismatch": "Os totais do documento não correspondem aos detalhes. A confirmação está bloqueada; confira o original.",
+  "pdfImportUnknownRow": "Há linha monetária ou data que não pôde ser interpretada com segurança. Confira a página indicada; a confirmação está bloqueada.",
+  "pdfImportWrongSource": "O tipo do documento não corresponde à conta ou cartão escolhido. Importe novamente com a origem correta.",
+  "pdfImportLimit": "O PDF ultrapassa os limites de páginas ou conteúdo do leitor. A confirmação está bloqueada.",
+  "pdfImportHeader": "O cabeçalho, os controles ou os lançamentos estão incompletos ou conflitantes. Confira o original; a confirmação está bloqueada.",
+  "pdfImportBlockedHelp": "Este documento não pode ser confirmado. Confira os impedimentos e o original.",
+  "pdfImportSourceExists": "Esta conta já possui uma origem de importação. Atualize a lista e selecione a origem existente.",
+  "pdfImportInvalidSource": "Confira os dados da origem. O extrato exige uma conta bancária ativa e o leitor atual exige reais.",
+  "pdfImportUnknownIssue": "A leitura identificou um impedimento. Confira o original e solicite análise do formato.",
+  "pdfImportUncertain": "A resposta não foi recebida. Consulte os documentos ou repita com o mesmo PDF e a mesma origem para recuperar o resultado.",
+  "pdfImportNoText": "Esta página não contém texto extraível.",
+  "pdfImportDocument": "Documento financeiro",
+  "pdfImportSourceRequired": "Selecione a conta ou cartão do documento.",
+  "pdfImportRequired": "Preencha de 2 a 100 caracteres."
 }

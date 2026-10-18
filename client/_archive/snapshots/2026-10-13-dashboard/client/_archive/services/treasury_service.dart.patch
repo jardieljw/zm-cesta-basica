@@ -1,0 +1,9 @@
+--- a/client/_archive/services/treasury_service.dart
++++ b/client/_archive/services/treasury_service.dart
+@@ -1,5 +1,5 @@
+ import '../../lib/core/api_client.dart';
+-import '../../lib/models/financial_account.dart';
++import '../models/financial_account.dart';
+ import '../models/cash_flow_entry.dart';
+ 
+ class TreasuryService {

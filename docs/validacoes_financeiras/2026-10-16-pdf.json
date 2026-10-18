@@ -1,0 +1,154 @@
+{
+  "status": "PASS",
+  "samples": [
+    {
+      "label": "card_a",
+      "status": "READY",
+      "pages": 4,
+      "items": 19,
+      "errors": [],
+      "checks": [
+        {
+          "code": "PDF_REPORTED_BILL_EQUATION",
+          "matches": true
+        },
+        {
+          "code": "PDF_SUMMARY_DETAILS",
+          "matches": true
+        }
+      ],
+      "independent_values_checked": true,
+      "independent_date_amount_pairs_checked": false,
+      "independent_header_fields_checked": 2,
+      "original_preserved": true,
+      "replay_preserved": true,
+      "pages_preserved": true,
+      "confirmation": "PENDING_EVIDENCE_ONLY",
+      "books_unchanged": true
+    },
+    {
+      "label": "card_b",
+      "status": "INVALID",
+      "pages": 6,
+      "items": 16,
+      "errors": [
+        "PDF_SUMMARY_DETAIL_MISMATCH"
+      ],
+      "checks": [
+        {
+          "code": "PDF_SECTION_TOTAL",
+          "matches": true
+        },
+        {
+          "code": "PDF_SECTION_TOTAL",
+          "matches": false
+        },
+        {
+          "code": "PDF_REPORTED_BILL_EQUATION",
+          "matches": true
+        },
+        {
+          "code": "PDF_SUMMARY_DETAILS",
+          "matches": false
+        }
+      ],
+      "independent_values_checked": true,
+      "independent_date_amount_pairs_checked": false,
+      "independent_header_fields_checked": 2,
+      "original_preserved": true,
+      "replay_preserved": true,
+      "pages_preserved": true,
+      "confirmation": "BLOCKED",
+      "books_unchanged": true
+    },
+    {
+      "label": "account_pf",
+      "status": "READY",
+      "pages": 2,
+      "items": 5,
+      "errors": [],
+      "checks": [
+        {
+          "code": "PDF_TOTAL_INFLOWS_CENTS",
+          "matches": true
+        },
+        {
+          "code": "PDF_TOTAL_OUTFLOWS_CENTS",
+          "matches": true
+        },
+        {
+          "code": "PDF_BALANCE_EQUATION",
+          "matches": true
+        }
+      ],
+      "independent_values_checked": true,
+      "independent_date_amount_pairs_checked": true,
+      "independent_header_fields_checked": 6,
+      "original_preserved": true,
+      "replay_preserved": true,
+      "pages_preserved": true,
+      "confirmation": "PENDING_EVIDENCE_ONLY",
+      "books_unchanged": true
+    },
+    {
+      "label": "account_pj",
+      "status": "READY",
+      "pages": 19,
+      "items": 97,
+      "errors": [],
+      "checks": [
+        {
+          "code": "PDF_TOTAL_INFLOWS_CENTS",
+          "matches": true
+        },
+        {
+          "code": "PDF_TOTAL_OUTFLOWS_CENTS",
+          "matches": true
+        },
+        {
+          "code": "PDF_BALANCE_EQUATION",
+          "matches": true
+        }
+      ],
+      "independent_values_checked": true,
+      "independent_date_amount_pairs_checked": true,
+      "independent_header_fields_checked": 6,
+      "original_preserved": true,
+      "replay_preserved": true,
+      "pages_preserved": true,
+      "confirmation": "PENDING_EVIDENCE_ONLY",
+      "books_unchanged": true
+    },
+    {
+      "label": "card_other_bank",
+      "status": "READY",
+      "pages": 4,
+      "items": 14,
+      "errors": [],
+      "checks": [
+        {
+          "code": "PDF_REPORTED_BILL_EQUATION",
+          "matches": true
+        },
+        {
+          "code": "PDF_SUMMARY_DETAILS",
+          "matches": true
+        }
+      ],
+      "independent_values_checked": true,
+      "independent_date_amount_pairs_checked": false,
+      "independent_header_fields_checked": 4,
+      "original_preserved": true,
+      "replay_preserved": true,
+      "pages_preserved": true,
+      "confirmation": "PENDING_EVIDENCE_ONLY",
+      "books_unchanged": true
+    }
+  ],
+  "checks": {
+    "backup_restore": true,
+    "integrity": true,
+    "foreign_keys": true,
+    "no_company_database": true
+  }
+}

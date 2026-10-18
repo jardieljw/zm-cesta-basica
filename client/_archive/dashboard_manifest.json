@@ -1,0 +1,226 @@
+{
+  "date": "2026-10-13",
+  "files": [
+    {
+      "source": "client/lib/models/dashboard.dart",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/models/dashboard.dart.snapshot",
+      "sha256_before": "3a4d19b626c6e081808ba7d26887f1a724590f690cde844428d40ec6746d096f",
+      "sha256_after": "ac6daf3207a5d6de494393a3be7cbfb065609de9b86c183db8016154a0ff73bd",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/models/dashboard.dart.patch"
+    },
+    {
+      "source": "client/lib/models/financial_account.dart",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/models/financial_account.dart.snapshot",
+      "sha256_before": "c9735b7beab537b8d1a1d6e5b4335381b5b1a4a95dba6708ad74d15d15eb31bd",
+      "sha256_after": null,
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/models/financial_account.dart.patch"
+    },
+    {
+      "source": "client/lib/models/account_payable.dart",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/models/account_payable.dart.snapshot",
+      "sha256_before": "2eff44880bbc62f56dac5e5d0dc2a70356d8bd111df9f33be7f772d47b5d2a14",
+      "sha256_after": "f6c731038c4a75ddadbb33a510cdcd719850fbf265dd03ec4a942ae20a3e48e6",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/models/account_payable.dart.patch"
+    },
+    {
+      "source": "client/lib/services/dashboard_service.dart",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/services/dashboard_service.dart.snapshot",
+      "sha256_before": "233bb99df8b74a14aba968f511837e9dbda887e303834d7292a8527776b67262",
+      "sha256_after": "6964a4e40f5d2aaa38b9c3c810799b1f62dc98f5ede3abf2229e63c8ccb4b520",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/services/dashboard_service.dart.patch"
+    },
+    {
+      "source": "client/lib/services/financial_accounts_service.dart",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/services/financial_accounts_service.dart.snapshot",
+      "sha256_before": "b1f7d80cee2ad2f28680646741bce12c986473a1a09a8f55b6e7990e55856f87",
+      "sha256_after": null,
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/services/financial_accounts_service.dart.patch"
+    },
+    {
+      "source": "client/lib/views/dashboard_view.dart",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/views/dashboard_view.dart.snapshot",
+      "sha256_before": "673347fbacd26bef557055fa13879e2afc8af1f0e236fe2b920586cd2c1bccc1",
+      "sha256_after": "2ec0492a8cfb2cc92a7e212abbcd8154854b38801a54435b691d589bc1ff4da2",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/views/dashboard_view.dart.patch"
+    },
+    {
+      "source": "client/lib/views/payables_view.dart",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/views/payables_view.dart.snapshot",
+      "sha256_before": "14787e15688c0c15315a9b18187fc998c4e833e64b688a2b4b1a911a798d5866",
+      "sha256_after": "33f43dad25ed9cf6a0f763848d05ba8dd883845623826dbf34697823d2713f53",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/views/payables_view.dart.patch"
+    },
+    {
+      "source": "client/lib/views/receivables_view.dart",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/views/receivables_view.dart.snapshot",
+      "sha256_before": "1f5d397459894badadffc2f462b61a065eb4ac63a0cb98e4339864b73e54892c",
+      "sha256_after": "3aecf86b3442e59a8bf51ece94f4a227db89087e19b99a3a8b330c541fd2a29c",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/views/receivables_view.dart.patch"
+    },
+    {
+      "source": "client/lib/views/purchase_form_view.dart",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/views/purchase_form_view.dart.snapshot",
+      "sha256_before": "573c735e200b2bf580ecc46cd4c421b5231089dc4ee77faa31b31dea3908f77f",
+      "sha256_after": "d88c50546c4162ebac74c4cb9de1f393e5e6aba91ac918245398228a7569cfd4",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/views/purchase_form_view.dart.patch"
+    },
+    {
+      "source": "client/lib/views/reports_view.dart",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/views/reports_view.dart.snapshot",
+      "sha256_before": "5c58016f795e911ab6d47264a75115b38f8340733f9e139bb7f8909d460044dd",
+      "sha256_after": "3fe9d8e6308602287fc12150748d59e4a1d4ebb9d85690270e788dc8f30594b7",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/views/reports_view.dart.patch"
+    },
+    {
+      "source": "client/lib/l10n/app_pt.arb",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/l10n/app_pt.arb.snapshot",
+      "sha256_before": "b684c62a40a3ac83bd9895e2003fdac6676bbb2446995e88bb251b6b7cf3b9e9",
+      "sha256_after": "09fdedc783c81c4ad81f930cb2303f3a8576b3c7b7dc9b166c9f70cbc3d88c7b",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/l10n/app_pt.arb.patch"
+    },
+    {
+      "source": "client/lib/l10n/app_localizations.dart",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/l10n/app_localizations.dart.snapshot",
+      "sha256_before": "ca03c81e1bd036800b4859c56a2925598d182a6875f276881c48ca9cdbd7c7ab",
+      "sha256_after": "d1147e2104f7248d4572f04546a8629095cde4a9bc3a2ad8319ff37a138565a1",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/l10n/app_localizations.dart.patch"
+    },
+    {
+      "source": "client/lib/l10n/app_localizations_pt.dart",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/l10n/app_localizations_pt.dart.snapshot",
+      "sha256_before": "dc20a10ad996019b553253403ebdbcc088825303fed29a1e054c3f75cb72d1a9",
+      "sha256_after": "fee4de2406cf3df915c887ead1fe5693f00ac38f153870c3eb50bae7a75017e3",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/lib/l10n/app_localizations_pt.dart.patch"
+    },
+    {
+      "source": "client/test/phase8_models_test.dart",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/test/phase8_models_test.dart.snapshot",
+      "sha256_before": "bf7c7b7b17b99b6b7b252d75caad8e836274534ba54b3b90870b205acce34eae",
+      "sha256_after": "299c8fab4847e1eb25829d7cc581ea993054b09a6a0c1805b86982dde481cb7a",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/test/phase8_models_test.dart.patch"
+    },
+    {
+      "source": "client/test/phase7_models_test.dart",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/test/phase7_models_test.dart.snapshot",
+      "sha256_before": "6c4c13ef41418a687be0c0ed0c5cfedf131facc337a9320325771bcbbc918e0d",
+      "sha256_after": "2c3cf5aa195cdd617e1e071cb2ae306b8fb834f8ae61323dcd5ec4d80265b6e4",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/test/phase7_models_test.dart.patch"
+    },
+    {
+      "source": "backend/app/api/v1/dashboard.py",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/backend/app/api/v1/dashboard.py.snapshot",
+      "sha256_before": "7a12c909a694dda94bb0a09d81fe9641d2ba099cf83d0a7f41dadc3446715e56",
+      "sha256_after": "7bff29a7980e314a871e2c6e6d23ab38bb9e0ed0d1e2913bf5b4dd2d127b093f",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/backend/app/api/v1/dashboard.py.patch"
+    },
+    {
+      "source": "backend/app/api/v1/reports.py",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/backend/app/api/v1/reports.py.snapshot",
+      "sha256_before": "ed83f9ad4fd84dcbe23a0e067505ecc997793c0e38c4f5dd8f1d60a86442334f",
+      "sha256_after": "eee390c8ca3ee65dffea2dfef53f42c0b353781115249672cb46ab0bad258161",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/backend/app/api/v1/reports.py.patch"
+    },
+    {
+      "source": "backend/app/schemas/financial.py",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/backend/app/schemas/financial.py.snapshot",
+      "sha256_before": "a23b8e03822f7011ad4a6ea479a430a7a67af5a21cf3cdef768e0679bfcd908a",
+      "sha256_after": "03ae6f5e7bde40c05726ef363175d919f062c54aa81e6de576bc2952810358da",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/backend/app/schemas/financial.py.patch"
+    },
+    {
+      "source": "backend/app/services/financial.py",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/backend/app/services/financial.py.snapshot",
+      "sha256_before": "fc5914ec54b21956a0d08b1b8a53891cde709f6523b2d336929f6b1d55801481",
+      "sha256_after": "26d99a573bc0b1441c580ad9c7b3da06c10efa13d185f74678989f9db8703c25",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/backend/app/services/financial.py.patch"
+    },
+    {
+      "source": "ARCHITECTURE.md",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/ARCHITECTURE.md.snapshot",
+      "sha256_before": "8177a88d87e5ffeb00e63cf02ca964874eb6db74c6710a565a6923e78df0242f",
+      "sha256_after": "33e97b7259a8e052a68e7ef60c3d1b74865b77b278da574b6e5dd43439070e72",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/ARCHITECTURE.md.patch"
+    },
+    {
+      "source": "docs/MANUAL_OPERACIONAL.md",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/docs/MANUAL_OPERACIONAL.md.snapshot",
+      "sha256_before": "824ee7f7ecf0d615b7d172a11041fd1c2b452d7eace986f7759875a0387130b7",
+      "sha256_after": "71abe1337725b49e22c69a19b104611d9bd290f47ac8a84b69a33c1c21b5fab2",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/docs/MANUAL_OPERACIONAL.md.patch"
+    },
+    {
+      "source": "client/_archive/README.md",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/_archive/README.md.snapshot",
+      "sha256_before": "2dabdf0f9f1c60f6fe81f4904dde2778755c6011baee9702f6849323f6840391",
+      "sha256_after": "8dfd5b34914b600aa59e431d30f201f626e694609a6a14c6cd754ba8bb9113f4",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/_archive/README.md.patch"
+    },
+    {
+      "source": "client/_archive/models/cash_flow_entry.dart",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/_archive/models/cash_flow_entry.dart.snapshot",
+      "sha256_before": "95e0a71315bf6f0570286dd9e34ecdf5d24ab58ce1511da5ecbaed80ad09bf1d",
+      "sha256_after": "52115abda9faf575c09be60a1f6c3bb1cee2a31eb0b2fce8f6d89ac5297d2211",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/_archive/models/cash_flow_entry.dart.patch"
+    },
+    {
+      "source": "client/_archive/services/treasury_service.dart",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/client/_archive/services/treasury_service.dart.snapshot",
+      "sha256_before": "67ae2b8463468bda96aa0940482c3529885e215221dfcecee6f52d4266c3dd46",
+      "sha256_after": "3be29ddb6cdd06e47ed032ddef60ea442433282c094bf022b5618387f25a1d89",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/client/_archive/services/treasury_service.dart.patch"
+    },
+    {
+      "source": "AGENT_INSTRUCTIONS.md",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/AGENT_INSTRUCTIONS.md.snapshot",
+      "sha256_before": "949bea4a6fe865dedca2ab36458e1557337682877000f170a1dd620448561b92",
+      "sha256_after": "260d40f7463ea71963dcc3479b710c6572c713b50d6d6f5128be8c526436dac9",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/AGENT_INSTRUCTIONS.md.patch"
+    },
+    {
+      "source": "README.md",
+      "snapshot": "client/_archive/snapshots/2026-10-13-dashboard/README.md.snapshot",
+      "sha256_before": "155e218bc8bdda562f8ab2a02ff43700d8f7a720da2538b81b2727db8c6a601b",
+      "sha256_after": "4cb83e4e1d8cc8cc63ce1a92d891d44fbd00ae1ac0a931c9c0a53cf5b78e5b56",
+      "patch": "client/_archive/snapshots/2026-10-13-dashboard/README.md.patch"
+    }
+  ],
+  "archived_localization_keys": [
+    "payableSelectAccount",
+    "dashboardSectionFinancial",
+    "dashboardOpenReceivables",
+    "dashboardEffectiveReceived",
+    "dashboardOpenPayables",
+    "dashboardEffectivePaid",
+    "dashboardProjectedCash",
+    "dashboardProjectionNotice",
+    "purchasePaymentFinancialAccountLabel"
+  ],
+  "created_files": [
+    "backend/app/schemas/business_dashboard.py",
+    "backend/app/services/business_dashboard.py",
+    "backend/tests/test_business_dashboard.py",
+    "client/test/business_dashboard_test.dart"
+  ],
+  "archived_modules": [
+    {
+      "source": "client/lib/models/dashboard.dart",
+      "archive": "client/_archive/models/dashboard_legacy.dart",
+      "action": "preserved legacy model and replaced active model"
+    },
+    {
+      "source": "client/lib/models/financial_account.dart",
+      "archive": "client/_archive/models/financial_account.dart",
+      "action": "moved"
+    },
+    {
+      "source": "client/lib/services/financial_accounts_service.dart",
+      "archive": "client/_archive/services/financial_accounts_service.dart",
+      "action": "moved"
+    }
+  ],
+  "validation": {
+    "backend_passed": 194,
+    "flutter_passed": 101,
+    "flutter_analyze": "no issues"
+  }
+}

@@ -1,4 +1,5 @@
-import 'dart:io';
+import '../utils/adaptive_ui_color.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -8,23 +9,40 @@ import '../services/connectivity_service.dart';
 import '../models/connection_status.dart';
 import '../models/backup.dart';
 import '../services/backup_service.dart';
+import '../services/printer_service.dart';
+import '../widgets/shared/printer_selection_dialog.dart';
 import '../l10n/l10n_extension.dart';
 import 'pairing_view.dart';
+import '../utils/api_error_mapper.dart';
 
 class SettingsView extends StatefulWidget {
-  const SettingsView({super.key});
+  final SecureStorageService? storage;
+  final ConnectivityService? connectivity;
+  final AuthService? auth;
+  final BackupService? backupService;
+  final PrinterService? printerService;
+  const SettingsView({
+    super.key,
+    this.storage,
+    this.connectivity,
+    this.auth,
+    this.backupService,
+    this.printerService,
+  });
 
   @override
   State<SettingsView> createState() => _SettingsViewState();
 }
 
 class _SettingsViewState extends State<SettingsView> {
-  final SecureStorageService _storage = SecureStorageService();
-  final AuthService _auth = AuthService();
-  final ConnectivityService _connectivity = ConnectivityService();
+  late final SecureStorageService _storage;
+  late final AuthService _auth;
+  late final ConnectivityService _connectivity;
+  late final PrinterService _printers;
 
   final TextEditingController _urlCtrl = TextEditingController();
   final TextEditingController _fpCtrl = TextEditingController();
+  final TextEditingController _tokenCtrl = TextEditingController();
 
   String? _deviceId;
   String? _deviceName;
@@ -34,15 +52,33 @@ class _SettingsViewState extends State<SettingsView> {
   bool _isGeneratingQr = false;
   ServerStatus? _serverStatus;
 
-  final BackupService _backupService = BackupService();
+  late final BackupService _backupService;
   List<BackupItemModel> _backups = [];
   bool _isCreatingBackup = false;
+  bool _isCreatingDatabase = false;
   bool _isRestoringBackup = false;
+  bool get _backupBusy =>
+      _isCreatingBackup || _isRestoringBackup || _isCreatingDatabase;
 
   @override
   void initState() {
     super.initState();
+    _storage = widget.storage ?? SecureStorageService();
+    _auth = widget.auth ?? AuthService(storage: _storage);
+    _connectivity =
+        widget.connectivity ?? ConnectivityService(storage: _storage);
+    _backupService = widget.backupService ?? BackupService();
+    _printers = widget.printerService ?? PrinterService();
     _loadSettings();
+  }
+
+  @override
+  void dispose() {
+    _urlCtrl.dispose();
+    _fpCtrl.dispose();
+    _tokenCtrl.dispose();
+    if (widget.printerService == null) _printers.dispose();
+    super.dispose();
   }
 
   Future<void> _confirmRestore(BackupItemModel backup) async {
@@ -72,16 +108,22 @@ class _SettingsViewState extends State<SettingsView> {
     try {
       final res = await _backupService.restoreBackup(backup.filename);
       await _loadBackups();
-      messenger.showSnackBar(SnackBar(
-        content: Text(l10n.backupRestoreSuccessMsg(res.safetyBackupFilename ?? '-')),
-        backgroundColor: Colors.green.shade700,
-        duration: const Duration(seconds: 8),
-      ));
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            l10n.backupRestoreSuccessMsg(res.safetyBackupFilename ?? '-'),
+          ),
+          backgroundColor: Colors.green.shade700,
+          duration: const Duration(seconds: 8),
+        ),
+      );
     } catch (e) {
-      messenger.showSnackBar(SnackBar(
-        content: Text(l10n.backupRestoreErrorMsg(e.toString())),
-        backgroundColor: Colors.red.shade700,
-      ));
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(l10n.backupRestoreErrorMsg(e.toString())),
+          backgroundColor: Colors.red.shade700,
+        ),
+      );
     } finally {
       if (mounted) setState(() => _isRestoringBackup = false);
     }
@@ -104,17 +146,94 @@ class _SettingsViewState extends State<SettingsView> {
     try {
       final res = await _backupService.createBackup();
       await _loadBackups();
-      messenger.showSnackBar(SnackBar(
-        content: Text(l10n.backupSuccessMsg(res.backupFilename)),
-        backgroundColor: Colors.green.shade700,
-      ));
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(l10n.backupSuccessMsg(res.backupFilename)),
+          backgroundColor: Colors.green.shade700,
+        ),
+      );
     } catch (e) {
-      messenger.showSnackBar(SnackBar(
-        content: Text(l10n.backupErrorMsg(e.toString())),
-        backgroundColor: Colors.red.shade700,
-      ));
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(l10n.backupErrorMsg(e.toString())),
+          backgroundColor: Colors.red.shade700,
+        ),
+      );
     } finally {
       if (mounted) setState(() => _isCreatingBackup = false);
+    }
+  }
+
+  Future<void> _createNewDatabase() async {
+    if (_backupBusy) return;
+    final l10n = context.l10n;
+    var confirmation = '';
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, update) => AlertDialog(
+          title: Text(l10n.newDatabaseTitle),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.newDatabaseConfirmationBody),
+                const SizedBox(height: 16),
+                TextField(
+                  onChanged: (value) => update(() => confirmation = value),
+                  decoration: InputDecoration(
+                    labelText: l10n.newDatabaseConfirmationLabel,
+                    border: const OutlineInputBorder(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(l10n.commonCancel),
+            ),
+            FilledButton(
+              onPressed: confirmation.trim().toUpperCase() == 'NOVO BANCO'
+                  ? () => Navigator.pop(ctx, true)
+                  : null,
+              style: FilledButton.styleFrom(
+                backgroundColor: Colors.red.shade700,
+              ),
+              child: Text(l10n.newDatabaseConfirmAction),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    setState(() => _isCreatingDatabase = true);
+    try {
+      final result = await _backupService.createNewDatabase();
+      await _loadSettings();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          duration: const Duration(seconds: 12),
+          content: Text(
+            result.operationReplayed
+                ? l10n.newDatabaseAlreadyProcessed
+                : l10n.newDatabaseSuccess(result.safetyBackupFilename),
+          ),
+        ),
+      );
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(ApiErrorMapper.toLocalizedMessage(error, l10n)),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isCreatingDatabase = false);
     }
   }
 
@@ -123,15 +242,16 @@ class _SettingsViewState extends State<SettingsView> {
     final fp = await _storage.getFingerprint() ?? '';
     final id = await _storage.getDevicePublicId();
     final name = await _storage.getDeviceName();
-    final token = await _storage.getDeviceToken();
     final status = await _connectivity.checkConnection();
+    final authenticated = status.isOnline && await _connectivity.isPaired();
+    if (!mounted) return;
 
     setState(() {
       _urlCtrl.text = url;
       _fpCtrl.text = fp;
       _deviceId = id ?? '-';
       _deviceName = name ?? '-';
-      _hasToken = token != null && token.isNotEmpty;
+      _hasToken = authenticated;
       _serverStatus = status;
     });
     if (_hasToken) {
@@ -139,12 +259,14 @@ class _SettingsViewState extends State<SettingsView> {
     }
   }
 
-
   Future<void> _checkConnection() async {
     setState(() => _isCheckingConnection = true);
     final status = await _connectivity.checkConnection();
+    final authenticated = status.isOnline && await _connectivity.isPaired();
+    if (!mounted) return;
     setState(() {
       _serverStatus = status;
+      _hasToken = authenticated;
       _isCheckingConnection = false;
     });
   }
@@ -159,7 +281,9 @@ class _SettingsViewState extends State<SettingsView> {
       await showDialog<void>(
         context: context,
         builder: (ctx) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: Text(l10n.settingsQrDialogTitle),
           content: SingleChildScrollView(
             child: Column(
@@ -186,9 +310,12 @@ class _SettingsViewState extends State<SettingsView> {
                 ),
                 const SizedBox(height: 16),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
-                    color: Colors.amber.shade50,
+                    color: adaptiveUiSurface(context, Colors.amber.shade50),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: Colors.amber.shade400),
                   ),
@@ -197,7 +324,7 @@ class _SettingsViewState extends State<SettingsView> {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
-                      color: Colors.amber.shade900,
+                      color: adaptiveUiText(context, Colors.amber.shade900),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -209,7 +336,10 @@ class _SettingsViewState extends State<SettingsView> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     l10n.settingsQrManualTitle,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -264,7 +394,7 @@ class _SettingsViewState extends State<SettingsView> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color: adaptiveUiSurface(context, Colors.grey.shade100),
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.grey.shade300),
       ),
@@ -276,7 +406,11 @@ class _SettingsViewState extends State<SettingsView> {
               children: [
                 Text(
                   label,
-                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.black54),
+                  style: TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 SelectableText(
@@ -310,15 +444,62 @@ class _SettingsViewState extends State<SettingsView> {
 
   Future<void> _saveSettings() async {
     final l10n = context.l10n;
-    setState(() => _isSaving = true);
-    await _storage.saveServerUrl(_urlCtrl.text.trim());
-    await _storage.saveFingerprint(_fpCtrl.text.trim());
-    setState(() => _isSaving = false);
-
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.settingsSaved)),
+    final messenger = ScaffoldMessenger.of(context);
+    final url = _urlCtrl.text.trim();
+    final uri = Uri.tryParse(url);
+    if (uri == null ||
+        uri.scheme != 'https' ||
+        uri.host.isEmpty ||
+        uri.userInfo.isNotEmpty ||
+        uri.hasQuery ||
+        uri.hasFragment) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(l10n.settingsHttpsUrlRequired)),
       );
+      return;
+    }
+    setState(() => _isSaving = true);
+    try {
+      final oldUrl = await _storage.getServerUrl();
+      if (oldUrl != null &&
+          oldUrl.replaceFirst(RegExp(r'/$'), '') !=
+              url.replaceFirst(RegExp(r'/$'), '')) {
+        await _storage.clearAll();
+      }
+      await _storage.saveServerUrl(url);
+      await _storage.saveFingerprint(_fpCtrl.text.trim());
+      final suppliedToken = _tokenCtrl.text.trim();
+      if (suppliedToken.isNotEmpty) {
+        await _storage.saveDeviceToken(suppliedToken);
+      }
+      final status = await _connectivity.checkConnection();
+      final authenticated =
+          status.isOnline &&
+          await _connectivity.isPaired(
+            allowLocalPairing: suppliedToken.isEmpty,
+          );
+      _tokenCtrl.clear();
+      await _loadSettings();
+      if (!mounted) return;
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            authenticated
+                ? l10n.settingsAuthenticatedSuccess
+                : l10n.settingsSavedNeedsAuthentication,
+          ),
+        ),
+      );
+    } catch (error) {
+      if (mounted) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(ApiErrorMapper.toLocalizedMessage(error, l10n)),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
     }
   }
 
@@ -330,7 +511,10 @@ class _SettingsViewState extends State<SettingsView> {
         title: Text(l10n.settingsUnpairTitle),
         content: Text(l10n.settingsUnpairContent),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l10n.commonCancel)),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(l10n.commonCancel),
+          ),
           TextButton(
             style: TextButton.styleFrom(foregroundColor: Colors.red),
             onPressed: () => Navigator.pop(ctx, true),
@@ -344,9 +528,9 @@ class _SettingsViewState extends State<SettingsView> {
       await _auth.disconnect();
       await _loadSettings();
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.settingsUnpairedSuccess)),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.settingsUnpairedSuccess)));
       }
     }
   }
@@ -375,12 +559,10 @@ class _SettingsViewState extends State<SettingsView> {
       statusIcon = Icons.cloud_done;
     }
 
-    final isAndroidDevice = Platform.isAndroid;
+    final isAndroidDevice = defaultTargetPlatform == TargetPlatform.android;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.settingsHeaderTitle),
-      ),
+      appBar: AppBar(title: Text(l10n.settingsHeaderTitle)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Column(
@@ -416,7 +598,9 @@ class _SettingsViewState extends State<SettingsView> {
                             _hasToken
                                 ? l10n.settingsStatusPairedSubtitle
                                 : l10n.settingsStatusWaitingSubtitle,
-                            style: theme.textTheme.bodyMedium?.copyWith(color: Colors.black87),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
                           ),
                         ],
                       ),
@@ -431,11 +615,20 @@ class _SettingsViewState extends State<SettingsView> {
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(48),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
               onPressed: _isCheckingConnection ? null : _checkConnection,
               icon: _isCheckingConnection
-                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
                   : const Icon(Icons.refresh),
               label: Text(l10n.homeCheckConnection),
             ),
@@ -446,7 +639,9 @@ class _SettingsViewState extends State<SettingsView> {
             if (isAndroidDevice)
               Card(
                 elevation: 1,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
@@ -454,18 +649,26 @@ class _SettingsViewState extends State<SettingsView> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.qr_code_scanner, color: theme.colorScheme.primary),
+                          Icon(
+                            Icons.qr_code_scanner,
+                            color: theme.colorScheme.primary,
+                          ),
                           const SizedBox(width: 10),
                           Text(
                             l10n.settingsPairDeviceSection,
-                            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 8),
                       Text(
                         l10n.settingsPairDeviceDesc,
-                        style: const TextStyle(color: Colors.black87, fontSize: 13),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontSize: 13,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       ElevatedButton.icon(
@@ -473,12 +676,17 @@ class _SettingsViewState extends State<SettingsView> {
                           backgroundColor: Colors.blue.shade700,
                           foregroundColor: Colors.white,
                           minimumSize: const Size.fromHeight(48),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                         onPressed: () async {
                           await Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (_) => const PairingView()),
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  PairingView(storage: _storage, auth: _auth),
+                            ),
                           );
                           _loadSettings();
                         },
@@ -493,7 +701,9 @@ class _SettingsViewState extends State<SettingsView> {
             else
               Card(
                 elevation: 1,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
@@ -505,14 +715,19 @@ class _SettingsViewState extends State<SettingsView> {
                           const SizedBox(width: 10),
                           Text(
                             l10n.settingsGenerateQrTitle,
-                            style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 8),
                       Text(
                         l10n.settingsGenerateQrDesc,
-                        style: const TextStyle(color: Colors.black87, fontSize: 13),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontSize: 13,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       ElevatedButton.icon(
@@ -520,11 +735,20 @@ class _SettingsViewState extends State<SettingsView> {
                           backgroundColor: Colors.teal.shade700,
                           foregroundColor: Colors.white,
                           minimumSize: const Size.fromHeight(48),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                         onPressed: _isGeneratingQr ? null : _generatePairingQr,
                         icon: _isGeneratingQr
-                            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: Colors.white,
+                                ),
+                              )
                             : const Icon(Icons.qr_code_2),
                         label: Text(l10n.settingsGenerateQrButton),
                       ),
@@ -534,11 +758,136 @@ class _SettingsViewState extends State<SettingsView> {
               ),
             const SizedBox(height: 24),
 
+            // Configurações de Rede / URL do Servidor
+            if (!isAndroidDevice) ...[
+              Text(
+                l10n.settingsServerNetworkSection,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                isAndroidDevice
+                    ? l10n.settingsNetworkSectionDescAndroid
+                    : l10n.settingsNetworkSectionDescWindows,
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: _urlCtrl,
+                decoration: InputDecoration(
+                  labelText: l10n.serverUrlLabel,
+                  hintText: l10n.settingsServerUrlHint,
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.dns),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _fpCtrl,
+                decoration: InputDecoration(
+                  labelText: l10n.fingerprintLabel,
+                  hintText: l10n.settingsFingerprintHint,
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.security),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: adaptiveUiSurface(context, Colors.blue.shade50),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: adaptiveUiSurface(context, Colors.blue.shade200),
+                  ),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      size: 20,
+                      color: adaptiveUiText(context, Colors.blue.shade800),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        l10n.settingsFingerprintExplanation,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: adaptiveUiText(context, Colors.blue.shade900),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _tokenCtrl,
+                obscureText: true,
+                autocorrect: false,
+                enableSuggestions: false,
+                decoration: InputDecoration(
+                  labelText: l10n.settingsDeviceTokenLabel,
+                  helperText: l10n.settingsTokenEntryHelp,
+                  helperMaxLines: 4,
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.key),
+                ),
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _isSaving ? null : _saveSettings,
+                child: Text(l10n.settingsSaveAuthenticate),
+              ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                icon: const Icon(Icons.pin),
+                label: Text(l10n.settingsPairComputer),
+                onPressed: _isSaving
+                    ? null
+                    : () async {
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                PairingView(storage: _storage, auth: _auth),
+                          ),
+                        );
+                        if (mounted) await _loadSettings();
+                      },
+              ),
+            ],
+            if (!isAndroidDevice) const SizedBox(height: 24),
+
+            Card(
+              child: ListTile(
+                key: const ValueKey('settings-printers'),
+                leading: const Icon(Icons.print_outlined),
+                title: Text(l10n.printerDialogTitle),
+                subtitle: Text(l10n.printerSettingsEntryHelp),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => showDialog<void>(
+                  context: context,
+                  builder: (_) => PrinterSelectionDialog(service: _printers),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+
             // Backup e Segurança do Banco de Dados (requer dispositivo pareado)
             if (_hasToken) ...[
               Card(
                 elevation: 1,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 child: Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
@@ -551,7 +900,9 @@ class _SettingsViewState extends State<SettingsView> {
                           Expanded(
                             child: Text(
                               l10n.backupSectionTitle,
-                              style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                              style: theme.textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
@@ -559,38 +910,98 @@ class _SettingsViewState extends State<SettingsView> {
                       const SizedBox(height: 8),
                       Text(
                         l10n.backupSectionDesc,
-                        style: const TextStyle(color: Colors.black87, fontSize: 13),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface,
+                          fontSize: 13,
+                        ),
                       ),
                       const SizedBox(height: 16),
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           minimumSize: const Size.fromHeight(48),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
-                        onPressed: _isCreatingBackup ? null : _createBackup,
+                        onPressed: _backupBusy ? null : _createBackup,
                         icon: _isCreatingBackup
-                            ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
                             : const Icon(Icons.save_alt),
-                        label: Text(_isCreatingBackup ? l10n.backupCreating : l10n.backupCreateButton),
+                        label: Text(
+                          _isCreatingBackup
+                              ? l10n.backupCreating
+                              : l10n.backupCreateButton,
+                        ),
                       ),
+                      if (!isAndroidDevice) ...[
+                        const SizedBox(height: 12),
+                        OutlinedButton.icon(
+                          onPressed: _backupBusy ? null : _createNewDatabase,
+                          icon: const Icon(Icons.storage),
+                          label: Text(
+                            _isCreatingDatabase
+                                ? l10n.newDatabaseCreating
+                                : l10n.newDatabaseTitle,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          l10n.newDatabaseHelp,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 16),
                       Text(
                         l10n.backupListTitle,
-                        style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                        style: theme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       if (_backups.isEmpty)
-                        Text(l10n.backupEmptyList, style: const TextStyle(color: Colors.black54, fontSize: 13))
+                        Text(
+                          l10n.backupEmptyList,
+                          style: TextStyle(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
+                            fontSize: 13,
+                          ),
+                        )
                       else
-                        ..._backups.take(10).map(
+                        ..._backups
+                            .take(10)
+                            .map(
                               (b) => ListTile(
                                 dense: true,
                                 contentPadding: EdgeInsets.zero,
-                                leading: const Icon(Icons.storage, color: Colors.teal),
-                                title: Text(b.filename, style: const TextStyle(fontSize: 13), overflow: TextOverflow.ellipsis),
-                                subtitle: Text('${b.formattedSize} • ${b.modifiedAt.split('.').first.replaceFirst('T', ' ')}'),
+                                leading: const Icon(
+                                  Icons.storage,
+                                  color: Colors.teal,
+                                ),
+                                title: Text(
+                                  b.filename,
+                                  style: const TextStyle(fontSize: 13),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                subtitle: Text(
+                                  '${b.formattedSize} • ${b.modifiedAt.split('.').first.replaceFirst('T', ' ')}',
+                                ),
                                 trailing: TextButton.icon(
-                                  onPressed: (_isCreatingBackup || _isRestoringBackup) ? null : () => _confirmRestore(b),
+                                  onPressed: _backupBusy
+                                      ? null
+                                      : () => _confirmRestore(b),
                                   icon: const Icon(Icons.restore, size: 18),
                                   label: Text(l10n.backupRestoreButton),
                                 ),
@@ -603,67 +1014,13 @@ class _SettingsViewState extends State<SettingsView> {
               const SizedBox(height: 24),
             ],
 
-
-            // Configurações de Rede / URL do Servidor
-            Text(l10n.settingsServerNetworkSection, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 4),
-            Text(
-              isAndroidDevice
-                  ? l10n.settingsNetworkSectionDescAndroid
-                  : l10n.settingsNetworkSectionDescWindows,
-              style: const TextStyle(fontSize: 13, color: Colors.black54),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _urlCtrl,
-              decoration: InputDecoration(
-                labelText: l10n.serverUrlLabel,
-                hintText: l10n.settingsServerUrlHint,
-                border: const OutlineInputBorder(),
-                prefixIcon: const Icon(Icons.dns),
-              ),
-            ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: _fpCtrl,
-              decoration: InputDecoration(
-                labelText: l10n.fingerprintLabel,
-                hintText: l10n.settingsFingerprintHint,
-                border: const OutlineInputBorder(),
-                prefixIcon: const Icon(Icons.security),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.blue.shade200),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Icon(Icons.info_outline, size: 20, color: Colors.blue.shade800),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      l10n.settingsFingerprintExplanation,
-                      style: TextStyle(fontSize: 12, color: Colors.blue.shade900),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _isSaving ? null : _saveSettings,
-              child: Text(l10n.settingsSaveButton),
-            ),
             const Divider(height: 40),
 
             // Informações do Dispositivo
-            Text(l10n.settingsDeviceInfoSection, style: theme.textTheme.titleMedium),
+            Text(
+              l10n.settingsDeviceInfoSection,
+              style: theme.textTheme.titleMedium,
+            ),
             const SizedBox(height: 12),
             ListTile(
               contentPadding: EdgeInsets.zero,
@@ -678,7 +1035,11 @@ class _SettingsViewState extends State<SettingsView> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               title: Text(l10n.settingsDeviceTokenLabel),
-              subtitle: Text(_hasToken ? l10n.settingsDeviceTokenConfigured : l10n.settingsDeviceTokenMissing),
+              subtitle: Text(
+                _hasToken
+                    ? l10n.settingsDeviceTokenConfigured
+                    : l10n.settingsDeviceTokenMissing,
+              ),
               trailing: Icon(
                 _hasToken ? Icons.check_circle : Icons.cancel,
                 color: _hasToken ? Colors.green : Colors.red,

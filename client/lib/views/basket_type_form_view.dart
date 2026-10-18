@@ -43,11 +43,14 @@ class _BasketTypeFormViewState extends State<BasketTypeFormView> {
     _nameCtrl = TextEditingController(text: bt?.name ?? '');
     _descriptionCtrl = TextEditingController(text: bt?.description ?? '');
     _defaultPriceCtrl = TextEditingController(
-      text: bt != null ? (bt.defaultPriceCents / 100.0).toStringAsFixed(2) : '0.00',
+      text: bt != null
+          ? (bt.defaultPriceCents / 100.0).toStringAsFixed(2)
+          : '0.00',
     );
 
     if (bt != null) {
-      _category = _categories.contains(bt.category) ? bt.category : _categories.first;
+      _category =
+          _categories.contains(bt.category) ? bt.category : _categories.first;
       _allowsCustomization = bt.allowsCustomization;
       _tracksFinishedStock = bt.tracksFinishedStock;
       _isActive = bt.isActive;
@@ -68,12 +71,18 @@ class _BasketTypeFormViewState extends State<BasketTypeFormView> {
 
     setState(() => _isSaving = true);
 
-    final defaultPrice = ((double.tryParse(_defaultPriceCtrl.text.trim().replaceAll(',', '.')) ?? 0.0) * 100).round();
+    final defaultPrice =
+        ((double.tryParse(_defaultPriceCtrl.text.trim().replaceAll(',', '.')) ??
+                    0.0) *
+                100)
+            .round();
 
     final data = {
       'code': _codeCtrl.text.trim().toUpperCase(),
       'name': _nameCtrl.text.trim(),
-      'description': _descriptionCtrl.text.trim().isNotEmpty ? _descriptionCtrl.text.trim() : null,
+      'description': _descriptionCtrl.text.trim().isNotEmpty
+          ? _descriptionCtrl.text.trim()
+          : null,
       'category': _category,
       'default_price_cents': defaultPrice,
       'allows_customization': _allowsCustomization,
@@ -94,7 +103,9 @@ class _BasketTypeFormViewState extends State<BasketTypeFormView> {
       if (mounted) {
         setState(() => _isSaving = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.basketTypeFormSaveError(e.toString()))),
+          SnackBar(
+              content:
+                  Text(context.l10n.basketTypeFormSaveError(e.toString()))),
         );
       }
     }
@@ -125,7 +136,9 @@ class _BasketTypeFormViewState extends State<BasketTypeFormView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isEditing ? l10n.basketTypeFormEditTitle : l10n.basketTypeFormNewTitle),
+        title: Text(isEditing
+            ? l10n.basketTypeFormEditTitle
+            : l10n.basketTypeFormNewTitle),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
@@ -142,7 +155,9 @@ class _BasketTypeFormViewState extends State<BasketTypeFormView> {
                   hintText: l10n.basketTypeFormCodeHint,
                   border: const OutlineInputBorder(),
                 ),
-                validator: (val) => val == null || val.trim().isEmpty ? l10n.basketTypeFormCodeRequired : null,
+                validator: (val) => val == null || val.trim().isEmpty
+                    ? l10n.basketTypeFormCodeRequired
+                    : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -152,7 +167,9 @@ class _BasketTypeFormViewState extends State<BasketTypeFormView> {
                   hintText: l10n.basketTypeFormNameHint,
                   border: const OutlineInputBorder(),
                 ),
-                validator: (val) => val == null || val.trim().isEmpty ? l10n.basketTypeFormNameRequired : null,
+                validator: (val) => val == null || val.trim().isEmpty
+                    ? l10n.basketTypeFormNameRequired
+                    : null,
               ),
               const SizedBox(height: 16),
               Row(
@@ -164,7 +181,11 @@ class _BasketTypeFormViewState extends State<BasketTypeFormView> {
                         labelText: l10n.basketTypeFormCategoryLabel,
                         border: const OutlineInputBorder(),
                       ),
-                      items: _categories.map((c) => DropdownMenuItem(value: c, child: Text(_formatCategory(context, c)))).toList(),
+                      items: _categories
+                          .map((c) => DropdownMenuItem(
+                              value: c,
+                              child: Text(_formatCategory(context, c))))
+                          .toList(),
                       onChanged: (val) => setState(() => _category = val!),
                     ),
                   ),
@@ -172,7 +193,8 @@ class _BasketTypeFormViewState extends State<BasketTypeFormView> {
                   Expanded(
                     child: TextFormField(
                       controller: _defaultPriceCtrl,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
                       decoration: InputDecoration(
                         labelText: l10n.basketTypeFormPriceLabel,
                         border: const OutlineInputBorder(),
@@ -199,7 +221,9 @@ class _BasketTypeFormViewState extends State<BasketTypeFormView> {
               ),
               SwitchListTile(
                 title: Text(l10n.basketTypeFormTracksStock),
-                subtitle: Text(l10n.basketTypeFormTracksStockSubtitle),
+                subtitle: Text(_tracksFinishedStock
+                    ? l10n.basketTypeFormTracksStockSubtitle
+                    : l10n.basketTypeFormNoStockSubtitle),
                 value: _tracksFinishedStock,
                 onChanged: (val) => setState(() => _tracksFinishedStock = val),
               ),
@@ -214,13 +238,20 @@ class _BasketTypeFormViewState extends State<BasketTypeFormView> {
                   minimumSize: const Size.fromHeight(50),
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
                 onPressed: _isSaving ? null : _save,
                 icon: _isSaving
-                    ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                            color: Colors.white, strokeWidth: 2))
                     : const Icon(Icons.check),
-                label: Text(isEditing ? l10n.basketTypeFormSaveUpdate : l10n.basketTypeFormSaveCreate),
+                label: Text(isEditing
+                    ? l10n.basketTypeFormSaveUpdate
+                    : l10n.basketTypeFormSaveCreate),
               ),
             ],
           ),

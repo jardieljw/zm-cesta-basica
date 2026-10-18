@@ -1,0 +1,20 @@
+FE-054 — 17/10/2026
+
+Backend
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+436 passed, 14 warnings in 103.55s (0:01:43)
+
+Flutter
+00:24 +318: C:/Users/jardi/Desktop/ZM CESTA BASICA/client/test/receivable_payment_view_test.dart: Receber list filters reflow at Size(1100.0, 900.0) scale 1.0 dark false
+00:24 +319: C:/Users/jardi/Desktop/ZM CESTA BASICA/client/test/receivable_payment_view_test.dart: (tearDownAll)
+00:24 +319: All tests passed!
+
+Análise
+Analyzing client...                                             
+No issues found! (ran in 39.3s)
+
+Windows debug
+Building Windows application...                                    23,3s
+√ Built build\windows\x64\runner\Debug\zm_cesta_basica_client.exe
+

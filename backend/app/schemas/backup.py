@@ -1,5 +1,5 @@
 import datetime
-from typing import List, Optional
+from typing import List, Optional, Literal
 from pydantic import BaseModel
 
 class BackupCreateResponse(BaseModel):
@@ -26,3 +26,15 @@ class BackupRestoreResponse(BaseModel):
     integrity_ok: bool
     restored_at: str
     safety_backup_filename: Optional[str] = None
+
+class NewDatabaseRequest(BaseModel):
+    confirmation: Literal['NOVO BANCO']
+
+class NewDatabaseResponse(BaseModel):
+    status: str
+    active_database_path: str
+    safety_backup_filename: str
+    safety_backup_path: str
+    integrity_ok: bool
+    message: str
+    operation_replayed: bool = False

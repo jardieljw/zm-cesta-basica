@@ -1,0 +1,18 @@
+--- a/README.md
++++ b/README.md
+@@ -1,6 +1,15 @@
+ # ZM Cesta Básica — Sistema Profissional de Gestão de Estoque e Produção
+ 
+ Sistema de alta confiabilidade para controle de estoque, compras com conversão de embalagens, montagem de cestas (padrão e personalizadas), vendas e relatórios gerenciais, operando em rede local privada (Windows Desktop e Android Mobile) sem dependência de serviços em nuvem.
++
++
++> **Escopo atual do cliente — 13/10/2026:** as telas de produção em lote,
++> desmontagem, expedição/conferência, responsáveis e tesouraria estão arquivadas.
++> As descrições dessas fases abaixo são referência histórica e de domínio.
++> O backend e os dados históricos são preservados para os fluxos compartilhados.
++> Consulte [client/_archive/README.md](client/_archive/README.md) antes de restaurar
++> funções. Não reintroduzir menus, relatórios ou serviços exclusivos arquivados
++> sem solicitação do usuário. Montagem na venda e consulta de contas seguem ativas.
+ 
+ ---
+ 

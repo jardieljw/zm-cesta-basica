@@ -1,0 +1,121 @@
+{
+  "consolidado_em": "2026-10-16",
+  "rodada": "Resumo rastreavel e novo seletor de data",
+  "situacao": "Previa verificada localmente; avaliacao no iPhone e do novo percurso pendentes",
+  "arquivos": [
+    {
+      "arquivo": "financeiro-origem-e-data-zm.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\financeiro-origem-e-data-zm.html",
+      "sha256": "7c7b10aa578f1e879e4806d9cbad9c17169a330b522a234d91349eaf90a5ff62",
+      "bytes": 77208
+    },
+    {
+      "arquivo": "financeiro-origem-e-data-zm-preview.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\financeiro-origem-e-data-zm-preview.html",
+      "sha256": "d4eae1c47d43461deef7bf0d9e5009f74763f865b6a8401eb20dddfedfade082",
+      "bytes": 173928
+    },
+    {
+      "arquivo": "check-financeiro-origem-data.cjs",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\check-financeiro-origem-data.cjs",
+      "sha256": "7ef7aa2318b12dc47779a75f36cf42ddf24c1dacb043168c2a5d0aaac8736e59",
+      "bytes": 16879
+    },
+    {
+      "arquivo": "financeiro-origem-data-verificacao.json",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\financeiro-origem-data-verificacao.json",
+      "sha256": "1014f509ef59f77cb937382facf805e7f29d7c83b9a3976e03aec3be03efb9cc",
+      "bytes": 89949
+    },
+    {
+      "arquivo": "origem-data-edge-calendario.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\origem-data-edge-calendario.png",
+      "sha256": "334da130899bb6937d109ee6de9347f2e9424ec6864169905b33a7acd7182e94",
+      "bytes": 15560
+    },
+    {
+      "arquivo": "origem-data-edge-formulario.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\origem-data-edge-formulario.png",
+      "sha256": "50182b315e0beee11a9192f6e6bad943bc7f33ff71abc7cd70e5bdca6ee76946",
+      "bytes": 55571
+    },
+    {
+      "arquivo": "origem-data-edge-indisponivel.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\origem-data-edge-indisponivel.png",
+      "sha256": "e07699fd3e7f592f6cb663392ef104f16a1580e236a390bfa5510d2b4379d289",
+      "bytes": 28922
+    },
+    {
+      "arquivo": "origem-data-edge-origem.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\origem-data-edge-origem.png",
+      "sha256": "fb0a5f56f7e85fa627ad093129c68c3788e4613b8ee34b44b493f4f63ab636bb",
+      "bytes": 79340
+    },
+    {
+      "arquivo": "origem-data-edge-resumo.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\origem-data-edge-resumo.png",
+      "sha256": "343fc4adf0940f0c41149bf32222fbfa40968d2c0d7ec1aa106b26697c99da1c",
+      "bytes": 29942
+    },
+    {
+      "arquivo": "origem-data-edge-tabela.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\origem-data-edge-tabela.png",
+      "sha256": "75aac6054107d6bc312bca9d37e7faf746ff13182b82d109891a1086723c4a04",
+      "bytes": 43086
+    },
+    {
+      "arquivo": "origem-data-edge-vazio.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\origem-data-edge-vazio.png",
+      "sha256": "af629863cf5eef22ee2f7e71eb15cf8fb97a768b66c53ae52181dbd71a948060",
+      "bytes": 31591
+    },
+    {
+      "arquivo": "origem-data-webkit-calendario.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\origem-data-webkit-calendario.png",
+      "sha256": "46f0958d7aefce74ee006f23a2b762b987c4b4869b0d6646b8f53219f90773fd",
+      "bytes": 13681
+    },
+    {
+      "arquivo": "origem-data-webkit-formulario.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\origem-data-webkit-formulario.png",
+      "sha256": "361dc1c1bbefee3e35a35135126d69ad1299c6f91492325d1b62364c11d540ea",
+      "bytes": 49696
+    },
+    {
+      "arquivo": "origem-data-webkit-indisponivel.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\origem-data-webkit-indisponivel.png",
+      "sha256": "47e14442aceca6db0be8cb1991290606cf4e9a0d75b8e19dd01d2fdb01825422",
+      "bytes": 26951
+    },
+    {
+      "arquivo": "origem-data-webkit-origem.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\origem-data-webkit-origem.png",
+      "sha256": "c318485686f25815650bce5e717fc8712f3d1d4f2b6c813f2db42dd98289136c",
+      "bytes": 57127
+    },
+    {
+      "arquivo": "origem-data-webkit-resumo.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\origem-data-webkit-resumo.png",
+      "sha256": "e27b0d9f5ac265a457b76dca7c5c889bfda108ab59e75c79c5635430c14c74a0",
+      "bytes": 28815
+    },
+    {
+      "arquivo": "origem-data-webkit-tabela.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\origem-data-webkit-tabela.png",
+      "sha256": "b0cc1fda1d8e26f55725578dae79de09122f3d327dec6e5a779d96ec7948c0b8",
+      "bytes": 39833
+    },
+    {
+      "arquivo": "origem-data-webkit-vazio.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\origem-data-webkit-vazio.png",
+      "sha256": "a4be1de3319f6d645128bae9ff508bff434ae67b091b765fb27c4563fa4c478b",
+      "bytes": 29363
+    },
+    {
+      "arquivo": "data-cortada-iphone.jpg",
+      "origem": "C:\\Users\\jardi\\.codex\\codex-remote-attachments\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\1F4D2AA5-2CA6-4A15-B03A-5205FB733648\\1-Foto-1.jpg",
+      "sha256": "9af0ee4c10153e89e85892b119bebb27fc10ecdf1a28b3826b9ea5bafb1f32d8",
+      "bytes": 89171
+    }
+  ]
+}

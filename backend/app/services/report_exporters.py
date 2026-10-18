@@ -1,12 +1,14 @@
 import csv
 import io
 import datetime
+import textwrap
 from typing import Dict, Any, List
 import openpyxl
 from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
 from openpyxl.utils import get_column_letter
 
 from app.schemas.reports import ReportResponse
+from app.schemas.form_print import FormPrintOptions, column_weight, select_form_columns
 
 
 def _format_currency_ptbr(cents: int) -> str:
@@ -197,192 +199,123 @@ def export_report_to_xlsx(report: ReportResponse) -> bytes:
     return buf.getvalue()
 
 
-def export_blank_template_to_xlsx(template_type: str, report: Optional[ReportResponse] = None) -> bytes:
-    """
-    Generates a formatted XLSX model with spacious rows (26-28pt) for clipboard audit and handwriting.
-    When report is provided with data rows, populates real data cells while maintaining generous line height.
-    When report is empty or None, generates 20 blank lines.
-    """
+def export_blank_template_to_xlsx(
+    template_type: str, report: Optional[ReportResponse] = None,
+    options: Optional[FormPrintOptions] = None,
+) -> bytes:
+    from openpyxl.worksheet.pagebreak import Break
+    from openpyxl.worksheet.page import PageMargins
+    from app.services.reports import get_blank_form_data
+
+    report = report or get_blank_form_data(template_type)
+    blank = report.metadata.report_type.startswith('blank-')
+    # Preserve the legacy GET export's row height/count; configurable exports share PDF defaults.
+    options = options or FormPrintOptions(blank_row_count=20, row_height_mm=(28 if blank else 26) / (72 / 25.4))
+    report = select_form_columns(report, options)
     wb = openpyxl.Workbook()
     ws = wb.active
-
-    header_font = Font(name="Calibri", size=11, bold=True, color="FFFFFF")
-    header_fill = PatternFill(start_color="34495E", end_color="34495E", fill_type="solid")
-    meta_font = Font(name="Calibri", size=10, italic=True, color="595959")
-    title_font = Font(name="Calibri", size=14, bold=True, color="1F497D")
-    total_font = Font(name="Calibri", size=11, bold=True, color="000000")
-    total_fill = PatternFill(start_color="E6EEF4", end_color="E6EEF4", fill_type="solid")
-
-    thin_border = Border(
-        left=Side(style="thin", color="A6A6A6"),
-        right=Side(style="thin", color="A6A6A6"),
-        top=Side(style="thin", color="A6A6A6"),
-        bottom=Side(style="thin", color="A6A6A6")
-    )
-    total_border = Border(
-        top=Side(style="thin", color="34495E"),
-        bottom=Side(style="double", color="34495E")
-    )
-
-    has_real_data = bool(
-        report
-        and report.metadata.report_type.startswith("audit-")
-        and len(report.rows) > 0
-    )
-    templates = {
-        "payments": {
-            "title": "Tabela de Pagamentos de Cestas (Auditoria e Conferência Física)" if has_real_data else "Tabela de Pagamentos de Cestas (Formulário em Branco)",
-            "headers": [
-                "Data Venda", "Cliente / Identificação", "Tipo de Cesta", "Qtd",
-                "Valor Total (R$)", "Data Prevista", "Data Pagamento", "Valor Recebido (R$)",
-                "Saldo Restante (R$)", "Quitação / Visto", "Observações"
-            ],
-            "sheet_name": "Pagamentos Cestas"
-        },
-        "payables": {
-            "title": "Tabela de Contas a Pagar (Auditoria e Conferência Física)" if has_real_data else "Tabela de Contas a Pagar (Formulário em Branco)",
-            "headers": [
-                "Descrição da Obrigação", "Beneficiário / Fornecedor", "Categoria", "Valor (R$)",
-                "Data Vencimento", "Data Pagamento", "Forma Pagamento", "Quitação / Visto", "Observações / NF"
-            ],
-            "sheet_name": "Contas a Pagar"
-        },
-        "dispatch_conference": {
-            "title": "Folha de Conferência de Saídas de Cestas (Auditoria Física)" if has_real_data else "Folha de Conferência de Saídas de Cestas (Formulário em Branco)",
-            "headers": [
-                "Data / Horário", "Responsável", "Tipo de Cesta", "Qtd Retirada", "Preço Unit. (R$)",
-                "Personalizações", "Vendidas", "Devolvidas", "Avariadas", "Custódia", "Visto Conferência"
-            ],
-            "sheet_name": "Conferência Saídas"
-        },
-        "physical_inventory": {
-            "title": "Folha de Contagem Física de Estoque (Auditoria e Balanço)" if has_real_data else "Folha de Contagem Física de Estoque (Formulário em Branco)",
-            "headers": [
-                "Produto / Cesta", "Unidade", "Saldo Sistema", "Quantidade Física (Contada)",
-                "Diferença (+/-)", "Observações e Justificativa", "Assinatura / Visto"
-            ],
-            "sheet_name": "Contagem Física"
-        }
-    }
-
-    cfg = templates.get(template_type, templates["payments"])
-    ws.title = cfg["sheet_name"]
-
-    # Header block
-    ws.append(["ZM Cesta Básica"])
-    ws.cell(row=1, column=1).font = Font(name="Calibri", size=11, bold=True, color="595959")
-    ws.append([report.metadata.title if report else cfg["title"]])
-    ws.cell(row=2, column=1).font = title_font
-    sub_label = report.metadata.filter_info.label if report else "Modelo Oficial para Preenchimento Manual à Caneta e Conferência de Prancheta"
-    ws.append([sub_label])
-    ws.cell(row=3, column=1).font = meta_font
+    ws.title = {'payments': 'Pagamentos', 'payables': 'Contas a pagar', 'physical_inventory': 'Contagem física'}.get(template_type, 'Formulário')
+    count = len(report.columns)
+    last = get_column_letter(count)
+    landscape = options.landscape(count)
+    weights = [options.column_weights.get(c, column_weight(c)) for c in report.columns]
+    printable_mm = (297 if landscape else 210) - options.margin_left_mm - options.margin_right_mm
+    widths_mm = [printable_mm * weight / sum(weights) for weight in weights]
+    for idx, text in enumerate([
+        report.metadata.company_name, report.metadata.title,
+        f"Consulta: {report.metadata.generated_at.astimezone(datetime.timezone(datetime.timedelta(hours=-3))).strftime('%d/%m/%Y %H:%M')} | {report.metadata.filter_info.label}",
+    ], start=1):
+        ws.cell(idx, 1, text)
+        if count > 1:
+            ws.merge_cells(start_row=idx, start_column=1, end_row=idx, end_column=count)
+        ws.cell(idx, 1).font = Font(name='Calibri', size=11 if idx == 2 else 9, bold=idx < 3)
+        ws.cell(idx, 1).alignment = Alignment(vertical='center', wrap_text=True)
+        ws.row_dimensions[idx].height = {1: 18, 2: 32, 3: 22}[idx]
     ws.append([])
-
-    # Table headers
-    headers = report.headers if report else cfg["headers"]
-    ws.append(headers)
-    header_row_idx = 5
-    for col_idx in range(1, len(headers) + 1):
-        cell = ws.cell(row=header_row_idx, column=col_idx)
-        cell.font = header_font
-        cell.fill = header_fill
-        cell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-    ws.row_dimensions[header_row_idx].height = 26
-
-    curr_row_idx = header_row_idx + 1
-
-    if has_real_data:
-        # Populate real rows
-        for r_idx, row in enumerate(report.rows):
-            row_vals = []
-            for col in report.columns:
-                val = row.get(col, "")
-                row_vals.append(val)
-            ws.append(row_vals)
-            ws.row_dimensions[curr_row_idx].height = 26
-
-            for col_idx, col in enumerate(report.columns, start=1):
-                cell = ws.cell(row=curr_row_idx, column=col_idx)
-                cell.border = thin_border
-                val = cell.value
-
-                if col.endswith("_cents") or "valor" in col or "preco" in col:
-                    if isinstance(val, (int, float)) and val != "":
-                        cell.value = val / 100.0
-                        cell.number_format = '"R$" #,##0.00'
-                        cell.alignment = Alignment(horizontal="right", vertical="center")
-                    else:
-                        cell.alignment = Alignment(horizontal="center", vertical="center")
-                elif isinstance(val, int):
-                    cell.number_format = '#,##0'
-                    cell.alignment = Alignment(horizontal="right", vertical="center")
-                elif isinstance(val, datetime.datetime):
-                    cell.value = val.strftime("%d/%m/%Y %H:%M")
-                    cell.alignment = Alignment(horizontal="center", vertical="center")
-                elif isinstance(val, datetime.date):
-                    cell.value = val.strftime("%d/%m/%Y")
-                    cell.alignment = Alignment(horizontal="center", vertical="center")
+    ws.row_dimensions[4].height = 28 * 72 / 25.4 - 72
+    for i, header in enumerate(report.headers, start=1):
+        cell = ws.cell(5, i, header)
+        cell.font = Font(name='Calibri', size=options.font_size, bold=True)
+        cell.fill = PatternFill('solid', fgColor='E6E6E6')
+        cell.alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
+    ws.row_dimensions[5].height = 18 * 72 / 25.4
+    border = Border(**{side: Side(style='thin', color='555555') for side in ['left', 'right', 'top', 'bottom']})
+    data = [{c: '' for c in report.columns} for _ in range(options.blank_rows(count))] if blank else report.rows
+    if not blank and not data:
+        ws.cell(6, 1, 'Nenhum registro encontrado.')
+    for row_idx, row in enumerate(data, start=6):
+        ws.row_dimensions[row_idx].height = options.row_height_mm * 72 / 25.4
+        for i, col in enumerate(report.columns, start=1):
+            value = row.get(col, '')
+            cell = ws.cell(row_idx, i)
+            # Force strings to text: descriptions must never become spreadsheet formulas.
+            if isinstance(value, str):
+                try:
+                    if col.endswith('_date') and value:
+                        value = datetime.datetime.fromisoformat(value.replace('Z', '+00:00'))
+                except ValueError:
+                    pass
+            if isinstance(value, datetime.datetime):
+                if col == 'due_date':
+                    value = value.replace(tzinfo=None)
+                elif value.tzinfo:
+                    value = value.astimezone(datetime.timezone(datetime.timedelta(hours=-3))).replace(tzinfo=None)
                 else:
-                    cell.alignment = Alignment(horizontal="left", vertical="center")
-
-            curr_row_idx += 1
-
-        # Totals row if available
-        if report.totals:
-            totals_row_vals = ["TOTAIS"]
-            for col in report.columns[1:]:
-                if col in report.totals:
-                    totals_row_vals.append(report.totals[col])
-                else:
-                    totals_row_vals.append("")
-            ws.append(totals_row_vals)
-            ws.row_dimensions[curr_row_idx].height = 26
-
-            for col_idx, col in enumerate(report.columns, start=1):
-                cell = ws.cell(row=curr_row_idx, column=col_idx)
-                cell.font = total_font
-                cell.fill = total_fill
-                cell.border = total_border
-                val = cell.value
-                if col.endswith("_cents") or "valor" in col or "preco" in col:
-                    if isinstance(val, (int, float)):
-                        cell.value = val / 100.0
-                        cell.number_format = '"R$" #,##0.00'
-                        cell.alignment = Alignment(horizontal="right", vertical="center")
-                elif isinstance(val, int):
-                    cell.number_format = '#,##0'
-                    cell.alignment = Alignment(horizontal="right", vertical="center")
-            curr_row_idx += 1
-
-    else:
-        # Blank rows (20 rows with comfortable height of 28pt for handwriting)
-        for r in range(curr_row_idx, curr_row_idx + 20):
-            ws.append(["" for _ in headers])
-            ws.row_dimensions[r].height = 28
-            for col_idx in range(1, len(headers) + 1):
-                cell = ws.cell(row=r, column=col_idx)
-                cell.border = thin_border
-        curr_row_idx += 20
-
-    # Footer Signatures
-    footer_row_idx = curr_row_idx + 2
-    ws.cell(row=footer_row_idx, column=2, value="_____________________________________________")
-    ws.cell(row=footer_row_idx + 1, column=2, value="Assinatura do Responsável")
-    sig_col = max(3, len(headers) - 1)
-    ws.cell(row=footer_row_idx, column=sig_col, value="_____________________________________________")
-    ws.cell(row=footer_row_idx + 1, column=sig_col, value="Visto do Auditor / Conferente")
-
-    # Column widths
-    for col in ws.columns:
-        col_letter = get_column_letter(col[0].column)
-        max_len = 0
-        for cell in col:
-            if cell.row < 5:
-                continue
-            if cell.value:
-                max_len = max(max_len, len(str(cell.value)))
-        ws.column_dimensions[col_letter].width = max(max_len + 4, 16)
-
+                    value = value.replace(tzinfo=datetime.timezone.utc).astimezone(datetime.timezone(datetime.timedelta(hours=-3))).replace(tzinfo=None)
+                cell.value = value
+                cell.number_format = 'dd/mm/yyyy'
+            elif isinstance(value, datetime.date):
+                cell.value = value
+                cell.number_format = 'dd/mm/yyyy'
+            elif col.endswith('_cents') and isinstance(value, (int, float)):
+                cell.value = value / 100
+                cell.number_format = '"R$" #,##0.00'
+            else:
+                cell.value = value
+                if isinstance(value, str):
+                    cell.data_type = 's'
+            cell.border = border
+            cell.font = Font(name='Calibri', size=options.font_size)
+            cell.alignment = Alignment(vertical='center', horizontal='right' if col.endswith('_cents') else 'left', wrap_text=True)
+            if not blank:
+                chars_per_line = max(1, int((widths_mm[i - 1] * 72 / 25.4 - 6) / (options.font_size * 0.6)))
+                display = _format_currency_ptbr(row.get(col)) if col.endswith('_cents') and isinstance(row.get(col), (int, float)) else str(value or '')
+                lines = sum(max(1, len(textwrap.wrap(part, width=chars_per_line))) for part in display.split('\n'))
+                ws.row_dimensions[row_idx].height = max(ws.row_dimensions[row_idx].height, lines * options.font_size * 1.25 + 6)
+    end_row = 5 + max(len(data), 1)
+    if not blank and report.totals:
+        end_row += 1
+        for i, col in enumerate(report.columns, start=1):
+            cell = ws.cell(end_row, i)
+            if col in report.totals:
+                cell.value = report.totals[col] / 100 if col.endswith('_cents') else report.totals[col]
+                if col.endswith('_cents'):
+                    cell.number_format = '"R$" #,##0.00'
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill('solid', fgColor='E6E6E6')
+    # Convert physical table width to Excel character units without shrinking the printed page.
+    for i, weight in enumerate(weights, start=1):
+        ws.column_dimensions[get_column_letter(i)].width = max(2, (printable_mm * 96 / 25.4 * weight / sum(weights) - 5) / 7)
+    ws.freeze_panes = 'A6'
+    ws.print_title_rows = '1:5'
+    ws.print_options.horizontalCentered = True
+    ws.page_setup.paperSize = ws.PAPERSIZE_A4
+    ws.page_setup.orientation = 'landscape' if landscape else 'portrait'
+    ws.page_setup.scale = 100
+    ws.page_margins = PageMargins(left=options.margin_left_mm / 25.4, right=options.margin_right_mm / 25.4,
+        top=options.margin_top_mm / 25.4, bottom=options.margin_bottom_mm / 25.4, header=0.15, footer=0.15)
+    ws.oddFooter.left.text = 'Responsável: __________________' if options.show_signatures else None
+    ws.oddFooter.right.text = 'Conferente: __________________' if options.show_signatures else None
+    ws.oddFooter.center.text = 'Página &P de &N'
+    available_points = ((210 if landscape else 297) - options.margin_top_mm - options.margin_bottom_mm - 28 - 18 - (18 if options.show_signatures else 9)) * 72 / 25.4
+    occupied = 0
+    for row_idx in range(6, end_row + 1):
+        height = ws.row_dimensions[row_idx].height or 15
+        if occupied and occupied + height > available_points:
+            ws.row_breaks.append(Break(id=row_idx - 1))
+            occupied = 0
+        occupied += height
+    ws.print_area = f'A1:{last}{end_row}'
     buf = io.BytesIO()
     wb.save(buf)
     return buf.getvalue()

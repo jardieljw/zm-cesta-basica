@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-16",
+  "decision": "FE-046",
+  "base": {
+    "path": "docs/referencias_frontend/mapa-navegavel-zm.html",
+    "sha256": "79388750430b1f39a50aafedb804053526db77524b11f46cefc5c72b7ae55758"
+  },
+  "recovered_source": {
+    "file": "mapa-integrado-recuperado-zm.html",
+    "sha256": "e3c688890506c3cf37a83793d811d9eb26f3c6b4b8b6aaa92a2f8fe597b57375"
+  },
+  "original_stylesheet_reused_without_change_except_root_id": true,
+  "intended_extensions": [
+    "Confirmed panel radius 32, field radius 24 and form-group spacing 20",
+    "Rounded primary actions inside content; original navigation unchanged",
+    "Integrated payment and receipt journeys inside the original shell",
+    "Shared appearance preferences and per-area navigation state",
+    "Useful information in Financial summary; original home hierarchy retained"
+  ],
+  "original_sidebar_css_width_px": 140,
+  "original_navigation_button_radius_px": 12,
+  "edge_sidebar_images": {
+    "reference_sha256": "52a99cad37dcda73402271d6977a05a82862f415f326392adfe012893ecedc2d",
+    "recovered_sha256": "52a99cad37dcda73402271d6977a05a82862f415f326392adfe012893ecedc2d",
+    "identical_bytes": true
+  },
+  "webkit_sidebar_images": {
+    "reference_sha256": "4e6479c1a5569a64a4229cfadf9380522d812669636a573635308537d056ebfb",
+    "recovered_sha256": "4e6479c1a5569a64a4229cfadf9380522d812669636a573635308537d056ebfb",
+    "identical_bytes": true
+  }
+}

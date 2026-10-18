@@ -3,272 +3,118 @@ import 'package:flutter/material.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/pdf.dart';
 import '../l10n/l10n_extension.dart';
+import '../services/document_file_service.dart';
+import '../services/printer_service.dart';
+import '../widgets/shared/printer_selection_dialog.dart';
 
-class PdfViewerScreen extends StatelessWidget {
+class PdfViewerScreen extends StatefulWidget {
   final String title;
   final Future<Uint8List> Function(PdfPageFormat format) buildPdf;
   final String fileName;
+  final bool canChangeOrientation;
+  final PdfPageFormat initialPageFormat;
+  final PrinterService? printerService;
 
-  const PdfViewerScreen({
-    super.key,
-    required this.title,
-    required this.buildPdf,
-    required this.fileName,
-  });
+  const PdfViewerScreen(
+      {super.key,
+      required this.title,
+      required this.buildPdf,
+      required this.fileName,
+      this.canChangeOrientation = true,
+      this.initialPageFormat = PdfPageFormat.a4,
+      this.printerService});
+  @override
+  State<PdfViewerScreen> createState() => _PdfViewerScreenState();
+}
 
-  void _showPrinterSelectionDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 650, maxHeight: 600),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.print, color: Colors.blue.shade800),
-                          const SizedBox(width: 8),
-                          const Text(
-                            'Impressão Direta & Dispositivos',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                        ],
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () => Navigator.pop(ctx),
-                      ),
-                    ],
-                  ),
-                  const Divider(),
-                  ListTile(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      side: BorderSide(color: Colors.blue.shade300),
-                    ),
-                    tileColor: Colors.blue.shade50,
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.blue.shade100,
-                      child: Icon(Icons.print_outlined, color: Colors.blue.shade900),
-                    ),
-                    title: const Text(
-                      'Serviço de Impressão do Sistema',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: const Text(
-                      'Windows Spooler / Android PrintManager (compatível com Epson Wi-Fi, Mopria e impressoras de rede).',
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    trailing: const Icon(Icons.arrow_forward_ios, size: 14),
-                    onTap: () async {
-                      Navigator.pop(ctx);
-                      await Printing.layoutPdf(onLayout: buildPdf, name: fileName);
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Impressoras Instaladas no Sistema:',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87),
-                  ),
-                  const SizedBox(height: 8),
-                  Expanded(
-                    child: FutureBuilder<List<Printer>>(
-                      future: Printing.listPrinters(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const CircularProgressIndicator(),
-                                const SizedBox(height: 12),
-                                Text(context.l10n.printerLocating, style: const TextStyle(fontSize: 12)),
-                              ],
-                            ),
-                          );
-                        }
+class _PdfViewerScreenState extends State<PdfViewerScreen> {
+  late final PrinterService _printers =
+      widget.printerService ?? PrinterService();
+  late PdfPageFormat _format = widget.initialPageFormat;
+  bool _busy = false;
 
-                        final printers = snapshot.data ?? [];
-                        if (printers.isEmpty) {
-                          return Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.info_outline, color: Colors.black54, size: 36),
-                                SizedBox(height: 12),
-                                Text(
-                                  'Nenhuma impressora listada via enumeração direta.',
-                                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(height: 6),
-                                Text(
-                                  'No Android ou em redes locais, utilize a opção "Serviço de Impressão do Sistema" acima para selecionar sua Epson Wi-Fi configurada no sistema operacional.',
-                                  style: TextStyle(fontSize: 12, color: Colors.black54),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          );
-                        }
+  @override
+  void dispose() {
+    if (widget.printerService == null) _printers.dispose();
+    super.dispose();
+  }
 
-                        return ListView.separated(
-                          itemCount: printers.length,
-                          separatorBuilder: (_, __) => const Divider(height: 1),
-                          itemBuilder: (context, i) {
-                            final p = printers[i];
-                            final nameLower = p.name.toLowerCase();
-                            final modelLower = (p.model ?? '').toLowerCase();
-                            final isEpson = nameLower.contains('epson') || modelLower.contains('epson');
-                            final isWifi = nameLower.contains('wi-fi') ||
-                                nameLower.contains('wifi') ||
-                                nameLower.contains('network') ||
-                                (p.location?.toLowerCase().contains('wi-fi') ?? false);
+  Future<void> _saveOrShare({required bool save}) async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    try {
+      final bytes = await widget.buildPdf(_format);
+      final saved = save
+          ? await DocumentFileService.save(bytes, widget.fileName)
+          : await Printing.sharePdf(bytes: bytes, filename: widget.fileName);
+      if (save && saved && mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(context.l10n.formFileSaved)));
+      }
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(context.l10n.formExportFailure)));
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
 
-                            return ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: isEpson ? Colors.blue.shade100 : Colors.grey.shade200,
-                                child: Icon(
-                                  Icons.print,
-                                  color: isEpson ? Colors.blue.shade800 : Colors.black54,
-                                ),
-                              ),
-                              title: Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      p.name,
-                                      style: TextStyle(
-                                        fontWeight: isEpson ? FontWeight.bold : FontWeight.w500,
-                                      ),
-                                    ),
-                                  ),
-                                  if (isEpson)
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue.shade50,
-                                        borderRadius: BorderRadius.circular(6),
-                                        border: Border.all(color: Colors.blue.shade300),
-                                      ),
-                                      child: Text(
-                                        isWifi ? 'Epson Wi-Fi' : 'Epson',
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.blue.shade900,
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                              subtitle: Text(
-                                [
-                                  if (p.model != null && p.model!.isNotEmpty) p.model,
-                                  if (p.isDefault) context.l10n.printerSystemDefault,
-                                  if (p.isAvailable) context.l10n.printerAvailable,
-                                ].join(' • '),
-                                style: const TextStyle(fontSize: 11),
-                              ),
-                              trailing: ElevatedButton.icon(
-                                icon: const Icon(Icons.send, size: 14),
-                                label: Text(context.l10n.printerActionPrint, style: const TextStyle(fontSize: 12)),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: isEpson ? Colors.blue.shade700 : null,
-                                  foregroundColor: isEpson ? Colors.white : null,
-                                ),
-                                onPressed: () async {
-                                  Navigator.pop(ctx);
-                                  await Printing.directPrintPdf(
-                                    printer: p,
-                                    onLayout: buildPdf,
-                                    name: fileName,
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
+  void _showPrinters() {
+    showDialog<void>(
+        context: context,
+        builder: (_) => PrinterSelectionDialog(
+            service: _printers,
+            buildPdf: widget.buildPdf,
+            fileName: widget.fileName,
+            format: _format,
+            dynamicLayout: widget.canChangeOrientation));
   }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-
+    final l = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.print),
-            tooltip: l10n.tooltipPrintSelectPrinter,
-            onPressed: () => _showPrinterSelectionDialog(context),
-          ),
-          IconButton(
-            icon: const Icon(Icons.share),
-            tooltip: l10n.tooltipShareSavePdf,
-            onPressed: () async {
-              final bytes = await buildPdf(PdfPageFormat.a4);
-              await Printing.sharePdf(bytes: bytes, filename: fileName);
-            },
-          ),
-        ],
-      ),
+          title:
+              Text(widget.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.save_alt),
+                tooltip: l.formSavePdf,
+                onPressed: _busy ? null : () => _saveOrShare(save: true)),
+            IconButton(
+                key: const ValueKey('pdf-select-printer'),
+                icon: const Icon(Icons.print),
+                tooltip: l.tooltipPrintSelectPrinter,
+                onPressed: _busy ? null : _showPrinters),
+            IconButton(
+                icon: const Icon(Icons.share),
+                tooltip: l.tooltipShareSavePdf,
+                onPressed: _busy ? null : () => _saveOrShare(save: false)),
+          ]),
       body: PdfPreview(
-        build: buildPdf,
-        canChangeOrientation: true,
+        build: widget.buildPdf,
+        initialPageFormat: widget.initialPageFormat,
+        canChangeOrientation: widget.canChangeOrientation,
         canChangePageFormat: false,
         canDebug: false,
-        pdfFileName: fileName,
+        allowPrinting: false,
+        allowSharing: false,
+        pdfFileName: widget.fileName,
+        onPageFormatChanged: (format) => _format = format,
+        onError: (context, error) => Center(
+            child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(l.printerPreviewError))),
         previewPageMargin: const EdgeInsets.all(16),
         loadingWidget: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const CircularProgressIndicator(),
-              const SizedBox(height: 16),
-              Text(l10n.commonLoading),
-            ],
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.devices),
-            tooltip: l10n.tooltipPrintSelectPrinter,
-            onPressed: () => _showPrinterSelectionDialog(context),
-          ),
-          IconButton(
-            icon: const Icon(Icons.share),
-            tooltip: l10n.tooltipShareSavePdf,
-            onPressed: () async {
-              final bytes = await buildPdf(PdfPageFormat.a4);
-              await Printing.sharePdf(bytes: bytes, filename: fileName);
-            },
-          ),
-        ],
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+          const CircularProgressIndicator(),
+          const SizedBox(height: 16),
+          Text(l.commonLoading),
+        ])),
       ),
     );
   }

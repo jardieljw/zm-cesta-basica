@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "scope": "preview_only_no_declared_bill_header",
+  "reader_id": "generic_csv",
+  "reader_version": "2",
+  "samples": [
+    {"alias": "card_a", "rows": 21, "errors": 0, "source_fields_match": true, "original_bytes_match": true, "preview_reused": true, "missing_header_blocks_confirmation": true, "confirmed": false},
+    {"alias": "card_b", "rows": 15, "errors": 0, "source_fields_match": true, "original_bytes_match": true, "preview_reused": true, "missing_header_blocks_confirmation": true, "confirmed": false}
+  ],
+  "books_unchanged": true,
+  "events_created": 0
+}

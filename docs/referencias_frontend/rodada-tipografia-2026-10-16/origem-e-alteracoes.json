@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-16",
+  "decision": "FE-048",
+  "phase": "planning_and_preview",
+  "productionImplementation": false,
+  "source": {
+    "path": "docs/referencias_frontend/rodada-recuperacao-integrada-2026-10-16/mapa-integrado-recuperado-zm.html",
+    "sha256": "e3c688890506c3cf37a83793d811d9eb26f3c6b4b8b6aaa92a2f8fe597b57375",
+    "decision": "FE-046"
+  },
+  "candidate": {
+    "path": "docs/referencias_frontend/rodada-tipografia-2026-10-16/hierarquia-integrada-zm.html",
+    "sha256": "01f28ece47a54fdd2f989caf351550ff5d6742b6d520799ec97b79e2b4abd071",
+    "rootId": "zm-typography-demo"
+  },
+  "structuralStyles": "First structural stylesheet identical after root identifier substitution; navigation has no content typography overrides.",
+  "intentionalChanges": [
+    "Two synchronized reading variants in the integrated shell",
+    "Shared presentation format, content scale and named fictitious cases",
+    "Proposed type roles from FE-033 plus summary amount 24/30",
+    "Reflow for names and enlarged content; opportunities to wrap currency between thousands groups",
+    "Existing reading gets reflow safeguards only for enlarged/extreme cases",
+    "Scenario change explicitly restarts example; blocked during simulated confirmation",
+    "Preview stage height resets with format/content-scale/case changes"
+  ],
+  "preserved": [
+    "Five areas and their destinations",
+    "Area navigation stacks",
+    "Original desktop column 140 and navigation button radius 12",
+    "Home financial summary, business today and attention",
+    "Field groups 20, field radius 24, panel radius 32, accent default #2866ae",
+    "Integral/partial, hidden-value exclusion, calendar, review/edit and module-specific methods"
+  ],
+  "verification": {
+    "path": "hierarquia-verificacao.json",
+    "continuity": "continuidade-verificacao.json",
+    "engines": [
+      "edge",
+      "webkit"
+    ],
+    "layouts": 640,
+    "sidebar": "Computed geometry/style comparison and byte equality of five button screenshots per variant per engine in 1024/light/100%",
+    "existingSuites": {
+      "backend": 363,
+      "flutter": 238,
+      "meaning": "Existing app health, not proof of preview or native implementation"
+    }
+  },
+  "limits": [
+    "Content-only scaling, not global browser zoom or native Dynamic Type",
+    "Navigation enlarged globally remains a separate unresolved adaptation decision",
+    "Wrapped extreme money needs user/device readability evaluation",
+    "Original Tweak helper with simulated annotation provider, not real host-panel automation",
+    "No real API, company database, Flutter/iOS implementation, native-device validation or Git commit"
+  ]
+}

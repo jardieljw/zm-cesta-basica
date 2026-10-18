@@ -16,13 +16,16 @@ class DashboardService {
   }) async {
     final params = <String>['filter_type=$filterType'];
     if (date != null && date.isNotEmpty) params.add('date=$date');
-    if (startDate != null && startDate.isNotEmpty) params.add('start_date=$startDate');
+    if (startDate != null && startDate.isNotEmpty) {
+      params.add('start_date=$startDate');
+    }
     if (endDate != null && endDate.isNotEmpty) params.add('end_date=$endDate');
     if (month != null) params.add('month=$month');
     if (year != null) params.add('year=$year');
 
     final query = '?${params.join('&')}';
-    final response = await _client.get('/api/v1/dashboard/summary$query');
+    final response =
+        await _client.get('/api/v1/dashboard/business-summary$query');
     return DashboardSummary.fromJson(response as Map<String, dynamic>);
   }
 }

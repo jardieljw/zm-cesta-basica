@@ -1,0 +1,86 @@
+{
+  "consolidado_em": "2026-10-15",
+  "rodada": "Jornada Pagar",
+  "situacao": "Previa pronta, aguardando avaliacao do usuario",
+  "verificacao": "passed",
+  "arquivos": [
+    {
+      "arquivo": "jornada-pagar-zm.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\jornada-pagar-zm.html",
+      "sha256": "f96b68e4be483c468fff05f829c18a3a63e9c2ee3f12ccc00d0969a36f18cd1f",
+      "bytes": 56839
+    },
+    {
+      "arquivo": "jornada-pagar-zm-preview.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\jornada-pagar-zm-preview.html",
+      "sha256": "db1547ef4d3fda6a5e31ff52b9000e8341d1bd786f89b97098e5f967f8a05648",
+      "bytes": 149554
+    },
+    {
+      "arquivo": "check-jornada-pagar.cjs",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\check-jornada-pagar.cjs",
+      "sha256": "29ed910f051e128db1ee99421ae31d156196d32a1bebd1047e0a0bff6f617153",
+      "bytes": 14377
+    },
+    {
+      "arquivo": "jornada-pagar-verificacao.json",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\jornada-pagar-verificacao.json",
+      "sha256": "3228bae484d055ffd9806ea7a72600248443e8e745a229d83e009060ccd2d906",
+      "bytes": 5409
+    },
+    {
+      "arquivo": "pagar-lista-mobile.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\pagar-lista-mobile.png",
+      "sha256": "d79580a9047f15cac7cb26b180dcf9b1c22bf85eb2865429d58a2ff630b5c738",
+      "bytes": 42850
+    },
+    {
+      "arquivo": "pagar-detalhe-mobile.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\pagar-detalhe-mobile.png",
+      "sha256": "383b333aa63f13c9ff0e4ec2dfd27912b21ca4127686e9f95a612d400ba7d3f4",
+      "bytes": 70456
+    },
+    {
+      "arquivo": "pagar-formulario-mobile.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\pagar-formulario-mobile.png",
+      "sha256": "68e592adb40ffc175801e0c2c775ad6331490b93fe5f0f24d18a94166b011eb4",
+      "bytes": 47715
+    },
+    {
+      "arquivo": "pagar-conferencia-mobile.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\pagar-conferencia-mobile.png",
+      "sha256": "c4e36e305e9d07589476a8dc7547796e6ec5fa433a74e26b06fe46a51fd34e60",
+      "bytes": 41613
+    },
+    {
+      "arquivo": "pagar-historico-mobile.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\pagar-historico-mobile.png",
+      "sha256": "c3d340abb35893ac9f3220fd850a3d0e6a42a5519f9f1fce6f9db42909200964",
+      "bytes": 74381
+    },
+    {
+      "arquivo": "pagar-falha-mobile.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\pagar-falha-mobile.png",
+      "sha256": "97e09af7acbf5934b162d640a928b7a78a94f4bd879181fc29366eabbf904315",
+      "bytes": 47549
+    },
+    {
+      "arquivo": "pagar-formulario-desktop.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\pagar-formulario-desktop.png",
+      "sha256": "d2bf9645c05714c78ee8374d287b9b9177d5729602fc66112e43674ac1090232",
+      "bytes": 58702
+    },
+    {
+      "arquivo": "pagar-historico-desktop.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\pagar-historico-desktop.png",
+      "sha256": "815879f703091ba8304c9ad7cfd17f64d91fd09008bfe8c54215897172ccb81e",
+      "bytes": 88549
+    },
+    {
+      "arquivo": "pagar-historico-desktop-escuro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\pagar-historico-desktop-escuro.png",
+      "sha256": "de73fd392bf68cb550ff03c6d82c21c426c84fe4ce40981b70a676d7dc9ac2c2",
+      "bytes": 88267
+    }
+  ]
+}

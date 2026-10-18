@@ -6,6 +6,11 @@ class PayableService {
 
   PayableService({ApiClient? client}) : _client = client ?? ApiClient();
 
+  Future<ApiOrigin> readOrigin() => _client.readOrigin();
+  void close() => _client.close();
+  PayableService bindOrigin(ApiOrigin origin) =>
+      PayableService(client: _client.bindOrigin(origin));
+
   Future<List<AccountPayable>> getPayables({
     DateTime? dueDateFrom,
     DateTime? dueDateTo,
@@ -19,15 +24,16 @@ class PayableService {
     int limit = 100,
     int offset = 0,
   }) async {
-    final params = <String>[
-      'limit=$limit',
-      'offset=$offset',
-    ];
+    final params = <String>['limit=$limit', 'offset=$offset'];
     if (dueDateFrom != null) {
-      params.add('due_date_from=${Uri.encodeComponent(dueDateFrom.toIso8601String())}');
+      params.add(
+        'due_date_from=${Uri.encodeComponent(dueDateFrom.toIso8601String())}',
+      );
     }
     if (dueDateTo != null) {
-      params.add('due_date_to=${Uri.encodeComponent(dueDateTo.toIso8601String())}');
+      params.add(
+        'due_date_to=${Uri.encodeComponent(dueDateTo.toIso8601String())}',
+      );
     }
     if (month != null) params.add('month=$month');
     if (year != null) params.add('year=$year');
@@ -50,7 +56,9 @@ class PayableService {
     final query = '?${params.join('&')}';
     final response = await _client.get('/api/v1/payables$query');
     final list = response as List<dynamic>? ?? [];
-    return list.map((j) => AccountPayable.fromJson(j as Map<String, dynamic>)).toList();
+    return list
+        .map((j) => AccountPayable.fromJson(j as Map<String, dynamic>))
+        .toList();
   }
 
   Future<AccountPayable> getPayable(String id) async {
@@ -68,7 +76,9 @@ class PayableService {
       idempotencyKey: idempotencyKey,
     );
     final list = response as List<dynamic>? ?? [];
-    return list.map((j) => AccountPayable.fromJson(j as Map<String, dynamic>)).toList();
+    return list
+        .map((j) => AccountPayable.fromJson(j as Map<String, dynamic>))
+        .toList();
   }
 
   Future<PayablePayment> recordPayment(

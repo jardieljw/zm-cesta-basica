@@ -1,21 +1,65 @@
 # ZM Cesta Básica — Sistema Profissional de Gestão de Estoque e Produção
 
-Sistema de alta confiabilidade para controle de estoque, compras com conversão de embalagens, montagem de cestas (padrão e personalizadas), vendas e relatórios gerenciais, operando em rede local privada (Windows Desktop e Android Mobile) sem dependência de serviços em nuvem.
+> **Atualização de 14/10/2026:** montagem padrão/personalizada antecipada e histórico estão na
+> interface por uma integração nova em **Tipos de Cesta → Montagens**. As telas
+> originais de produção/desmontagem continuam arquivadas. Ver
+> [Montagens e histórico](docs/MONTAGENS_E_HISTORICO.md).
+
+Sistema para produtos, composições de cestas, compras, estoque, vendas de balcão com montagem durante a venda, fiado, contas a pagar e relatórios gerenciais, operando em rede local privada (Windows e Android).
+
+
+> **Escopo atual do cliente — 13/10/2026:** as telas de produção em lote,
+> desmontagem, expedição/conferência, responsáveis e tesouraria estão arquivadas.
+> As descrições dessas fases abaixo são referência histórica e de domínio.
+> O backend e os dados históricos são preservados para os fluxos compartilhados.
+> Consulte [client/_archive/README.md](client/_archive/README.md) antes de restaurar
+> funções. Não reintroduzir menus, relatórios ou serviços exclusivos arquivados
+> sem solicitação do usuário. Montagem na venda segue ativa; pagamentos não exigem seleção de contas.
+
+> **Dashboard e financeiro simplificados:** o aplicativo usa `dashboard/business-summary`
+> e `reports/business-financial-summary`, com vendas, compras, estoque, confirmações,
+> pendências, custo vendido e resultado gerencial. Não exibir saldos de caixa/contas,
+> depósitos manuais ou projeção de tesouraria. As confirmações preservam a auditoria
+> interna; contas financeiras não são selecionadas pelo operador. Consultar
+> [client/_archive/DASHBOARD.md](client/_archive/DASHBOARD.md) antes de evoluir esses fluxos.
 
 ---
 
 ## 📌 Documentos Canônicos de Referência
 
+**Comece pelo [índice das mecânicas do app](docs/README.md)** para entender cada
+fluxo da interface ao backend e ao banco, com exemplos e limitações atuais.
+
+O [contrato de integridade e evolução](docs/REGRAS_DE_INTEGRIDADE_E_EVOLUCAO.md)
+define os cuidados com edição, exclusão, histórico e migrações de dados existentes.
+
 Para entender a arquitetura, regras de engenharia, especificações de negócio e diretrizes para agentes de desenvolvimento:
 
-1. **[ARCHITECTURE.md](./ARCHITECTURE.md):** Documento canônico de arquitetura, princípios permanentes de engenharia, governança técnica, backlog futuro (financeiro, fiado, expedição) e mapa de fases.
+1. **[ARCHITECTURE.md](./ARCHITECTURE.md):** Arquitetura, regras permanentes, escopo atual e histórico das fases; as regras de custódia preservadas não significam telas de expedição ativas.
 2. **[Especificacao_Sistema_Estoque_Cestas.md](./Especificacao_Sistema_Estoque_Cestas.md):** Especificação original completa do negócio aprovada pela empresa.
 3. **[backend/README.md](./backend/README.md):** Guia detalhado do backend FastAPI, banco de dados SQLite WAL, migrações e endpoints.
 4. **[client/README.md](./client/README.md):** Guia da aplicação cliente Flutter (Windows e Android), pinning TLS e componentes de interface.
 
 ---
 
-## 🚀 Status do Projeto
+## Escopo atual e histórico de entrega
+
+**Revisão de escopo — 14/10/2026:** a tabela de fases abaixo registra a entrega
+original, não a lista de telas disponíveis hoje. Os números de testes e tamanhos
+dos binários desta seção são evidências históricas dessa entrega.
+
+| Função | Situação na interface atual |
+| --- | --- |
+| Produção em lote e desmontagem separada | Arquivadas; motor de produção e dados preservados. |
+| Responsáveis, expedição, conferência e acerto de rota | Arquivados; backend e histórico de custódia preservados. |
+| Tesouraria, contas, depósitos e transferências manuais | Telas arquivadas; registros internos usados pelos pagamentos continuam. |
+| Relatórios exclusivos de montagem/expedição e formulário C | Arquivados na interface. |
+| Venda de balcão, montagem na venda, fiado e contas a pagar | Ativos. |
+| Dashboard e relatório financeiro | Ativos na versão simplificada; não apresentam saldos de tesouraria. |
+
+Consultar [funções arquivadas](docs/FUNCOES_ARQUIVADAS.md) e
+[guia de restauração do cliente](client/_archive/README.md). Compilar o projeto
+não restaura automaticamente menus arquivados.
 
 | Fase | Escopo | Situação | Testes / Evidências |
 | :--- | :--- | :---: | :---: |

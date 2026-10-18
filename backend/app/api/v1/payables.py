@@ -10,6 +10,7 @@ from app.api.deps import get_current_device, get_idempotency_key
 from app.models.auth import PairedDevice
 from app.models.financial import AccountPayable, PayablePayment
 from app.models.base import utc_now
+from app.core.business_dates import as_utc, business_today
 from app.schemas.financial import (
     AccountPayableCreate,
     AccountPayableResponse,
@@ -37,7 +38,7 @@ def serialize_payable(p: AccountPayable) -> AccountPayableResponse:
     due = p.due_date
     if due.tzinfo is None and now.tzinfo is not None:
         due = due.replace(tzinfo=datetime.timezone.utc)
-    is_overdue = due < now and p.status in ["OPEN", "PARTIAL"]
+    is_overdue = due.date() < business_today(now) and p.status in ["OPEN", "PARTIAL"]
 
     c_at = p.created_at
     if c_at.tzinfo is None and now.tzinfo is not None:
@@ -81,14 +82,14 @@ def serialize_payable_detail(p: AccountPayable) -> AccountPayableDetailResponse:
             payable_id=pay.payable_id,
             account_id=pay.account_id,
             account_name=pay.account.name if pay.account else None,
-            payment_date=pay.payment_date,
+            payment_date=as_utc(pay.payment_date),
             amount_cents=pay.amount_cents,
             payment_method=pay.payment_method,
             status=pay.status,
             reversal_reason=pay.reversal_reason,
             reversal_of_id=pay.reversal_of_id,
             notes=pay.notes,
-            created_at=pay.created_at,
+            created_at=as_utc(pay.created_at),
         )
         for pay in p.payments
     ]
@@ -187,14 +188,14 @@ def post_payable_payment(
             payable_id=payment.payable_id,
             account_id=payment.account_id,
             account_name=payment.account.name if payment.account else None,
-            payment_date=payment.payment_date,
+            payment_date=as_utc(payment.payment_date),
             amount_cents=payment.amount_cents,
             payment_method=payment.payment_method,
             status=payment.status,
             reversal_reason=payment.reversal_reason,
             reversal_of_id=payment.reversal_of_id,
             notes=payment.notes,
-            created_at=payment.created_at,
+            created_at=as_utc(payment.created_at),
         ).model_dump(mode="json")
         return status.HTTP_201_CREATED, resp
 
@@ -202,7 +203,10 @@ def post_payable_payment(
         db=db,
         idempotency_key=idempotency_key,
         operation_type="PAYABLE_PAYMENT_CREATE",
-        payload={"payable_id": payable_id, **data.model_dump(mode="json")},
+        # Keep legacy request hashes byte-equivalent when additive fields are absent.
+        payload={"payable_id": payable_id, **data.model_dump(mode="json", exclude={
+            name for name in ("expected_balance_cents", "payment_business_date") if getattr(data, name) is None
+        })},
         business_callback=callback,
     )
     return JSONResponse(status_code=result.status_code, content=result.to_json_dict())

@@ -1,0 +1,27 @@
+import '../../lib/core/api_client.dart';
+import '../models/financial_account.dart';
+
+/// Shared account lookup for purchases, payables and receivables.
+class FinancialAccountsService {
+  final ApiClient _client;
+
+  FinancialAccountsService({ApiClient? client})
+      : _client = client ?? ApiClient();
+
+  Future<List<FinancialAccount>> getAccounts({
+    bool? isActive,
+    String? accountType,
+  }) async {
+    final params = <String>[];
+    if (isActive != null) params.add('is_active=$isActive');
+    if (accountType != null && accountType.isNotEmpty) {
+      params.add('account_type=${Uri.encodeComponent(accountType)}');
+    }
+    final query = params.isNotEmpty ? '?${params.join('&')}' : '';
+    final response = await _client.get('/api/v1/treasury/accounts$query');
+    final list = response as List<dynamic>? ?? [];
+    return list
+        .map((j) => FinancialAccount.fromJson(j as Map<String, dynamic>))
+        .toList();
+  }
+}

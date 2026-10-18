@@ -6,6 +6,8 @@ class ProductService {
 
   ProductService({ApiClient? client}) : _client = client ?? ApiClient();
 
+  ApiClient get client => _client;
+
   Future<List<Product>> getProducts({
     String? category,
     bool? isActive,
@@ -26,7 +28,9 @@ class ProductService {
     final response = await _client.get('/api/v1/products$query');
 
     if (response is List) {
-      return response.map((json) => Product.fromJson(json as Map<String, dynamic>)).toList();
+      return response
+          .map((json) => Product.fromJson(json as Map<String, dynamic>))
+          .toList();
     }
     return [];
   }
@@ -50,23 +54,40 @@ class ProductService {
     await _client.delete('/api/v1/products/$id');
   }
 
+  Future<ProductDeletionCheck> checkDeletion(String id) async {
+    final response = await _client.get('/api/v1/products/$id/deletion-check');
+    return ProductDeletionCheck.fromJson(response as Map<String, dynamic>);
+  }
+
+  Future<void> deleteUnusedProduct(String id) async {
+    await _client.delete('/api/v1/products/$id/permanent');
+  }
+
   // --- EMBALAGENS ---
 
   Future<List<ProductPackaging>> getPackagings(String productId) async {
-    final response = await _client.get('/api/v1/products/$productId/packagings');
+    final response =
+        await _client.get('/api/v1/products/$productId/packagings');
     if (response is List) {
-      return response.map((json) => ProductPackaging.fromJson(json as Map<String, dynamic>)).toList();
+      return response
+          .map(
+              (json) => ProductPackaging.fromJson(json as Map<String, dynamic>))
+          .toList();
     }
     return [];
   }
 
-  Future<ProductPackaging> createPackaging(String productId, Map<String, dynamic> data) async {
-    final response = await _client.post('/api/v1/products/$productId/packagings', body: data);
+  Future<ProductPackaging> createPackaging(
+      String productId, Map<String, dynamic> data) async {
+    final response = await _client
+        .post('/api/v1/products/$productId/packagings', body: data);
     return ProductPackaging.fromJson(response as Map<String, dynamic>);
   }
 
-  Future<ProductPackaging> updatePackaging(String packagingId, Map<String, dynamic> data) async {
-    final response = await _client.put('/api/v1/packagings/$packagingId', body: data);
+  Future<ProductPackaging> updatePackaging(
+      String packagingId, Map<String, dynamic> data) async {
+    final response =
+        await _client.put('/api/v1/packagings/$packagingId', body: data);
     return ProductPackaging.fromJson(response as Map<String, dynamic>);
   }
 

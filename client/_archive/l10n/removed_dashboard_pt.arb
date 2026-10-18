@@ -1,0 +1,12 @@
+{
+  "@@locale": "pt",
+  "payableSelectAccount": "Conta Financeira de Saída",
+  "dashboardSectionFinancial": "Financeiro & Tesouraria",
+  "dashboardOpenReceivables": "A Receber (Em Aberto)",
+  "dashboardEffectiveReceived": "Recebimentos Efetivos",
+  "dashboardOpenPayables": "A Pagar (Em Aberto)",
+  "dashboardEffectivePaid": "Pagamentos Efetuados",
+  "dashboardProjectedCash": "Saldo de Caixa Projetado",
+  "dashboardProjectionNotice": "Atenção: Valores projetados são estimativas futuras e NÃO constituem dinheiro disponível em caixa.",
+  "purchasePaymentFinancialAccountLabel": "Conta Financeira de Liquidação"
+}

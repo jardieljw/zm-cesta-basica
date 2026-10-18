@@ -62,7 +62,7 @@ import 'app_localizations_pt.dart';
 /// property.
 abstract class AppLocalizations {
   AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -85,11 +85,11 @@ abstract class AppLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ];
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[Locale('pt')];
@@ -154,12 +154,6 @@ abstract class AppLocalizations {
   /// **'Buscar'**
   String get commonSearch;
 
-  /// No description provided for @commonFilter.
-  ///
-  /// In pt, this message translates to:
-  /// **'Filtrar'**
-  String get commonFilter;
-
   /// No description provided for @commonClear.
   ///
   /// In pt, this message translates to:
@@ -214,12 +208,6 @@ abstract class AppLocalizations {
   /// **'Sim'**
   String get commonYes;
 
-  /// No description provided for @commonNo.
-  ///
-  /// In pt, this message translates to:
-  /// **'Não'**
-  String get commonNo;
-
   /// No description provided for @commonSuccess.
   ///
   /// In pt, this message translates to:
@@ -237,12 +225,6 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Atenção'**
   String get commonWarning;
-
-  /// No description provided for @commonUnit.
-  ///
-  /// In pt, this message translates to:
-  /// **'un'**
-  String get commonUnit;
 
   /// No description provided for @commonViewDetails.
   ///
@@ -376,12 +358,6 @@ abstract class AppLocalizations {
   /// **'Unidade Base'**
   String get productBaseUnit;
 
-  /// No description provided for @productCostPrice.
-  ///
-  /// In pt, this message translates to:
-  /// **'Preço de Custo'**
-  String get productCostPrice;
-
   /// No description provided for @productMinStock.
   ///
   /// In pt, this message translates to:
@@ -472,12 +448,6 @@ abstract class AppLocalizations {
   /// **'Permite Personalização'**
   String get basketTypeAllowsCustom;
 
-  /// No description provided for @recipesTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Ficha Técnica / Receita'**
-  String get recipesTitle;
-
   /// No description provided for @recipeVersionLabel.
   ///
   /// In pt, this message translates to:
@@ -489,18 +459,6 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Adicionar Insumo'**
   String get recipeAddIngredient;
-
-  /// No description provided for @recipeQuantityPerBasket.
-  ///
-  /// In pt, this message translates to:
-  /// **'Quantidade por Cesta'**
-  String get recipeQuantityPerBasket;
-
-  /// No description provided for @recipeSection.
-  ///
-  /// In pt, this message translates to:
-  /// **'Seção do Insumo'**
-  String get recipeSection;
 
   /// No description provided for @purchasesTitle.
   ///
@@ -562,65 +520,11 @@ abstract class AppLocalizations {
   /// **'Lotes de Produção'**
   String get productionBatchesTitle;
 
-  /// No description provided for @productionBatchNew.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nova Montagem de Cestas'**
-  String get productionBatchNew;
-
   /// No description provided for @productionBatchNumber.
   ///
   /// In pt, this message translates to:
   /// **'Lote #{number}'**
   String productionBatchNumber(int number);
-
-  /// No description provided for @productionQuantityProduced.
-  ///
-  /// In pt, this message translates to:
-  /// **'Qtd. Produzida'**
-  String get productionQuantityProduced;
-
-  /// No description provided for @productionQuantityDisassembled.
-  ///
-  /// In pt, this message translates to:
-  /// **'Qtd. Desmontada'**
-  String get productionQuantityDisassembled;
-
-  /// No description provided for @productionCurrentStock.
-  ///
-  /// In pt, this message translates to:
-  /// **'Saldo em Estoque'**
-  String get productionCurrentStock;
-
-  /// No description provided for @productionUnitCost.
-  ///
-  /// In pt, this message translates to:
-  /// **'Custo Unitário'**
-  String get productionUnitCost;
-
-  /// No description provided for @productionTotalCost.
-  ///
-  /// In pt, this message translates to:
-  /// **'Custo Total do Lote'**
-  String get productionTotalCost;
-
-  /// No description provided for @productionStatusConfirmed.
-  ///
-  /// In pt, this message translates to:
-  /// **'Confirmado'**
-  String get productionStatusConfirmed;
-
-  /// No description provided for @productionStatusDisassembled.
-  ///
-  /// In pt, this message translates to:
-  /// **'Desmontado'**
-  String get productionStatusDisassembled;
-
-  /// No description provided for @productionStatusCanceled.
-  ///
-  /// In pt, this message translates to:
-  /// **'Cancelado'**
-  String get productionStatusCanceled;
 
   /// No description provided for @productionDirectSale.
   ///
@@ -658,12 +562,6 @@ abstract class AppLocalizations {
   /// **'Motivo da Desmontagem'**
   String get productionDisassembleReasonLabel;
 
-  /// No description provided for @productionDisassembleReasonHint.
-  ///
-  /// In pt, this message translates to:
-  /// **'Ex: Avaria em embalagem, readequação'**
-  String get productionDisassembleReasonHint;
-
   /// No description provided for @productionDisassembleTriageTitle.
   ///
   /// In pt, this message translates to:
@@ -688,65 +586,11 @@ abstract class AppLocalizations {
   /// **'Perda/Avaria ({unit})'**
   String productionLossQtyLabel(String unit);
 
-  /// No description provided for @productionLossReasonLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Motivo da Perda'**
-  String get productionLossReasonLabel;
-
-  /// No description provided for @productionDisassembleDescription.
-  ///
-  /// In pt, this message translates to:
-  /// **'A desmontagem realiza triagem física: itens intactos retornam ao estoque e avarias são registradas como perda sem inflar o estoque fisicamente.'**
-  String get productionDisassembleDescription;
-
   /// No description provided for @productionDisassembledSuccess.
   ///
   /// In pt, this message translates to:
   /// **'Lote desmontado com sucesso!'**
   String get productionDisassembledSuccess;
-
-  /// No description provided for @productionBatchSearchHint.
-  ///
-  /// In pt, this message translates to:
-  /// **'Buscar por lote (#1), tipo ou observações...'**
-  String get productionBatchSearchHint;
-
-  /// No description provided for @productionBatchFilterAllStatus.
-  ///
-  /// In pt, this message translates to:
-  /// **'Todos os Status'**
-  String get productionBatchFilterAllStatus;
-
-  /// No description provided for @productionBatchFilterConfirmed.
-  ///
-  /// In pt, this message translates to:
-  /// **'Confirmados'**
-  String get productionBatchFilterConfirmed;
-
-  /// No description provided for @productionBatchFilterDisassembled.
-  ///
-  /// In pt, this message translates to:
-  /// **'Desmontados'**
-  String get productionBatchFilterDisassembled;
-
-  /// No description provided for @productionBatchFilterAllTypes.
-  ///
-  /// In pt, this message translates to:
-  /// **'Todos os Tipos'**
-  String get productionBatchFilterAllTypes;
-
-  /// No description provided for @productionBatchFilterStandard.
-  ///
-  /// In pt, this message translates to:
-  /// **'Cesta Padrão'**
-  String get productionBatchFilterStandard;
-
-  /// No description provided for @productionBatchFilterCustom.
-  ///
-  /// In pt, this message translates to:
-  /// **'Personalizada'**
-  String get productionBatchFilterCustom;
 
   /// No description provided for @productionBatchEmpty.
   ///
@@ -766,24 +610,6 @@ abstract class AppLocalizations {
   /// **'Estorno Total do Lote #{number}'**
   String productionBatchCancelTitle(int number);
 
-  /// No description provided for @productionBatchCancelDescription.
-  ///
-  /// In pt, this message translates to:
-  /// **'Esta operação cancela a ordem de produção, deduz o saldo das cestas acabadas e retorna 100% dos insumos consumidos ao estoque fisicamente.\\n\\nRequer que todas as cestas acabadas estejam disponíveis em estoque.'**
-  String get productionBatchCancelDescription;
-
-  /// No description provided for @productionBatchCancelReasonLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Motivo do Estorno'**
-  String get productionBatchCancelReasonLabel;
-
-  /// No description provided for @productionBatchCancelReasonHint.
-  ///
-  /// In pt, this message translates to:
-  /// **'Ex: Ordem gerada em duplicidade'**
-  String get productionBatchCancelReasonHint;
-
   /// No description provided for @productionBatchCancelConfirm.
   ///
   /// In pt, this message translates to:
@@ -796,102 +622,6 @@ abstract class AppLocalizations {
   /// **'Lote estornado com sucesso!'**
   String get productionBatchCancelSuccess;
 
-  /// No description provided for @productionBatchSnapshotTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Snapshot Imutável de Insumos Consumidos'**
-  String get productionBatchSnapshotTitle;
-
-  /// No description provided for @productionBatchSectionLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Seção: {section} | Custo un: {cost}'**
-  String productionBatchSectionLabel(String section, String cost);
-
-  /// No description provided for @productionBatchTotalItemCost.
-  ///
-  /// In pt, this message translates to:
-  /// **'Total: {cost}'**
-  String productionBatchTotalItemCost(String cost);
-
-  /// No description provided for @productionBatchDisassembleButton.
-  ///
-  /// In pt, this message translates to:
-  /// **'Desmontar Lote'**
-  String get productionBatchDisassembleButton;
-
-  /// No description provided for @productionBatchCancelButton.
-  ///
-  /// In pt, this message translates to:
-  /// **'Estorno Total'**
-  String get productionBatchCancelButton;
-
-  /// No description provided for @productionBatchDetailProduced.
-  ///
-  /// In pt, this message translates to:
-  /// **'Quantidade Produzida'**
-  String get productionBatchDetailProduced;
-
-  /// No description provided for @productionBatchDetailStock.
-  ///
-  /// In pt, this message translates to:
-  /// **'Saldo Disponível'**
-  String get productionBatchDetailStock;
-
-  /// No description provided for @productionBatchDetailDisassembled.
-  ///
-  /// In pt, this message translates to:
-  /// **'Quantidade Desmontada'**
-  String get productionBatchDetailDisassembled;
-
-  /// No description provided for @productionBatchDetailUnitCost.
-  ///
-  /// In pt, this message translates to:
-  /// **'Custo Unitário'**
-  String get productionBatchDetailUnitCost;
-
-  /// No description provided for @productionBatchDetailTotalCost.
-  ///
-  /// In pt, this message translates to:
-  /// **'Custo Total'**
-  String get productionBatchDetailTotalCost;
-
-  /// No description provided for @productionBatchDetailDate.
-  ///
-  /// In pt, this message translates to:
-  /// **'Data: {date}'**
-  String productionBatchDetailDate(String date);
-
-  /// No description provided for @productionBatchDetailNotes.
-  ///
-  /// In pt, this message translates to:
-  /// **'Observações: {notes}'**
-  String productionBatchDetailNotes(String notes);
-
-  /// No description provided for @productionBatchDetailDisassembledAt.
-  ///
-  /// In pt, this message translates to:
-  /// **'Desmontado em: {date} ({reason})'**
-  String productionBatchDetailDisassembledAt(String date, String reason);
-
-  /// No description provided for @productionBatchDescriptionLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Descrição: {description}'**
-  String productionBatchDescriptionLabel(String description);
-
-  /// No description provided for @productionBatchConsumedTotal.
-  ///
-  /// In pt, this message translates to:
-  /// **'Consumido total: {quantity}'**
-  String productionBatchConsumedTotal(String quantity);
-
-  /// No description provided for @validationInvalid.
-  ///
-  /// In pt, this message translates to:
-  /// **'Inválido'**
-  String get validationInvalid;
-
   /// No description provided for @validationMinChars.
   ///
   /// In pt, this message translates to:
@@ -903,12 +633,6 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'A quantidade a desmontar deve ser maior que zero.'**
   String get validationMustBePositive;
-
-  /// No description provided for @validationInsufficientStockForDisassembly.
-  ///
-  /// In pt, this message translates to:
-  /// **'Saldo insuficiente para desmontagem: máximo permitido é de {max} unidade(s).'**
-  String validationInsufficientStockForDisassembly(int max);
 
   /// No description provided for @commonTryAgain.
   ///
@@ -957,24 +681,6 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Histórico auditável e imutável de todas as movimentações.'**
   String get homeInventoryMovementsDescription;
-
-  /// No description provided for @homePhase4Header.
-  ///
-  /// In pt, this message translates to:
-  /// **'Produção e Desmontagem'**
-  String get homePhase4Header;
-
-  /// No description provided for @homeProductionBatchesDescription.
-  ///
-  /// In pt, this message translates to:
-  /// **'Histórico de ordens, desmontagem com triagem e estorno total.'**
-  String get homeProductionBatchesDescription;
-
-  /// No description provided for @homeProductionAssemblyDescription.
-  ///
-  /// In pt, this message translates to:
-  /// **'Simulação de viabilidade com CMPM e baixa atômica.'**
-  String get homeProductionAssemblyDescription;
 
   /// No description provided for @homeServerStatusTitle.
   ///
@@ -1171,7 +877,7 @@ abstract class AppLocalizations {
   /// No description provided for @productInactivateConfirm.
   ///
   /// In pt, this message translates to:
-  /// **'Deseja inativar o produto \"{name}\"?\n\nA exclusão física é proibida para preservar a integridade das transações anteriores. O produto deixará de aparecer em novas composições.'**
+  /// **'Deseja inativar o produto \"{name}\"?\n\nO cadastro e o histórico serão preservados. Ele deixará de aparecer em novas compras e composições. Produtos nunca utilizados também podem ser excluídos definitivamente pela ação de excluir.'**
   String productInactivateConfirm(String name);
 
   /// No description provided for @productInactivateButton.
@@ -1213,7 +919,7 @@ abstract class AppLocalizations {
   /// No description provided for @productPackagingsCount.
   ///
   /// In pt, this message translates to:
-  /// **'Embalagens ({count})'**
+  /// **'Formas de compra ({count})'**
   String productPackagingsCount(int count);
 
   /// No description provided for @productSkuLabel.
@@ -1357,7 +1063,7 @@ abstract class AppLocalizations {
   /// No description provided for @packagingsTitle.
   ///
   /// In pt, this message translates to:
-  /// **'Embalagens Comerciais'**
+  /// **'Formas de compra (embalagens)'**
   String get packagingsTitle;
 
   /// No description provided for @packagingProductSubtitle.
@@ -1417,7 +1123,7 @@ abstract class AppLocalizations {
   /// No description provided for @packagingDialogQtyLabel.
   ///
   /// In pt, this message translates to:
-  /// **'Quantidade na Unidade Base * ({unit})'**
+  /// **'Conteúdo de uma embalagem ({unit}) *'**
   String packagingDialogQtyLabel(String unit);
 
   /// No description provided for @packagingDialogQtyHint.
@@ -1603,13 +1309,13 @@ abstract class AppLocalizations {
   /// No description provided for @basketTypeFormTracksStock.
   ///
   /// In pt, this message translates to:
-  /// **'Controla Estoque de Cesta Acabada'**
+  /// **'Estoque de cestas prontas'**
   String get basketTypeFormTracksStock;
 
   /// No description provided for @basketTypeFormTracksStockSubtitle.
   ///
   /// In pt, this message translates to:
-  /// **'Mantém saldo da cesta como produto acabado no inventário.'**
+  /// **'Mantém o saldo de cestas prontas no estoque. Na venda, permite escolher Pronta ou Montar.'**
   String get basketTypeFormTracksStockSubtitle;
 
   /// No description provided for @basketTypeFormStatusActive.
@@ -2017,13 +1723,13 @@ abstract class AppLocalizations {
   /// No description provided for @purchaseFormPackagingLabel.
   ///
   /// In pt, this message translates to:
-  /// **'Embalagem'**
+  /// **'Forma de compra'**
   String get purchaseFormPackagingLabel;
 
   /// No description provided for @purchaseFormBaseUnitPackaging.
   ///
   /// In pt, this message translates to:
-  /// **'Unidade Base ({unit})'**
+  /// **'Sem embalagem: comprar em {unit}'**
   String purchaseFormBaseUnitPackaging(String unit);
 
   /// No description provided for @purchaseFormQtyLabel.
@@ -2362,168 +2068,6 @@ abstract class AppLocalizations {
   /// **'Selecione um produto.'**
   String get stockAdjustmentSelectProductError;
 
-  /// No description provided for @assemblyHeaderTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Montagem de Cestas (Ordem de Produção)'**
-  String get assemblyHeaderTitle;
-
-  /// No description provided for @assemblyTabStandard.
-  ///
-  /// In pt, this message translates to:
-  /// **'Cesta Padrão'**
-  String get assemblyTabStandard;
-
-  /// No description provided for @assemblyTabCustom.
-  ///
-  /// In pt, this message translates to:
-  /// **'Cesta Personalizada'**
-  String get assemblyTabCustom;
-
-  /// No description provided for @assemblyStandardBasketLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Tipo de Cesta *'**
-  String get assemblyStandardBasketLabel;
-
-  /// No description provided for @assemblyStandardQtyLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Quantidade a Montar *'**
-  String get assemblyStandardQtyLabel;
-
-  /// No description provided for @assemblyStandardQtyValidation.
-  ///
-  /// In pt, this message translates to:
-  /// **'Informe uma quantidade válida maior que zero'**
-  String get assemblyStandardQtyValidation;
-
-  /// No description provided for @assemblyStandardDirectSale.
-  ///
-  /// In pt, this message translates to:
-  /// **'Venda Direta (Não adiciona ao estoque acabado)'**
-  String get assemblyStandardDirectSale;
-
-  /// No description provided for @assemblyStandardDirectSaleSubtitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Baixa os insumos consumidos sem criar saldo da cesta montada no inventário.'**
-  String get assemblyStandardDirectSaleSubtitle;
-
-  /// No description provided for @assemblyStandardNotesLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Observações da Ordem'**
-  String get assemblyStandardNotesLabel;
-
-  /// No description provided for @assemblyStandardNotesHint.
-  ///
-  /// In pt, this message translates to:
-  /// **'Ex: Pedido especial cliente XPTO'**
-  String get assemblyStandardNotesHint;
-
-  /// No description provided for @assemblyFeasibilityTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Simulação de Viabilidade e Custo Médio (CMPM)'**
-  String get assemblyFeasibilityTitle;
-
-  /// No description provided for @assemblyFeasibleOk.
-  ///
-  /// In pt, this message translates to:
-  /// **'Estoque Suficiente para Montagem'**
-  String get assemblyFeasibleOk;
-
-  /// No description provided for @assemblyFeasibleFail.
-  ///
-  /// In pt, this message translates to:
-  /// **'Estoque Insuficiente para Montagem'**
-  String get assemblyFeasibleFail;
-
-  /// No description provided for @assemblyTotalCostPreview.
-  ///
-  /// In pt, this message translates to:
-  /// **'Custo Total do Lote: {cost}'**
-  String assemblyTotalCostPreview(String cost);
-
-  /// No description provided for @assemblyUnitCostPreview.
-  ///
-  /// In pt, this message translates to:
-  /// **'Custo Unitário da Cesta: {cost}'**
-  String assemblyUnitCostPreview(String cost);
-
-  /// No description provided for @assemblyConfirmDialogTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Confirmar Montagem de Cestas'**
-  String get assemblyConfirmDialogTitle;
-
-  /// No description provided for @assemblyConfirmDialogContent.
-  ///
-  /// In pt, this message translates to:
-  /// **'Deseja confirmar a montagem de {qty} cesta(s) \"{name}\"?\n\nOs insumos serão baixados e o lote de cestas acabadas será adicionado ao estoque imediatamente.'**
-  String assemblyConfirmDialogContent(int qty, String name);
-
-  /// No description provided for @assemblyConfirmSuccess.
-  ///
-  /// In pt, this message translates to:
-  /// **'Lote #{number} montado com sucesso! Custo unitário: {cost}'**
-  String assemblyConfirmSuccess(int number, String cost);
-
-  /// No description provided for @assemblySubmitStandard.
-  ///
-  /// In pt, this message translates to:
-  /// **'Confirmar Montagem da Cesta Padrão'**
-  String get assemblySubmitStandard;
-
-  /// No description provided for @assemblySubmitCustom.
-  ///
-  /// In pt, this message translates to:
-  /// **'Confirmar Montagem da Cesta Personalizada'**
-  String get assemblySubmitCustom;
-
-  /// No description provided for @assemblyCustomBaseBasket.
-  ///
-  /// In pt, this message translates to:
-  /// **'Modelo Base da Cesta'**
-  String get assemblyCustomBaseBasket;
-
-  /// No description provided for @assemblyCustomDescLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Descrição da Cesta Personalizada *'**
-  String get assemblyCustomDescLabel;
-
-  /// No description provided for @assemblyCustomDescHint.
-  ///
-  /// In pt, this message translates to:
-  /// **'Ex: Cesta Natalina Especial para Empresa Alpha'**
-  String get assemblyCustomDescHint;
-
-  /// No description provided for @assemblyCustomDescRequired.
-  ///
-  /// In pt, this message translates to:
-  /// **'Informe a descrição da cesta personalizada'**
-  String get assemblyCustomDescRequired;
-
-  /// No description provided for @assemblyCustomItemsHeader.
-  ///
-  /// In pt, this message translates to:
-  /// **'Composição Customizada de Insumos ({count})'**
-  String assemblyCustomItemsHeader(int count);
-
-  /// No description provided for @assemblyCustomAddItem.
-  ///
-  /// In pt, this message translates to:
-  /// **'Adicionar Insumo'**
-  String get assemblyCustomAddItem;
-
-  /// No description provided for @assemblyCustomQtyValidation.
-  ///
-  /// In pt, this message translates to:
-  /// **'Quantidade inválida'**
-  String get assemblyCustomQtyValidation;
-
   /// No description provided for @pairingViewTitle.
   ///
   /// In pt, this message translates to:
@@ -2755,8 +2299,20 @@ abstract class AppLocalizations {
   /// Mensagem quando a câmera precisa ser ativada
   ///
   /// In pt, this message translates to:
-  /// **'Câmera aguardando permissão ou reinicialização.'**
+  /// **'O acesso à câmera não foi permitido.'**
   String get cameraPermissionDenied;
+
+  /// No description provided for @pairingCameraPermissionHint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Permita o acesso à câmera para ler o QR Code. Se o Android não perguntar novamente, habilite a câmera nas configurações de permissões deste aplicativo e volte para esta tela.'**
+  String get pairingCameraPermissionHint;
+
+  /// No description provided for @pairingCameraUnavailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível abrir a câmera. Feche outros aplicativos que estejam usando a câmera e tente novamente.'**
+  String get pairingCameraUnavailable;
 
   /// Botão para solicitar permissão de câmera
   ///
@@ -2812,12 +2368,6 @@ abstract class AppLocalizations {
   /// **'Carnes & Frios'**
   String get categoryMeat;
 
-  /// No description provided for @categoryHygiene.
-  ///
-  /// In pt, this message translates to:
-  /// **'Higiene'**
-  String get categoryHygiene;
-
   /// No description provided for @categoryOthers.
   ///
   /// In pt, this message translates to:
@@ -2865,12 +2415,6 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Ver Insumos'**
   String get productionBatchViewIngredients;
-
-  /// No description provided for @productionDisassemble.
-  ///
-  /// In pt, this message translates to:
-  /// **'Desmontar'**
-  String get productionDisassemble;
 
   /// No description provided for @productionDisassembleNoIngredients.
   ///
@@ -3253,13 +2797,13 @@ abstract class AppLocalizations {
   /// No description provided for @saleAssemblyModeStock.
   ///
   /// In pt, this message translates to:
-  /// **'Estoque Acabado'**
+  /// **'Pronta'**
   String get saleAssemblyModeStock;
 
   /// No description provided for @saleAssemblyModeDemand.
   ///
   /// In pt, this message translates to:
-  /// **'Montar Imediatamente'**
+  /// **'Montar'**
   String get saleAssemblyModeDemand;
 
   /// No description provided for @saleGrossTotal.
@@ -3361,7 +2905,7 @@ abstract class AppLocalizations {
   /// No description provided for @saleStockAvailable.
   ///
   /// In pt, this message translates to:
-  /// **'Saldo disponível: {qty}'**
+  /// **'Cestas prontas disponíveis: {qty}'**
   String saleStockAvailable(int qty);
 
   /// No description provided for @salesEmpty.
@@ -3568,12 +3112,6 @@ abstract class AppLocalizations {
   /// **'Saídas e Conferências'**
   String get moduleDispatches;
 
-  /// No description provided for @homeDispatchesDescription.
-  ///
-  /// In pt, this message translates to:
-  /// **'Controle de saídas físicas, conferência e repasses'**
-  String get homeDispatchesDescription;
-
   /// No description provided for @moduleResponsiblePersons.
   ///
   /// In pt, this message translates to:
@@ -3592,53 +3130,11 @@ abstract class AppLocalizations {
   /// **'Pessoas Responsáveis'**
   String get responsiblePersonsTitle;
 
-  /// No description provided for @responsiblePersonNew.
-  ///
-  /// In pt, this message translates to:
-  /// **'Novo Responsável'**
-  String get responsiblePersonNew;
-
-  /// No description provided for @responsiblePersonEdit.
-  ///
-  /// In pt, this message translates to:
-  /// **'Editar Responsável'**
-  String get responsiblePersonEdit;
-
   /// No description provided for @responsiblePersonName.
   ///
   /// In pt, this message translates to:
   /// **'Nome'**
   String get responsiblePersonName;
-
-  /// No description provided for @responsiblePersonPhone.
-  ///
-  /// In pt, this message translates to:
-  /// **'Telefone / WhatsApp'**
-  String get responsiblePersonPhone;
-
-  /// No description provided for @responsiblePersonNotes.
-  ///
-  /// In pt, this message translates to:
-  /// **'Observações'**
-  String get responsiblePersonNotes;
-
-  /// No description provided for @responsiblePersonActive.
-  ///
-  /// In pt, this message translates to:
-  /// **'Ativo'**
-  String get responsiblePersonActive;
-
-  /// No description provided for @responsiblePersonInactive.
-  ///
-  /// In pt, this message translates to:
-  /// **'Inativo'**
-  String get responsiblePersonInactive;
-
-  /// No description provided for @responsiblePersonsEmpty.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nenhuma pessoa responsável cadastrada.'**
-  String get responsiblePersonsEmpty;
 
   /// No description provided for @responsiblePersonCustodyTitle.
   ///
@@ -3646,35 +3142,11 @@ abstract class AppLocalizations {
   /// **'Custódia Atual de Cestas'**
   String get responsiblePersonCustodyTitle;
 
-  /// No description provided for @responsiblePersonTotalInCustody.
-  ///
-  /// In pt, this message translates to:
-  /// **'Total sob custódia: {qty} cestas'**
-  String responsiblePersonTotalInCustody(int qty);
-
-  /// No description provided for @responsiblePersonNoCustody.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nenhuma cesta sob custódia no momento.'**
-  String get responsiblePersonNoCustody;
-
-  /// No description provided for @responsiblePersonSavedSuccess.
-  ///
-  /// In pt, this message translates to:
-  /// **'Responsável salvo com sucesso.'**
-  String get responsiblePersonSavedSuccess;
-
   /// No description provided for @dispatchesTitle.
   ///
   /// In pt, this message translates to:
   /// **'Saídas Físicas e Conferência'**
   String get dispatchesTitle;
-
-  /// No description provided for @dispatchNew.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nova Saída de Cestas'**
-  String get dispatchNew;
 
   /// No description provided for @dispatchNumber.
   ///
@@ -3682,53 +3154,11 @@ abstract class AppLocalizations {
   /// **'Saída #{number}'**
   String dispatchNumber(int number);
 
-  /// No description provided for @dispatchResponsible.
-  ///
-  /// In pt, this message translates to:
-  /// **'Responsável'**
-  String get dispatchResponsible;
-
   /// No description provided for @dispatchDate.
   ///
   /// In pt, this message translates to:
   /// **'Data da Saída'**
   String get dispatchDate;
-
-  /// No description provided for @dispatchTotalBaskets.
-  ///
-  /// In pt, this message translates to:
-  /// **'Total de Cestas'**
-  String get dispatchTotalBaskets;
-
-  /// No description provided for @dispatchTotalReference.
-  ///
-  /// In pt, this message translates to:
-  /// **'Valor de Referência'**
-  String get dispatchTotalReference;
-
-  /// No description provided for @dispatchStatusOpen.
-  ///
-  /// In pt, this message translates to:
-  /// **'Aberta'**
-  String get dispatchStatusOpen;
-
-  /// No description provided for @dispatchStatusConcluded.
-  ///
-  /// In pt, this message translates to:
-  /// **'Concluída'**
-  String get dispatchStatusConcluded;
-
-  /// No description provided for @dispatchStatusPendingInvestigation.
-  ///
-  /// In pt, this message translates to:
-  /// **'Sob Investigação'**
-  String get dispatchStatusPendingInvestigation;
-
-  /// No description provided for @dispatchStatusCanceled.
-  ///
-  /// In pt, this message translates to:
-  /// **'Cancelada'**
-  String get dispatchStatusCanceled;
 
   /// No description provided for @dispatchStatusResolved.
   ///
@@ -3736,137 +3166,11 @@ abstract class AppLocalizations {
   /// **'Resolvido'**
   String get dispatchStatusResolved;
 
-  /// No description provided for @dispatchesEmpty.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nenhuma saída física registrada.'**
-  String get dispatchesEmpty;
-
-  /// No description provided for @dispatchCancel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Cancelar Saída'**
-  String get dispatchCancel;
-
-  /// No description provided for @dispatchCancelConfirm.
-  ///
-  /// In pt, this message translates to:
-  /// **'Deseja realmente cancelar a saída #{number}?'**
-  String dispatchCancelConfirm(int number);
-
-  /// No description provided for @dispatchCancelReason.
-  ///
-  /// In pt, this message translates to:
-  /// **'Motivo do cancelamento'**
-  String get dispatchCancelReason;
-
-  /// No description provided for @dispatchCancelSuccess.
-  ///
-  /// In pt, this message translates to:
-  /// **'Saída cancelada com sucesso. Cestas retornadas ao estoque da loja.'**
-  String get dispatchCancelSuccess;
-
-  /// No description provided for @dispatchCreatedSuccess.
-  ///
-  /// In pt, this message translates to:
-  /// **'Saída registrada com sucesso.'**
-  String get dispatchCreatedSuccess;
-
-  /// No description provided for @dispatchFormTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Registrar Saída Física'**
-  String get dispatchFormTitle;
-
-  /// No description provided for @dispatchSelectResponsible.
-  ///
-  /// In pt, this message translates to:
-  /// **'Selecione o Responsável'**
-  String get dispatchSelectResponsible;
-
-  /// No description provided for @dispatchItemsTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Cestas a Retirar'**
-  String get dispatchItemsTitle;
-
-  /// No description provided for @dispatchAddItem.
-  ///
-  /// In pt, this message translates to:
-  /// **'Adicionar Cesta'**
-  String get dispatchAddItem;
-
-  /// No description provided for @dispatchItemBasket.
-  ///
-  /// In pt, this message translates to:
-  /// **'Tipo de Cesta'**
-  String get dispatchItemBasket;
-
-  /// No description provided for @dispatchItemQuantity.
-  ///
-  /// In pt, this message translates to:
-  /// **'Quantidade'**
-  String get dispatchItemQuantity;
-
-  /// No description provided for @dispatchItemUnitPrice.
-  ///
-  /// In pt, this message translates to:
-  /// **'Preço de Referência'**
-  String get dispatchItemUnitPrice;
-
-  /// No description provided for @dispatchItemSubtotal.
-  ///
-  /// In pt, this message translates to:
-  /// **'Subtotal'**
-  String get dispatchItemSubtotal;
-
-  /// No description provided for @dispatchItemNotes.
-  ///
-  /// In pt, this message translates to:
-  /// **'Personalizações / Observações'**
-  String get dispatchItemNotes;
-
-  /// No description provided for @dispatchAvailableStoreStock.
-  ///
-  /// In pt, this message translates to:
-  /// **'Estoque loja: {qty}'**
-  String dispatchAvailableStoreStock(int qty);
-
-  /// No description provided for @dispatchInsufficientStoreStock.
-  ///
-  /// In pt, this message translates to:
-  /// **'Estoque insuficiente na loja para \"{name}\". Disponível: {stock}, Solicitado: {qty}.'**
-  String dispatchInsufficientStoreStock(String name, int stock, int qty);
-
   /// No description provided for @dispatchDuplicateBasketConsolidatedNotice.
   ///
   /// In pt, this message translates to:
   /// **'Cesta repetida: será consolidada automaticamente no despacho.'**
   String get dispatchDuplicateBasketConsolidatedNotice;
-
-  /// No description provided for @dispatchSubmit.
-  ///
-  /// In pt, this message translates to:
-  /// **'Confirmar Saída Física'**
-  String get dispatchSubmit;
-
-  /// No description provided for @conferenceTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Conferência da Saída #{number}'**
-  String conferenceTitle(int number);
-
-  /// Título genérico da tela de conferência de saída durante carregamento ou erro
-  ///
-  /// In pt, this message translates to:
-  /// **'Conferência de Saída'**
-  String get conferenceScreenTitle;
-
-  /// No description provided for @conferenceStatusLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Status da Saída: {status}'**
-  String conferenceStatusLabel(String status);
 
   /// No description provided for @conferencePhysicalEquationTitle.
   ///
@@ -3898,18 +3202,6 @@ abstract class AppLocalizations {
   /// **'4. Avariadas / Perdidas: {qty}'**
   String conferenceLostLabel(int qty);
 
-  /// No description provided for @conferenceCustodyRemainingLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Em Trânsito / Custódia: {qty}'**
-  String conferenceCustodyRemainingLabel(int qty);
-
-  /// No description provided for @conferenceDiscrepancyLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Divergência Física: {qty} cestas'**
-  String conferenceDiscrepancyLabel(int qty);
-
   /// No description provided for @conferencePhysicalEquationBalanced.
   ///
   /// In pt, this message translates to:
@@ -3922,59 +3214,11 @@ abstract class AppLocalizations {
   /// **'Divergência Física Detectada!'**
   String get conferencePhysicalEquationDivergent;
 
-  /// No description provided for @conferenceFinancialTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Controle Financeiro de Rota e Repasses'**
-  String get conferenceFinancialTitle;
-
   /// No description provided for @conferenceExpectedCashLabel.
   ///
   /// In pt, this message translates to:
   /// **'Dinheiro em Mãos Esperado: {amount}'**
   String conferenceExpectedCashLabel(String amount);
-
-  /// No description provided for @conferenceActualRepaidLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Repasses Realizados: {amount}'**
-  String conferenceActualRepaidLabel(String amount);
-
-  /// No description provided for @conferencePendingCashLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Saldo a Repassar: {amount}'**
-  String conferencePendingCashLabel(String amount);
-
-  /// No description provided for @conferenceCashSalesLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Vendas à Vista (Dinheiro): {amount}'**
-  String conferenceCashSalesLabel(String amount);
-
-  /// No description provided for @conferenceDirectCompanyLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Pix / Cartão Direto à Empresa: {amount}'**
-  String conferenceDirectCompanyLabel(String amount);
-
-  /// No description provided for @conferenceCreditSalesLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Vendas a Prazo (Fiado na rota): {amount}'**
-  String conferenceCreditSalesLabel(String amount);
-
-  /// No description provided for @conferenceDebtCollectedLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Cobrança de Fiados em Rota: {amount}'**
-  String conferenceDebtCollectedLabel(String amount);
-
-  /// No description provided for @conferenceExpensesLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Despesas Autorizadas Abatidas: {amount}'**
-  String conferenceExpensesLabel(String amount);
 
   /// No description provided for @conferenceFinancialDivergent.
   ///
@@ -4000,300 +3244,6 @@ abstract class AppLocalizations {
   /// **'As despesas autorizadas superaram as vendas em dinheiro da rota. Saldo credor ao entregador / ressarcimento pela empresa.'**
   String get conferenceExpenseExceedsNotice;
 
-  /// No description provided for @conferenceActionReturn.
-  ///
-  /// In pt, this message translates to:
-  /// **'Devolução Intacta'**
-  String get conferenceActionReturn;
-
-  /// No description provided for @conferenceActionLoss.
-  ///
-  /// In pt, this message translates to:
-  /// **'Avaria / Perda'**
-  String get conferenceActionLoss;
-
-  /// No description provided for @conferenceActionExpense.
-  ///
-  /// In pt, this message translates to:
-  /// **'Despesa Autorizada'**
-  String get conferenceActionExpense;
-
-  /// No description provided for @conferenceActionRepayment.
-  ///
-  /// In pt, this message translates to:
-  /// **'Repasse de Dinheiro'**
-  String get conferenceActionRepayment;
-
-  /// No description provided for @conferenceActionSettle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Concluir Acerto / Fechamento'**
-  String get conferenceActionSettle;
-
-  /// No description provided for @conferenceActionInvestigation.
-  ///
-  /// In pt, this message translates to:
-  /// **'Documentar Investigação'**
-  String get conferenceActionInvestigation;
-
-  /// No description provided for @conferenceSettledSuccess.
-  ///
-  /// In pt, this message translates to:
-  /// **'Conferência registrada com sucesso.'**
-  String get conferenceSettledSuccess;
-
-  /// No description provided for @conferenceInvestigationUpdatedSuccess.
-  ///
-  /// In pt, this message translates to:
-  /// **'Notas de investigação atualizadas com sucesso.'**
-  String get conferenceInvestigationUpdatedSuccess;
-
-  /// No description provided for @conferenceReturnsListTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Devoluções de Cestas Intactas'**
-  String get conferenceReturnsListTitle;
-
-  /// No description provided for @conferenceLossesListTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Avarias e Perdas Físicas'**
-  String get conferenceLossesListTitle;
-
-  /// No description provided for @conferenceExpensesListTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Despesas Autorizadas'**
-  String get conferenceExpensesListTitle;
-
-  /// No description provided for @conferenceRepaymentsListTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Repasses Financeiros Registrados'**
-  String get conferenceRepaymentsListTitle;
-
-  /// No description provided for @conferenceNoReturns.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nenhuma devolução intacta registrada.'**
-  String get conferenceNoReturns;
-
-  /// No description provided for @conferenceNoLosses.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nenhuma avaria ou perda registrada.'**
-  String get conferenceNoLosses;
-
-  /// No description provided for @conferenceNoExpenses.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nenhuma despesa autorizada registrada.'**
-  String get conferenceNoExpenses;
-
-  /// No description provided for @conferenceNoRepayments.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nenhum repasse de dinheiro registrado.'**
-  String get conferenceNoRepayments;
-
-  /// No description provided for @dialogReturnTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Registrar Devolução Intacta'**
-  String get dialogReturnTitle;
-
-  /// No description provided for @dialogReturnQty.
-  ///
-  /// In pt, this message translates to:
-  /// **'Quantidade Devolvida'**
-  String get dialogReturnQty;
-
-  /// No description provided for @dialogReturnNotes.
-  ///
-  /// In pt, this message translates to:
-  /// **'Observações'**
-  String get dialogReturnNotes;
-
-  /// No description provided for @dialogLossTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Registrar Avaria ou Perda'**
-  String get dialogLossTitle;
-
-  /// No description provided for @dialogLossQty.
-  ///
-  /// In pt, this message translates to:
-  /// **'Quantidade Avariada/Perdida'**
-  String get dialogLossQty;
-
-  /// No description provided for @dialogLossReason.
-  ///
-  /// In pt, this message translates to:
-  /// **'Justificativa Obrigatória da Perda'**
-  String get dialogLossReason;
-
-  /// No description provided for @dialogLossReasonRequired.
-  ///
-  /// In pt, this message translates to:
-  /// **'A justificativa da perda é obrigatória (mínimo 3 caracteres).'**
-  String get dialogLossReasonRequired;
-
-  /// No description provided for @dialogExpenseTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Registrar Despesa Autorizada'**
-  String get dialogExpenseTitle;
-
-  /// No description provided for @dialogExpenseAmount.
-  ///
-  /// In pt, this message translates to:
-  /// **'Valor da Despesa'**
-  String get dialogExpenseAmount;
-
-  /// No description provided for @dialogExpenseDesc.
-  ///
-  /// In pt, this message translates to:
-  /// **'Descrição (ex: Combustível, Borracharia)'**
-  String get dialogExpenseDesc;
-
-  /// No description provided for @dialogExpenseReceipt.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nº do Comprovante / Cupom'**
-  String get dialogExpenseReceipt;
-
-  /// No description provided for @dialogExpenseAuthorizedBy.
-  ///
-  /// In pt, this message translates to:
-  /// **'Autorizado por'**
-  String get dialogExpenseAuthorizedBy;
-
-  /// No description provided for @dialogRepaymentTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Registrar Repasse Financeiro'**
-  String get dialogRepaymentTitle;
-
-  /// No description provided for @dialogRepaymentAmount.
-  ///
-  /// In pt, this message translates to:
-  /// **'Valor Repassado'**
-  String get dialogRepaymentAmount;
-
-  /// No description provided for @dialogRepaymentMethod.
-  ///
-  /// In pt, this message translates to:
-  /// **'Forma do Repasse'**
-  String get dialogRepaymentMethod;
-
-  /// No description provided for @dialogRepaymentReceivedBy.
-  ///
-  /// In pt, this message translates to:
-  /// **'Recebido na Empresa por'**
-  String get dialogRepaymentReceivedBy;
-
-  /// No description provided for @dialogRepaymentNotes.
-  ///
-  /// In pt, this message translates to:
-  /// **'Observações'**
-  String get dialogRepaymentNotes;
-
-  /// No description provided for @dialogSettleTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Fechamento Operacional / Acerto'**
-  String get dialogSettleTitle;
-
-  /// No description provided for @dialogSettleAuditedBy.
-  ///
-  /// In pt, this message translates to:
-  /// **'Auditor / Responsável pelo Fechamento'**
-  String get dialogSettleAuditedBy;
-
-  /// No description provided for @dialogSettleAuditedByRequired.
-  ///
-  /// In pt, this message translates to:
-  /// **'Informe o nome do responsável pelo fechamento.'**
-  String get dialogSettleAuditedByRequired;
-
-  /// No description provided for @dialogSettleNotes.
-  ///
-  /// In pt, this message translates to:
-  /// **'Observações do Fechamento'**
-  String get dialogSettleNotes;
-
-  /// No description provided for @dialogSettleWarningDivergent.
-  ///
-  /// In pt, this message translates to:
-  /// **'Atenção: Existem divergências físicas ou financeiras. O fechamento será registrado como SOB INVESTIGAÇÃO.'**
-  String get dialogSettleWarningDivergent;
-
-  /// No description provided for @dialogSettleInvestigationNotes.
-  ///
-  /// In pt, this message translates to:
-  /// **'Notas Iniciais da Investigação'**
-  String get dialogSettleInvestigationNotes;
-
-  /// No description provided for @dialogInvestigationTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Investigação de Divergências'**
-  String get dialogInvestigationTitle;
-
-  /// No description provided for @dialogInvestigationNotes.
-  ///
-  /// In pt, this message translates to:
-  /// **'Parecer da Investigação / Justificativas'**
-  String get dialogInvestigationNotes;
-
-  /// No description provided for @dialogInvestigationMarkResolved.
-  ///
-  /// In pt, this message translates to:
-  /// **'Marcar como Resolvido (Divergências apuradas/justificadas)'**
-  String get dialogInvestigationMarkResolved;
-
-  /// No description provided for @dialogInvestigationSave.
-  ///
-  /// In pt, this message translates to:
-  /// **'Salvar Parecer'**
-  String get dialogInvestigationSave;
-
-  /// No description provided for @saleModeLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Modalidade da Venda'**
-  String get saleModeLabel;
-
-  /// No description provided for @saleModeDirectStore.
-  ///
-  /// In pt, this message translates to:
-  /// **'Balcão / Loja'**
-  String get saleModeDirectStore;
-
-  /// No description provided for @saleModeCommercialRoute.
-  ///
-  /// In pt, this message translates to:
-  /// **'Rota / Venda Externa'**
-  String get saleModeCommercialRoute;
-
-  /// No description provided for @saleRouteSelectDispatch.
-  ///
-  /// In pt, this message translates to:
-  /// **'Vincular à Saída / Rota Ativa'**
-  String get saleRouteSelectDispatch;
-
-  /// No description provided for @saleRouteNoDispatches.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nenhuma saída aberta disponível para este responsável.'**
-  String get saleRouteNoDispatches;
-
-  /// No description provided for @saleRouteResponsibleLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Responsável pela Rota'**
-  String get saleRouteResponsibleLabel;
-
   /// No description provided for @saleCustodyStockAvailable.
   ///
   /// In pt, this message translates to:
@@ -4303,7 +3253,7 @@ abstract class AppLocalizations {
   /// No description provided for @homePhase7Header.
   ///
   /// In pt, this message translates to:
-  /// **'Fase 7: Gestão Financeira & Tesouraria'**
+  /// **'Financeiro'**
   String get homePhase7Header;
 
   /// No description provided for @modulePayables.
@@ -4317,18 +3267,6 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Boletos, cheques, empréstimos, fornecedores e parcelamentos'**
   String get homePayablesDescription;
-
-  /// No description provided for @moduleTreasury.
-  ///
-  /// In pt, this message translates to:
-  /// **'Tesouraria & Livro-Caixa'**
-  String get moduleTreasury;
-
-  /// No description provided for @homeTreasuryDescription.
-  ///
-  /// In pt, this message translates to:
-  /// **'Caixa físico, contas bancárias, transferências e conciliação'**
-  String get homeTreasuryDescription;
 
   /// No description provided for @payablesTitle.
   ///
@@ -4540,12 +3478,6 @@ abstract class AppLocalizations {
   /// **'O valor do pagamento deve ser maior que zero.'**
   String get payablePaymentAmountMustBePositive;
 
-  /// No description provided for @payableSelectAccount.
-  ///
-  /// In pt, this message translates to:
-  /// **'Conta Financeira de Saída'**
-  String get payableSelectAccount;
-
   /// No description provided for @payableNoPayables.
   ///
   /// In pt, this message translates to:
@@ -4564,72 +3496,6 @@ abstract class AppLocalizations {
   /// **'Ano'**
   String get payableFilterYear;
 
-  /// No description provided for @treasuryTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Tesouraria & Conciliação'**
-  String get treasuryTitle;
-
-  /// No description provided for @treasuryTabAccounts.
-  ///
-  /// In pt, this message translates to:
-  /// **'Saldos & Contas'**
-  String get treasuryTabAccounts;
-
-  /// No description provided for @treasuryTabLedger.
-  ///
-  /// In pt, this message translates to:
-  /// **'Livro-Caixa (Extrato)'**
-  String get treasuryTabLedger;
-
-  /// No description provided for @treasuryTabSummary.
-  ///
-  /// In pt, this message translates to:
-  /// **'Visão Gerencial'**
-  String get treasuryTabSummary;
-
-  /// No description provided for @treasuryTotalAvailable.
-  ///
-  /// In pt, this message translates to:
-  /// **'Saldo Disponível (Caixa e Bancos)'**
-  String get treasuryTotalAvailable;
-
-  /// No description provided for @treasuryCashBalance.
-  ///
-  /// In pt, this message translates to:
-  /// **'Caixa Físico da Loja'**
-  String get treasuryCashBalance;
-
-  /// No description provided for @treasuryBankBalance.
-  ///
-  /// In pt, this message translates to:
-  /// **'Contas Bancárias'**
-  String get treasuryBankBalance;
-
-  /// No description provided for @treasuryRouteCashPending.
-  ///
-  /// In pt, this message translates to:
-  /// **'Dinheiro em Rota (em trânsito)'**
-  String get treasuryRouteCashPending;
-
-  /// No description provided for @treasuryProjectedNet.
-  ///
-  /// In pt, this message translates to:
-  /// **'Saldo Líquido Projetado'**
-  String get treasuryProjectedNet;
-
-  /// No description provided for @treasuryOpenReceivables.
-  ///
-  /// In pt, this message translates to:
-  /// **'A Receber (Fiados Pendentes)'**
-  String get treasuryOpenReceivables;
-
-  /// No description provided for @treasuryOverdueReceivables.
-  ///
-  /// In pt, this message translates to:
-  /// **'A Receber Vencidos'**
-  String get treasuryOverdueReceivables;
-
   /// No description provided for @treasuryOpenPayables.
   ///
   /// In pt, this message translates to:
@@ -4641,186 +3507,6 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'A Pagar Vencidos'**
   String get treasuryOverduePayables;
-
-  /// No description provided for @treasuryBusinessExpenses.
-  ///
-  /// In pt, this message translates to:
-  /// **'Despesas Operacionais (Mês)'**
-  String get treasuryBusinessExpenses;
-
-  /// No description provided for @treasuryPersonalWithdrawals.
-  ///
-  /// In pt, this message translates to:
-  /// **'Retiradas de Sócios (Mês)'**
-  String get treasuryPersonalWithdrawals;
-
-  /// No description provided for @treasuryNewAccount.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nova Conta Financeira'**
-  String get treasuryNewAccount;
-
-  /// No description provided for @treasuryEditAccount.
-  ///
-  /// In pt, this message translates to:
-  /// **'Editar Conta Financeira'**
-  String get treasuryEditAccount;
-
-  /// No description provided for @treasuryAccountName.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nome da Conta'**
-  String get treasuryAccountName;
-
-  /// No description provided for @treasuryAccountType.
-  ///
-  /// In pt, this message translates to:
-  /// **'Tipo de Conta'**
-  String get treasuryAccountType;
-
-  /// No description provided for @treasuryTypeCash.
-  ///
-  /// In pt, this message translates to:
-  /// **'Caixa Físico'**
-  String get treasuryTypeCash;
-
-  /// No description provided for @treasuryTypeBank.
-  ///
-  /// In pt, this message translates to:
-  /// **'Conta Bancária'**
-  String get treasuryTypeBank;
-
-  /// No description provided for @treasuryTypeOther.
-  ///
-  /// In pt, this message translates to:
-  /// **'Outra Conta / Cofre'**
-  String get treasuryTypeOther;
-
-  /// No description provided for @treasuryBankName.
-  ///
-  /// In pt, this message translates to:
-  /// **'Instituição Financeira / Banco'**
-  String get treasuryBankName;
-
-  /// No description provided for @treasuryAccountNumber.
-  ///
-  /// In pt, this message translates to:
-  /// **'Agência e Conta'**
-  String get treasuryAccountNumber;
-
-  /// No description provided for @treasuryInitialBalance.
-  ///
-  /// In pt, this message translates to:
-  /// **'Saldo Inicial de Abertura'**
-  String get treasuryInitialBalance;
-
-  /// No description provided for @treasuryIsDefault.
-  ///
-  /// In pt, this message translates to:
-  /// **'Conta Padrão'**
-  String get treasuryIsDefault;
-
-  /// No description provided for @treasuryTransferTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Transferência entre Contas'**
-  String get treasuryTransferTitle;
-
-  /// No description provided for @treasurySourceAccount.
-  ///
-  /// In pt, this message translates to:
-  /// **'Conta de Origem (Saída)'**
-  String get treasurySourceAccount;
-
-  /// No description provided for @treasuryDestinationAccount.
-  ///
-  /// In pt, this message translates to:
-  /// **'Conta de Destino (Entrada)'**
-  String get treasuryDestinationAccount;
-
-  /// No description provided for @treasuryTransferAmount.
-  ///
-  /// In pt, this message translates to:
-  /// **'Valor da Transferência'**
-  String get treasuryTransferAmount;
-
-  /// No description provided for @treasuryTransferSuccess.
-  ///
-  /// In pt, this message translates to:
-  /// **'Transferência realizada com sucesso'**
-  String get treasuryTransferSuccess;
-
-  /// No description provided for @treasuryManualEntryTitle.
-  ///
-  /// In pt, this message translates to:
-  /// **'Lançamento no Livro-Caixa'**
-  String get treasuryManualEntryTitle;
-
-  /// No description provided for @treasuryEntryType.
-  ///
-  /// In pt, this message translates to:
-  /// **'Tipo de Lançamento'**
-  String get treasuryEntryType;
-
-  /// No description provided for @treasuryEntryCredit.
-  ///
-  /// In pt, this message translates to:
-  /// **'Crédito (Entrada)'**
-  String get treasuryEntryCredit;
-
-  /// No description provided for @treasuryEntryDebit.
-  ///
-  /// In pt, this message translates to:
-  /// **'Débito (Saída)'**
-  String get treasuryEntryDebit;
-
-  /// No description provided for @treasuryEntryCategory.
-  ///
-  /// In pt, this message translates to:
-  /// **'Categoria'**
-  String get treasuryEntryCategory;
-
-  /// No description provided for @treasuryEntryDescription.
-  ///
-  /// In pt, this message translates to:
-  /// **'Descrição do Lançamento'**
-  String get treasuryEntryDescription;
-
-  /// No description provided for @treasuryEntryAmount.
-  ///
-  /// In pt, this message translates to:
-  /// **'Valor'**
-  String get treasuryEntryAmount;
-
-  /// No description provided for @treasuryEntrySuccess.
-  ///
-  /// In pt, this message translates to:
-  /// **'Lançamento registrado com sucesso'**
-  String get treasuryEntrySuccess;
-
-  /// No description provided for @treasuryNoEntries.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nenhuma movimentação registrada no livro-caixa.'**
-  String get treasuryNoEntries;
-
-  /// No description provided for @treasuryNoAccounts.
-  ///
-  /// In pt, this message translates to:
-  /// **'Nenhuma conta financeira cadastrada.'**
-  String get treasuryNoAccounts;
-
-  /// No description provided for @treasuryReversalBadge.
-  ///
-  /// In pt, this message translates to:
-  /// **'ESTORNO'**
-  String get treasuryReversalBadge;
-
-  /// No description provided for @treasuryImmutableNote.
-  ///
-  /// In pt, this message translates to:
-  /// **'Livro-Caixa imutável: todas as operações são estritamente append-only.'**
-  String get treasuryImmutableNote;
 
   /// No description provided for @receivableRepassDirect.
   ///
@@ -4957,7 +3643,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeDashboardDescription.
   ///
   /// In pt, this message translates to:
-  /// **'Visão consolidada operacional, faturamento e livro-caixa'**
+  /// **'Vendas, estoque, recebimentos, pagamentos e resultado'**
   String get homeDashboardDescription;
 
   /// No description provided for @moduleReports.
@@ -5098,47 +3784,17 @@ abstract class AppLocalizations {
   /// **'Estoque em Nível Regular'**
   String get dashboardStockNormal;
 
-  /// No description provided for @dashboardSectionFinancial.
-  ///
-  /// In pt, this message translates to:
-  /// **'Financeiro & Tesouraria'**
-  String get dashboardSectionFinancial;
-
-  /// No description provided for @dashboardOpenReceivables.
-  ///
-  /// In pt, this message translates to:
-  /// **'A Receber (Em Aberto)'**
-  String get dashboardOpenReceivables;
-
   /// No description provided for @dashboardOverdueReceivables.
   ///
   /// In pt, this message translates to:
   /// **'A Receber Vencidos'**
   String get dashboardOverdueReceivables;
 
-  /// No description provided for @dashboardEffectiveReceived.
-  ///
-  /// In pt, this message translates to:
-  /// **'Recebimentos Efetivos'**
-  String get dashboardEffectiveReceived;
-
-  /// No description provided for @dashboardOpenPayables.
-  ///
-  /// In pt, this message translates to:
-  /// **'A Pagar (Em Aberto)'**
-  String get dashboardOpenPayables;
-
   /// No description provided for @dashboardOverduePayables.
   ///
   /// In pt, this message translates to:
   /// **'A Pagar Vencidos'**
   String get dashboardOverduePayables;
-
-  /// No description provided for @dashboardEffectivePaid.
-  ///
-  /// In pt, this message translates to:
-  /// **'Pagamentos Efetuados'**
-  String get dashboardEffectivePaid;
 
   /// No description provided for @dashboardCashInflow.
   ///
@@ -5157,18 +3813,6 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Saldo Disponível (Tesouraria)'**
   String get dashboardTreasuryBalance;
-
-  /// No description provided for @dashboardProjectedCash.
-  ///
-  /// In pt, this message translates to:
-  /// **'Saldo de Caixa Projetado'**
-  String get dashboardProjectedCash;
-
-  /// No description provided for @dashboardProjectionNotice.
-  ///
-  /// In pt, this message translates to:
-  /// **'Atenção: Valores projetados são estimativas futuras e NÃO constituem dinheiro disponível em caixa.'**
-  String get dashboardProjectionNotice;
 
   /// No description provided for @reportsTitle.
   ///
@@ -5566,30 +4210,6 @@ abstract class AppLocalizations {
   /// **'Nenhuma conta a pagar em aberto.'**
   String get dashboardNoOpenPayables;
 
-  /// Forma de repasse: Dinheiro em Mãos
-  ///
-  /// In pt, this message translates to:
-  /// **'Dinheiro em Mãos'**
-  String get conferenceMethodCashHand;
-
-  /// Forma de repasse: PIX Repassado
-  ///
-  /// In pt, this message translates to:
-  /// **'PIX Repassado'**
-  String get conferenceMethodPixSettled;
-
-  /// Forma de repasse: Transferência Bancária
-  ///
-  /// In pt, this message translates to:
-  /// **'Transferência Bancária'**
-  String get conferenceMethodBankTransfer;
-
-  /// Prefixo de observações completas
-  ///
-  /// In pt, this message translates to:
-  /// **'Observações: {notes}'**
-  String commonObservationsPrefix(String notes);
-
   /// Categoria de conta: Fornecedor
   ///
   /// In pt, this message translates to:
@@ -5812,180 +4432,6 @@ abstract class AppLocalizations {
   /// **'Todos'**
   String get filterAllOption;
 
-  /// Alerta de contas insuficientes para transferência
-  ///
-  /// In pt, this message translates to:
-  /// **'São necessárias ao menos 2 contas para realizar transferências.'**
-  String get treasuryNeedTwoAccountsForTransfer;
-
-  /// Rótulo do seletor de conta financeira
-  ///
-  /// In pt, this message translates to:
-  /// **'Conta Financeira'**
-  String get treasuryAccountLabel;
-
-  /// Filtro de conta
-  ///
-  /// In pt, this message translates to:
-  /// **'Conta'**
-  String get treasuryAccountFilterLabel;
-
-  /// Botão de novo lançamento na tesouraria
-  ///
-  /// In pt, this message translates to:
-  /// **'Lançamento'**
-  String get treasuryLaunchEntry;
-
-  /// Título do quadro consolidado da tesouraria
-  ///
-  /// In pt, this message translates to:
-  /// **'Posição Consolidada da Empresa'**
-  String get treasuryConsolidatedPosition;
-
-  /// Saldo em espécie/caixa físico
-  ///
-  /// In pt, this message translates to:
-  /// **'Caixa Físico: {amount}'**
-  String treasuryCashPhysicalLabel(String amount);
-
-  /// Saldo em contas bancárias
-  ///
-  /// In pt, this message translates to:
-  /// **'Bancos: {amount}'**
-  String treasuryBankLabel(String amount);
-
-  /// Legenda explicativa do cálculo de previsão
-  ///
-  /// In pt, this message translates to:
-  /// **'Fórmula: Disponível + A Receber - A Pagar'**
-  String get treasuryFormulaExplanation;
-
-  /// Título do quadro de compromissos futuros
-  ///
-  /// In pt, this message translates to:
-  /// **'Compromissos Futuros & Fiados'**
-  String get treasuryFutureCommitmentsTitle;
-
-  /// Subtítulo de valores em custódia externa
-  ///
-  /// In pt, this message translates to:
-  /// **'Em custódia de entregadores'**
-  String get treasuryCustodyCouriers;
-
-  /// Título do quadro de segregação de despesas
-  ///
-  /// In pt, this message translates to:
-  /// **'Segregação de Despesas (Mês)'**
-  String get treasuryExpenseSegregationTitle;
-
-  /// Descrição de despesas empresariais
-  ///
-  /// In pt, this message translates to:
-  /// **'Gastos operacionais da atividade'**
-  String get treasuryBusinessExpensesDesc;
-
-  /// Descrição de retiradas de sócios
-  ///
-  /// In pt, this message translates to:
-  /// **'Não misturar com contas da empresa'**
-  String get treasuryPersonalWithdrawalsDesc;
-
-  /// Categoria: Aporte de Capital
-  ///
-  /// In pt, this message translates to:
-  /// **'Aporte de Capital'**
-  String get treasuryCatCapitalContribution;
-
-  /// Categoria: Receita de Vendas
-  ///
-  /// In pt, this message translates to:
-  /// **'Receita de Vendas'**
-  String get treasuryCatSalesRevenue;
-
-  /// Categoria: Recebimento de Cliente
-  ///
-  /// In pt, this message translates to:
-  /// **'Recebimento de Cliente'**
-  String get treasuryCatCustomerReceipt;
-
-  /// Categoria: Outros Créditos
-  ///
-  /// In pt, this message translates to:
-  /// **'Outros Créditos'**
-  String get treasuryCatOtherCredits;
-
-  /// Categoria: Retirada de Sócios / Pró-labore
-  ///
-  /// In pt, this message translates to:
-  /// **'Retirada de Sócios / Pró-labore'**
-  String get treasuryCatPartnerWithdrawal;
-
-  /// Categoria: Pagamento Fornecedor
-  ///
-  /// In pt, this message translates to:
-  /// **'Pagamento Fornecedor'**
-  String get treasuryCatSupplierPayment;
-
-  /// Categoria: Energia Elétrica
-  ///
-  /// In pt, this message translates to:
-  /// **'Energia Elétrica'**
-  String get treasuryCatElectricity;
-
-  /// Categoria: Aluguel
-  ///
-  /// In pt, this message translates to:
-  /// **'Aluguel'**
-  String get treasuryCatRent;
-
-  /// Categoria: Frete / Combustível
-  ///
-  /// In pt, this message translates to:
-  /// **'Frete / Combustível'**
-  String get treasuryCatFreightFuel;
-
-  /// Categoria: Manutenção
-  ///
-  /// In pt, this message translates to:
-  /// **'Manutenção'**
-  String get treasuryCatMaintenance;
-
-  /// Categoria: Outras Despesas
-  ///
-  /// In pt, this message translates to:
-  /// **'Outras Despesas'**
-  String get treasuryCatOtherExpenses;
-
-  /// Método de pagamento: PIX
-  ///
-  /// In pt, this message translates to:
-  /// **'PIX'**
-  String get treasuryMethodPix;
-
-  /// Método de pagamento: Dinheiro
-  ///
-  /// In pt, this message translates to:
-  /// **'Dinheiro'**
-  String get treasuryMethodCash;
-
-  /// Método de pagamento: Transferência
-  ///
-  /// In pt, this message translates to:
-  /// **'Transferência'**
-  String get treasuryMethodTransfer;
-
-  /// Método de pagamento: Cartão
-  ///
-  /// In pt, this message translates to:
-  /// **'Cartão'**
-  String get treasuryMethodCard;
-
-  /// Método de pagamento: Outro
-  ///
-  /// In pt, this message translates to:
-  /// **'Outro'**
-  String get treasuryMethodOther;
-
   /// Resumo de cestas do recebível
   ///
   /// In pt, this message translates to:
@@ -6001,7 +4447,7 @@ abstract class AppLocalizations {
   /// Tooltip do botão de seleção de impressoras e Epson
   ///
   /// In pt, this message translates to:
-  /// **'Imprimir / Selecionar Impressora (Epson Wi-Fi)'**
+  /// **'Imprimir / Selecionar impressora'**
   String get tooltipPrintSelectPrinter;
 
   /// Tooltip para compartilhar ou salvar arquivo PDF
@@ -6021,48 +4467,6 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Estornar este pagamento'**
   String get payableRevertPaymentTooltip;
-
-  /// Dica de preenchimento para observações de saída física
-  ///
-  /// In pt, this message translates to:
-  /// **'Observações da saída física (opcional)'**
-  String get dispatchPhysicalNotesHint;
-
-  /// Dica de personalização de cesta na saída
-  ///
-  /// In pt, this message translates to:
-  /// **'Ex: Cesta personalizada, lote específico'**
-  String get dispatchCustomizationHint;
-
-  /// Dica de justificativa para avaria ou perda na conferência
-  ///
-  /// In pt, this message translates to:
-  /// **'Ex: Caixa molhou na chuva durante entrega'**
-  String get conferenceLossReasonHint;
-
-  /// Dica do conferente que recebeu o repasse
-  ///
-  /// In pt, this message translates to:
-  /// **'Colaborador que conferiu e recebeu'**
-  String get conferenceReceivedByHint;
-
-  /// Dica do nome do auditor na finalização do acerto
-  ///
-  /// In pt, this message translates to:
-  /// **'Nome do conferente / auditor'**
-  String get conferenceAuditorNameHint;
-
-  /// Dica para justificativa inicial de pendências
-  ///
-  /// In pt, this message translates to:
-  /// **'Justificativa inicial das divergências'**
-  String get conferenceInitialJustificationHint;
-
-  /// Dica para investigação de divergência
-  ///
-  /// In pt, this message translates to:
-  /// **'Descreva a apuração, se foi justificado, perdas aceitas ou ressarcimento'**
-  String get conferenceInvestigationHint;
 
   /// Mensagem durante a inicialização da câmera
   ///
@@ -6232,12 +4636,6 @@ abstract class AppLocalizations {
   /// **'A data de vencimento é obrigatória para compras pendentes.'**
   String get purchasePaymentDueDateRequired;
 
-  /// No description provided for @purchasePaymentFinancialAccountLabel.
-  ///
-  /// In pt, this message translates to:
-  /// **'Conta Financeira de Liquidação'**
-  String get purchasePaymentFinancialAccountLabel;
-
   /// No description provided for @purchasePaymentPendingNotice.
   ///
   /// In pt, this message translates to:
@@ -6363,6 +4761,3144 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Falha ao restaurar backup: {error}'**
   String backupRestoreErrorMsg(String error);
+
+  /// No description provided for @companyFinanceTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recebimentos, pagamentos e resultado'**
+  String get companyFinanceTitle;
+
+  /// No description provided for @companyFinancialReportTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resultado, recebimentos e pagamentos'**
+  String get companyFinancialReportTitle;
+
+  /// No description provided for @companyPaymentsScope.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valores confirmados no período selecionado, incluindo os estornos registrados nesse período.'**
+  String get companyPaymentsScope;
+
+  /// No description provided for @companyReceived.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recebimentos confirmados'**
+  String get companyReceived;
+
+  /// No description provided for @companyPaid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamentos confirmados'**
+  String get companyPaid;
+
+  /// No description provided for @companyPaymentDifference.
+  ///
+  /// In pt, this message translates to:
+  /// **'Diferença entre recebido e pago'**
+  String get companyPaymentDifference;
+
+  /// No description provided for @companyDifferenceExplanation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compara os movimentos do período. Não representa saldo bancário nem lucro.'**
+  String get companyDifferenceExplanation;
+
+  /// No description provided for @companyResultTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resultado das vendas no período'**
+  String get companyResultTitle;
+
+  /// No description provided for @companyResultExplanation.
+  ///
+  /// In pt, this message translates to:
+  /// **'As vendas a prazo entram no valor vendido, mesmo antes do recebimento. As outras despesas são consideradas quando pagas.'**
+  String get companyResultExplanation;
+
+  /// No description provided for @companySalesRevenue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor das vendas'**
+  String get companySalesRevenue;
+
+  /// No description provided for @companySoldCost.
+  ///
+  /// In pt, this message translates to:
+  /// **'Custo das cestas vendidas'**
+  String get companySoldCost;
+
+  /// No description provided for @companyGrossProfit.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lucro bruto das vendas'**
+  String get companyGrossProfit;
+
+  /// No description provided for @companyOperatingExpenses.
+  ///
+  /// In pt, this message translates to:
+  /// **'Outras despesas do negócio pagas'**
+  String get companyOperatingExpenses;
+
+  /// No description provided for @companyOperatingResult.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resultado gerencial do período'**
+  String get companyOperatingResult;
+
+  /// No description provided for @companyCostExplanation.
+  ///
+  /// In pt, this message translates to:
+  /// **'O custo dos insumos vendidos já está no custo das cestas. As compras de estoque não são descontadas novamente do lucro bruto. Retiradas pessoais são mostradas separadamente.'**
+  String get companyCostExplanation;
+
+  /// No description provided for @companyPendingTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Contas ainda pendentes'**
+  String get companyPendingTitle;
+
+  /// No description provided for @companyPendingScope.
+  ///
+  /// In pt, this message translates to:
+  /// **'Totais atuais de todas as contas em aberto. Os vencimentos no período aparecem abaixo.'**
+  String get companyPendingScope;
+
+  /// No description provided for @companyPendingReceivable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Total pendente a receber'**
+  String get companyPendingReceivable;
+
+  /// No description provided for @companyPendingPayable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Total pendente a pagar'**
+  String get companyPendingPayable;
+
+  /// No description provided for @companyReceivableDueInPeriod.
+  ///
+  /// In pt, this message translates to:
+  /// **'A receber com vencimento no período'**
+  String get companyReceivableDueInPeriod;
+
+  /// No description provided for @companyPayableDueInPeriod.
+  ///
+  /// In pt, this message translates to:
+  /// **'A pagar com vencimento no período'**
+  String get companyPayableDueInPeriod;
+
+  /// No description provided for @companyReceivedDetails.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recebimentos confirmados no período'**
+  String get companyReceivedDetails;
+
+  /// No description provided for @companyPaidDetails.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamentos confirmados no período'**
+  String get companyPaidDetails;
+
+  /// No description provided for @companyNoPayments.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum registro confirmado neste período.'**
+  String get companyNoPayments;
+
+  /// No description provided for @companyPaidStatus.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recebida'**
+  String get companyPaidStatus;
+
+  /// No description provided for @companyPartialStatus.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recebida parcialmente'**
+  String get companyPartialStatus;
+
+  /// No description provided for @companyPendingStatus.
+  ///
+  /// In pt, this message translates to:
+  /// **'A receber'**
+  String get companyPendingStatus;
+
+  /// No description provided for @companyStockAvailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Disponível'**
+  String get companyStockAvailable;
+
+  /// No description provided for @companyMissingCost.
+  ///
+  /// In pt, this message translates to:
+  /// **'Há {count} venda(s) com custo incompleto. O resultado gerencial precisa ser conferido.'**
+  String companyMissingCost(int count);
+
+  /// No description provided for @companyStockPaid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compras de estoque pagas: {value}'**
+  String companyStockPaid(String value);
+
+  /// No description provided for @companyWithdrawalsPaid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Retiradas pessoais pagas: {value}'**
+  String companyWithdrawalsPaid(String value);
+
+  /// No description provided for @companyOverdueAmount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vencido: {value}'**
+  String companyOverdueAmount(String value);
+
+  /// No description provided for @companyPaymentDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'{method} · {date}'**
+  String companyPaymentDescription(String method, String date);
+
+  /// No description provided for @companyPurchasesTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compras registradas no período'**
+  String get companyPurchasesTitle;
+
+  /// No description provided for @companyPurchaseCount.
+  ///
+  /// In pt, this message translates to:
+  /// **'{count} compra(s) confirmada(s)'**
+  String companyPurchaseCount(int count);
+
+  /// No description provided for @companyPurchasesExplanation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Inclui compras pagas e a prazo. Os pagamentos confirmados aparecem separadamente no financeiro.'**
+  String get companyPurchasesExplanation;
+
+  /// No description provided for @productDeleteButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir definitivamente'**
+  String get productDeleteButton;
+
+  /// No description provided for @productDeleteTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir produto nunca utilizado?'**
+  String get productDeleteTitle;
+
+  /// No description provided for @productDeleteConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir definitivamente \"{name}\"? O cadastro e suas embalagens nunca usadas serão removidos. Essa ação não pode ser desfeita.'**
+  String productDeleteConfirm(String name);
+
+  /// No description provided for @productDeletedSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Produto nunca utilizado excluído definitivamente.'**
+  String get productDeletedSuccess;
+
+  /// No description provided for @productDeleteBlockedTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este produto tem vínculos ou histórico'**
+  String get productDeleteBlockedTitle;
+
+  /// No description provided for @productDeleteBlocked.
+  ///
+  /// In pt, this message translates to:
+  /// **'\"{name}\" não pode ser excluído definitivamente porque possui registros em:\n\n{reasons}\n\nPara deixar de utilizá-lo, você pode inativar o cadastro. Se ele estiver em uma receita ativa, retire-o dessa composição antes de inativar.'**
+  String productDeleteBlocked(String name, String reasons);
+
+  /// No description provided for @productDeleteHistoryError.
+  ///
+  /// In pt, this message translates to:
+  /// **'O produto possui vínculos ou histórico. A exclusão definitiva foi bloqueada para preservar esses registros.'**
+  String get productDeleteHistoryError;
+
+  /// No description provided for @productUsageRecipes.
+  ///
+  /// In pt, this message translates to:
+  /// **'• Receitas de cestas, incluindo versões anteriores'**
+  String get productUsageRecipes;
+
+  /// No description provided for @productUsagePurchases.
+  ///
+  /// In pt, this message translates to:
+  /// **'• Compras, incluindo rascunhos e compras canceladas'**
+  String get productUsagePurchases;
+
+  /// No description provided for @productUsageProduction.
+  ///
+  /// In pt, this message translates to:
+  /// **'• Montagens ou composições já registradas'**
+  String get productUsageProduction;
+
+  /// No description provided for @productUsageMovements.
+  ///
+  /// In pt, this message translates to:
+  /// **'• Movimentações de estoque, mesmo com estoque zerado'**
+  String get productUsageMovements;
+
+  /// No description provided for @productUsageHistory.
+  ///
+  /// In pt, this message translates to:
+  /// **'• Outros registros anteriores'**
+  String get productUsageHistory;
+
+  /// No description provided for @packagingHelpExplanation.
+  ///
+  /// In pt, this message translates to:
+  /// **'A embalagem comercial é a forma como você compra este produto: pacote, saco, fardo, caixa ou unidade. Ela informa quanto uma embalagem acrescenta ao estoque. Não é a embalagem vazia usada para montar a cesta.\n\nExemplo: se o arroz é controlado em gramas, um saco de 5 kg contém 5.000 g. Ao comprar 3 sacos, entram 15.000 g no estoque. Sem uma embalagem cadastrada, a compra é informada diretamente na unidade-base do produto.'**
+  String get packagingHelpExplanation;
+
+  /// No description provided for @packagingContentHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe o conteúdo de uma única embalagem na unidade-base {unit}. Exemplos: caixa com 12 unidades = 12 UNIT; saco de 5 kg = 5.000 G; frasco de 500 ml = 500 ML. Use o exemplo que corresponde à unidade deste produto.'**
+  String packagingContentHelp(String unit);
+
+  /// No description provided for @purchasePackagingHelpTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Como informar quantidade e preço?'**
+  String get purchasePackagingHelpTitle;
+
+  /// No description provided for @purchasePackagingHelpExplanation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha a forma como comprou o produto. A quantidade indica quantas embalagens você comprou, e o preço é o valor de uma delas.\n\nExemplo: 3 sacos de arroz de 5 kg a R\$ 25 por saco = 15 kg no estoque e R\$ 75 na compra. Caixa com 12 unidades: 2 caixas = 24 unidades.\n\nSe escolher \"Sem embalagem\", informe a quantidade e o preço na unidade-base exibida. Para comprar por kg ou litro com preço por kg/litro, cadastre essa forma de compra antes: 1 kg = 1.000 g; 1 litro = 1.000 ml.'**
+  String get purchasePackagingHelpExplanation;
+
+  /// No description provided for @purchaseQuantityPackages.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quantidade de embalagens'**
+  String get purchaseQuantityPackages;
+
+  /// No description provided for @purchaseQuantityBaseUnits.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quantidade em {unit}'**
+  String purchaseQuantityBaseUnits(String unit);
+
+  /// No description provided for @purchasePricePerPackage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Preço de uma embalagem (R\$)'**
+  String get purchasePricePerPackage;
+
+  /// No description provided for @purchasePricePerBaseUnit.
+  ///
+  /// In pt, this message translates to:
+  /// **'Preço por {unit} (R\$)'**
+  String purchasePricePerBaseUnit(String unit);
+
+  /// No description provided for @purchasePackageCountHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ex.: para 3 sacos ou 3 caixas, informe 3.'**
+  String get purchasePackageCountHelp;
+
+  /// No description provided for @purchaseBaseCountHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quantidade diretamente na unidade-base exibida.'**
+  String get purchaseBaseCountHelp;
+
+  /// No description provided for @purchasePackagePriceHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor de um saco, pacote ou caixa da forma de compra escolhida.'**
+  String get purchasePackagePriceHelp;
+
+  /// No description provided for @purchaseBasePriceHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Preço de uma única unidade-base. Para preço por kg/litro, cadastre a forma de compra.'**
+  String get purchaseBasePriceHelp;
+
+  /// No description provided for @purchasePackagingContents.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cada \"{name}\" acrescenta {quantity} ao estoque.'**
+  String purchasePackagingContents(String name, String quantity);
+
+  /// No description provided for @settingsHttpsUrlRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe uma URL HTTPS válida do servidor, sem usuário ou senha no endereço.'**
+  String get settingsHttpsUrlRequired;
+
+  /// No description provided for @settingsTokenEntryHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Opcional: cole um token já emitido pelo servidor. Deixe vazio para manter a autenticação atual ou autenticar automaticamente no servidor deste computador (localhost).'**
+  String get settingsTokenEntryHelp;
+
+  /// No description provided for @settingsSaveAuthenticate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Salvar e autenticar este computador'**
+  String get settingsSaveAuthenticate;
+
+  /// No description provided for @settingsPairComputer.
+  ///
+  /// In pt, this message translates to:
+  /// **'Parear este computador por PIN'**
+  String get settingsPairComputer;
+
+  /// No description provided for @settingsAuthenticatedSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Computador autenticado no servidor.'**
+  String get settingsAuthenticatedSuccess;
+
+  /// No description provided for @settingsSavedNeedsAuthentication.
+  ///
+  /// In pt, this message translates to:
+  /// **'Configurações salvas. O servidor ainda não confirmou a autenticação. Confira a conexão, informe um token válido ou faça o pareamento por PIN.'**
+  String get settingsSavedNeedsAuthentication;
+
+  /// No description provided for @newDatabaseTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Criar e usar um novo banco'**
+  String get newDatabaseTitle;
+
+  /// No description provided for @newDatabaseCreating.
+  ///
+  /// In pt, this message translates to:
+  /// **'Criando e ativando o novo banco...'**
+  String get newDatabaseCreating;
+
+  /// No description provided for @newDatabaseHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gera um backup verificado do banco atual e começa com um banco vazio. Os pareamentos dos dispositivos são mantidos.'**
+  String get newDatabaseHelp;
+
+  /// No description provided for @newDatabaseConfirmationBody.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta ação troca o banco usado por toda a empresa, incluindo computadores, celulares e tablets. Produtos, receitas, clientes, compras, vendas, estoque e contas começarão vazios. Um backup obrigatório do banco atual será criado e verificado antes da troca. Os dispositivos continuam pareados. Para recuperar os dados anteriores, use Restaurar no backup de segurança. Para confirmar, digite NOVO BANCO.'**
+  String get newDatabaseConfirmationBody;
+
+  /// No description provided for @newDatabaseConfirmationLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Digite NOVO BANCO'**
+  String get newDatabaseConfirmationLabel;
+
+  /// No description provided for @newDatabaseConfirmAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Gerar backup e ativar banco novo'**
+  String get newDatabaseConfirmAction;
+
+  /// No description provided for @newDatabaseSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Novo banco ativado. Backup anterior: {filename}. Recarregue as páginas nos demais dispositivos.'**
+  String newDatabaseSuccess(String filename);
+
+  /// No description provided for @newDatabaseFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível concluir a criação do banco. Confira a conexão e tente novamente; a mesma operação será retomada com segurança.'**
+  String get newDatabaseFailed;
+
+  /// No description provided for @newDatabaseAlreadyProcessed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta solicitação já foi concluída anteriormente. O banco atual foi mantido. Para criar outro banco, inicie uma nova solicitação.'**
+  String get newDatabaseAlreadyProcessed;
+
+  /// No description provided for @payableFiltersTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Filtros'**
+  String get payableFiltersTitle;
+
+  /// No description provided for @payableCreateShort.
+  ///
+  /// In pt, this message translates to:
+  /// **'Criar conta a pagar'**
+  String get payableCreateShort;
+
+  /// No description provided for @payableOpenShort.
+  ///
+  /// In pt, this message translates to:
+  /// **'A pagar'**
+  String get payableOpenShort;
+
+  /// No description provided for @payableDisplayedSummary.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resumo das contas exibidas'**
+  String get payableDisplayedSummary;
+
+  /// No description provided for @payableSearch.
+  ///
+  /// In pt, this message translates to:
+  /// **'Buscar favorecido'**
+  String get payableSearch;
+
+  /// No description provided for @saleCancelAssemblyHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe o que aconteceu fisicamente com cada item montado nesta venda. Cestas vendidas de estoque pronto voltam como cestas prontas.'**
+  String get saleCancelAssemblyHelp;
+
+  /// No description provided for @saleCancelAssemblyQuestion.
+  ///
+  /// In pt, this message translates to:
+  /// **'Situação da montagem'**
+  String get saleCancelAssemblyQuestion;
+
+  /// No description provided for @saleCancelKeepBaskets.
+  ///
+  /// In pt, this message translates to:
+  /// **'As cestas continuam montadas'**
+  String get saleCancelKeepBaskets;
+
+  /// No description provided for @saleCancelReturnIngredients.
+  ///
+  /// In pt, this message translates to:
+  /// **'A montagem não aconteceu'**
+  String get saleCancelReturnIngredients;
+
+  /// No description provided for @saleCancelAssemblyRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe a situação de todas as montagens antes de cancelar.'**
+  String get saleCancelAssemblyRequired;
+
+  /// No description provided for @saleAssemblyStockHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usa cestas já montadas e desconta do estoque de cestas prontas.'**
+  String get saleAssemblyStockHelp;
+
+  /// No description provided for @saleAssemblyDemandHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Consome os produtos da composição e registra a montagem ao confirmar a venda.'**
+  String get saleAssemblyDemandHelp;
+
+  /// No description provided for @saleStockSelectBasket.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecione uma cesta para consultar o saldo.'**
+  String get saleStockSelectBasket;
+
+  /// No description provided for @saleStockLoading.
+  ///
+  /// In pt, this message translates to:
+  /// **'Consultando saldo…'**
+  String get saleStockLoading;
+
+  /// No description provided for @saleStockQueryFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível consultar o saldo. Tente novamente.'**
+  String get saleStockQueryFailed;
+
+  /// No description provided for @basketTypeFormNoStockSubtitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'As cestas são montadas na venda, com baixa dos produtos da composição.'**
+  String get basketTypeFormNoStockSubtitle;
+
+  /// No description provided for @saleAssemblyAutomatic.
+  ///
+  /// In pt, this message translates to:
+  /// **'Montar na venda'**
+  String get saleAssemblyAutomatic;
+
+  /// No description provided for @basketStockDisabledError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta cesta está configurada para montagem na venda. Para usar cestas prontas, ative Estoque de cestas prontas no cadastro.'**
+  String get basketStockDisabledError;
+
+  /// No description provided for @basketStockRemainsError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ainda existem cestas prontas deste tipo em estoque. Resolva esse saldo antes de desativar a opção.'**
+  String get basketStockRemainsError;
+
+  /// No description provided for @assemblyRegister.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registrar montagem'**
+  String get assemblyRegister;
+
+  /// No description provided for @assemblyRegisterHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe a quantidade e quando as cestas foram fabricadas. Revise a composição antes de confirmar: os produtos serão consumidos e as cestas prontas entrarão no estoque.'**
+  String get assemblyRegisterHelp;
+
+  /// No description provided for @assemblyHistory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Montagens'**
+  String get assemblyHistory;
+
+  /// No description provided for @assemblyHistoryTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Montagens — {name}'**
+  String assemblyHistoryTitle(String name);
+
+  /// No description provided for @assemblyStandardStock.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cestas padrão prontas: {qty}'**
+  String assemblyStandardStock(int qty);
+
+  /// No description provided for @assemblyOccurredAt.
+  ///
+  /// In pt, this message translates to:
+  /// **'Data e horário da fabricação'**
+  String get assemblyOccurredAt;
+
+  /// No description provided for @assemblyReview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revisar montagem'**
+  String get assemblyReview;
+
+  /// No description provided for @assemblyConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar montagem'**
+  String get assemblyConfirm;
+
+  /// No description provided for @assemblyRetry.
+  ///
+  /// In pt, this message translates to:
+  /// **'Retomar confirmação'**
+  String get assemblyRetry;
+
+  /// No description provided for @assemblySaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Montagem registrada e estoque atualizado.'**
+  String get assemblySaved;
+
+  /// No description provided for @assemblyComposition.
+  ///
+  /// In pt, this message translates to:
+  /// **'Produtos a consumir'**
+  String get assemblyComposition;
+
+  /// No description provided for @assemblyEstimatedCost.
+  ///
+  /// In pt, this message translates to:
+  /// **'Custo total estimado: {value}'**
+  String assemblyEstimatedCost(String value);
+
+  /// No description provided for @assemblyRecordedCost.
+  ///
+  /// In pt, this message translates to:
+  /// **'Custo total registrado: {value}'**
+  String assemblyRecordedCost(String value);
+
+  /// No description provided for @assemblyRequiredAvailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Necessário: {required} · Disponível: {available}'**
+  String assemblyRequiredAvailable(String required, String available);
+
+  /// No description provided for @assemblyMissing.
+  ///
+  /// In pt, this message translates to:
+  /// **'Faltam: {qty}'**
+  String assemblyMissing(String qty);
+
+  /// No description provided for @assemblyInsufficientHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Faltam produtos para esta montagem. Reponha o estoque ou altere a quantidade e revise novamente.'**
+  String get assemblyInsufficientHelp;
+
+  /// No description provided for @assemblyPendingHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Existe uma montagem aguardando confirmação do servidor. Retome a mesma solicitação para verificar o resultado sem registrar as cestas novamente.'**
+  String get assemblyPendingHelp;
+
+  /// No description provided for @assemblyRecipeChanged.
+  ///
+  /// In pt, this message translates to:
+  /// **'A receita mudou desde a revisão. Confira a composição novamente antes de confirmar.'**
+  String get assemblyRecipeChanged;
+
+  /// No description provided for @assemblyInactiveHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este tipo de cesta está inativo. O histórico continua disponível.'**
+  String get assemblyInactiveHelp;
+
+  /// No description provided for @assemblyNoStockHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este tipo está configurado para montar na venda. Ative Estoque de cestas prontas no cadastro para registrar fabricação antecipada.'**
+  String get assemblyNoStockHelp;
+
+  /// No description provided for @assemblyNoRecipeHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastre uma receita ativa antes de registrar a montagem.'**
+  String get assemblyNoRecipeHelp;
+
+  /// No description provided for @assemblyHistoryHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Inclui montagens antecipadas e realizadas na venda. A quantidade fabricada é histórica; não representa o saldo atual de cada lote.'**
+  String get assemblyHistoryHelp;
+
+  /// No description provided for @assemblyHistoryEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma montagem registrada para este tipo de cesta.'**
+  String get assemblyHistoryEmpty;
+
+  /// No description provided for @assemblyOriginSale.
+  ///
+  /// In pt, this message translates to:
+  /// **'Montada na venda'**
+  String get assemblyOriginSale;
+
+  /// No description provided for @assemblyOriginAdvance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Montagem antecipada'**
+  String get assemblyOriginAdvance;
+
+  /// No description provided for @assemblyRecorded.
+  ///
+  /// In pt, this message translates to:
+  /// **'Montagem registrada'**
+  String get assemblyRecorded;
+
+  /// No description provided for @assemblyUndone.
+  ///
+  /// In pt, this message translates to:
+  /// **'Montagem desfeita'**
+  String get assemblyUndone;
+
+  /// No description provided for @assemblyCustom.
+  ///
+  /// In pt, this message translates to:
+  /// **'Composição personalizada'**
+  String get assemblyCustom;
+
+  /// No description provided for @assemblyBatch.
+  ///
+  /// In pt, this message translates to:
+  /// **'Montagem #{number} · {qty} cestas'**
+  String assemblyBatch(int number, int qty);
+
+  /// No description provided for @assemblyPage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Página {page} de {total}'**
+  String assemblyPage(int page, int total);
+
+  /// No description provided for @assemblyPreviousPage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Página anterior'**
+  String get assemblyPreviousPage;
+
+  /// No description provided for @assemblyNextPage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Próxima página'**
+  String get assemblyNextPage;
+
+  /// No description provided for @assemblyCustomize.
+  ///
+  /// In pt, this message translates to:
+  /// **'Personalizar esta montagem'**
+  String get assemblyCustomize;
+
+  /// No description provided for @assemblyCustomizeHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Altere os produtos destas cestas sem mudar a receita cadastrada.'**
+  String get assemblyCustomizeHelp;
+
+  /// No description provided for @assemblyCustomDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Identificação da montagem personalizada'**
+  String get assemblyCustomDescription;
+
+  /// No description provided for @assemblyCustomDescriptionRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe uma identificação para diferenciar estas cestas.'**
+  String get assemblyCustomDescriptionRequired;
+
+  /// No description provided for @assemblyCustomItemsHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Composição por cesta. Todas as cestas desta montagem terão os mesmos produtos e quantidades.'**
+  String get assemblyCustomItemsHelp;
+
+  /// No description provided for @assemblyProduct.
+  ///
+  /// In pt, this message translates to:
+  /// **'Produto'**
+  String get assemblyProduct;
+
+  /// No description provided for @assemblyQuantityPerBasket.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quantidade por cesta'**
+  String get assemblyQuantityPerBasket;
+
+  /// No description provided for @assemblyBaseUnitsHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Use números inteiros na unidade indicada: G = gramas, ML = mililitros e UN = unidades. Ao trocar o produto, informe a quantidade novamente.'**
+  String get assemblyBaseUnitsHelp;
+
+  /// No description provided for @assemblyAddProduct.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar produto'**
+  String get assemblyAddProduct;
+
+  /// No description provided for @assemblyRemoveProduct.
+  ///
+  /// In pt, this message translates to:
+  /// **'Remover produto'**
+  String get assemblyRemoveProduct;
+
+  /// No description provided for @assemblyCustomItemsRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Inclua ao menos um produto na montagem personalizada.'**
+  String get assemblyCustomItemsRequired;
+
+  /// No description provided for @assemblyCustomizationDisabled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este tipo de cesta não permite personalização. Confira seu cadastro.'**
+  String get assemblyCustomizationDisabled;
+
+  /// No description provided for @assemblyCustomStock.
+  ///
+  /// In pt, this message translates to:
+  /// **'Prontas desta montagem: {quantity}'**
+  String assemblyCustomStock(int quantity);
+
+  /// No description provided for @basketDeleteButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir cesta'**
+  String get basketDeleteButton;
+
+  /// No description provided for @basketDeleteBlockedTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cesta ainda em uso'**
+  String get basketDeleteBlockedTitle;
+
+  /// No description provided for @basketDeleteBlockedHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'A cesta tem vendas não canceladas, estoque ou operações pendentes. Confira esses registros antes de tentar excluir novamente.'**
+  String get basketDeleteBlockedHelp;
+
+  /// No description provided for @basketDeleteActiveSales.
+  ///
+  /// In pt, this message translates to:
+  /// **'Há venda não cancelada com esta cesta. Cancele a operação incorreta antes de excluir o cadastro.'**
+  String get basketDeleteActiveSales;
+
+  /// No description provided for @basketDeleteStockRemains.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ainda há cestas em estoque. Cancelar uma venda pode devolver cestas prontas; confira o destino físico antes de excluir o cadastro.'**
+  String get basketDeleteStockRemains;
+
+  /// No description provided for @basketDeleteActiveDispatches.
+  ///
+  /// In pt, this message translates to:
+  /// **'Há uma saída/conferência ainda aberta vinculada a esta cesta.'**
+  String get basketDeleteActiveDispatches;
+
+  /// No description provided for @basketDeleteUnusedConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir definitivamente “{name}” e suas receitas nunca utilizadas? Os produtos da receita serão preservados.'**
+  String basketDeleteUnusedConfirm(String name);
+
+  /// No description provided for @basketDeleteCatalogConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir “{name}” do catálogo? A cesta deixará de aparecer na lista e nas novas operações. Seu cadastro e suas receitas permanecerão no banco para preservar vendas canceladas, montagens e movimentações. Essa ação não apaga o histórico.'**
+  String basketDeleteCatalogConfirm(String name);
+
+  /// No description provided for @basketDeletedPermanently.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cesta nunca utilizada excluída definitivamente.'**
+  String get basketDeletedPermanently;
+
+  /// No description provided for @basketRemovedFromCatalog.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cesta excluída do catálogo. Histórico preservado.'**
+  String get basketRemovedFromCatalog;
+
+  /// No description provided for @basketRemovedError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta cesta foi excluída do catálogo e permanece somente no histórico.'**
+  String get basketRemovedError;
+
+  /// No description provided for @formDocumentType.
+  ///
+  /// In pt, this message translates to:
+  /// **'Documento'**
+  String get formDocumentType;
+
+  /// No description provided for @formSelectColumns.
+  ///
+  /// In pt, this message translates to:
+  /// **'Campos do documento'**
+  String get formSelectColumns;
+
+  /// No description provided for @formColumnsHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Marque as colunas que devem aparecer no PDF e na planilha. Mantenha pelo menos uma.'**
+  String get formColumnsHelp;
+
+  /// No description provided for @formAllColumns.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecionar todas'**
+  String get formAllColumns;
+
+  /// No description provided for @printerDialogTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Impressão e impressoras'**
+  String get printerDialogTitle;
+
+  /// No description provided for @printerSettingsEntryHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Configurar a impressão e testar uma página A4, mesmo sem conexão com o servidor.'**
+  String get printerSettingsEntryHelp;
+
+  /// No description provided for @printerAndroidDiscovery.
+  ///
+  /// In pt, this message translates to:
+  /// **'No Android, a procura e a seleção da impressora acontecem na janela de impressão do sistema, usando os serviços ativados no celular.'**
+  String get printerAndroidDiscovery;
+
+  /// No description provided for @printerDesktopDiscovery.
+  ///
+  /// In pt, this message translates to:
+  /// **'Use a janela de impressão do sistema ou uma impressora cadastrada abaixo. Impressoras de rede precisam estar instaladas no computador.'**
+  String get printerDesktopDiscovery;
+
+  /// No description provided for @printerSystemPrint.
+  ///
+  /// In pt, this message translates to:
+  /// **'Procurar impressora e imprimir'**
+  String get printerSystemPrint;
+
+  /// No description provided for @printerTestAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Imprimir página de teste A4'**
+  String get printerTestAction;
+
+  /// No description provided for @printerOpenSettings.
+  ///
+  /// In pt, this message translates to:
+  /// **'Configurar impressão no Android'**
+  String get printerOpenSettings;
+
+  /// No description provided for @printerSettingsHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ative um serviço de impressão compatível nas configurações. Ao voltar ao app, tente imprimir novamente.'**
+  String get printerSettingsHelp;
+
+  /// No description provided for @printerSettingsUnavailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível abrir as configurações. Procure Impressão nas configurações do Android.'**
+  String get printerSettingsUnavailable;
+
+  /// No description provided for @printerInstalledTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Impressoras cadastradas no sistema'**
+  String get printerInstalledTitle;
+
+  /// No description provided for @printerNoInstalled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma impressora cadastrada foi retornada. Instale a impressora nas configurações do computador e atualize esta lista.'**
+  String get printerNoInstalled;
+
+  /// No description provided for @printerNotAvailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Indisponível segundo o sistema'**
+  String get printerNotAvailable;
+
+  /// No description provided for @printerDiscoveryError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível consultar as impressoras. Você ainda pode tentar a janela de impressão do sistema ou atualizar a consulta.'**
+  String get printerDiscoveryError;
+
+  /// No description provided for @printerUnsupported.
+  ///
+  /// In pt, this message translates to:
+  /// **'O serviço de impressão não está disponível neste dispositivo. Você pode salvar o PDF e imprimir em outro dispositivo.'**
+  String get printerUnsupported;
+
+  /// No description provided for @printerWaiting.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aguardando retorno do sistema de impressão. Você pode fechar esta janela; acompanhe também a fila de impressão do sistema.'**
+  String get printerWaiting;
+
+  /// No description provided for @printerJobBusy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Já existe uma impressão em andamento nesta tela. Acompanhe a fila do sistema antes de tentar novamente.'**
+  String get printerJobBusy;
+
+  /// No description provided for @printerJobSubmitted.
+  ///
+  /// In pt, this message translates to:
+  /// **'O sistema retornou a conclusão do trabalho. Confira se a folha saiu corretamente; o app não verifica papel ou tinta.'**
+  String get printerJobSubmitted;
+
+  /// No description provided for @printerJobCanceled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Impressão cancelada.'**
+  String get printerJobCanceled;
+
+  /// No description provided for @printerJobError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível concluir a impressão. Confira a conexão, a impressora e a fila do sistema. Você também pode salvar o PDF.'**
+  String get printerJobError;
+
+  /// No description provided for @printerPreviewError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar a prévia deste PDF. Tente gerar o documento novamente.'**
+  String get printerPreviewError;
+
+  /// No description provided for @printerHelpTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'A impressora não apareceu?'**
+  String get printerHelpTitle;
+
+  /// No description provided for @printerHelpNetwork.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confira se a impressora está ligada e acessível na mesma rede local do dispositivo. Redes de visitantes, isolamento entre aparelhos e VPN podem impedir a descoberta.'**
+  String get printerHelpNetwork;
+
+  /// No description provided for @printerHelpAndroid.
+  ///
+  /// In pt, this message translates to:
+  /// **'No Android, ative o serviço padrão de impressão, Mopria ou um serviço do fabricante compatível com o modelo. A busca de impressoras é feita por esse serviço na janela do sistema.'**
+  String get printerHelpAndroid;
+
+  /// No description provided for @printerHelpWindows.
+  ///
+  /// In pt, this message translates to:
+  /// **'No Windows, adicione a impressora em Configurações > Impressoras e scanners e confira o driver do modelo. Depois atualize esta lista.'**
+  String get printerHelpWindows;
+
+  /// No description provided for @printerHelpIp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Se a busca automática falhar, verifique se o serviço de impressão ou as configurações do sistema permitem adicionar a impressora pelo endereço IP.'**
+  String get printerHelpIp;
+
+  /// No description provided for @printerHelpDirect.
+  ///
+  /// In pt, this message translates to:
+  /// **'Wi-Fi Direct depende do suporte do celular e da impressora. Essa conexão pode interromper o acesso ao servidor da loja; carregue o documento antes de mudar de rede.'**
+  String get printerHelpDirect;
+
+  /// No description provided for @printerHelpQueue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Se houver trabalho bloqueado, confira papel, tinta, estado da impressora e fila de impressão. Evite reenviar sem verificar a fila para não duplicar folhas.'**
+  String get printerHelpQueue;
+
+  /// No description provided for @printerCompatibility.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ter Wi-Fi não garante compatibilidade. O modelo precisa ser atendido pelo serviço de impressão do Android ou pelo driver do Windows.'**
+  String get printerCompatibility;
+
+  /// No description provided for @printerTestTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Página de teste de impressão A4'**
+  String get printerTestTitle;
+
+  /// No description provided for @printerTestInstructions.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecione papel A4 e escala de 100% quando disponível. Confira texto, bordas, proporções e alinhamento nesta folha antes de imprimir documentos da loja.'**
+  String get printerTestInstructions;
+
+  /// No description provided for @printerTestCharacters.
+  ///
+  /// In pt, this message translates to:
+  /// **'Teste de acentos: ação, quitação, descrição, café, açúcar.'**
+  String get printerTestCharacters;
+
+  /// No description provided for @printerTestScale.
+  ///
+  /// In pt, this message translates to:
+  /// **'A referência abaixo deve medir 100 mm de largura e 20 mm de altura, sem redimensionamento.'**
+  String get printerTestScale;
+
+  /// No description provided for @printerTestLine.
+  ///
+  /// In pt, this message translates to:
+  /// **'Espaço para escrita: {height} mm'**
+  String printerTestLine(int height);
+
+  /// No description provided for @printerTestFooter.
+  ///
+  /// In pt, this message translates to:
+  /// **'Documento de teste sem dados comerciais. Confira também orientação, escala e margens nas configurações da impressora.'**
+  String get printerTestFooter;
+
+  /// No description provided for @formColumnOrder.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ordem das colunas'**
+  String get formColumnOrder;
+
+  /// No description provided for @formColumnOrderHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Use as setas para mover os campos. A lista de cima para baixo define a ordem da esquerda para a direita no PDF e no XLSX.'**
+  String get formColumnOrderHelp;
+
+  /// No description provided for @formColumnMoveUp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mover para cima'**
+  String get formColumnMoveUp;
+
+  /// No description provided for @formColumnMoveDown.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mover para baixo'**
+  String get formColumnMoveDown;
+
+  /// No description provided for @formColumnOrderReset.
+  ///
+  /// In pt, this message translates to:
+  /// **'Restaurar ordem padrão'**
+  String get formColumnOrderReset;
+
+  /// No description provided for @formPrintSettings.
+  ///
+  /// In pt, this message translates to:
+  /// **'Configuração da impressão'**
+  String get formPrintSettings;
+
+  /// No description provided for @formOrientation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Orientação da folha'**
+  String get formOrientation;
+
+  /// No description provided for @formOrientationAuto.
+  ///
+  /// In pt, this message translates to:
+  /// **'Automática'**
+  String get formOrientationAuto;
+
+  /// No description provided for @formPortrait.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vertical (retrato)'**
+  String get formPortrait;
+
+  /// No description provided for @formLandscape.
+  ///
+  /// In pt, this message translates to:
+  /// **'Horizontal (paisagem)'**
+  String get formLandscape;
+
+  /// No description provided for @formRowHeight.
+  ///
+  /// In pt, this message translates to:
+  /// **'Altura mínima da linha (mm)'**
+  String get formRowHeight;
+
+  /// No description provided for @formFontSize.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tamanho da fonte (pt)'**
+  String get formFontSize;
+
+  /// No description provided for @formPageMargins.
+  ///
+  /// In pt, this message translates to:
+  /// **'Margens da folha (mm)'**
+  String get formPageMargins;
+
+  /// No description provided for @formMarginTop.
+  ///
+  /// In pt, this message translates to:
+  /// **'Superior (mm)'**
+  String get formMarginTop;
+
+  /// No description provided for @formMarginBottom.
+  ///
+  /// In pt, this message translates to:
+  /// **'Inferior (mm)'**
+  String get formMarginBottom;
+
+  /// No description provided for @formMarginLeft.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esquerda (mm)'**
+  String get formMarginLeft;
+
+  /// No description provided for @formMarginRight.
+  ///
+  /// In pt, this message translates to:
+  /// **'Direita (mm)'**
+  String get formMarginRight;
+
+  /// No description provided for @formMarginHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'O padrão usa 15 mm. Margens menores dependem da área imprimível da sua impressora. Confira a prévia.'**
+  String get formMarginHelp;
+
+  /// No description provided for @formAutoRows.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ajustar linhas em branco para uma página'**
+  String get formAutoRows;
+
+  /// No description provided for @formBlankRows.
+  ///
+  /// In pt, this message translates to:
+  /// **'Total de linhas em branco'**
+  String get formBlankRows;
+
+  /// No description provided for @formShowSignatures.
+  ///
+  /// In pt, this message translates to:
+  /// **'Incluir espaços de assinatura no rodapé'**
+  String get formShowSignatures;
+
+  /// No description provided for @formColumnWidths.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ajustar larguras das colunas'**
+  String get formColumnWidths;
+
+  /// No description provided for @formColumnWidthHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Larguras proporcionais: um valor maior reserva mais espaço para a coluna dentro da folha.'**
+  String get formColumnWidthHelp;
+
+  /// No description provided for @formResetDefaults.
+  ///
+  /// In pt, this message translates to:
+  /// **'Restaurar padrão automático'**
+  String get formResetDefaults;
+
+  /// No description provided for @formNoRecords.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum registro encontrado para este documento.'**
+  String get formNoRecords;
+
+  /// No description provided for @formPaperOnly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Anotações no papel e alterações na planilha não atualizam os pagamentos ou o estoque do sistema.'**
+  String get formPaperOnly;
+
+  /// No description provided for @formPreparing.
+  ///
+  /// In pt, this message translates to:
+  /// **'Calculando páginas do documento…'**
+  String get formPreparing;
+
+  /// No description provided for @formSavePdf.
+  ///
+  /// In pt, this message translates to:
+  /// **'Salvar PDF'**
+  String get formSavePdf;
+
+  /// No description provided for @formSaveXlsx.
+  ///
+  /// In pt, this message translates to:
+  /// **'Salvar planilha XLSX'**
+  String get formSaveXlsx;
+
+  /// No description provided for @formPreview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Prévia do documento'**
+  String get formPreview;
+
+  /// No description provided for @formInvalidNumber.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe um número dentro do intervalo.'**
+  String get formInvalidNumber;
+
+  /// No description provided for @formFileSaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Arquivo salvo no local escolhido.'**
+  String get formFileSaved;
+
+  /// No description provided for @formExportFailure.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível gerar ou salvar o documento. Confira as opções e tente novamente.'**
+  String get formExportFailure;
+
+  /// No description provided for @formPaymentsHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferência de fiados: valor original, total recebido, data do pagamento e saldo restante.'**
+  String get formPaymentsHelp;
+
+  /// No description provided for @formPayablesHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferência de obrigações e pagamentos, com valor pago e saldo em colunas próprias.'**
+  String get formPayablesHelp;
+
+  /// No description provided for @formInventoryHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Contagem de produtos e cestas da loja, com espaços para quantidade física, diferença e conferência.'**
+  String get formInventoryHelp;
+
+  /// No description provided for @formDocumentSummary.
+  ///
+  /// In pt, this message translates to:
+  /// **'{columns} colunas · {rows} linhas · {pages} página(s) no PDF'**
+  String formDocumentSummary(int columns, int rows, int pages);
+
+  /// No description provided for @paymentFlowDetail.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta a pagar'**
+  String get paymentFlowDetail;
+
+  /// No description provided for @paymentFlowRegister.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registrar pagamento'**
+  String get paymentFlowRegister;
+
+  /// No description provided for @paymentFlowBalance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo em aberto'**
+  String get paymentFlowBalance;
+
+  /// No description provided for @paymentFlowTitleRef.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta #{number}'**
+  String paymentFlowTitleRef(int number);
+
+  /// No description provided for @paymentFlowSituation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Situação'**
+  String get paymentFlowSituation;
+
+  /// No description provided for @paymentFlowNoHistory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum pagamento registrado nesta conta.'**
+  String get paymentFlowNoHistory;
+
+  /// No description provided for @paymentFlowNotOpen.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta conta não está aberta para pagamento.'**
+  String get paymentFlowNotOpen;
+
+  /// No description provided for @paymentFlowReversed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estornado'**
+  String get paymentFlowReversed;
+
+  /// No description provided for @paymentFlowKind.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tipo de pagamento'**
+  String get paymentFlowKind;
+
+  /// No description provided for @paymentFlowFull.
+  ///
+  /// In pt, this message translates to:
+  /// **'Integral'**
+  String get paymentFlowFull;
+
+  /// No description provided for @paymentFlowPartial.
+  ///
+  /// In pt, this message translates to:
+  /// **'Parcial'**
+  String get paymentFlowPartial;
+
+  /// No description provided for @paymentFlowAmount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quanto você pagou?'**
+  String get paymentFlowAmount;
+
+  /// No description provided for @paymentFlowAmountLimit.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe um valor entre R\$ 0,01 e {amount}.'**
+  String paymentFlowAmountLimit(String amount);
+
+  /// No description provided for @paymentFlowDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Data do pagamento'**
+  String get paymentFlowDate;
+
+  /// No description provided for @paymentFlowMethod.
+  ///
+  /// In pt, this message translates to:
+  /// **'Como você pagou?'**
+  String get paymentFlowMethod;
+
+  /// No description provided for @paymentFlowSelectMethod.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecione a forma de pagamento'**
+  String get paymentFlowSelectMethod;
+
+  /// No description provided for @paymentFlowRemaining.
+  ///
+  /// In pt, this message translates to:
+  /// **'Restará em aberto após este registro'**
+  String get paymentFlowRemaining;
+
+  /// No description provided for @paymentFlowReview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revisar pagamento'**
+  String get paymentFlowReview;
+
+  /// No description provided for @paymentFlowSending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registrando…'**
+  String get paymentFlowSending;
+
+  /// No description provided for @paymentFlowRecordedOnly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registre um pagamento que você já realizou. A confirmação lança o registro no aplicativo.'**
+  String get paymentFlowRecordedOnly;
+
+  /// No description provided for @paymentFlowBalanceChanged.
+  ///
+  /// In pt, this message translates to:
+  /// **'O saldo mudou. Confira o valor atualizado e revise novamente.'**
+  String get paymentFlowBalanceChanged;
+
+  /// No description provided for @paymentFlowUncertain.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta tentativa aguarda confirmação.'**
+  String get paymentFlowUncertain;
+
+  /// No description provided for @paymentFlowResumeHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Retomar usa os mesmos dados e pode concluir o pagamento original. Aguarde a confirmação desta tentativa antes de criar outro registro.'**
+  String get paymentFlowResumeHelp;
+
+  /// No description provided for @paymentFlowResume.
+  ///
+  /// In pt, this message translates to:
+  /// **'Retomar registro'**
+  String get paymentFlowResume;
+
+  /// No description provided for @paymentFlowConfirmed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamento registrado'**
+  String get paymentFlowConfirmed;
+
+  /// No description provided for @paymentFlowReference.
+  ///
+  /// In pt, this message translates to:
+  /// **'Referência do registro'**
+  String get paymentFlowReference;
+
+  /// No description provided for @paymentFlowRefreshing.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamento registrado. Atualizando a conta…'**
+  String get paymentFlowRefreshing;
+
+  /// No description provided for @paymentFlowConfirmedRefreshFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'O pagamento está registrado. Falta atualizar a consulta da conta.'**
+  String get paymentFlowConfirmedRefreshFailed;
+
+  /// No description provided for @paymentFlowCurrentBalance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo atual consultado'**
+  String get paymentFlowCurrentBalance;
+
+  /// No description provided for @paymentFlowFinish.
+  ///
+  /// In pt, this message translates to:
+  /// **'Voltar às contas'**
+  String get paymentFlowFinish;
+
+  /// No description provided for @paymentFlowUnexpected.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível concluir esta etapa. Tente atualizar a consulta.'**
+  String get paymentFlowUnexpected;
+
+  /// No description provided for @paymentFlowLocalStorage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível conservar os dados da tentativa neste aparelho. Atualize antes de continuar.'**
+  String get paymentFlowLocalStorage;
+
+  /// No description provided for @paymentFlowConnectionChanged.
+  ///
+  /// In pt, this message translates to:
+  /// **'A conexão foi alterada. Para retomar este registro, volte à conexão original.'**
+  String get paymentFlowConnectionChanged;
+
+  /// No description provided for @paymentFlowInvalidConfirmation.
+  ///
+  /// In pt, this message translates to:
+  /// **'A resposta não permitiu confirmar o registro. Retome a mesma tentativa.'**
+  String get paymentFlowInvalidConfirmation;
+
+  /// No description provided for @paymentFlowServerUpdate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Atualize o servidor para usar o pagamento com revisão e recuperação.'**
+  String get paymentFlowServerUpdate;
+
+  /// No description provided for @paymentFlowPendingTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registros para acompanhar'**
+  String get paymentFlowPendingTitle;
+
+  /// No description provided for @paymentFlowPendingItem.
+  ///
+  /// In pt, this message translates to:
+  /// **'{beneficiary} · conta #{number}'**
+  String paymentFlowPendingItem(String beneficiary, int number);
+
+  /// No description provided for @paymentFlowPendingReadError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível consultar os registros pendentes deste aparelho.'**
+  String get paymentFlowPendingReadError;
+
+  /// No description provided for @paymentFlowMore.
+  ///
+  /// In pt, this message translates to:
+  /// **'Carregar mais contas'**
+  String get paymentFlowMore;
+
+  /// No description provided for @paymentFlowMoreFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível carregar as próximas contas.'**
+  String get paymentFlowMoreFailed;
+
+  /// No description provided for @paymentFlowValue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor deste registro'**
+  String get paymentFlowValue;
+
+  /// No description provided for @paymentFlowRecordedRemaining.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo após este registro'**
+  String get paymentFlowRecordedRemaining;
+
+  /// No description provided for @receiptFlowDetail.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta a receber'**
+  String get receiptFlowDetail;
+
+  /// No description provided for @receiptFlowRegister.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registrar recebimento'**
+  String get receiptFlowRegister;
+
+  /// No description provided for @receiptFlowReview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revisar recebimento'**
+  String get receiptFlowReview;
+
+  /// No description provided for @receiptFlowConfirmed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recebimento registrado'**
+  String get receiptFlowConfirmed;
+
+  /// No description provided for @receiptFlowNoHistory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum recebimento registrado nesta conta.'**
+  String get receiptFlowNoHistory;
+
+  /// No description provided for @receiptFlowNotOpen.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta conta não está aberta para recebimento.'**
+  String get receiptFlowNotOpen;
+
+  /// No description provided for @receiptFlowKind.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tipo de recebimento'**
+  String get receiptFlowKind;
+
+  /// No description provided for @receiptFlowAmount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quanto você recebeu?'**
+  String get receiptFlowAmount;
+
+  /// No description provided for @receiptFlowDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Data do recebimento'**
+  String get receiptFlowDate;
+
+  /// No description provided for @receiptFlowMethod.
+  ///
+  /// In pt, this message translates to:
+  /// **'Como você recebeu?'**
+  String get receiptFlowMethod;
+
+  /// No description provided for @receiptFlowSelectMethod.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecione a forma de recebimento'**
+  String get receiptFlowSelectMethod;
+
+  /// No description provided for @receiptFlowRecordedOnly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registre um valor que você já recebeu. A confirmação lança o registro no aplicativo.'**
+  String get receiptFlowRecordedOnly;
+
+  /// No description provided for @receiptFlowResumeHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Retomar usa os mesmos dados e pode concluir o recebimento original. Aguarde a confirmação desta tentativa antes de criar outro registro.'**
+  String get receiptFlowResumeHelp;
+
+  /// No description provided for @receiptFlowRefreshing.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recebimento registrado. Atualizando a conta…'**
+  String get receiptFlowRefreshing;
+
+  /// No description provided for @receiptFlowConfirmedRefreshFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'O recebimento está registrado. Falta atualizar a consulta da conta.'**
+  String get receiptFlowConfirmedRefreshFailed;
+
+  /// No description provided for @receiptFlowServerUpdate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Atualize o servidor para usar o recebimento com revisão e recuperação.'**
+  String get receiptFlowServerUpdate;
+
+  /// No description provided for @receiptFlowCash.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dinheiro'**
+  String get receiptFlowCash;
+
+  /// No description provided for @receiptFlowReceived.
+  ///
+  /// In pt, this message translates to:
+  /// **'Já recebido'**
+  String get receiptFlowReceived;
+
+  /// No description provided for @receiptFlowSaleRef.
+  ///
+  /// In pt, this message translates to:
+  /// **'Venda #{number}'**
+  String receiptFlowSaleRef(int number);
+
+  /// No description provided for @receiptFlowPendingItem.
+  ///
+  /// In pt, this message translates to:
+  /// **'{customer} · venda #{number}'**
+  String receiptFlowPendingItem(String customer, int number);
+
+  /// No description provided for @receiptFlowOrigin.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver venda de origem'**
+  String get receiptFlowOrigin;
+
+  /// No description provided for @receiptFlowOriginHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'O recebimento reduz ou quita a dívida desta venda.'**
+  String get receiptFlowOriginHelp;
+
+  /// No description provided for @receiptFlowSaleTotal.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor original da venda'**
+  String get receiptFlowSaleTotal;
+
+  /// No description provided for @receiptFlowSaleItem.
+  ///
+  /// In pt, this message translates to:
+  /// **'{quantity} × {name}'**
+  String receiptFlowSaleItem(int quantity, String name);
+
+  /// No description provided for @receiptFlowBasketFallback.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tipo de cesta {id}'**
+  String receiptFlowBasketFallback(String id);
+
+  /// No description provided for @receiptFlowOriginUnavailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível conferir a venda de origem. Atualize a consulta.'**
+  String get receiptFlowOriginUnavailable;
+
+  /// No description provided for @receiptFlowSummary.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resumo das contas exibidas'**
+  String get receiptFlowSummary;
+
+  /// No description provided for @receiptFlowFilters.
+  ///
+  /// In pt, this message translates to:
+  /// **'Filtros'**
+  String get receiptFlowFilters;
+
+  /// No description provided for @receiptFlowFilterAll.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todas as situações'**
+  String get receiptFlowFilterAll;
+
+  /// No description provided for @receiptFlowFilterOpen.
+  ///
+  /// In pt, this message translates to:
+  /// **'Em aberto, incluindo parciais'**
+  String get receiptFlowFilterOpen;
+
+  /// No description provided for @receiptFlowFilterScope.
+  ///
+  /// In pt, this message translates to:
+  /// **'{status} · {overdue}'**
+  String receiptFlowFilterScope(String status, String overdue);
+
+  /// No description provided for @receiptFlowFilterAnyDue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todos os vencimentos'**
+  String get receiptFlowFilterAnyDue;
+
+  /// No description provided for @receiptFlowFilterApplied.
+  ///
+  /// In pt, this message translates to:
+  /// **'Filtros adicionais aplicados'**
+  String get receiptFlowFilterApplied;
+
+  /// No description provided for @receiptFlowSaleDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Venda em {date}'**
+  String receiptFlowSaleDate(String date);
+
+  /// No description provided for @receiptFlowReversalReason.
+  ///
+  /// In pt, this message translates to:
+  /// **'Motivo do estorno: {reason}'**
+  String receiptFlowReversalReason(String reason);
+
+  /// No description provided for @appBrand.
+  ///
+  /// In pt, this message translates to:
+  /// **'ZM Cesta Básica'**
+  String get appBrand;
+
+  /// No description provided for @appOverview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Visão geral'**
+  String get appOverview;
+
+  /// No description provided for @appHome.
+  ///
+  /// In pt, this message translates to:
+  /// **'Início'**
+  String get appHome;
+
+  /// No description provided for @appFinance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Financeiro'**
+  String get appFinance;
+
+  /// No description provided for @appBusiness.
+  ///
+  /// In pt, this message translates to:
+  /// **'Negócio'**
+  String get appBusiness;
+
+  /// No description provided for @appInventory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estoque'**
+  String get appInventory;
+
+  /// No description provided for @appMore.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mais'**
+  String get appMore;
+
+  /// No description provided for @appDay.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dia'**
+  String get appDay;
+
+  /// No description provided for @appWeek.
+  ///
+  /// In pt, this message translates to:
+  /// **'Semana'**
+  String get appWeek;
+
+  /// No description provided for @appMonth.
+  ///
+  /// In pt, this message translates to:
+  /// **'Mês'**
+  String get appMonth;
+
+  /// No description provided for @appTodayWhen.
+  ///
+  /// In pt, this message translates to:
+  /// **'hoje'**
+  String get appTodayWhen;
+
+  /// No description provided for @appWeekWhen.
+  ///
+  /// In pt, this message translates to:
+  /// **'nesta semana'**
+  String get appWeekWhen;
+
+  /// No description provided for @appMonthWhen.
+  ///
+  /// In pt, this message translates to:
+  /// **'neste mês'**
+  String get appMonthWhen;
+
+  /// No description provided for @appSummary.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resumo'**
+  String get appSummary;
+
+  /// No description provided for @appPay.
+  ///
+  /// In pt, this message translates to:
+  /// **'A pagar'**
+  String get appPay;
+
+  /// No description provided for @appReceive.
+  ///
+  /// In pt, this message translates to:
+  /// **'A receber'**
+  String get appReceive;
+
+  /// No description provided for @appPayTab.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagar'**
+  String get appPayTab;
+
+  /// No description provided for @appReceiveTab.
+  ///
+  /// In pt, this message translates to:
+  /// **'Receber'**
+  String get appReceiveTab;
+
+  /// No description provided for @appFilter.
+  ///
+  /// In pt, this message translates to:
+  /// **'Filtrar'**
+  String get appFilter;
+
+  /// No description provided for @appThisWeek.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nesta semana'**
+  String get appThisWeek;
+
+  /// No description provided for @appThisMonth.
+  ///
+  /// In pt, this message translates to:
+  /// **'Neste mês'**
+  String get appThisMonth;
+
+  /// No description provided for @appDueToday.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vencem hoje'**
+  String get appDueToday;
+
+  /// No description provided for @appOverdue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vencidas'**
+  String get appOverdue;
+
+  /// No description provided for @appNextThree.
+  ///
+  /// In pt, this message translates to:
+  /// **'Próximos 3 dias'**
+  String get appNextThree;
+
+  /// No description provided for @appAllOpen.
+  ///
+  /// In pt, this message translates to:
+  /// **'Todas em aberto'**
+  String get appAllOpen;
+
+  /// No description provided for @appCurrentPosition.
+  ///
+  /// In pt, this message translates to:
+  /// **'Posição atual'**
+  String get appCurrentPosition;
+
+  /// No description provided for @appBeforeDate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vencidas · antes de {date}'**
+  String appBeforeDate(String date);
+
+  /// No description provided for @appDueScope.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vencimento das contas'**
+  String get appDueScope;
+
+  /// No description provided for @appBalancePay.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo a pagar'**
+  String get appBalancePay;
+
+  /// No description provided for @appBalanceReceive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo a receber'**
+  String get appBalanceReceive;
+
+  /// No description provided for @appOpenCount.
+  ///
+  /// In pt, this message translates to:
+  /// **'{count, plural, one{1 conta em aberto} other{{count} contas em aberto}}'**
+  String appOpenCount(int count);
+
+  /// No description provided for @appPartialCount.
+  ///
+  /// In pt, this message translates to:
+  /// **'{count, plural, one{1 parcial} other{{count} parciais}}'**
+  String appPartialCount(int count);
+
+  /// No description provided for @appOriginDue.
+  ///
+  /// In pt, this message translates to:
+  /// **'{origin} · Vence {date}'**
+  String appOriginDue(String origin, String date);
+
+  /// No description provided for @appPurchaseOrigin.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compra de produtos'**
+  String get appPurchaseOrigin;
+
+  /// No description provided for @appSaleOrigin.
+  ///
+  /// In pt, this message translates to:
+  /// **'Venda de cestas'**
+  String get appSaleOrigin;
+
+  /// No description provided for @appPartial.
+  ///
+  /// In pt, this message translates to:
+  /// **'Parcial'**
+  String get appPartial;
+
+  /// No description provided for @appOpen.
+  ///
+  /// In pt, this message translates to:
+  /// **'Em aberto'**
+  String get appOpen;
+
+  /// No description provided for @appDueTodayShort.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vence hoje'**
+  String get appDueTodayShort;
+
+  /// No description provided for @appPaid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pago'**
+  String get appPaid;
+
+  /// No description provided for @appReceived.
+  ///
+  /// In pt, this message translates to:
+  /// **'Recebido'**
+  String get appReceived;
+
+  /// No description provided for @appOriginalPaid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Original {original} · {kind} {paid}'**
+  String appOriginalPaid(String original, String kind, String paid);
+
+  /// No description provided for @appFinanceContext.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagar, receber e acompanhar vencimentos'**
+  String get appFinanceContext;
+
+  /// No description provided for @appOpenInPeriod.
+  ///
+  /// In pt, this message translates to:
+  /// **'Em aberto · vencimentos do período'**
+  String get appOpenInPeriod;
+
+  /// No description provided for @appCurrentDeadlines.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vencimentos atuais'**
+  String get appCurrentDeadlines;
+
+  /// No description provided for @appAccountAmount.
+  ///
+  /// In pt, this message translates to:
+  /// **'{count, plural, one{1 conta} other{{count} contas}} · {amount}'**
+  String appAccountAmount(int count, String amount);
+
+  /// No description provided for @appPendingNotBank.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pendências cadastradas não são saldo bancário. Próximos três dias são separados de hoje.'**
+  String get appPendingNotBank;
+
+  /// No description provided for @appOrganizeFinance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Organizar seu financeiro'**
+  String get appOrganizeFinance;
+
+  /// No description provided for @appAccountsCards.
+  ///
+  /// In pt, this message translates to:
+  /// **'Contas e cartões'**
+  String get appAccountsCards;
+
+  /// No description provided for @appStatements.
+  ///
+  /// In pt, this message translates to:
+  /// **'Extratos e faturas'**
+  String get appStatements;
+
+  /// No description provided for @appFutureFeature.
+  ///
+  /// In pt, this message translates to:
+  /// **'Proposta futura. Esta função ainda não está disponível no aplicativo.'**
+  String get appFutureFeature;
+
+  /// No description provided for @appAccounts.
+  ///
+  /// In pt, this message translates to:
+  /// **'Contas'**
+  String get appAccounts;
+
+  /// No description provided for @appResults.
+  ///
+  /// In pt, this message translates to:
+  /// **'{count, plural, one{1 resultado} other{{count} resultados}}'**
+  String appResults(int count);
+
+  /// No description provided for @appNoOpenAccounts.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma conta em aberto neste recorte. Você pode consultar outros vencimentos.'**
+  String get appNoOpenAccounts;
+
+  /// No description provided for @appHistoryAndRecords.
+  ///
+  /// In pt, this message translates to:
+  /// **'Histórico e cadastros'**
+  String get appHistoryAndRecords;
+
+  /// No description provided for @appYourFinance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seu financeiro {when}'**
+  String appYourFinance(String when);
+
+  /// No description provided for @appYourBusiness.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seu negócio {when}'**
+  String appYourBusiness(String when);
+
+  /// No description provided for @appOpenDueInPeriod.
+  ///
+  /// In pt, this message translates to:
+  /// **'Em aberto · vencimentos do período'**
+  String get appOpenDueInPeriod;
+
+  /// No description provided for @appOpenFinance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Abrir Financeiro'**
+  String get appOpenFinance;
+
+  /// No description provided for @appBasketsSold.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cestas vendidas'**
+  String get appBasketsSold;
+
+  /// No description provided for @appSalesValue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor das vendas'**
+  String get appSalesValue;
+
+  /// No description provided for @appAttention.
+  ///
+  /// In pt, this message translates to:
+  /// **'Precisa da sua atenção'**
+  String get appAttention;
+
+  /// No description provided for @appNow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Agora'**
+  String get appNow;
+
+  /// No description provided for @appLateAccounts.
+  ///
+  /// In pt, this message translates to:
+  /// **'{count, plural, one{1 conta atrasada} other{{count} contas atrasadas}}'**
+  String appLateAccounts(int count);
+
+  /// No description provided for @appTodayPay.
+  ///
+  /// In pt, this message translates to:
+  /// **'Hoje: {amount} a pagar'**
+  String appTodayPay(String amount);
+
+  /// No description provided for @appTodayAmounts.
+  ///
+  /// In pt, this message translates to:
+  /// **'Hoje: pagar {pay} · receber {receive}'**
+  String appTodayAmounts(String pay, String receive);
+
+  /// No description provided for @appNoLowStock.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum produto abaixo do mínimo'**
+  String get appNoLowStock;
+
+  /// No description provided for @appCheckInventory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferir produtos e reposição'**
+  String get appCheckInventory;
+
+  /// No description provided for @appLowStockProduct.
+  ///
+  /// In pt, this message translates to:
+  /// **'{name} abaixo do mínimo'**
+  String appLowStockProduct(String name);
+
+  /// No description provided for @appStockMinimum.
+  ///
+  /// In pt, this message translates to:
+  /// **'{current} disponíveis · mínimo cadastrado {minimum}'**
+  String appStockMinimum(String current, String minimum);
+
+  /// No description provided for @appBusinessContext.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vendas, clientes e resultado · {range}'**
+  String appBusinessContext(String range);
+
+  /// No description provided for @appSalesWhen.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vendas {when}'**
+  String appSalesWhen(String when);
+
+  /// No description provided for @appBasketsCount.
+  ///
+  /// In pt, this message translates to:
+  /// **'{count, plural, one{1 cesta vendida} other{{count} cestas vendidas}}'**
+  String appBasketsCount(int count);
+
+  /// No description provided for @appBusinessResult.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resultado do negócio · {range}'**
+  String appBusinessResult(String range);
+
+  /// No description provided for @appResultExplanation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vendas menos custos registrados e outras despesas pagas no período.'**
+  String get appResultExplanation;
+
+  /// No description provided for @appIncompleteCost.
+  ///
+  /// In pt, this message translates to:
+  /// **'{count, plural, one{1 venda com custo incompleto} other{{count} vendas com custo incompleto}}'**
+  String appIncompleteCost(int count);
+
+  /// No description provided for @appUnderstandResult.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entender o resultado'**
+  String get appUnderstandResult;
+
+  /// No description provided for @appSaleRow.
+  ///
+  /// In pt, this message translates to:
+  /// **'{amount} · Conferir itens, cliente e pagamento'**
+  String appSaleRow(String amount);
+
+  /// No description provided for @appSales.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vendas'**
+  String get appSales;
+
+  /// No description provided for @appSalesDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registrar e consultar vendas'**
+  String get appSalesDescription;
+
+  /// No description provided for @appCustomers.
+  ///
+  /// In pt, this message translates to:
+  /// **'Clientes'**
+  String get appCustomers;
+
+  /// No description provided for @appCustomersDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastros e histórico'**
+  String get appCustomersDescription;
+
+  /// No description provided for @appInventoryContext.
+  ///
+  /// In pt, this message translates to:
+  /// **'Produtos, compras e cestas'**
+  String get appInventoryContext;
+
+  /// No description provided for @appProducts.
+  ///
+  /// In pt, this message translates to:
+  /// **'Produtos'**
+  String get appProducts;
+
+  /// No description provided for @appProductsDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastros e posição de estoque'**
+  String get appProductsDescription;
+
+  /// No description provided for @appPurchases.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compras'**
+  String get appPurchases;
+
+  /// No description provided for @appPurchasesDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entradas e fornecedores'**
+  String get appPurchasesDescription;
+
+  /// No description provided for @appBasketsAssembly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cestas e montagens'**
+  String get appBasketsAssembly;
+
+  /// No description provided for @appBasketsDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tipos, composição e histórico de montagem'**
+  String get appBasketsDescription;
+
+  /// No description provided for @appMovements.
+  ///
+  /// In pt, this message translates to:
+  /// **'Movimentações'**
+  String get appMovements;
+
+  /// No description provided for @appMovementsDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'O que entrou e saiu do estoque'**
+  String get appMovementsDescription;
+
+  /// No description provided for @appStockPosition.
+  ///
+  /// In pt, this message translates to:
+  /// **'Posição do estoque'**
+  String get appStockPosition;
+
+  /// No description provided for @appMoreContext.
+  ///
+  /// In pt, this message translates to:
+  /// **'Documentos e ferramentas do aplicativo'**
+  String get appMoreContext;
+
+  /// No description provided for @appReports.
+  ///
+  /// In pt, this message translates to:
+  /// **'Relatórios'**
+  String get appReports;
+
+  /// No description provided for @appReportsDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Consultar e exportar os dados'**
+  String get appReportsDescription;
+
+  /// No description provided for @appPrinting.
+  ///
+  /// In pt, this message translates to:
+  /// **'Impressão e formulários'**
+  String get appPrinting;
+
+  /// No description provided for @appPrintingDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'PDF e folhas para preencher à caneta'**
+  String get appPrintingDescription;
+
+  /// No description provided for @appSettingsConnection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Configurações e conexão'**
+  String get appSettingsConnection;
+
+  /// No description provided for @appSettingsDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aparência, servidor e pareamento'**
+  String get appSettingsDescription;
+
+  /// No description provided for @appBackup.
+  ///
+  /// In pt, this message translates to:
+  /// **'Backup'**
+  String get appBackup;
+
+  /// No description provided for @appBackupDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cópias de segurança e recuperação'**
+  String get appBackupDescription;
+
+  /// No description provided for @appConfirmedSales.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vendas confirmadas'**
+  String get appConfirmedSales;
+
+  /// No description provided for @appSoldCosts.
+  ///
+  /// In pt, this message translates to:
+  /// **'Custos registrados nas vendas'**
+  String get appSoldCosts;
+
+  /// No description provided for @appGrossProfit.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lucro bruto calculado'**
+  String get appGrossProfit;
+
+  /// No description provided for @appPaidExpenses.
+  ///
+  /// In pt, this message translates to:
+  /// **'Outras despesas pagas'**
+  String get appPaidExpenses;
+
+  /// No description provided for @appResult.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resultado do negócio'**
+  String get appResult;
+
+  /// No description provided for @appResultHow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Como este valor é calculado'**
+  String get appResultHow;
+
+  /// No description provided for @appResultNotBank.
+  ///
+  /// In pt, this message translates to:
+  /// **'As vendas podem ainda não ter sido recebidas. Este resultado não representa saldo bancário.'**
+  String get appResultNotBank;
+
+  /// No description provided for @appReviewType.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tipo'**
+  String get appReviewType;
+
+  /// No description provided for @appReviewFull.
+  ///
+  /// In pt, this message translates to:
+  /// **'Integral do saldo atual'**
+  String get appReviewFull;
+
+  /// No description provided for @appReviewNoNote.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não informada'**
+  String get appReviewNoNote;
+
+  /// No description provided for @appReviewExpectedBalance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo esperado após o registro'**
+  String get appReviewExpectedBalance;
+
+  /// No description provided for @appReviewHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'O saldo esperado será confirmado depois do registro.'**
+  String get appReviewHelp;
+
+  /// No description provided for @appAppearance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aparência'**
+  String get appAppearance;
+
+  /// No description provided for @appAppearanceDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Tema, cores e acessibilidade'**
+  String get appAppearanceDescription;
+
+  /// No description provided for @appAppearanceContext.
+  ///
+  /// In pt, this message translates to:
+  /// **'Preferências de aparência neste aparelho'**
+  String get appAppearanceContext;
+
+  /// No description provided for @appFollowDevice.
+  ///
+  /// In pt, this message translates to:
+  /// **'Seguir o aparelho'**
+  String get appFollowDevice;
+
+  /// No description provided for @appLight.
+  ///
+  /// In pt, this message translates to:
+  /// **'Claro'**
+  String get appLight;
+
+  /// No description provided for @appDark.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escuro'**
+  String get appDark;
+
+  /// No description provided for @appAccent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cor de destaque'**
+  String get appAccent;
+
+  /// No description provided for @appChooseColor.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolher cor'**
+  String get appChooseColor;
+
+  /// No description provided for @appAccentHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Azul original por padrão. A cor é ajustada para manter a leitura.'**
+  String get appAccentHelp;
+
+  /// No description provided for @appColorRed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vermelho'**
+  String get appColorRed;
+
+  /// No description provided for @appColorGreen.
+  ///
+  /// In pt, this message translates to:
+  /// **'Verde'**
+  String get appColorGreen;
+
+  /// No description provided for @appColorBlue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Azul'**
+  String get appColorBlue;
+
+  /// No description provided for @appBackground.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fundo'**
+  String get appBackground;
+
+  /// No description provided for @appSoftBackground.
+  ///
+  /// In pt, this message translates to:
+  /// **'Superfície suave'**
+  String get appSoftBackground;
+
+  /// No description provided for @appPureBackground.
+  ///
+  /// In pt, this message translates to:
+  /// **'Branco / preto'**
+  String get appPureBackground;
+
+  /// No description provided for @appAppearanceSaveError.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível salvar a preferência. Tente novamente.'**
+  String get appAppearanceSaveError;
+
+  /// No description provided for @appServerConnection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conexão com o servidor'**
+  String get appServerConnection;
+
+  /// No description provided for @appServerDescription.
+  ///
+  /// In pt, this message translates to:
+  /// **'Disponibilidade e pareamento'**
+  String get appServerDescription;
+
+  /// No description provided for @appRangeSameMonth.
+  ///
+  /// In pt, this message translates to:
+  /// **'{first} a {last} de {month}'**
+  String appRangeSameMonth(String first, String last, String month);
+
+  /// No description provided for @appRangeDifferentMonth.
+  ///
+  /// In pt, this message translates to:
+  /// **'{first} a {last}'**
+  String appRangeDifferentMonth(String first, String last);
+
+  /// No description provided for @pdfImportTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Extratos e faturas'**
+  String get pdfImportTitle;
+
+  /// No description provided for @pdfImportEntry.
+  ///
+  /// In pt, this message translates to:
+  /// **'Importar PDF e conferir documentos'**
+  String get pdfImportEntry;
+
+  /// No description provided for @pdfImportAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Importar PDF'**
+  String get pdfImportAction;
+
+  /// No description provided for @pdfImportChoose.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecionar PDF'**
+  String get pdfImportChoose;
+
+  /// No description provided for @pdfImportRead.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ler documento'**
+  String get pdfImportRead;
+
+  /// No description provided for @pdfImportHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Envie um PDF com texto, de até 10 MiB. Layouts testados: faturas Nubank/PicPay e extratos Nubank PF/PJ. PDFs escaneados, protegidos por senha ou de outros formatos podem não ser lidos.'**
+  String get pdfImportHelp;
+
+  /// No description provided for @pdfImportEffect.
+  ///
+  /// In pt, this message translates to:
+  /// **'A importação guarda o documento e os lançamentos pendentes de revisão. Não cria contas a pagar, pagamentos ou conciliação automática.'**
+  String get pdfImportEffect;
+
+  /// No description provided for @pdfImportSource.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta ou cartão do documento'**
+  String get pdfImportSource;
+
+  /// No description provided for @pdfImportSourceCheck.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confira a conta/cartão e a titularidade. O leitor não verifica se o documento pertence à origem escolhida.'**
+  String get pdfImportSourceCheck;
+
+  /// No description provided for @pdfImportNewSource.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastrar conta ou cartão'**
+  String get pdfImportNewSource;
+
+  /// No description provided for @pdfImportSourceName.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nome para identificar a conta ou cartão'**
+  String get pdfImportSourceName;
+
+  /// No description provided for @pdfImportInstitution.
+  ///
+  /// In pt, this message translates to:
+  /// **'Instituição financeira'**
+  String get pdfImportInstitution;
+
+  /// No description provided for @pdfImportBank.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conta bancária'**
+  String get pdfImportBank;
+
+  /// No description provided for @pdfImportCard.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cartão de crédito'**
+  String get pdfImportCard;
+
+  /// No description provided for @pdfImportHolder.
+  ///
+  /// In pt, this message translates to:
+  /// **'Titularidade'**
+  String get pdfImportHolder;
+
+  /// No description provided for @pdfImportPF.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pessoa física'**
+  String get pdfImportPF;
+
+  /// No description provided for @pdfImportPJ.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pessoa jurídica'**
+  String get pdfImportPJ;
+
+  /// No description provided for @pdfImportBankLink.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vincular conta bancária cadastrada'**
+  String get pdfImportBankLink;
+
+  /// No description provided for @pdfImportNewBank.
+  ///
+  /// In pt, this message translates to:
+  /// **'Criar cadastro bancário para esta origem'**
+  String get pdfImportNewBank;
+
+  /// No description provided for @pdfImportBankHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'O vínculo identifica a conta do extrato. Um novo cadastro é criado sem saldo de abertura e sem movimentação de dinheiro.'**
+  String get pdfImportBankHelp;
+
+  /// No description provided for @pdfImportNoSources.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastre a conta ou cartão antes de importar. Use um nome que permita distinguir banco e titularidade.'**
+  String get pdfImportNoSources;
+
+  /// No description provided for @pdfImportHistory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Documentos enviados'**
+  String get pdfImportHistory;
+
+  /// No description provided for @pdfImportEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhum PDF enviado nesta consulta.'**
+  String get pdfImportEmpty;
+
+  /// No description provided for @pdfImportMore.
+  ///
+  /// In pt, this message translates to:
+  /// **'Carregar mais'**
+  String get pdfImportMore;
+
+  /// No description provided for @pdfImportReady.
+  ///
+  /// In pt, this message translates to:
+  /// **'Leitura concluída · conferir antes de guardar'**
+  String get pdfImportReady;
+
+  /// No description provided for @pdfImportBlocked.
+  ///
+  /// In pt, this message translates to:
+  /// **'Leitura bloqueada · confirmação indisponível'**
+  String get pdfImportBlocked;
+
+  /// No description provided for @pdfImportConfirmed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Documento guardado · revisão pendente'**
+  String get pdfImportConfirmed;
+
+  /// No description provided for @pdfImportConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Guardar para revisão'**
+  String get pdfImportConfirm;
+
+  /// No description provided for @pdfImportAcknowledged.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferi a origem, os dados extraídos e os avisos.'**
+  String get pdfImportAcknowledged;
+
+  /// No description provided for @pdfImportSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Documento guardado. Os lançamentos continuam pendentes de revisão, sem criar dívidas ou pagamentos.'**
+  String get pdfImportSuccess;
+
+  /// No description provided for @pdfImportRetry.
+  ///
+  /// In pt, this message translates to:
+  /// **'Consultar novamente'**
+  String get pdfImportRetry;
+
+  /// No description provided for @pdfImportBusy.
+  ///
+  /// In pt, this message translates to:
+  /// **'Enviando e lendo o PDF…'**
+  String get pdfImportBusy;
+
+  /// No description provided for @pdfImportReading.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferência do documento'**
+  String get pdfImportReading;
+
+  /// No description provided for @pdfImportItems.
+  ///
+  /// In pt, this message translates to:
+  /// **'Lançamentos extraídos'**
+  String get pdfImportItems;
+
+  /// No description provided for @pdfImportPages.
+  ///
+  /// In pt, this message translates to:
+  /// **'Texto das páginas'**
+  String get pdfImportPages;
+
+  /// No description provided for @pdfImportOriginal.
+  ///
+  /// In pt, this message translates to:
+  /// **'Visualizar PDF original'**
+  String get pdfImportOriginal;
+
+  /// No description provided for @pdfImportOriginalTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Documento original'**
+  String get pdfImportOriginalTitle;
+
+  /// No description provided for @pdfImportWarnings.
+  ///
+  /// In pt, this message translates to:
+  /// **'Avisos e impedimentos'**
+  String get pdfImportWarnings;
+
+  /// No description provided for @pdfImportControls.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferências de totais do documento'**
+  String get pdfImportControls;
+
+  /// No description provided for @pdfImportControlOk.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valores correspondentes'**
+  String get pdfImportControlOk;
+
+  /// No description provided for @pdfImportControlFail.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valores divergentes'**
+  String get pdfImportControlFail;
+
+  /// No description provided for @pdfImportPage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Página {number}'**
+  String pdfImportPage(int number);
+
+  /// No description provided for @pdfImportCounts.
+  ///
+  /// In pt, this message translates to:
+  /// **'{items} lançamentos · {pages} páginas'**
+  String pdfImportCounts(int items, int pages);
+
+  /// No description provided for @pdfImportCoverage.
+  ///
+  /// In pt, this message translates to:
+  /// **'Exibindo {loaded} de {total} lançamentos extraídos.'**
+  String pdfImportCoverage(int loaded, int total);
+
+  /// No description provided for @pdfImportInstallments.
+  ///
+  /// In pt, this message translates to:
+  /// **'Parcela {current} de {total}'**
+  String pdfImportInstallments(int current, int total);
+
+  /// No description provided for @pdfImportPartialYear.
+  ///
+  /// In pt, this message translates to:
+  /// **'Algumas datas não trazem o ano. O leitor usou o ciclo da fatura para completá-las; confira no original.'**
+  String get pdfImportPartialYear;
+
+  /// No description provided for @pdfImportSignBank.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entradas positivas e saídas negativas, conforme o extrato.'**
+  String get pdfImportSignBank;
+
+  /// No description provided for @pdfImportSignCard.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compras positivas e créditos/pagamentos negativos. Pagamento de fatura anterior não quita a atual.'**
+  String get pdfImportSignCard;
+
+  /// No description provided for @pdfImportPeriodStart.
+  ///
+  /// In pt, this message translates to:
+  /// **'Início do período'**
+  String get pdfImportPeriodStart;
+
+  /// No description provided for @pdfImportPeriodEnd.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fim do período'**
+  String get pdfImportPeriodEnd;
+
+  /// No description provided for @pdfImportIssued.
+  ///
+  /// In pt, this message translates to:
+  /// **'Emissão'**
+  String get pdfImportIssued;
+
+  /// No description provided for @pdfImportClosing.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fechamento'**
+  String get pdfImportClosing;
+
+  /// No description provided for @pdfImportDue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vencimento'**
+  String get pdfImportDue;
+
+  /// No description provided for @pdfImportTotal.
+  ///
+  /// In pt, this message translates to:
+  /// **'Total declarado'**
+  String get pdfImportTotal;
+
+  /// No description provided for @pdfImportMinimum.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamento mínimo'**
+  String get pdfImportMinimum;
+
+  /// No description provided for @pdfImportOpeningBalance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo inicial declarado'**
+  String get pdfImportOpeningBalance;
+
+  /// No description provided for @pdfImportClosingBalance.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo final declarado'**
+  String get pdfImportClosingBalance;
+
+  /// No description provided for @pdfImportInflows.
+  ///
+  /// In pt, this message translates to:
+  /// **'Entradas declaradas'**
+  String get pdfImportInflows;
+
+  /// No description provided for @pdfImportOutflows.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saídas declaradas'**
+  String get pdfImportOutflows;
+
+  /// No description provided for @pdfImportBillEquation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Composição do total da fatura'**
+  String get pdfImportBillEquation;
+
+  /// No description provided for @pdfImportDetailsCheck.
+  ///
+  /// In pt, this message translates to:
+  /// **'Detalhes e resumo da fatura'**
+  String get pdfImportDetailsCheck;
+
+  /// No description provided for @pdfImportSectionCheck.
+  ///
+  /// In pt, this message translates to:
+  /// **'Subtotal da seção'**
+  String get pdfImportSectionCheck;
+
+  /// No description provided for @pdfImportBalanceCheck.
+  ///
+  /// In pt, this message translates to:
+  /// **'Equação dos saldos'**
+  String get pdfImportBalanceCheck;
+
+  /// No description provided for @pdfImportInflowsCheck.
+  ///
+  /// In pt, this message translates to:
+  /// **'Total de entradas'**
+  String get pdfImportInflowsCheck;
+
+  /// No description provided for @pdfImportOutflowsCheck.
+  ///
+  /// In pt, this message translates to:
+  /// **'Total de saídas'**
+  String get pdfImportOutflowsCheck;
+
+  /// No description provided for @pdfImportCandidate.
+  ///
+  /// In pt, this message translates to:
+  /// **'Há registros semelhantes no sistema. Essa semelhança não comprova duplicidade; a revisão é separada.'**
+  String get pdfImportCandidate;
+
+  /// No description provided for @pdfImportServerUpdate.
+  ///
+  /// In pt, this message translates to:
+  /// **'O servidor precisa da atualização e da migração financeira antes de receber documentos. Solicite a preparação da instalação.'**
+  String get pdfImportServerUpdate;
+
+  /// No description provided for @pdfImportRuntime.
+  ///
+  /// In pt, this message translates to:
+  /// **'O leitor de PDF não está disponível nesta instalação do servidor. É necessário preparar o runtime antes de importar.'**
+  String get pdfImportRuntime;
+
+  /// No description provided for @pdfImportProcessing.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível concluir a leitura agora. Tente novamente com o mesmo arquivo e a mesma origem.'**
+  String get pdfImportProcessing;
+
+  /// No description provided for @pdfImportSize.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecione um PDF não vazio, com até 10 MiB.'**
+  String get pdfImportSize;
+
+  /// No description provided for @pdfImportInvalidFile.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível ler este PDF. Confira se o arquivo está íntegro e é um PDF válido.'**
+  String get pdfImportInvalidFile;
+
+  /// No description provided for @pdfImportPassword.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este PDF exige senha. A leitura de arquivos protegidos ainda não está disponível.'**
+  String get pdfImportPassword;
+
+  /// No description provided for @pdfImportOcr.
+  ///
+  /// In pt, this message translates to:
+  /// **'Há página sem texto extraível. A leitura de PDFs escaneados ainda não está disponível.'**
+  String get pdfImportOcr;
+
+  /// No description provided for @pdfImportUnsupported.
+  ///
+  /// In pt, this message translates to:
+  /// **'O formato deste documento ainda não tem um leitor confirmado. Use um layout testado ou solicite ampliação do leitor.'**
+  String get pdfImportUnsupported;
+
+  /// No description provided for @pdfImportMismatch.
+  ///
+  /// In pt, this message translates to:
+  /// **'Os totais do documento não correspondem aos detalhes. A confirmação está bloqueada; confira o original.'**
+  String get pdfImportMismatch;
+
+  /// No description provided for @pdfImportUnknownRow.
+  ///
+  /// In pt, this message translates to:
+  /// **'Há linha monetária ou data que não pôde ser interpretada com segurança. Confira a página indicada; a confirmação está bloqueada.'**
+  String get pdfImportUnknownRow;
+
+  /// No description provided for @pdfImportWrongSource.
+  ///
+  /// In pt, this message translates to:
+  /// **'O tipo do documento não corresponde à conta ou cartão escolhido. Importe novamente com a origem correta.'**
+  String get pdfImportWrongSource;
+
+  /// No description provided for @pdfImportLimit.
+  ///
+  /// In pt, this message translates to:
+  /// **'O PDF ultrapassa os limites de páginas ou conteúdo do leitor. A confirmação está bloqueada.'**
+  String get pdfImportLimit;
+
+  /// No description provided for @pdfImportHeader.
+  ///
+  /// In pt, this message translates to:
+  /// **'O cabeçalho, os controles ou os lançamentos estão incompletos ou conflitantes. Confira o original; a confirmação está bloqueada.'**
+  String get pdfImportHeader;
+
+  /// No description provided for @pdfImportBlockedHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este documento não pode ser confirmado. Confira os impedimentos e o original.'**
+  String get pdfImportBlockedHelp;
+
+  /// No description provided for @pdfImportSourceExists.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta conta já possui uma origem de importação. Atualize a lista e selecione a origem existente.'**
+  String get pdfImportSourceExists;
+
+  /// No description provided for @pdfImportInvalidSource.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confira os dados da origem. O extrato exige uma conta bancária ativa e o leitor atual exige reais.'**
+  String get pdfImportInvalidSource;
+
+  /// No description provided for @pdfImportUnknownIssue.
+  ///
+  /// In pt, this message translates to:
+  /// **'A leitura identificou um impedimento. Confira o original e solicite análise do formato.'**
+  String get pdfImportUnknownIssue;
+
+  /// No description provided for @pdfImportUncertain.
+  ///
+  /// In pt, this message translates to:
+  /// **'A resposta não foi recebida. Consulte os documentos ou repita com o mesmo PDF e a mesma origem para recuperar o resultado.'**
+  String get pdfImportUncertain;
+
+  /// No description provided for @pdfImportNoText.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta página não contém texto extraível.'**
+  String get pdfImportNoText;
+
+  /// No description provided for @pdfImportDocument.
+  ///
+  /// In pt, this message translates to:
+  /// **'Documento financeiro'**
+  String get pdfImportDocument;
+
+  /// No description provided for @pdfImportSourceRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecione a conta ou cartão do documento.'**
+  String get pdfImportSourceRequired;
+
+  /// No description provided for @pdfImportRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Preencha de 2 a 100 caracteres.'**
+  String get pdfImportRequired;
 }
 
 class _AppLocalizationsDelegate
@@ -6390,8 +7926,9 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
 }

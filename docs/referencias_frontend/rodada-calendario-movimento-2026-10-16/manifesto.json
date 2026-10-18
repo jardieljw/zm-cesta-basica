@@ -1,0 +1,61 @@
+{
+  "consolidado_em": "2026-10-16",
+  "rodada": "Estudo local de movimento do calendario",
+  "situacao": "Nao apresentado nem aprovado; agrupar ajustes conforme FE-032",
+  "arquivos": [
+    {
+      "arquivo": "calendario-movimento-zm.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\calendario-movimento-zm.html",
+      "sha256": "a4647a619518c1339e8569dbf9a76228e3e9855485b4809d16b41b2c9d98bacf",
+      "bytes": 49008
+    },
+    {
+      "arquivo": "calendario-movimento-zm-preview.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\calendario-movimento-zm-preview.html",
+      "sha256": "0bc6140f52d7140c8582c550a27dddd022a6e3247daa2b3e2df4f567790b81d2",
+      "bytes": 140136
+    },
+    {
+      "arquivo": "check-calendar-motion-zm.cjs",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\check-calendar-motion-zm.cjs",
+      "sha256": "387ebd17cc10c4d3f6d0b49f02e351fec00cde8a724cce9d677e166c30854ab9",
+      "bytes": 10970
+    },
+    {
+      "arquivo": "calendar-motion-before.json",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\calendar-motion-before.json",
+      "sha256": "014bef38922ff89a88e4bfcf84b3bc077658eaf525176b22890d42a142f9527c",
+      "bytes": 11065
+    },
+    {
+      "arquivo": "calendar-motion-verification.json",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\calendar-motion-verification.json",
+      "sha256": "282cc66e3a577aa881aa9c40a39b52894d9253dad7c29db8f459cdd963b1079d",
+      "bytes": 17165
+    },
+    {
+      "arquivo": "calendar-edge-intermediate.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\calendar-edge-intermediate.png",
+      "sha256": "041d49e5ece2fb00822da1d9ee3e71858dddb06ef0cddb9cbfa5f399dd8486b8",
+      "bytes": 74215
+    },
+    {
+      "arquivo": "calendar-edge-complete.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\calendar-edge-complete.png",
+      "sha256": "ee739a6703db0b6720431e656999a8513c7bb9c630df162a4b2edf2ae88b1b59",
+      "bytes": 58581
+    },
+    {
+      "arquivo": "calendar-webkit-intermediate.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\calendar-webkit-intermediate.png",
+      "sha256": "f1d0a8cfb771499e0f571ec626dc8f98d23102bc934436a7eb3eb058d318f15d",
+      "bytes": 66440
+    },
+    {
+      "arquivo": "calendar-webkit-complete.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\calendar-webkit-complete.png",
+      "sha256": "ea5d5a0682431de1c7423f5a6d16d4976ad8329c0dcd982cf3e9732840d93108",
+      "bytes": 52165
+    }
+  ]
+}

@@ -40,6 +40,6 @@ if errorlevel 1 (
 )
 
 echo [3/3] Subindo servico HTTPS Local (porta 8000)...
-"%PYTHON_EXE%" -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --ssl-keyfile certs/server.key --ssl-certfile certs/server.crt --workers 1
+"%PYTHON_EXE%" -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --ssl-keyfile certs/server.key --ssl-certfile certs/server.crt --workers 1 --timeout-keep-alive 65
 
 pause

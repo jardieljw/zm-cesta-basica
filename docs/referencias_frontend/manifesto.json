@@ -1,0 +1,72 @@
+{
+  "consolidado_em": "2026-10-15",
+  "finalidade": "Copias historicas de planejamento do front-end, sem implementacao no aplicativo",
+  "arquivos": [
+    {
+      "arquivo": "direcoes-design-zm-ajustavel.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\direcoes-design-zm-ajustavel.html",
+      "sha256": "dc45605433951d7cf2575d2d8dd23fe86069def948713b246a3a6f38fc51db5c",
+      "bytes": 35203
+    },
+    {
+      "arquivo": "direcoes-design-zm-ajustavel-preview.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\direcoes-design-zm-ajustavel-preview.html",
+      "sha256": "dff4312fbfbe1e92599198a667d054503ab589b4b672baa1429b14f21fe55373",
+      "bytes": 119849
+    },
+    {
+      "arquivo": "mapa-navegavel-zm.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\mapa-navegavel-zm.html",
+      "sha256": "79388750430b1f39a50aafedb804053526db77524b11f46cefc5c72b7ae55758",
+      "bytes": 29386
+    },
+    {
+      "arquivo": "mapa-navegavel-zm-preview.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\mapa-navegavel-zm-preview.html",
+      "sha256": "6e455583fff6b5381ac2bf31b63c33766bae17849d9363fdee1ecf79acab3bcf",
+      "bytes": 116256
+    },
+    {
+      "arquivo": "check-design-controls.cjs",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\check-design-controls.cjs",
+      "sha256": "c83053b6424eb9926d77d434f3f16219c4ae7be6fa50456cb07ea3abc7271ac7",
+      "bytes": 5637
+    },
+    {
+      "arquivo": "check-navigation-preview.cjs",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\check-navigation-preview.cjs",
+      "sha256": "46c24047c9a86f61b020b9c7d656d77785475668a2caab622f0e7b6926716a0d",
+      "bytes": 3539
+    },
+    {
+      "arquivo": "navigation-mobile.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\navigation-mobile.png",
+      "sha256": "ca39d461cb49c352c4aa7ff489e97cc02bab30d7af51126c05f025ae8bc7e287",
+      "bytes": 66686
+    },
+    {
+      "arquivo": "navigation-desktop.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\navigation-desktop.png",
+      "sha256": "a204f7a1375e5acecc2392adbe0917faf791c938c566db26f3579054330dad06",
+      "bytes": 81133
+    },
+    {
+      "arquivo": "navigation-dark-mobile.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\navigation-dark-mobile.png",
+      "sha256": "410d04bc7b4002060dffc095af577083f65cf3bb90241f53714ab6b9c520a00d",
+      "bytes": 60008
+    },
+    {
+      "arquivo": "controls-glass-mobile.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\controls-glass-mobile.png",
+      "sha256": "0c07431ff07f0212770a606bdc7d5a7e5c8d9ebab2a76d10736a5547bfbe2367",
+      "bytes": 244294
+    },
+    {
+      "arquivo": "briefing-inicial.txt",
+      "origem": "C:\\Users\\jardi\\.codex\\attachments\\2806585c-a8a3-4938-8f09-4a6a7bc871b7\\Texto colado.txt",
+      "sha256": "3d72b79a9534461052e4b55d9e6ee0f9f03b22441e21ff1b8432329e9e1660b4",
+      "bytes": 14257
+    }
+  ]
+}

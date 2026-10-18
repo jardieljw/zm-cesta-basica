@@ -1,3 +1,5 @@
+import '../utils/adaptive_ui_color.dart';
+import '../widgets/shared/responsive_filter_bar.dart';
 import 'package:flutter/material.dart';
 import '../models/dashboard.dart';
 import '../services/dashboard_service.dart';
@@ -6,14 +8,15 @@ import '../utils/formatters.dart';
 import '../utils/api_error_mapper.dart';
 
 class DashboardView extends StatefulWidget {
-  const DashboardView({super.key});
+  final DashboardService? service;
+  const DashboardView({super.key, this.service});
 
   @override
   State<DashboardView> createState() => _DashboardViewState();
 }
 
 class _DashboardViewState extends State<DashboardView> {
-  final DashboardService _dashboardService = DashboardService();
+  late final DashboardService _dashboardService;
 
   bool _isLoading = true;
   String? _errorMessage;
@@ -32,6 +35,7 @@ class _DashboardViewState extends State<DashboardView> {
   @override
   void initState() {
     super.initState();
+    _dashboardService = widget.service ?? DashboardService();
     _loadDashboard();
   }
 
@@ -121,7 +125,7 @@ class _DashboardViewState extends State<DashboardView> {
                 )
               else if (_errorMessage != null)
                 Card(
-                  color: Colors.red.shade50,
+                  color: adaptiveUiSurface(context, Colors.red.shade50),
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
@@ -133,7 +137,10 @@ class _DashboardViewState extends State<DashboardView> {
                             Expanded(
                               child: Text(
                                 _errorMessage!,
-                                style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ],
@@ -152,6 +159,8 @@ class _DashboardViewState extends State<DashboardView> {
                 _buildFilterInfoBadge(theme, _summary!.filterInfo),
                 const SizedBox(height: 16),
                 _buildSalesSection(theme, _summary!.sales),
+                const SizedBox(height: 16),
+                _buildPurchasesSection(theme, _summary!.purchases),
                 const SizedBox(height: 16),
                 _buildInventorySection(theme, _summary!.inventory),
                 const SizedBox(height: 16),
@@ -175,7 +184,7 @@ class _DashboardViewState extends State<DashboardView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Wrap(
+            ResponsiveFilterBar(
               spacing: 8,
               runSpacing: 8,
               alignment: WrapAlignment.center,
@@ -269,7 +278,11 @@ class _DashboardViewState extends State<DashboardView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(context.l10n.dashboardSelectedDate(AppFormatters.formatDate(_selectedDate))),
+                  Text(
+                    context.l10n.dashboardSelectedDate(
+                      AppFormatters.formatDate(_selectedDate),
+                    ),
+                  ),
                   const SizedBox(width: 8),
                   TextButton.icon(
                     icon: const Icon(Icons.calendar_today, size: 16),
@@ -294,10 +307,12 @@ class _DashboardViewState extends State<DashboardView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(context.l10n.commonPeriodLabel(
-                    AppFormatters.formatDate(_selectedRange.start),
-                    AppFormatters.formatDate(_selectedRange.end),
-                  )),
+                  Text(
+                    context.l10n.commonPeriodLabel(
+                      AppFormatters.formatDate(_selectedRange.start),
+                      AppFormatters.formatDate(_selectedRange.end),
+                    ),
+                  ),
                   const SizedBox(width: 8),
                   TextButton.icon(
                     icon: const Icon(Icons.date_range, size: 16),
@@ -325,7 +340,10 @@ class _DashboardViewState extends State<DashboardView> {
                   DropdownButton<int>(
                     value: _selectedMonth,
                     items: List.generate(12, (i) => i + 1).map((m) {
-                      return DropdownMenuItem(value: m, child: Text(context.l10n.commonMonthNumber(m)));
+                      return DropdownMenuItem(
+                        value: m,
+                        child: Text(context.l10n.commonMonthNumber(m)),
+                      );
                     }).toList(),
                     onChanged: (val) {
                       if (val != null) {
@@ -381,20 +399,26 @@ class _DashboardViewState extends State<DashboardView> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.blue.shade50,
+        color: adaptiveUiSurface(context, Colors.blue.shade50),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.blue.shade200),
+        border: Border.all(
+          color: adaptiveUiSurface(context, Colors.blue.shade200),
+        ),
       ),
       child: Row(
         children: [
-          Icon(Icons.info_outline, size: 18, color: Colors.blue.shade700),
+          Icon(
+            Icons.info_outline,
+            size: 18,
+            color: adaptiveUiText(context, Colors.blue.shade700),
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               'Período em Exibição: ${info.label}',
               style: TextStyle(
                 fontWeight: FontWeight.w600,
-                color: Colors.blue.shade900,
+                color: adaptiveUiText(context, Colors.blue.shade900),
                 fontSize: 13,
               ),
             ),
@@ -403,8 +427,6 @@ class _DashboardViewState extends State<DashboardView> {
       ),
     );
   }
-
-
 
   // ==========================================
   // SECTION 2: SALES
@@ -423,20 +445,32 @@ class _DashboardViewState extends State<DashboardView> {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: Colors.indigo.shade100,
+                  backgroundColor: adaptiveUiSurface(
+                    context,
+                    Colors.indigo.shade100,
+                  ),
                   radius: 20,
-                  child: Icon(Icons.point_of_sale, color: Colors.indigo.shade800, size: 22),
+                  child: Icon(
+                    Icons.point_of_sale,
+                    color: adaptiveUiText(context, Colors.indigo.shade800),
+                    size: 22,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     l10n.dashboardSectionSales,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.list_alt, size: 18),
-                  label: Text(context.l10n.dashboardSalesCount(sales.sales.length)),
+                  label: Text(
+                    context.l10n.dashboardSalesCount(sales.sales.length),
+                  ),
                   onPressed: () => _showSalesDrilldown(sales.sales),
                 ),
               ],
@@ -451,7 +485,10 @@ class _DashboardViewState extends State<DashboardView> {
                     child: Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.indigo.shade50,
+                        color: adaptiveUiSurface(
+                          context,
+                          Colors.indigo.shade50,
+                        ),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
@@ -459,7 +496,13 @@ class _DashboardViewState extends State<DashboardView> {
                         children: [
                           Text(
                             l10n.dashboardSoldBaskets,
-                            style: TextStyle(fontSize: 12, color: Colors.indigo.shade900),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: adaptiveUiText(
+                                context,
+                                Colors.indigo.shade900,
+                              ),
+                            ),
                           ),
                           const SizedBox(height: 4),
                           Text(
@@ -467,7 +510,10 @@ class _DashboardViewState extends State<DashboardView> {
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
-                              color: Colors.indigo.shade900,
+                              color: adaptiveUiText(
+                                context,
+                                Colors.indigo.shade900,
+                              ),
                             ),
                           ),
                         ],
@@ -483,7 +529,10 @@ class _DashboardViewState extends State<DashboardView> {
                     child: Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.indigo.shade50,
+                        color: adaptiveUiSurface(
+                          context,
+                          Colors.indigo.shade50,
+                        ),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
@@ -491,7 +540,13 @@ class _DashboardViewState extends State<DashboardView> {
                         children: [
                           Text(
                             l10n.dashboardTotalSold,
-                            style: TextStyle(fontSize: 12, color: Colors.indigo.shade900),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: adaptiveUiText(
+                                context,
+                                Colors.indigo.shade900,
+                              ),
+                            ),
                           ),
                           const SizedBox(height: 4),
                           Text(
@@ -499,7 +554,10 @@ class _DashboardViewState extends State<DashboardView> {
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
-                              color: Colors.indigo.shade900,
+                              color: adaptiveUiText(
+                                context,
+                                Colors.indigo.shade900,
+                              ),
                             ),
                           ),
                         ],
@@ -511,9 +569,13 @@ class _DashboardViewState extends State<DashboardView> {
             ),
             if (sales.byBasketType.isNotEmpty) ...[
               const SizedBox(height: 12),
-              const Text(
+              Text(
                 'Vendas por Tipo de Cesta:',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12, color: Colors.black54),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
               const SizedBox(height: 6),
               Wrap(
@@ -521,10 +583,16 @@ class _DashboardViewState extends State<DashboardView> {
                 runSpacing: 6,
                 children: sales.byBasketType.map((bt) {
                   return Chip(
-                    backgroundColor: Colors.indigo.shade50,
+                    backgroundColor: adaptiveUiSurface(
+                      context,
+                      Colors.indigo.shade50,
+                    ),
                     label: Text(
                       '${bt.basketTypeName}: ${bt.count} un. (${AppFormatters.formatCurrency(bt.totalCents)})',
-                      style: TextStyle(fontSize: 12, color: Colors.indigo.shade900),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: adaptiveUiText(context, Colors.indigo.shade900),
+                      ),
                     ),
                   );
                 }).toList(),
@@ -541,7 +609,9 @@ class _DashboardViewState extends State<DashboardView> {
       context: context,
       builder: (ctx) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 750, maxHeight: 600),
             child: Padding(
@@ -554,7 +624,10 @@ class _DashboardViewState extends State<DashboardView> {
                     children: [
                       Text(
                         'Detalhamento de Vendas (${sales.length})',
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.close),
@@ -568,20 +641,41 @@ class _DashboardViewState extends State<DashboardView> {
                         ? Center(child: Text(context.l10n.dashboardNoSales))
                         : ListView.separated(
                             itemCount: sales.length,
-                            separatorBuilder: (_, __) => const Divider(height: 1),
+                            separatorBuilder: (_, __) =>
+                                const Divider(height: 1),
                             itemBuilder: (context, i) {
                               final s = sales[i];
                               return ListTile(
                                 leading: CircleAvatar(
-                                  backgroundColor: Colors.indigo.shade100,
-                                  child: Text('#${s.saleNumber}', style: TextStyle(color: Colors.indigo.shade900, fontSize: 12)),
+                                  backgroundColor: adaptiveUiSurface(
+                                    context,
+                                    Colors.indigo.shade100,
+                                  ),
+                                  child: Text(
+                                    '#${s.saleNumber}',
+                                    style: TextStyle(
+                                      color: adaptiveUiText(
+                                        context,
+                                        Colors.indigo.shade900,
+                                      ),
+                                      fontSize: 12,
+                                    ),
+                                  ),
                                 ),
                                 title: Text(
-                                  s.customerName ?? 'Cliente Balcão / Consumidor',
-                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                  s.customerName ??
+                                      context.l10n.saleCustomerAnonymous,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 subtitle: Text(
-                                  'Modo: ${s.saleMode} | Pagto: ${s.paymentMode} | ${AppFormatters.formatDateTime(s.saleDate)}',
+                                  context.l10n.companyPaymentDescription(
+                                    _paymentLabel(s.paymentMode),
+                                    AppFormatters.formatDateTime(
+                                      s.saleDate.toLocal(),
+                                    ),
+                                  ),
                                   style: const TextStyle(fontSize: 12),
                                 ),
                                 trailing: Column(
@@ -589,14 +683,34 @@ class _DashboardViewState extends State<DashboardView> {
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      AppFormatters.formatCurrency(s.totalAmountCents),
-                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                      AppFormatters.formatCurrency(
+                                        s.totalAmountCents,
+                                      ),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     Text(
-                                      s.paymentStatus,
+                                      s.paymentStatus == 'PAID'
+                                          ? context.l10n.companyPaidStatus
+                                          : (s.paymentStatus == 'PARTIAL'
+                                                ? context
+                                                      .l10n
+                                                      .companyPartialStatus
+                                                : context
+                                                      .l10n
+                                                      .companyPendingStatus),
                                       style: TextStyle(
                                         fontSize: 11,
-                                        color: s.paymentStatus == 'PAID' ? Colors.green.shade700 : Colors.orange.shade800,
+                                        color: s.paymentStatus == 'PAID'
+                                            ? adaptiveUiText(
+                                                context,
+                                                Colors.green.shade700,
+                                              )
+                                            : adaptiveUiText(
+                                                context,
+                                                Colors.orange.shade800,
+                                              ),
                                       ),
                                     ),
                                   ],
@@ -614,14 +728,43 @@ class _DashboardViewState extends State<DashboardView> {
     );
   }
 
-
-
-
-
   // ==========================================
   // SECTION 4: INVENTORY
   // ==========================================
-  Widget _buildInventorySection(ThemeData theme, DashboardInventorySummary inv) {
+  Widget _buildPurchasesSection(
+    ThemeData theme,
+    DashboardPurchasesSummary purchases,
+  ) {
+    final l10n = context.l10n;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.companyPurchasesTitle,
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: 12),
+            Text(l10n.companyPurchaseCount(purchases.purchaseCount)),
+            const SizedBox(height: 6),
+            Text(
+              AppFormatters.formatCurrency(purchases.totalAmountCents),
+              style: theme.textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 6),
+            Text(l10n.companyPurchasesExplanation),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInventorySection(
+    ThemeData theme,
+    DashboardInventorySummary inv,
+  ) {
     final l10n = context.l10n;
 
     return Card(
@@ -635,22 +778,40 @@ class _DashboardViewState extends State<DashboardView> {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: Colors.orange.shade100,
+                  backgroundColor: adaptiveUiSurface(
+                    context,
+                    Colors.orange.shade100,
+                  ),
                   radius: 20,
-                  child: Icon(Icons.inventory, color: Colors.orange.shade800, size: 22),
+                  child: Icon(
+                    Icons.inventory,
+                    color: adaptiveUiText(context, Colors.orange.shade800),
+                    size: 22,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     l10n.dashboardSectionInventory,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
                 TextButton.icon(
-                  icon: const Icon(Icons.warning_amber, size: 18, color: Colors.red),
+                  icon: const Icon(
+                    Icons.warning_amber,
+                    size: 18,
+                    color: Colors.red,
+                  ),
                   label: Text(
                     'Críticos (${inv.lowStockProductsCount})',
-                    style: TextStyle(color: inv.lowStockProductsCount > 0 ? Colors.red : Colors.grey),
+                    style: TextStyle(
+                      color: inv.lowStockProductsCount > 0
+                          ? Colors.red
+                          : Colors.grey,
+                    ),
                   ),
                   onPressed: () => _showLowStockDrilldown(inv.lowStockItems),
                 ),
@@ -663,15 +824,20 @@ class _DashboardViewState extends State<DashboardView> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.orange.shade50,
+                      color: adaptiveUiSurface(context, Colors.orange.shade50),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Produtos Cadastrados',
-                          style: TextStyle(fontSize: 12, color: Colors.black54),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurfaceVariant,
+                          ),
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -679,7 +845,10 @@ class _DashboardViewState extends State<DashboardView> {
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
-                            color: Colors.orange.shade900,
+                            color: adaptiveUiText(
+                              context,
+                              Colors.orange.shade900,
+                            ),
                           ),
                         ),
                       ],
@@ -694,20 +863,31 @@ class _DashboardViewState extends State<DashboardView> {
                     child: Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: inv.lowStockProductsCount > 0 ? Colors.red.shade50 : Colors.green.shade50,
+                        color: inv.lowStockProductsCount > 0
+                            ? adaptiveUiSurface(context, Colors.red.shade50)
+                            : adaptiveUiSurface(context, Colors.green.shade50),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: inv.lowStockProductsCount > 0 ? Colors.red.shade300 : Colors.green.shade300,
+                          color: inv.lowStockProductsCount > 0
+                              ? Colors.red.shade300
+                              : Colors.green.shade300,
                         ),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            inv.lowStockProductsCount > 0 ? l10n.dashboardLowStockAlert : l10n.dashboardStockNormal,
+                            inv.lowStockProductsCount > 0
+                                ? l10n.dashboardLowStockAlert
+                                : l10n.dashboardStockNormal,
                             style: TextStyle(
                               fontSize: 12,
-                              color: inv.lowStockProductsCount > 0 ? Colors.red.shade900 : Colors.green.shade900,
+                              color: inv.lowStockProductsCount > 0
+                                  ? adaptiveUiText(context, Colors.red.shade900)
+                                  : adaptiveUiText(
+                                      context,
+                                      Colors.green.shade900,
+                                    ),
                             ),
                           ),
                           const SizedBox(height: 4),
@@ -716,7 +896,12 @@ class _DashboardViewState extends State<DashboardView> {
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
-                              color: inv.lowStockProductsCount > 0 ? Colors.red.shade900 : Colors.green.shade900,
+                              color: inv.lowStockProductsCount > 0
+                                  ? adaptiveUiText(context, Colors.red.shade900)
+                                  : adaptiveUiText(
+                                      context,
+                                      Colors.green.shade900,
+                                    ),
                             ),
                           ),
                         ],
@@ -734,30 +919,59 @@ class _DashboardViewState extends State<DashboardView> {
               ),
               const SizedBox(height: 8),
               Table(
-                border: TableBorder.all(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(8)),
+                border: TableBorder.all(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 columnWidths: const {
                   0: FlexColumnWidth(2),
                   1: FlexColumnWidth(1),
-                  2: FlexColumnWidth(1),
-                  3: FlexColumnWidth(1),
                 },
                 children: [
                   TableRow(
-                    decoration: BoxDecoration(color: Colors.grey.shade100),
+                    decoration: BoxDecoration(
+                      color: adaptiveUiSurface(context, Colors.grey.shade100),
+                    ),
                     children: [
-                      Padding(padding: const EdgeInsets.all(8), child: Text(context.l10n.dashboardStockColBasket, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
-                      Padding(padding: const EdgeInsets.all(8), child: Text(context.l10n.dashboardStockColStore, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
-                      Padding(padding: const EdgeInsets.all(8), child: Text(context.l10n.dashboardStockColTransit, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
-                      Padding(padding: const EdgeInsets.all(8), child: Text(context.l10n.dashboardStockColTotal, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          context.l10n.dashboardStockColBasket,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Text(
+                          context.l10n.companyStockAvailable,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                   ...inv.basketStock.map((b) {
                     return TableRow(
                       children: [
-                        Padding(padding: const EdgeInsets.all(8), child: Text(b.name, style: const TextStyle(fontSize: 12))),
-                        Padding(padding: const EdgeInsets.all(8), child: Text('${b.stockStore}', style: const TextStyle(fontSize: 12))),
-                        Padding(padding: const EdgeInsets.all(8), child: Text('${b.stockTransit}', style: const TextStyle(fontSize: 12))),
-                        Padding(padding: const EdgeInsets.all(8), child: Text('${b.totalStock}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold))),
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Text(
+                            b.name,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Text(
+                            '${b.stockStore}',
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
                       ],
                     );
                   }),
@@ -775,7 +989,9 @@ class _DashboardViewState extends State<DashboardView> {
       context: context,
       builder: (ctx) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 700, maxHeight: 600),
             child: Padding(
@@ -788,7 +1004,11 @@ class _DashboardViewState extends State<DashboardView> {
                     children: [
                       Text(
                         'Produtos Abaixo do Estoque Mínimo (${items.length})',
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.red),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.red,
+                        ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.close),
@@ -799,30 +1019,52 @@ class _DashboardViewState extends State<DashboardView> {
                   const Divider(),
                   Expanded(
                     child: items.isEmpty
-                        ? Center(child: Text(context.l10n.dashboardAllAboveMinStock))
+                        ? Center(
+                            child: Text(context.l10n.dashboardAllAboveMinStock),
+                          )
                         : ListView.separated(
                             itemCount: items.length,
-                            separatorBuilder: (_, __) => const Divider(height: 1),
+                            separatorBuilder: (_, __) =>
+                                const Divider(height: 1),
                             itemBuilder: (context, i) {
                               final item = items[i];
                               return ListTile(
                                 leading: CircleAvatar(
-                                  backgroundColor: Colors.red.shade100,
-                                  child: const Icon(Icons.priority_high, color: Colors.red),
+                                  backgroundColor: adaptiveUiSurface(
+                                    context,
+                                    Colors.red.shade100,
+                                  ),
+                                  child: const Icon(
+                                    Icons.priority_high,
+                                    color: Colors.red,
+                                  ),
                                 ),
-                                title: Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                subtitle: Text('${context.l10n.dashboardItemSku(item.sku ?? "-")} | Un: ${item.baseUnit}'),
+                                title: Text(
+                                  item.name,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  '${context.l10n.dashboardItemSku(item.sku ?? "-")} | Un: ${item.baseUnit}',
+                                ),
                                 trailing: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
                                       'Atual: ${item.currentStock} / Mín: ${item.minStock}',
-                                      style: const TextStyle(fontWeight: FontWeight.bold),
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                     Text(
                                       'Déficit: ${item.difference} ${item.baseUnit}',
-                                      style: const TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.bold),
+                                      style: const TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -842,291 +1084,397 @@ class _DashboardViewState extends State<DashboardView> {
   // ==========================================
   // SECTION 5: FINANCIAL & TREASURY
   // ==========================================
-  Widget _buildFinancialSection(ThemeData theme, DashboardFinancialSummary fin) {
-    final l10n = context.l10n;
-
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+  Widget _financialTile(
+    String title,
+    int value,
+    Color color, {
+    VoidCallback? onTap,
+    String? caption,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.07),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color.withValues(alpha: 0.18)),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundColor: Colors.teal.shade100,
-                  radius: 20,
-                  child: Icon(Icons.account_balance, color: Colors.teal.shade800, size: 22),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    l10n.dashboardSectionFinancial,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                ),
-                TextButton.icon(
-                  icon: const Icon(Icons.receipt_long, size: 18),
-                  label: Text(context.l10n.dashboardCashRecordsCount(fin.cashRecords.length)),
-                  onPressed: () => _showCashDrilldown(fin.cashRecords),
-                ),
-              ],
-            ),
-            const Divider(height: 24),
-
-            // Realized Cash & Treasury
-            const Text(
-              'Movimentações Efetivas e Saldo em Caixa (Realizado):',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.green.shade50,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.dashboardEffectiveReceived,
-                          style: TextStyle(fontSize: 12, color: Colors.green.shade900),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          AppFormatters.formatCurrency(fin.effectiveReceivedCents),
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green.shade900),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.red.shade50,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l10n.dashboardEffectivePaid,
-                          style: TextStyle(fontSize: 12, color: Colors.red.shade900),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          AppFormatters.formatCurrency(fin.effectivePaidCents),
-                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red.shade900),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Open Receivables and Payables
-            const Text(
-              'Títulos em Aberto e Vencidos:',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: () => _showReceivablesDrilldown(fin.receivablesRecords),
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.amber.shade50,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(l10n.dashboardOpenReceivables, style: TextStyle(fontSize: 12, color: Colors.amber.shade900)),
-                          const SizedBox(height: 4),
-                          Text(
-                            AppFormatters.formatCurrency(fin.receivablesOpenCents),
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.amber.shade900),
-                          ),
-                          if (fin.receivablesOverdueCents > 0) ...[
-                            const SizedBox(height: 4),
-                            Text(
-                              'Vencidos: ${AppFormatters.formatCurrency(fin.receivablesOverdueCents)}',
-                              style: const TextStyle(fontSize: 11, color: Colors.red, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: () => _showPayablesDrilldown(fin.payablesRecords),
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.red.shade50,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(l10n.dashboardOpenPayables, style: TextStyle(fontSize: 12, color: Colors.red.shade900)),
-                          const SizedBox(height: 4),
-                          Text(
-                            AppFormatters.formatCurrency(fin.payablesOpenCents),
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red.shade900),
-                          ),
-                          if (fin.payablesOverdueCents > 0) ...[
-                            const SizedBox(height: 4),
-                            Text(
-                              'Vencidos: ${AppFormatters.formatCurrency(fin.payablesOverdueCents)}',
-                              style: const TextStyle(fontSize: 11, color: Colors.red, fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Cash Projection Card & Strict Distinction Warning
-            Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: Colors.amber.shade50,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.amber.shade400, width: 1.5),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.query_builder, color: Colors.amber.shade900, size: 20),
-                      const SizedBox(width: 8),
-                      Text(
-                        l10n.dashboardProjectedCash,
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.amber.shade900),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    l10n.dashboardProjectionNotice,
-                    style: TextStyle(fontSize: 12, color: Colors.amber.shade900, fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        context.l10n.dashboardProjectedInflow(AppFormatters.formatCurrency(fin.projectedInflowCents)),
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      Text(
-                        context.l10n.dashboardProjectedOutflow(AppFormatters.formatCurrency(fin.projectedOutflowCents)),
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      Text(
-                        'Saldo Projetado: ${AppFormatters.formatCurrency(fin.projectedTreasuryBalanceCents)}',
-                        style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.amber.shade900),
-                      ),
-                    ],
-                  ),
-                ],
+            Text(title, style: TextStyle(fontSize: 13, color: color)),
+            const SizedBox(height: 6),
+            Text(
+              AppFormatters.formatCurrency(value),
+              style: TextStyle(
+                fontSize: 21,
+                fontWeight: FontWeight.bold,
+                color: color,
               ),
             ),
+            if (caption != null) ...[
+              const SizedBox(height: 6),
+              Text(caption, style: const TextStyle(fontSize: 12)),
+            ],
+            if (onTap != null) ...[
+              const SizedBox(height: 6),
+              Text(
+                context.l10n.commonViewDetails,
+                style: TextStyle(fontSize: 12, color: color),
+              ),
+            ],
           ],
         ),
       ),
     );
   }
 
-  void _showCashDrilldown(List<DashboardCashRecord> records) {
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 750, maxHeight: 600),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Lançamentos do Livro-Caixa (${records.length})',
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.close),
-                        onPressed: () => Navigator.pop(ctx),
-                      ),
-                    ],
-                  ),
-                  const Divider(),
-                  Expanded(
-                    child: records.isEmpty
-                        ? Center(child: Text(context.l10n.dashboardNoCashRecords))
-                        : ListView.separated(
-                            itemCount: records.length,
-                            separatorBuilder: (_, __) => const Divider(height: 1),
-                            itemBuilder: (context, i) {
-                              final r = records[i];
-                              final isCredit = r.entryType == 'CREDIT';
-                              return ListTile(
-                                leading: CircleAvatar(
-                                  backgroundColor: isCredit ? Colors.green.shade100 : Colors.red.shade100,
-                                  child: Icon(
-                                    isCredit ? Icons.arrow_downward : Icons.arrow_upward,
-                                    color: isCredit ? Colors.green.shade800 : Colors.red.shade800,
-                                    size: 18,
-                                  ),
-                                ),
-                                title: Text(r.description, style: const TextStyle(fontWeight: FontWeight.bold)),
-                                subtitle: Text('${r.category} | ${r.nature} | ${AppFormatters.formatDateTime(r.occurredAt)}'),
-                                trailing: Text(
-                                  '${isCredit ? "+" : "-"}${AppFormatters.formatCurrency(r.amountCents)}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: isCredit ? Colors.green.shade800 : Colors.red.shade800,
-                                  ),
-                                ),
-                              );
-                            },
+  Widget _financialGrid(List<Widget> tiles) => LayoutBuilder(
+    builder: (context, constraints) {
+      final columns = constraints.maxWidth < 560
+          ? 1
+          : (constraints.maxWidth < 900 ? 2 : 3);
+      final width = (constraints.maxWidth - (columns - 1) * 12) / columns;
+      return Wrap(
+        spacing: 12,
+        runSpacing: 12,
+        children: tiles
+            .map((tile) => SizedBox(width: width, child: tile))
+            .toList(),
+      );
+    },
+  );
+
+  Widget _buildFinancialSection(
+    ThemeData theme,
+    DashboardFinancialSummary fin,
+  ) {
+    final l10n = context.l10n;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(l10n.companyFinanceTitle, style: theme.textTheme.titleLarge),
+            const SizedBox(height: 8),
+            Text(l10n.companyPaymentsScope),
+            if (fin.treasuryBalanceCents != null || fin.accountsBalances.isNotEmpty) ...[
+              const SizedBox(height: 14),
+              Text('Disponibilidade e Saldos (Caixa e Bancos)', style: theme.textTheme.titleMedium),
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: adaptiveUiSurface(context, Colors.teal.shade50),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.teal.shade200),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: [
+                        const Text(
+                          'Saldo Total Disponível',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        ),
+                        Text(
+                          AppFormatters.formatCurrency(fin.treasuryBalanceCents ?? 0),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: (fin.treasuryBalanceCents ?? 0) >= 0 ? Colors.teal.shade900 : Colors.red.shade900,
                           ),
-                  ),
-                ],
+                        ),
+                      ],
+                    ),
+                    if (fin.accountsBalances.isNotEmpty) ...[
+                      const Divider(height: 18),
+                      for (final acc in fin.accountsBalances) ...[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 3),
+                          child: Wrap(
+                            alignment: WrapAlignment.spaceBetween,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: 8,
+                            runSpacing: 4,
+                            children: [
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    acc['account_type'] == 'CASH'
+                                        ? Icons.point_of_sale_outlined
+                                        : Icons.account_balance_outlined,
+                                    size: 16,
+                                    color: Colors.teal.shade800,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    acc['name'] as String? ?? 'Conta',
+                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                AppFormatters.formatCurrency(
+                                  (acc['current_balance_cents'] as num?)?.toInt() ?? 0,
+                                ),
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: ((acc['current_balance_cents'] as num?) ?? 0) >= 0
+                                      ? Colors.teal.shade900
+                                      : Colors.red.shade700,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ],
+                  ],
+                ),
+              ),
+            ],
+            const SizedBox(height: 16),
+            _financialGrid([
+              _financialTile(
+                l10n.companyReceived,
+                fin.effectiveReceivedCents,
+                Colors.green.shade800,
+                onTap: () => _showPaymentRecords(fin.receivedRecords, true),
+              ),
+              _financialTile(
+                l10n.companyPaid,
+                fin.effectivePaidCents,
+                Colors.red.shade800,
+                onTap: () => _showPaymentRecords(fin.paidRecords, false),
+              ),
+              _financialTile(
+                l10n.companyPaymentDifference,
+                fin.paymentDifferenceCents,
+                fin.paymentDifferenceCents >= 0
+                    ? Colors.blue.shade800
+                    : Colors.red.shade800,
+                caption: l10n.companyDifferenceExplanation,
+              ),
+            ]),
+            const Divider(height: 32),
+            Text(l10n.companyResultTitle, style: theme.textTheme.titleMedium),
+            const SizedBox(height: 8),
+            Text(l10n.companyResultExplanation),
+            const SizedBox(height: 14),
+            if (fin.salesWithoutCostCount > 0) ...[
+              Text(
+                l10n.companyMissingCost(fin.salesWithoutCostCount),
+                style: TextStyle(
+                  color: adaptiveUiText(context, Colors.orange.shade900),
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+            ],
+            _financialGrid([
+              _financialTile(
+                l10n.companySalesRevenue,
+                fin.salesRevenueCents,
+                Colors.indigo.shade800,
+              ),
+              _financialTile(
+                l10n.companySoldCost,
+                fin.soldBasketsCostCents,
+                Colors.blueGrey.shade800,
+              ),
+              _financialTile(
+                l10n.companyGrossProfit,
+                fin.grossProfitCents,
+                Colors.indigo.shade800,
+              ),
+              _financialTile(
+                l10n.companyOperatingExpenses,
+                fin.operatingExpensesPaidCents,
+                Colors.red.shade800,
+              ),
+              _financialTile(
+                l10n.companyOperatingResult,
+                fin.operatingResultCents,
+                fin.operatingResultCents >= 0
+                    ? Colors.green.shade800
+                    : Colors.red.shade800,
+              ),
+            ]),
+            const SizedBox(height: 12),
+            Text(
+              l10n.companyStockPaid(
+                AppFormatters.formatCurrency(fin.stockPurchasesPaidCents),
               ),
             ),
+            Text(
+              l10n.companyWithdrawalsPaid(
+                AppFormatters.formatCurrency(fin.personalWithdrawalsPaidCents),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Text(l10n.companyCostExplanation, style: theme.textTheme.bodySmall),
+            const Divider(height: 32),
+            Text(l10n.companyPendingTitle, style: theme.textTheme.titleMedium),
+            const SizedBox(height: 8),
+            Text(l10n.companyPendingScope),
+            const SizedBox(height: 14),
+            _financialGrid([
+              _financialTile(
+                l10n.companyPendingReceivable,
+                fin.receivablesOpenCents,
+                Colors.orange.shade900,
+                onTap: () => _showReceivablesDrilldown(fin.receivablesRecords),
+                caption: l10n.companyOverdueAmount(
+                  AppFormatters.formatCurrency(fin.receivablesOverdueCents),
+                ),
+              ),
+              _financialTile(
+                l10n.companyPendingPayable,
+                fin.payablesOpenCents,
+                Colors.red.shade800,
+                onTap: () => _showPayablesDrilldown(fin.payablesRecords),
+                caption: l10n.companyOverdueAmount(
+                  AppFormatters.formatCurrency(fin.payablesOverdueCents),
+                ),
+              ),
+            ]),
+            const SizedBox(height: 14),
+            _financialGrid([
+              _financialTile(
+                l10n.companyReceivableDueInPeriod,
+                fin.receivablesDueInPeriodCents,
+                Colors.orange.shade900,
+              ),
+              _financialTile(
+                l10n.companyPayableDueInPeriod,
+                fin.payablesDueInPeriodCents,
+                Colors.red.shade800,
+              ),
+            ]),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _paymentLabel(String method) {
+    final l10n = context.l10n;
+    switch (method) {
+      case 'CREDIT_TERM':
+        return l10n.salePaymentModeCredit;
+      case 'CASH':
+      case 'CASH_IMMEDIATE':
+      case 'DINHEIRO':
+        return l10n.payablePaymentMethodCash;
+      case 'PIX':
+        return l10n.payablePaymentMethodPix;
+      case 'CARD':
+      case 'CARTAO_CREDITO':
+        return l10n.payablePaymentMethodCard;
+      case 'TRANSFER':
+      case 'TRANSFERENCIA':
+      case 'BANK_TRANSFER':
+        return l10n.payablePaymentMethodTransfer;
+      case 'CHECK':
+      case 'CHEQUE':
+        return l10n.payablePaymentMethodCheck;
+      case 'BOLETO':
+        return l10n.payablePaymentMethodBoleto;
+      default:
+        return l10n.payablePaymentMethodOther;
+    }
+  }
+
+
+  void _showPaymentRecords(List<BusinessPaymentRecord> records, bool received) {
+    final l10n = context.l10n;
+    showDialog(
+      context: context,
+      builder: (ctx) => Dialog(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 750, maxHeight: 600),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        received
+                            ? l10n.companyReceivedDetails
+                            : l10n.companyPaidDetails,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      icon: const Icon(Icons.close),
+                    ),
+                  ],
+                ),
+                const Divider(),
+                Expanded(
+                  child: records.isEmpty
+                      ? Center(child: Text(l10n.companyNoPayments))
+                      : ListView.separated(
+                          itemCount: records.length,
+                          separatorBuilder: (_, __) => const Divider(),
+                          itemBuilder: (context, i) {
+                            final r = records[i];
+                            final color = r.isReversal
+                                ? Colors.orange.shade800
+                                : (received
+                                      ? Colors.green.shade800
+                                      : Colors.red.shade800);
+                            return ListTile(
+                              leading: Icon(
+                                r.isReversal
+                                    ? Icons.undo
+                                    : (received
+                                          ? Icons.task_alt
+                                          : Icons.receipt_long),
+                                color: color,
+                              ),
+                              title: Text(r.description),
+                              subtitle: Text(
+                                l10n.companyPaymentDescription(
+                                  _paymentLabel(r.paymentMethod),
+                                  AppFormatters.formatDateTime(
+                                    r.occurredAt.toLocal(),
+                                  ),
+                                ),
+                              ),
+                              trailing: Text(
+                                AppFormatters.formatCurrency(r.amountCents),
+                                style: TextStyle(
+                                  color: color,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -1135,7 +1483,9 @@ class _DashboardViewState extends State<DashboardView> {
       context: context,
       builder: (ctx) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 750, maxHeight: 600),
             child: Padding(
@@ -1148,7 +1498,10 @@ class _DashboardViewState extends State<DashboardView> {
                     children: [
                       Text(
                         'Contas a Receber em Aberto / Vencidas (${records.length})',
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.close),
@@ -1159,40 +1512,86 @@ class _DashboardViewState extends State<DashboardView> {
                   const Divider(),
                   Expanded(
                     child: records.isEmpty
-                        ? Center(child: Text(context.l10n.dashboardNoOpenReceivables))
+                        ? Center(
+                            child: Text(
+                              context.l10n.dashboardNoOpenReceivables,
+                            ),
+                          )
                         : ListView.separated(
                             itemCount: records.length,
-                            separatorBuilder: (_, __) => const Divider(height: 1),
+                            separatorBuilder: (_, __) =>
+                                const Divider(height: 1),
                             itemBuilder: (context, i) {
                               final r = records[i];
                               return ListTile(
                                 leading: CircleAvatar(
-                                  backgroundColor: r.isOverdue ? Colors.red.shade100 : Colors.amber.shade100,
+                                  backgroundColor: r.isOverdue
+                                      ? adaptiveUiSurface(
+                                          context,
+                                          Colors.red.shade100,
+                                        )
+                                      : adaptiveUiSurface(
+                                          context,
+                                          Colors.amber.shade100,
+                                        ),
                                   child: Icon(
-                                    r.isOverdue ? Icons.event_busy : Icons.event,
-                                    color: r.isOverdue ? Colors.red.shade800 : Colors.amber.shade800,
+                                    r.isOverdue
+                                        ? Icons.event_busy
+                                        : Icons.event,
+                                    color: r.isOverdue
+                                        ? adaptiveUiText(
+                                            context,
+                                            Colors.red.shade800,
+                                          )
+                                        : adaptiveUiText(
+                                            context,
+                                            Colors.amber.shade800,
+                                          ),
                                     size: 18,
                                   ),
                                 ),
-                                title: Text(r.customerName, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                title: Text(
+                                  r.customerName,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                                 subtitle: Text(
-                                  'Venda #${r.saleNumber} | Vencimento: ${AppFormatters.formatDate(r.dueDate)} ${r.isOverdue ? "(VENCIDO)" : ""}',
-                                  style: TextStyle(color: r.isOverdue ? Colors.red : Colors.black54),
+                                  'Venda #${r.saleNumber} | Vencimento: ${AppFormatters.formatDate(r.dueDate.toLocal())} ${r.isOverdue ? "(VENCIDO)" : ""}',
+                                  style: TextStyle(
+                                    color: r.isOverdue
+                                        ? Colors.red
+                                        : Theme.of(
+                                            context,
+                                          ).colorScheme.onSurfaceVariant,
+                                  ),
                                 ),
                                 trailing: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      AppFormatters.formatCurrency(r.balanceCents),
+                                      AppFormatters.formatCurrency(
+                                        r.balanceCents,
+                                      ),
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: r.isOverdue ? Colors.red.shade800 : Colors.black87,
+                                        color: r.isOverdue
+                                            ? adaptiveUiText(
+                                                context,
+                                                Colors.red.shade800,
+                                              )
+                                            : Theme.of(
+                                                context,
+                                              ).colorScheme.onSurface,
                                       ),
                                     ),
                                     Text(
                                       'Orig: ${AppFormatters.formatCurrency(r.originalAmountCents)}',
-                                      style: const TextStyle(fontSize: 11, color: Colors.grey),
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -1214,7 +1613,9 @@ class _DashboardViewState extends State<DashboardView> {
       context: context,
       builder: (ctx) {
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 750, maxHeight: 600),
             child: Padding(
@@ -1227,7 +1628,10 @@ class _DashboardViewState extends State<DashboardView> {
                     children: [
                       Text(
                         'Contas a Pagar em Aberto / Vencidas (${records.length})',
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
                       IconButton(
                         icon: const Icon(Icons.close),
@@ -1238,40 +1642,84 @@ class _DashboardViewState extends State<DashboardView> {
                   const Divider(),
                   Expanded(
                     child: records.isEmpty
-                        ? Center(child: Text(context.l10n.dashboardNoOpenPayables))
+                        ? Center(
+                            child: Text(context.l10n.dashboardNoOpenPayables),
+                          )
                         : ListView.separated(
                             itemCount: records.length,
-                            separatorBuilder: (_, __) => const Divider(height: 1),
+                            separatorBuilder: (_, __) =>
+                                const Divider(height: 1),
                             itemBuilder: (context, i) {
                               final p = records[i];
                               return ListTile(
                                 leading: CircleAvatar(
-                                  backgroundColor: p.isOverdue ? Colors.red.shade100 : Colors.blueGrey.shade100,
+                                  backgroundColor: p.isOverdue
+                                      ? adaptiveUiSurface(
+                                          context,
+                                          Colors.red.shade100,
+                                        )
+                                      : adaptiveUiSurface(
+                                          context,
+                                          Colors.blueGrey.shade100,
+                                        ),
                                   child: Icon(
-                                    p.isOverdue ? Icons.warning : Icons.schedule,
-                                    color: p.isOverdue ? Colors.red.shade800 : Colors.blueGrey.shade800,
+                                    p.isOverdue
+                                        ? Icons.warning
+                                        : Icons.schedule,
+                                    color: p.isOverdue
+                                        ? adaptiveUiText(
+                                            context,
+                                            Colors.red.shade800,
+                                          )
+                                        : adaptiveUiText(
+                                            context,
+                                            Colors.blueGrey.shade800,
+                                          ),
                                     size: 18,
                                   ),
                                 ),
-                                title: Text(p.beneficiary, style: const TextStyle(fontWeight: FontWeight.bold)),
+                                title: Text(
+                                  p.beneficiary,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                                 subtitle: Text(
-                                  '#${p.payableNumber} | Cat: ${p.category} | Venc: ${AppFormatters.formatDate(p.dueDate)} ${p.isOverdue ? "(VENCIDO)" : ""}',
-                                  style: TextStyle(color: p.isOverdue ? Colors.red : Colors.black54),
+                                  '#${p.payableNumber} | Cat: ${p.category} | Venc: ${AppFormatters.formatDate(p.dueDate.toLocal())} ${p.isOverdue ? "(VENCIDO)" : ""}',
+                                  style: TextStyle(
+                                    color: p.isOverdue
+                                        ? Colors.red
+                                        : Theme.of(
+                                            context,
+                                          ).colorScheme.onSurfaceVariant,
+                                  ),
                                 ),
                                 trailing: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
                                     Text(
-                                      AppFormatters.formatCurrency(p.balanceCents),
+                                      AppFormatters.formatCurrency(
+                                        p.balanceCents,
+                                      ),
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        color: p.isOverdue ? Colors.red.shade800 : Colors.black87,
+                                        color: p.isOverdue
+                                            ? adaptiveUiText(
+                                                context,
+                                                Colors.red.shade800,
+                                              )
+                                            : Theme.of(
+                                                context,
+                                              ).colorScheme.onSurface,
                                       ),
                                     ),
                                     Text(
                                       'Orig: ${AppFormatters.formatCurrency(p.originalAmountCents)}',
-                                      style: const TextStyle(fontSize: 11, color: Colors.grey),
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   ],
                                 ),

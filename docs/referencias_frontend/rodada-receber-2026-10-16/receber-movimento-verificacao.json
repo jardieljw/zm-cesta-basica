@@ -1,0 +1,286 @@
+{
+  "date": "2026-10-16",
+  "result": "passed",
+  "scope": "Previa de Receber e movimento; sem Flutter/API/dados reais",
+  "layoutCases": 32,
+  "engines": [
+    {
+      "engine": "edge",
+      "groups": [
+        "Origem na venda #1042; original 150, recebido 50 e integral do saldo atual 100",
+        "Movimento de pagina 220 ms, calendario 180 ms; integral ignora parcial oculto, uma confirmacao, saldo e venda preservados",
+        "Parcial de 40 deixa 60, permanece em aberto; proximo integral usa o novo saldo",
+        "Reducao por controle e por sistema; sem animacoes opcionais, com os mesmos dados e acoes",
+        "Falha conhecida preserva dados; repeticao conclui sem recebimento duplicado",
+        "Estado restaurado sem desconectar ajustes de forma e movimento",
+        "Lista mobile e tabela Windows em quatro larguras e dois temas"
+      ],
+      "layouts": [
+        {
+          "device": "mobile",
+          "width": 288,
+          "theme": "light",
+          "viewport": 288,
+          "overflow": false
+        },
+        {
+          "device": "mobile",
+          "width": 288,
+          "theme": "dark",
+          "viewport": 288,
+          "overflow": false
+        },
+        {
+          "device": "mobile",
+          "width": 288,
+          "theme": "light",
+          "viewport": 288,
+          "overflow": false
+        },
+        {
+          "device": "mobile",
+          "width": 288,
+          "theme": "dark",
+          "viewport": 288,
+          "overflow": false
+        },
+        {
+          "device": "mobile",
+          "width": 328,
+          "theme": "light",
+          "viewport": 328,
+          "overflow": false
+        },
+        {
+          "device": "mobile",
+          "width": 328,
+          "theme": "dark",
+          "viewport": 328,
+          "overflow": false
+        },
+        {
+          "device": "mobile",
+          "width": 358,
+          "theme": "light",
+          "viewport": 358,
+          "overflow": false
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "dark",
+          "viewport": 748,
+          "overflow": false
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "theme": "light",
+          "viewport": 288,
+          "overflow": false
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "theme": "dark",
+          "viewport": 288,
+          "overflow": false
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "theme": "light",
+          "viewport": 288,
+          "overflow": false
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "theme": "dark",
+          "viewport": 288,
+          "overflow": false
+        },
+        {
+          "device": "desktop",
+          "width": 328,
+          "theme": "light",
+          "viewport": 328,
+          "overflow": false
+        },
+        {
+          "device": "desktop",
+          "width": 328,
+          "theme": "dark",
+          "viewport": 328,
+          "overflow": false
+        },
+        {
+          "device": "desktop",
+          "width": 358,
+          "theme": "light",
+          "viewport": 358,
+          "overflow": false
+        },
+        {
+          "device": "desktop",
+          "width": 748,
+          "theme": "dark",
+          "viewport": 748,
+          "overflow": false
+        }
+      ],
+      "motionDurations": [
+        220,
+        220,
+        220,
+        220,
+        220,
+        220,
+        220
+      ],
+      "javascriptErrors": []
+    },
+    {
+      "engine": "webkit",
+      "groups": [
+        "Origem na venda #1042; original 150, recebido 50 e integral do saldo atual 100",
+        "Movimento de pagina 220 ms, calendario 180 ms; integral ignora parcial oculto, uma confirmacao, saldo e venda preservados",
+        "Parcial de 40 deixa 60, permanece em aberto; proximo integral usa o novo saldo",
+        "Reducao por controle e por sistema; sem animacoes opcionais, com os mesmos dados e acoes",
+        "Falha conhecida preserva dados; repeticao conclui sem recebimento duplicado",
+        "Estado restaurado sem desconectar ajustes de forma e movimento",
+        "Lista mobile e tabela Windows em quatro larguras e dois temas"
+      ],
+      "layouts": [
+        {
+          "device": "mobile",
+          "width": 288,
+          "theme": "light",
+          "viewport": 288,
+          "overflow": false
+        },
+        {
+          "device": "mobile",
+          "width": 288,
+          "theme": "dark",
+          "viewport": 288,
+          "overflow": false
+        },
+        {
+          "device": "mobile",
+          "width": 328,
+          "theme": "light",
+          "viewport": 328,
+          "overflow": false
+        },
+        {
+          "device": "mobile",
+          "width": 328,
+          "theme": "dark",
+          "viewport": 328,
+          "overflow": false
+        },
+        {
+          "device": "mobile",
+          "width": 358,
+          "theme": "light",
+          "viewport": 358,
+          "overflow": false
+        },
+        {
+          "device": "mobile",
+          "width": 358,
+          "theme": "dark",
+          "viewport": 358,
+          "overflow": false
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "light",
+          "viewport": 748,
+          "overflow": false
+        },
+        {
+          "device": "mobile",
+          "width": 420,
+          "theme": "dark",
+          "viewport": 748,
+          "overflow": false
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "theme": "light",
+          "viewport": 288,
+          "overflow": false
+        },
+        {
+          "device": "desktop",
+          "width": 288,
+          "theme": "dark",
+          "viewport": 288,
+          "overflow": false
+        },
+        {
+          "device": "desktop",
+          "width": 328,
+          "theme": "light",
+          "viewport": 328,
+          "overflow": false
+        },
+        {
+          "device": "desktop",
+          "width": 328,
+          "theme": "dark",
+          "viewport": 328,
+          "overflow": false
+        },
+        {
+          "device": "desktop",
+          "width": 358,
+          "theme": "light",
+          "viewport": 358,
+          "overflow": false
+        },
+        {
+          "device": "desktop",
+          "width": 358,
+          "theme": "dark",
+          "viewport": 358,
+          "overflow": false
+        },
+        {
+          "device": "desktop",
+          "width": 748,
+          "theme": "light",
+          "viewport": 748,
+          "overflow": false
+        },
+        {
+          "device": "desktop",
+          "width": 748,
+          "theme": "dark",
+          "viewport": 748,
+          "overflow": false
+        }
+      ],
+      "motionDurations": [
+        220,
+        220,
+        220,
+        220,
+        220,
+        220,
+        220
+      ],
+      "javascriptErrors": []
+    }
+  ],
+  "limits": [
+    "Motores locais Windows, sem aparelho iOS/Android nem leitor de tela.",
+    "Tweak e persistencia instrumentados; painel nativo e restauracao real do hospedeiro nao automatizados.",
+    "Duracoes observadas nao medem fluidez nem taxa de quadros do Flutter.",
+    "Retorno desconhecido ao salvar, estornos e horario/fuso da futura API continuam pendentes."
+  ]
+}

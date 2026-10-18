@@ -1,0 +1,97 @@
+{
+  "consolidado_em": "2026-10-16",
+  "rodada": "Integral por padrao, parcial opcional e controles arredondados",
+  "situacao": "Comportamento solicitado pelo usuario; acabamento da nova amostra aguardando retorno",
+  "arquivos": [
+    {
+      "arquivo": "jornada-pagar-integral-zm.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\jornada-pagar-integral-zm.html",
+      "sha256": "8f865e718bc6d5424a472694825a583f6afea8ab50904e3252350e7b6f3f6879",
+      "bytes": 64722
+    },
+    {
+      "arquivo": "jornada-pagar-integral-zm-preview.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\jornada-pagar-integral-zm-preview.html",
+      "sha256": "507e8f0a5ce4b84ba2afbd513dbab7901e6f821cf3e0da1fa121bd5cbdee5ec4",
+      "bytes": 158328
+    },
+    {
+      "arquivo": "check-pagamento-integral.cjs",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\check-pagamento-integral.cjs",
+      "sha256": "721fca8470cff8f10143e1902380d5dd3eeb3e69bd3057228dcc5cb07fa60233",
+      "bytes": 19612
+    },
+    {
+      "arquivo": "pagamento-integral-verificacao.json",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\pagamento-integral-verificacao.json",
+      "sha256": "79d1403ade630f403ff0f769b1456181ce550d7297f02b6dc4e48f870eb7246d",
+      "bytes": 6880
+    },
+    {
+      "arquivo": "integral-padrao-mobile.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\integral-padrao-mobile.png",
+      "sha256": "6424bb0553953e44097d380ff1dfe9ce389041a8ae276f803fc25b802647b88d",
+      "bytes": 56069
+    },
+    {
+      "arquivo": "integral-lista-mobile.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\integral-lista-mobile.png",
+      "sha256": "2bbb8944b41edcb8dcbd6a3e03ee20e49054e136ebca658f83845751078edcfd",
+      "bytes": 46301
+    },
+    {
+      "arquivo": "integral-detalhe-mobile.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\integral-detalhe-mobile.png",
+      "sha256": "1b52db862b593de352a4550870e997d8dae916c97909cd8cefc09e758b87ab6c",
+      "bytes": 74089
+    },
+    {
+      "arquivo": "integral-formulario-mobile.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\integral-formulario-mobile.png",
+      "sha256": "5ce67ecc67050f476f0b9409359336850c9575ab763f58f17c524ba56b7ec7f7",
+      "bytes": 62967
+    },
+    {
+      "arquivo": "integral-conferencia-mobile.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\integral-conferencia-mobile.png",
+      "sha256": "aca9d4361a6950ea3665261e6a2be185fa096a1bc277bd4919db64a3908ad25c",
+      "bytes": 44398
+    },
+    {
+      "arquivo": "integral-historico-mobile.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\integral-historico-mobile.png",
+      "sha256": "364e87ff0fcdf95c3db2271b87d5486d16a310418d4ed6a69cfb9c3c769e5bfc",
+      "bytes": 78128
+    },
+    {
+      "arquivo": "integral-falha-mobile.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\integral-falha-mobile.png",
+      "sha256": "13bd0915c2497114f9442d7918f5aa31fff0ba455299084e07a8afc2d4209248",
+      "bytes": 50386
+    },
+    {
+      "arquivo": "integral-formulario-desktop.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\integral-formulario-desktop.png",
+      "sha256": "488dd8b470f4f581380451726c56ba0df9ee01a6cbc1ba1526890b4bcb3ac3c0",
+      "bytes": 74282
+    },
+    {
+      "arquivo": "integral-historico-desktop.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\integral-historico-desktop.png",
+      "sha256": "568b1fc563226cfb9e3634fec0c2e55732faca1013184302c5ea5c2e2f528ea6",
+      "bytes": 93942
+    },
+    {
+      "arquivo": "integral-historico-desktop-escuro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\integral-historico-desktop-escuro.png",
+      "sha256": "29e0476b19099dda3d6ffe1e6b20e7d65bb6afba70361f4a2f7e4a7066339d46",
+      "bytes": 92992
+    },
+    {
+      "arquivo": "referencia-usuario.jpg",
+      "origem": "C:\\Users\\jardi\\.codex\\codex-remote-attachments\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\4AC15AA7-FB5D-4727-A9E0-E69F9705B04A\\1-Foto-1.jpg",
+      "sha256": "6af76087dd641f58056d403c9718fec66d11b226f80ee92f0c16507d50bb45a9",
+      "bytes": 97312
+    }
+  ]
+}

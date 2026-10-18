@@ -1,0 +1,29 @@
+--- a/client/lib/views/payables_view.dart
++++ b/client/lib/views/payables_view.dart
+@@ -2,7 +2,7 @@
+ import '../models/account_payable.dart';
+ import '../models/financial_account.dart';
+ import '../services/payable_service.dart';
+-import '../services/treasury_service.dart';
++import '../services/financial_accounts_service.dart';
+ import '../l10n/l10n_extension.dart';
+ import '../utils/formatters.dart';
+ import '../utils/api_error_mapper.dart';
+@@ -16,7 +16,7 @@
+ 
+ class _PayablesViewState extends State<PayablesView> {
+   final PayableService _payableService = PayableService();
+-  final TreasuryService _treasuryService = TreasuryService();
++  final FinancialAccountsService _accountsService = FinancialAccountsService();
+ 
+   List<AccountPayable> _payables = [];
+   bool _isLoading = true;
+@@ -447,7 +447,7 @@
+ 
+     // Load financial accounts
+     try {
+-      accounts = await _treasuryService.getAccounts(isActive: true);
++      accounts = await _accountsService.getAccounts(isActive: true);
+       if (accounts.isNotEmpty) {
+         selectedAccountId = accounts.firstWhere((a) => a.isDefault, orElse: () => accounts.first).id;
+       }

@@ -1,3 +1,4 @@
+import '../utils/adaptive_ui_color.dart';
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../models/stock_adjustment.dart';
@@ -32,7 +33,8 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
   @override
   void initState() {
     super.initState();
-    _selectedProductId = widget.initialProductId ??
+    _selectedProductId =
+        widget.initialProductId ??
         (widget.products.isNotEmpty ? widget.products.first.id : null);
   }
 
@@ -84,7 +86,9 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    final selectedProduct = widget.products.where((p) => p.id == _selectedProductId).firstOrNull;
+    final selectedProduct = widget.products
+        .where((p) => p.id == _selectedProductId)
+        .firstOrNull;
     final unit = selectedProduct?.baseUnit ?? 'UN';
 
     return AlertDialog(
@@ -109,13 +113,18 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
                     padding: const EdgeInsets.all(12),
                     margin: const EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
-                      color: Colors.red.shade50,
+                      color: adaptiveUiSurface(context, Colors.red.shade50),
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.red.shade200),
+                      border: Border.all(
+                        color: adaptiveUiSurface(context, Colors.red.shade200),
+                      ),
                     ),
                     child: Text(
                       _errorMessage!,
-                      style: TextStyle(color: Colors.red.shade800, fontSize: 13),
+                      style: TextStyle(
+                        color: adaptiveUiText(context, Colors.red.shade800),
+                        fontSize: 13,
+                      ),
                     ),
                   ),
 
@@ -135,7 +144,8 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
                   onChanged: (val) {
                     setState(() => _selectedProductId = val);
                   },
-                  validator: (v) => v == null ? l10n.stockAdjustmentSelectProductError : null,
+                  validator: (v) =>
+                      v == null ? l10n.stockAdjustmentSelectProductError : null,
                 ),
                 const SizedBox(height: 16),
 
@@ -147,10 +157,22 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
                     border: const OutlineInputBorder(),
                   ),
                   items: [
-                    DropdownMenuItem(value: 'IN', child: Text(l10n.stockAdjustmentTypeIn)),
-                    DropdownMenuItem(value: 'OUT', child: Text(l10n.stockAdjustmentTypeOut)),
-                    DropdownMenuItem(value: 'LOSS', child: Text(l10n.stockAdjustmentTypeLoss)),
-                    DropdownMenuItem(value: 'COUNT', child: Text(l10n.stockAdjustmentTypeCount)),
+                    DropdownMenuItem(
+                      value: 'IN',
+                      child: Text(l10n.stockAdjustmentTypeIn),
+                    ),
+                    DropdownMenuItem(
+                      value: 'OUT',
+                      child: Text(l10n.stockAdjustmentTypeOut),
+                    ),
+                    DropdownMenuItem(
+                      value: 'LOSS',
+                      child: Text(l10n.stockAdjustmentTypeLoss),
+                    ),
+                    DropdownMenuItem(
+                      value: 'COUNT',
+                      child: Text(l10n.stockAdjustmentTypeCount),
+                    ),
                   ],
                   onChanged: (val) {
                     if (val != null) setState(() => _adjustmentType = val);
@@ -170,8 +192,12 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
                   validator: (v) {
                     final n = int.tryParse(v?.trim() ?? '');
                     if (n == null) return l10n.stockAdjustmentQtyRequired;
-                    if (_adjustmentType != 'COUNT' && n <= 0) return l10n.stockAdjustmentQtyRequired;
-                    if (_adjustmentType == 'COUNT' && n < 0) return l10n.stockAdjustmentQtyRequired;
+                    if (_adjustmentType != 'COUNT' && n <= 0) {
+                      return l10n.stockAdjustmentQtyRequired;
+                    }
+                    if (_adjustmentType == 'COUNT' && n < 0) {
+                      return l10n.stockAdjustmentQtyRequired;
+                    }
                     return null;
                   },
                 ),
@@ -210,9 +236,15 @@ class _StockAdjustmentDialogState extends State<StockAdjustmentDialog> {
               ? const SizedBox(
                   width: 20,
                   height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.white,
+                  ),
                 )
-              : Text(l10n.stockAdjustmentConfirmButton, style: const TextStyle(color: Colors.white)),
+              : Text(
+                  l10n.stockAdjustmentConfirmButton,
+                  style: const TextStyle(color: Colors.white),
+                ),
         ),
       ],
     );

@@ -1,22 +1,41 @@
+import '../utils/adaptive_ui_color.dart';
+import '../core/api_client.dart';
+import '../widgets/shared/responsive_filter_bar.dart';
 import 'package:flutter/material.dart';
 import '../models/sales_receivable.dart';
-import '../models/financial_account.dart';
 import '../services/receivable_service.dart';
-import '../services/treasury_service.dart';
+import '../services/receivable_payment_coordinator.dart';
+import '../widgets/shared/financial_surface.dart';
+import '../widgets/shared/approved_app_style.dart';
+import '../utils/money_input.dart';
+import 'receivable_payment_view.dart';
 import '../l10n/l10n_extension.dart';
 import '../utils/formatters.dart';
 import '../utils/api_error_mapper.dart';
 
 class ReceivablesView extends StatefulWidget {
-  const ReceivablesView({super.key});
+  final ApiClient? apiClient;
+  final ReceivableService? service;
+  final ReceivablePaymentCoordinator? paymentCoordinator;
+  const ReceivablesView({
+    super.key,
+    this.apiClient,
+    this.service,
+    this.paymentCoordinator,
+  });
 
   @override
   State<ReceivablesView> createState() => _ReceivablesViewState();
 }
 
 class _ReceivablesViewState extends State<ReceivablesView> {
-  final ReceivableService _receivableService = ReceivableService();
-  final TreasuryService _treasuryService = TreasuryService();
+  late final ReceivableService _receivableService;
+  late final ReceivablePaymentCoordinator _paymentCoordinator;
+  List<ReceivablePaymentAttempt> _pendingPayments = [];
+  int _requestVersion = 0, _pendingVersion = 0, _nextOffset = 0;
+  bool _pendingReadFailed = false, _hasMore = false, _loadingMore = false;
+  String? _moreError, _appliedScope;
+  Future<List<SalesReceivable>> Function(int)? _fetchPage;
 
   List<SalesReceivable> _receivables = [];
   bool _isLoading = true;
@@ -37,7 +56,14 @@ class _ReceivablesViewState extends State<ReceivablesView> {
   @override
   void initState() {
     super.initState();
-    _loadReceivables();
+    _receivableService =
+        widget.service ?? ReceivableService(client: widget.apiClient);
+    _paymentCoordinator =
+        widget.paymentCoordinator ??
+        ReceivablePaymentCoordinator(service: _receivableService);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _loadReceivables();
+    });
   }
 
   @override
@@ -46,45 +72,205 @@ class _ReceivablesViewState extends State<ReceivablesView> {
     _basketTypeController.dispose();
     _minAmountController.dispose();
     _maxAmountController.dispose();
+    if (widget.paymentCoordinator == null) _paymentCoordinator.dispose();
+    if (widget.service == null && widget.apiClient == null) {
+      _receivableService.close();
+    }
     super.dispose();
   }
 
   Future<void> _loadReceivables() async {
+    if (!mounted) return;
+    final version = ++_requestVersion;
+    _loadPendingPayments();
     setState(() {
       _isLoading = true;
       _errorMessage = null;
+      _loadingMore = false;
+      _moreError = null;
+      _hasMore = false;
     });
-
     try {
-      final minCents = _minAmountController.text.trim().isNotEmpty
-          ? _parseToCents(_minAmountController.text)
-          : null;
-      final maxCents = _maxAmountController.text.trim().isNotEmpty
-          ? _parseToCents(_maxAmountController.text)
-          : null;
-
-      final items = await _receivableService.getReceivables(
-        status: _statusFilter,
-        overdueOnly: _overdueOnly,
-        customerId: _customerController.text.trim().isNotEmpty ? _customerController.text.trim() : null,
-        basketTypeId: _basketTypeController.text.trim().isNotEmpty ? _basketTypeController.text.trim() : null,
-        saleDateFrom: _saleDateFrom,
-        saleDateTo: _saleDateTo,
-        dueDateFrom: _dueDateFrom,
-        dueDateTo: _dueDateTo,
-        minAmountCents: minCents,
-        maxAmountCents: maxCents,
+      final minText = _minAmountController.text.trim();
+      final maxText = _maxAmountController.text.trim();
+      final min = minText.isEmpty ? null : MoneyInput.cents(minText);
+      final max = maxText.isEmpty ? null : MoneyInput.cents(maxText);
+      if ((minText.isNotEmpty && min == null) ||
+          (maxText.isNotEmpty && max == null) ||
+          (min != null && max != null && min > max)) {
+        throw ApiException(
+          statusCode: 422,
+          message: 'Invalid amount filter',
+          errorCode: 'VALIDATION_ERROR',
+        );
+      }
+      // Freeze the applied query. Editing a field does not change subsequent pages
+      // until Apply is chosen, and old responses cannot replace a newer query.
+      final status = _statusFilter, overdue = _overdueOnly;
+      final customer = _customerController.text.trim(),
+          basket = _basketTypeController.text.trim();
+      final saleFrom = _saleDateFrom, saleTo = _saleDateTo;
+      final dueFrom = _dueDateFrom, dueTo = _dueDateTo;
+      Future<List<SalesReceivable>> fetch(int offset) =>
+          _receivableService.getReceivables(
+            status: status == 'UNPAID' ? null : status,
+            openOnly: status == 'UNPAID',
+            overdueOnly: overdue,
+            customerId: customer.isEmpty ? null : customer,
+            basketTypeId: basket.isEmpty ? null : basket,
+            saleDateFrom: saleFrom,
+            saleDateTo: saleTo,
+            dueDateFrom: dueFrom,
+            dueDateTo: dueTo,
+            minAmountCents: min,
+            maxAmountCents: max,
+            limit: 100,
+            offset: offset,
+          );
+      final scope = _filterScope(
+        additional:
+            customer.isNotEmpty ||
+            basket.isNotEmpty ||
+            saleFrom != null ||
+            saleTo != null ||
+            dueFrom != null ||
+            dueTo != null ||
+            min != null ||
+            max != null,
       );
+      final items = await fetch(0);
+      if (!mounted || version != _requestVersion) return;
       setState(() {
         _receivables = items;
+        _fetchPage = fetch;
+        _nextOffset = items.length;
+        _hasMore = items.length == 100;
         _isLoading = false;
+        _appliedScope = scope;
       });
     } catch (e) {
+      if (!mounted || version != _requestVersion) return;
       setState(() {
         _errorMessage = ApiErrorMapper.toLocalizedMessage(e, context.l10n);
         _isLoading = false;
       });
     }
+  }
+
+  Future<void> _loadMore() async {
+    if (_loadingMore || !_hasMore || _fetchPage == null) return;
+    final version = _requestVersion;
+    setState(() {
+      _loadingMore = true;
+      _moreError = null;
+    });
+    try {
+      final items = await _fetchPage!(_nextOffset);
+      if (!mounted || version != _requestVersion) return;
+      setState(() {
+        final ids = _receivables.map((item) => item.id).toSet();
+        _receivables.addAll(items.where((item) => ids.add(item.id)));
+        _nextOffset += items.length;
+        _hasMore = items.length == 100;
+        _loadingMore = false;
+      });
+    } catch (_) {
+      if (mounted && version == _requestVersion) {
+        setState(() {
+          _loadingMore = false;
+          _moreError = context.l10n.paymentFlowMoreFailed;
+        });
+      }
+    }
+  }
+
+  Future<void> _loadPendingPayments() async {
+    final version = ++_pendingVersion;
+    try {
+      final pending = await _paymentCoordinator.pending();
+      if (mounted && version == _pendingVersion) {
+        setState(() {
+          _pendingPayments = pending;
+          _pendingReadFailed = false;
+        });
+      }
+    } catch (_) {
+      if (mounted && version == _pendingVersion) {
+        setState(() => _pendingReadFailed = true);
+      }
+    }
+  }
+
+  String _filterScope({bool additional = false}) {
+    final l = context.l10n;
+    final status = _statusFilter == null
+        ? l.receiptFlowFilterAll
+        : _statusFilter == 'UNPAID'
+        ? l.receiptFlowFilterOpen
+        : _formatStatus(context, _statusFilter!);
+    return l.receiptFlowFilterScope(
+          status,
+          _overdueOnly ? l.receivableOverdue : l.receiptFlowFilterAnyDue,
+        ) +
+        (additional ? ' · ${l.receiptFlowFilterApplied}' : '');
+  }
+
+  Future<void> _openPayment(String id) async {
+    await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => ReceivablePaymentView(
+          receivableId: id,
+          coordinator: _paymentCoordinator,
+        ),
+      ),
+    );
+    if (mounted) await _loadReceivables();
+  }
+
+  Widget _pendingSection() {
+    final l = context.l10n;
+    if (_pendingPayments.isEmpty && !_pendingReadFailed) {
+      return const SizedBox.shrink();
+    }
+    return FinancialSurface(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            l.paymentFlowPendingTitle,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          if (_pendingReadFailed) ...[
+            Text(l.paymentFlowPendingReadError),
+            TextButton(
+              onPressed: _loadPendingPayments,
+              child: Text(l.commonRefresh),
+            ),
+          ],
+          for (final attempt in _pendingPayments)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: Icon(
+                attempt.confirmation == null
+                    ? Icons.sync
+                    : Icons.check_circle_outline,
+              ),
+              title: Text(
+                l.receiptFlowPendingItem(
+                  attempt.customerName,
+                  attempt.saleNumber,
+                ),
+              ),
+              subtitle: Text(
+                attempt.confirmation == null
+                    ? l.paymentFlowUncertain
+                    : l.receiptFlowConfirmed,
+              ),
+              onTap: () => _openPayment(attempt.receivableId),
+            ),
+        ],
+      ),
+    );
   }
 
   void _clearFilters() {
@@ -114,183 +300,8 @@ class _ReceivablesViewState extends State<ReceivablesView> {
   }
 
   int get _openCount => _receivables.where((r) => r.status == 'OPEN').length;
-  int get _partialCount => _receivables.where((r) => r.status == 'PARTIAL').length;
-
-  int _parseToCents(String text) {
-    final cleaned = text.replaceAll('R\$', '').replaceAll(' ', '').replaceAll('.', '').replaceAll(',', '.').trim();
-    final val = double.tryParse(cleaned) ?? 0.0;
-    return (val * 100).round();
-  }
-
-  Future<void> _showPaymentDialog(SalesReceivable receivable) async {
-    final l10n = context.l10n;
-    final initialVal = (receivable.balanceCents / 100.0).toStringAsFixed(2).replaceAll('.', ',');
-    final amountController = TextEditingController(text: initialVal);
-    final notesController = TextEditingController();
-    String paymentMethod = 'CASH';
-    String? selectedAccountId;
-    List<FinancialAccount> accounts = [];
-    bool isLoadingAccounts = true;
-    bool isSaving = false;
-    String? payError;
-
-    try {
-      accounts = await _treasuryService.getAccounts(isActive: true);
-      if (accounts.isNotEmpty) {
-        selectedAccountId = accounts.firstWhere((a) => a.isDefault, orElse: () => accounts.first).id;
-      }
-      isLoadingAccounts = false;
-    } catch (_) {
-      isLoadingAccounts = false;
-    }
-
-    if (!mounted) return;
-
-    await showDialog(
-      context: context,
-      builder: (ctx) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return AlertDialog(
-              title: Text(l10n.receivableRecordPayment),
-              content: SizedBox(
-                width: 460,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (payError != null) ...[
-                      Text(payError!, style: const TextStyle(color: Colors.red)),
-                      const SizedBox(height: 8),
-                    ],
-                    Text(
-                      '${l10n.customerName}: ${receivable.customerName}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      '${l10n.receivableRemainingBalance}: ${AppFormatters.formatCurrency(receivable.balanceCents)}',
-                      style: const TextStyle(color: Colors.black54),
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: amountController,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      decoration: InputDecoration(
-                        labelText: l10n.receivablePaymentAmount,
-                        prefixText: 'R\$ ',
-                        border: const OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    if (isLoadingAccounts)
-                      const LinearProgressIndicator()
-                    else
-                      DropdownButtonFormField<String>(
-                        initialValue: selectedAccountId,
-                        decoration: InputDecoration(
-                          labelText: l10n.payableSelectAccount,
-                          border: const OutlineInputBorder(),
-                        ),
-                        items: accounts.map((a) {
-                          return DropdownMenuItem(
-                            value: a.id,
-                            child: Text('${a.name} (${AppFormatters.formatCurrency(a.currentBalanceCents)})'),
-                          );
-                        }).toList(),
-                        onChanged: (val) {
-                          if (val != null) setDialogState(() => selectedAccountId = val);
-                        },
-                      ),
-                    const SizedBox(height: 12),
-                    DropdownButtonFormField<String>(
-                      initialValue: paymentMethod,
-                      decoration: InputDecoration(
-                        labelText: l10n.receivablePaymentMethod,
-                        border: const OutlineInputBorder(),
-                      ),
-                      items: [
-                        DropdownMenuItem(value: 'CASH', child: Text(l10n.salePaymentModeCash)),
-                        DropdownMenuItem(value: 'PIX', child: Text(l10n.salePaymentModePix)),
-                        DropdownMenuItem(value: 'CARD', child: Text(l10n.salePaymentModeCard)),
-                      ],
-                      onChanged: (val) {
-                        if (val != null) setDialogState(() => paymentMethod = val);
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
-                      controller: notesController,
-                      decoration: InputDecoration(
-                        labelText: l10n.receivablePaymentNotes,
-                        border: const OutlineInputBorder(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: isSaving ? null : () => Navigator.pop(ctx),
-                  child: Text(l10n.commonCancel),
-                ),
-                ElevatedButton(
-                  onPressed: isSaving
-                      ? null
-                      : () async {
-                          final cents = _parseToCents(amountController.text);
-                          if (cents <= 0) {
-                            setDialogState(() => payError = l10n.receivablePaymentAmountMustBePositive);
-                            return;
-                          }
-                          if (cents > receivable.balanceCents) {
-                            setDialogState(() => payError = l10n.receivablePaymentAmountExceedsBalance);
-                            return;
-                          }
-
-                          setDialogState(() {
-                            isSaving = true;
-                            payError = null;
-                          });
-
-                          try {
-                            await _receivableService.recordPayment(
-                              receivable.id,
-                              ReceivablePaymentCreate(
-                                amountCents: cents,
-                                paymentMethod: paymentMethod,
-                                accountId: selectedAccountId,
-                                notes: notesController.text.trim().isNotEmpty ? notesController.text.trim() : null,
-                              ),
-                            );
-                            if (mounted) {
-                              Navigator.pop(ctx);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(l10n.receivablePaymentSuccess)),
-                              );
-                              _loadReceivables();
-                            }
-                          } catch (e) {
-                            setDialogState(() {
-                              isSaving = false;
-                              payError = ApiErrorMapper.toLocalizedMessage(e, l10n);
-                            });
-                          }
-                        },
-                  child: isSaving
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                        )
-                      : Text(l10n.commonConfirm),
-                ),
-              ],
-            );
-          },
-        );
-      },
-    );
-  }
+  int get _partialCount =>
+      _receivables.where((r) => r.status == 'PARTIAL').length;
 
   Widget _buildRepassBadge(BuildContext context, ReceivablePayment p) {
     final l10n = context.l10n;
@@ -300,25 +311,31 @@ class _ReceivablesViewState extends State<ReceivablesView> {
 
     switch (p.repassStatus) {
       case 'PENDING_REPASS':
-        bg = Colors.orange.shade100;
+        bg = adaptiveUiSurface(context, Colors.orange.shade100);
         fg = Colors.orange.shade900;
         text = l10n.receivableRepassPending;
         break;
       case 'REPASSED':
-        bg = Colors.blue.shade100;
+        bg = adaptiveUiSurface(context, Colors.blue.shade100);
         fg = Colors.blue.shade900;
         text = l10n.receivableRepassDone;
         break;
       default:
-        bg = Colors.green.shade100;
+        bg = adaptiveUiSurface(context, Colors.green.shade100);
         fg = Colors.green.shade900;
         text = l10n.receivableRepassDirect;
     }
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(6)),
-      child: Text(text, style: TextStyle(fontSize: 10, color: fg, fontWeight: FontWeight.bold)),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        text,
+        style: TextStyle(fontSize: 10, color: fg, fontWeight: FontWeight.bold),
+      ),
     );
   }
 
@@ -337,9 +354,14 @@ class _ReceivablesViewState extends State<ReceivablesView> {
               }
               if (snapshot.hasError || !snapshot.hasData) {
                 return AlertDialog(
-                  content: Text(ApiErrorMapper.toLocalizedMessage(snapshot.error, l10n)),
+                  content: Text(
+                    ApiErrorMapper.toLocalizedMessage(snapshot.error, l10n),
+                  ),
                   actions: [
-                    TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.commonClose)),
+                    TextButton(
+                      onPressed: () => Navigator.pop(ctx),
+                      child: Text(l10n.commonClose),
+                    ),
                   ],
                 );
               }
@@ -371,7 +393,9 @@ class _ReceivablesViewState extends State<ReceivablesView> {
                                     AppFormatters.formatCurrency(p.amountCents),
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      decoration: isConfirmed ? null : TextDecoration.lineThrough,
+                                      decoration: isConfirmed
+                                          ? null
+                                          : TextDecoration.lineThrough,
                                     ),
                                   ),
                                   const SizedBox(width: 8),
@@ -382,54 +406,94 @@ class _ReceivablesViewState extends State<ReceivablesView> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${AppFormatters.formatDateTime(p.paymentDate)} via ${p.paymentMethod}${p.accountName != null ? ' (${p.accountName})' : ''}',
+                                    '${AppFormatters.formatDateTime(p.paymentDate)} · ${p.paymentMethod}',
                                     style: const TextStyle(fontSize: 12),
                                   ),
                                   if (!isConfirmed && p.reversalReason != null)
                                     Text(
-                                      'Estornado: ${p.reversalReason}',
-                                      style: const TextStyle(fontSize: 11, color: Colors.red),
+                                      l10n.receiptFlowReversalReason(
+                                        p.reversalReason!,
+                                      ),
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.red,
+                                      ),
                                     ),
                                   if (p.notes != null)
                                     Text(
                                       p.notes!,
-                                      style: const TextStyle(fontSize: 11, color: Colors.black54),
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onSurfaceVariant,
+                                      ),
                                     ),
                                 ],
                               ),
                               trailing: isConfirmed
                                   ? IconButton(
-                                      icon: const Icon(Icons.undo, color: Colors.orange),
+                                      icon: const Icon(
+                                        Icons.undo,
+                                        color: Colors.orange,
+                                      ),
                                       tooltip: l10n.receivableReversePayment,
                                       onPressed: () async {
-                                        final reasonCtrl = TextEditingController();
+                                        final reasonCtrl =
+                                            TextEditingController();
                                         final confirm = await showDialog<bool>(
                                           context: context,
                                           builder: (dCtx) => AlertDialog(
-                                            title: Text(l10n.receivableReversePayment),
+                                            title: Text(
+                                              l10n.receivableReversePayment,
+                                            ),
                                             content: TextField(
                                               controller: reasonCtrl,
                                               decoration: InputDecoration(
-                                                labelText: l10n.receivableReverseReason,
-                                                border: const OutlineInputBorder(),
+                                                labelText: l10n
+                                                    .receivableReverseReason,
+                                                border:
+                                                    const OutlineInputBorder(),
                                               ),
                                             ),
                                             actions: [
-                                              TextButton(onPressed: () => Navigator.pop(dCtx, false), child: Text(l10n.commonCancel)),
-                                              ElevatedButton(onPressed: () => Navigator.pop(dCtx, true), child: Text(l10n.commonConfirm)),
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(dCtx, false),
+                                                child: Text(l10n.commonCancel),
+                                              ),
+                                              ElevatedButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(dCtx, true),
+                                                child: Text(l10n.commonConfirm),
+                                              ),
                                             ],
                                           ),
                                         );
 
-                                        if (confirm == true && reasonCtrl.text.trim().isNotEmpty) {
+                                        if (confirm == true &&
+                                            reasonCtrl.text.trim().isNotEmpty) {
                                           try {
-                                            await _receivableService.cancelPayment(p.id, reasonCtrl.text.trim());
+                                            await _receivableService
+                                                .cancelPayment(
+                                                  p.id,
+                                                  reasonCtrl.text.trim(),
+                                                );
                                             setDialogState(() {});
                                             _loadReceivables();
                                           } catch (err) {
                                             if (mounted) {
-                                              ScaffoldMessenger.of(context).showSnackBar(
-                                                SnackBar(content: Text(ApiErrorMapper.toLocalizedMessage(err, l10n))),
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    ApiErrorMapper.toLocalizedMessage(
+                                                      err,
+                                                      l10n,
+                                                    ),
+                                                  ),
+                                                ),
                                               );
                                             }
                                           }
@@ -463,22 +527,44 @@ class _ReceivablesViewState extends State<ReceivablesView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
+          ResponsiveFilterBar(
             children: [
-              Expanded(
+              SizedBox(
+                width: 220,
                 child: DropdownButtonFormField<String?>(
                   initialValue: _statusFilter,
+                  isExpanded: true,
                   decoration: InputDecoration(
                     labelText: l10n.commonStatus,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                   ),
                   items: [
-                    DropdownMenuItem(value: null, child: Text(l10n.categoryAll)),
-                    DropdownMenuItem(value: 'OPEN', child: Text(l10n.receivableStatusOpen)),
-                    DropdownMenuItem(value: 'PARTIAL', child: Text(l10n.receivableStatusPartial)),
-                    DropdownMenuItem(value: 'PAID', child: Text(l10n.receivableStatusPaid)),
-                    DropdownMenuItem(value: 'CANCELED', child: Text(l10n.receivableStatusCanceled)),
+                    DropdownMenuItem(
+                      value: null,
+                      child: Text(l10n.categoryAll),
+                    ),
+                    DropdownMenuItem(
+                      value: 'UNPAID',
+                      child: Text(l10n.receiptFlowFilterOpen),
+                    ),
+                    DropdownMenuItem(
+                      value: 'PARTIAL',
+                      child: Text(l10n.receivableStatusPartial),
+                    ),
+                    DropdownMenuItem(
+                      value: 'PAID',
+                      child: Text(l10n.receivableStatusPaid),
+                    ),
+                    DropdownMenuItem(
+                      value: 'CANCELED',
+                      child: Text(l10n.receivableStatusCanceled),
+                    ),
                   ],
                   onChanged: (val) {
                     setState(() => _statusFilter = val);
@@ -486,7 +572,6 @@ class _ReceivablesViewState extends State<ReceivablesView> {
                   },
                 ),
               ),
-              const SizedBox(width: 8),
               FilterChip(
                 label: Text(l10n.receivableOverdue),
                 selected: _overdueOnly,
@@ -495,16 +580,21 @@ class _ReceivablesViewState extends State<ReceivablesView> {
                   _loadReceivables();
                 },
               ),
-              const SizedBox(width: 8),
               FilterChip(
-                avatar: Icon(_showAdvancedFilters ? Icons.expand_less : Icons.tune, size: 16),
-                label: Text(_showAdvancedFilters ? l10n.receivableFilterHideAdvanced : l10n.receivableFilterAdvanced),
+                avatar: Icon(
+                  _showAdvancedFilters ? Icons.expand_less : Icons.tune,
+                  size: 16,
+                ),
+                label: Text(
+                  _showAdvancedFilters
+                      ? l10n.receivableFilterHideAdvanced
+                      : l10n.receivableFilterAdvanced,
+                ),
                 selected: _showAdvancedFilters,
                 onSelected: (val) {
                   setState(() => _showAdvancedFilters = val);
                 },
               ),
-              const SizedBox(width: 4),
               IconButton(
                 icon: const Icon(Icons.refresh),
                 tooltip: l10n.commonRefresh,
@@ -517,7 +607,7 @@ class _ReceivablesViewState extends State<ReceivablesView> {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.grey.shade50,
+                color: adaptiveUiSurface(context, Colors.grey.shade50),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: Colors.grey.shade300),
               ),
@@ -542,8 +632,12 @@ class _ReceivablesViewState extends State<ReceivablesView> {
                             context: context,
                             firstDate: DateTime(2020),
                             lastDate: DateTime(2035),
-                            initialDateRange: _saleDateFrom != null && _saleDateTo != null
-                                ? DateTimeRange(start: _saleDateFrom!, end: _saleDateTo!)
+                            initialDateRange:
+                                _saleDateFrom != null && _saleDateTo != null
+                                ? DateTimeRange(
+                                    start: _saleDateFrom!,
+                                    end: _saleDateTo!,
+                                  )
                                 : null,
                           );
                           if (range != null) {
@@ -567,8 +661,12 @@ class _ReceivablesViewState extends State<ReceivablesView> {
                             context: context,
                             firstDate: DateTime(2020),
                             lastDate: DateTime(2035),
-                            initialDateRange: _dueDateFrom != null && _dueDateTo != null
-                                ? DateTimeRange(start: _dueDateFrom!, end: _dueDateTo!)
+                            initialDateRange:
+                                _dueDateFrom != null && _dueDateTo != null
+                                ? DateTimeRange(
+                                    start: _dueDateFrom!,
+                                    end: _dueDateTo!,
+                                  )
                                 : null,
                           );
                           if (range != null) {
@@ -607,7 +705,9 @@ class _ReceivablesViewState extends State<ReceivablesView> {
                         width: 140,
                         child: TextField(
                           controller: _minAmountController,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
                           decoration: InputDecoration(
                             labelText: l10n.receivableFilterMinValue,
                             prefixText: 'R\$ ',
@@ -621,7 +721,9 @@ class _ReceivablesViewState extends State<ReceivablesView> {
                         width: 140,
                         child: TextField(
                           controller: _maxAmountController,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
                           decoration: InputDecoration(
                             labelText: l10n.receivableFilterMaxValue,
                             prefixText: 'R\$ ',
@@ -677,193 +779,255 @@ class _ReceivablesViewState extends State<ReceivablesView> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = context.l10n;
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.receivablesTitle),
-      ),
-      body: Column(
-        children: [
-          _buildSummaryHeader(context),
-          _buildFilterBar(context),
-          const Divider(height: 1),
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _errorMessage != null
-                    ? Center(
+    final l = context.l10n;
+    return FinancialJourneyTheme(
+      child: ApprovedPage(
+        title: l.receivablesTitle,
+        body: ListView(
+          key: const PageStorageKey('receivables-list'),
+          padding: const EdgeInsets.all(16),
+          children: [
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1000),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (!_isLoading && _errorMessage == null) ...[
+                      _buildSummaryHeader(context),
+                      const SizedBox(height: 20),
+                    ],
+                    FinancialSurface(
+                      child: ExpansionTile(
+                        key: const ValueKey('receipt-filters'),
+                        maintainState: true,
+                        tilePadding: EdgeInsets.zero,
+                        childrenPadding: EdgeInsets.zero,
+                        title: Text(l.receiptFlowFilters),
+                        subtitle: Text(_appliedScope ?? _filterScope()),
+                        children: [_buildFilterBar(context)],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    _pendingSection(),
+                    if (_pendingPayments.isNotEmpty || _pendingReadFailed)
+                      const SizedBox(height: 20),
+                    if (_isLoading)
+                      const Center(child: CircularProgressIndicator())
+                    else if (_errorMessage != null)
+                      FinancialSurface(
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
-                            const SizedBox(height: 12),
-                            ElevatedButton(
+                            Text(_errorMessage!),
+                            TextButton(
                               onPressed: _loadReceivables,
-                              child: Text(l10n.commonRefresh),
+                              child: Text(l.commonRefresh),
                             ),
                           ],
                         ),
                       )
-                    : _receivables.isEmpty
-                        ? Center(child: Text(l10n.receivablesEmpty))
-                        : ListView.builder(
-                            padding: const EdgeInsets.all(16.0),
-                            itemCount: _receivables.length,
-                            itemBuilder: (context, index) {
-                              return _buildReceivableCard(context, _receivables[index]);
-                            },
+                    else if (_receivables.isEmpty)
+                      FinancialSurface(child: Text(l.receivablesEmpty))
+                    else
+                      FinancialSurface(
+                        child: Column(
+                          children: [
+                            for (var i = 0; i < _receivables.length; i++) ...[
+                              if (i > 0) const Divider(height: 1),
+                              _buildReceivableCard(context, _receivables[i]),
+                            ],
+                          ],
+                        ),
+                      ),
+                    if (_moreError != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12),
+                        child: Text(_moreError!),
+                      ),
+                    if (_hasMore)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: OutlinedButton(
+                          onPressed: _loadingMore ? null : _loadMore,
+                          child: Text(
+                            _loadingMore ? l.commonLoading : l.paymentFlowMore,
                           ),
-          ),
-        ],
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildSummaryHeader(BuildContext context) {
-    final l10n = context.l10n;
-
-    return Container(
-      color: Colors.amber.shade50,
-      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+    final l = context.l10n;
+    return FinancialSurface(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildSummaryItem(
-            l10n.receivablesSummaryTotal,
-            AppFormatters.formatCurrency(_totalBalanceCents),
-            Colors.red.shade700,
+          Text(
+            l.receiptFlowSummary,
+            style: Theme.of(context).textTheme.bodySmall,
           ),
-          _buildSummaryItem(
-            l10n.receivablesSummaryOpen,
-            _openCount.toString(),
-            Colors.orange.shade800,
-          ),
-          _buildSummaryItem(
-            l10n.receivablesSummaryPartial,
-            _partialCount.toString(),
-            Colors.blue.shade800,
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 40,
+            runSpacing: 16,
+            children: [
+              _buildSummaryItem(
+                l.receivablesSummaryTotal,
+                AppFormatters.formatCurrency(_totalBalanceCents),
+              ),
+              _buildSummaryItem(
+                l.receivablesSummaryOpen,
+                _openCount.toString(),
+              ),
+              _buildSummaryItem(
+                l.receivablesSummaryPartial,
+                _partialCount.toString(),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildSummaryItem(String label, String value, Color color) {
-    return Column(
-      children: [
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.black54)),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: color),
-        ),
-      ],
-    );
-  }
+  Widget _buildSummaryItem(String label, String value) => Column(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(label, style: Theme.of(context).textTheme.bodySmall),
+      const SizedBox(height: 4),
+      Text(
+        value,
+        style: Theme.of(
+          context,
+        ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w500),
+      ),
+    ],
+  );
 
   Widget _buildReceivableCard(BuildContext context, SalesReceivable r) {
-    final l10n = context.l10n;
-    final isSettled = r.status == 'PAID';
-
-    return Card(
-      elevation: 2,
-      margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        r.customerName,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      Text(
-                        l10n.receivableDueDateLabel(AppFormatters.formatDate(r.dueDate)),
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: r.isOverdue ? Colors.red.shade700 : Colors.black54,
-                          fontWeight: r.isOverdue ? FontWeight.bold : FontWeight.normal,
-                        ),
-                      ),
-                      if (r.saleDate != null)
-                        Text(
-                          'Data da venda: ${AppFormatters.formatDate(r.saleDate!)}',
-                          style: const TextStyle(fontSize: 12, color: Colors.black45),
-                        ),
-                    ],
-                  ),
-                ),
-                Text(
-                  AppFormatters.formatCurrency(r.balanceCents),
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17,
-                    color: isSettled ? Colors.green.shade700 : (r.isOverdue ? Colors.red.shade700 : Colors.black87),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 4,
-              children: [
-                Chip(
-                  label: Text(_formatStatus(context, r.status), style: const TextStyle(fontSize: 11)),
-                  backgroundColor: isSettled ? Colors.green.shade50 : Colors.orange.shade50,
-                ),
-                if (r.isOverdue && !isSettled)
-                  Chip(
-                    label: Text(l10n.receivableOverdue, style: const TextStyle(fontSize: 11, color: Colors.white)),
-                    backgroundColor: Colors.red.shade700,
-                  ),
-                if (r.basketTypesSummary != null && r.basketTypesSummary!.isNotEmpty)
-                  Chip(
-                    label: Text(l10n.receivablesBasketsPrefix(r.basketTypesSummary!), style: const TextStyle(fontSize: 11)),
-                    backgroundColor: Colors.grey.shade200,
-                  ),
-              ],
-            ),
-            const Divider(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${l10n.receivableOriginalAmount}: ${AppFormatters.formatCurrency(r.originalAmountCents)} | ${l10n.receivablePaidAmount}: ${AppFormatters.formatCurrency(r.paidAmountCents)}',
-                  style: const TextStyle(fontSize: 12, color: Colors.black54),
-                ),
-                Row(
+    final l = context.l10n, theme = Theme.of(context);
+    final isOpen = {'OPEN', 'PARTIAL'}.contains(r.status) && r.balanceCents > 0;
+    final overdue = r.isOverdue && isOpen;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          InkWell(
+            onTap: () => _openPayment(r.id),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final compact =
+                    constraints.maxWidth < 480 ||
+                    MediaQuery.textScalerOf(context).scale(16) > 22;
+                final identity = Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (r.paymentsCount > 0)
-                      IconButton(
-                        tooltip: l10n.receivablePaymentsHistory,
-                        icon: const Icon(Icons.history, size: 20),
-                        onPressed: () => _showHistoryDialog(r),
+                    Text(
+                      r.customerName,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
                       ),
-                    if (!isSettled && r.status != 'CANCELED')
-                      ElevatedButton.icon(
-                        onPressed: () => _showPaymentDialog(r),
-                        icon: const Icon(Icons.price_check, size: 16),
-                        label: Text(l10n.receivableRecordPayment),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        ),
+                    ),
+                    Text(l.receiptFlowSaleRef(r.saleNumber)),
+                    if (r.basketTypesSummary?.isNotEmpty == true)
+                      Text(
+                        r.basketTypesSummary!,
+                        style: theme.textTheme.bodySmall,
                       ),
                   ],
-                ),
-              ],
+                );
+                final amount = Text(
+                  AppFormatters.formatCurrency(r.balanceCents),
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w500,
+                  ),
+                );
+                return compact
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [identity, const SizedBox(height: 8), amount],
+                      )
+                    : Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(child: identity),
+                          const SizedBox(width: 20),
+                          amount,
+                        ],
+                      );
+              },
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            l.receivableDueDateLabel(AppFormatters.formatDate(r.dueDate)),
+            style: theme.textTheme.bodyMedium,
+          ),
+          Wrap(
+            spacing: 16,
+            runSpacing: 4,
+            children: [
+              Text(
+                '${l.receivableOriginalAmount}: ${AppFormatters.formatCurrency(r.originalAmountCents)}',
+                style: theme.textTheme.bodySmall,
+              ),
+              Text(
+                '${l.receiptFlowReceived}: ${AppFormatters.formatCurrency(r.paidAmountCents)}',
+                style: theme.textTheme.bodySmall,
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 12,
+            runSpacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: overdue
+                      ? theme.colorScheme.errorContainer
+                      : theme.colorScheme.surfaceContainerHighest,
+                ),
+                child: Text(
+                  '${_formatStatus(context, r.status)}${overdue ? ' · ${l.receivableOverdue}' : ''}',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: overdue
+                        ? theme.colorScheme.onErrorContainer
+                        : theme.colorScheme.onSurface,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () => _openPayment(r.id),
+                child: Text(
+                  isOpen ? l.receiptFlowRegister : l.receiptFlowDetail,
+                ),
+              ),
+              if (r.paymentsCount > 0)
+                IconButton(
+                  tooltip: l.receivablePaymentsHistory,
+                  icon: const Icon(Icons.history_outlined),
+                  onPressed: () => _showHistoryDialog(r),
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }

@@ -99,3 +99,17 @@ class ProductInactivationResponse(BaseModel):
     name: str
     is_active: bool
     message: str
+
+
+class ProductDeletionCheck(BaseModel):
+    id: str
+    name: str
+    can_delete: bool
+    reasons: List[str]
+
+
+class ProductDeletionResponse(BaseModel):
+    id: str
+    name: str
+    deleted: bool
+    removed_packagings_count: int

@@ -19,6 +19,7 @@ from app.schemas.production import (
     ProductionBatchCreate,
     ProductionPreviewRequest,
     CustomItemInput,
+    DisassemblyRequest,
 )
 from app.services.inventory import (
     get_basket_stock,
@@ -28,8 +29,10 @@ from app.services.inventory import (
 from app.services.production import (
     create_production_batch,
     preview_production,
+    disassemble_production_batch,
 )
 from app.services.customers import get_customer_debt_balance
+from app.services.basket_stock_policy import require_finished_stock
 
 
 def generate_next_sale_number(db: Session) -> int:
@@ -246,6 +249,9 @@ def create_sale(db: Session, data: SaleCreate) -> Sale:
         line_net = (item.quantity * item.unit_price_cents) - item.discount_cents
         item_unit_cost = 0
         resolved_batch_id = item.production_batch_id
+
+        if not item.assemble_on_demand:
+            require_finished_stock(basket_type)
 
         if item.assemble_on_demand:
             # 1. Simultaneous Assembly on Demand
@@ -481,6 +487,21 @@ def cancel_sale(db: Session, sale_id: str, data: SaleCancelRequest) -> Sale:
             detail=f"Apenas vendas confirmadas podem ser canceladas. Status atual: {sale.status}.",
         )
 
+    unassembled_ids = set(data.unassembled_item_ids)
+    batches_to_undo = []
+    sale_item_ids = {item.id for item in sale.items}
+    if len(unassembled_ids) != len(data.unassembled_item_ids) or not unassembled_ids.issubset(sale_item_ids):
+        raise HTTPException(status_code=422, detail={"error_code": "VALIDATION_ERROR", "message": "Itens de cancelamento invalidos."})
+    for item in sale.items:
+        if item.id not in unassembled_ids:
+            continue
+        batch = db.get(ProductionBatch, item.production_batch_id) if item.production_batch_id else None
+        if (sale.sale_mode != "DIRECT_STORE" or not batch or not batch.is_direct_sale
+                or batch.status != "CONFIRMED" or batch.quantity_produced != item.quantity
+                or batch.basket_type_id != item.basket_type_id):
+            raise HTTPException(status_code=422, detail={"error_code": "VALIDATION_ERROR", "message": "Apenas montagens realizadas nesta venda podem devolver insumos."})
+        batches_to_undo.append(batch)
+
     if sale.receivable:
         if sale.receivable.paid_amount_cents > 0:
             raise HTTPException(
@@ -518,6 +539,15 @@ def cancel_sale(db: Session, sale_id: str, data: SaleCancelRequest) -> Sale:
             location_type=m.location_type,
             responsible_person_id=m.responsible_person_id,
         )
+
+    # Undo only the explicitly selected on-demand assemblies, using their frozen
+    # composition. Sale reversals above make the produced baskets available first.
+    db.flush()
+    for batch in batches_to_undo:
+        disassemble_production_batch(db, batch.id, DisassemblyRequest(
+            quantity_to_disassemble=batch.quantity_produced,
+            reason=f"Venda #{sale.sale_number}: montagem nao realizada. {data.reason.strip()}"[:500],
+        ))
 
     # Reverse treasury cash flow entry if money entered company
     if sale.account_id:

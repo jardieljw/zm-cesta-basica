@@ -1,0 +1,29 @@
+--- a/client/lib/views/purchase_form_view.dart
++++ b/client/lib/views/purchase_form_view.dart
+@@ -3,7 +3,7 @@
+ import '../models/financial_account.dart';
+ import '../services/product_service.dart';
+ import '../services/purchase_service.dart';
+-import '../services/treasury_service.dart';
++import '../services/financial_accounts_service.dart';
+ import '../l10n/l10n_extension.dart';
+ import '../utils/formatters.dart';
+ 
+@@ -37,7 +37,7 @@
+   final _formKey = GlobalKey<FormState>();
+   final ProductService _productService = ProductService();
+   final PurchaseService _purchaseService = PurchaseService();
+-  final TreasuryService _treasuryService = TreasuryService();
++  final FinancialAccountsService _accountsService = FinancialAccountsService();
+   final _supplierController = TextEditingController();
+   final _notesController = TextEditingController();
+   final DateTime _purchaseDate = DateTime.now();
+@@ -73,7 +73,7 @@
+     try {
+       final results = await Future.wait([
+         _productService.getProducts(isActive: true),
+-        _treasuryService.getAccounts(isActive: true),
++        _accountsService.getAccounts(isActive: true),
+       ]);
+ 
+       final prods = results[0] as List<Product>;

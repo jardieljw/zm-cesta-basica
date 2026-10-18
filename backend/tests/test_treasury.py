@@ -339,12 +339,11 @@ def test_route_cash_repayment_treasury_integration(client: TestClient, authentic
     assert sum2["route_cash_pending_cents"] == sum1["route_cash_pending_cents"] - 15000
 
 
-def test_duplicate_cash_flow_entry_prevention(client: TestClient, authenticated_device):
+def test_duplicate_cash_flow_entry_prevention(client: TestClient, authenticated_device, test_session):
     """
     Verifies that calling record_cash_flow_entry for the same source_id and source_type
     is rejected with 409 Conflict when allow_duplicate_source is False.
     """
-    from app.core.database import SessionLocal
     from app.services.financial import record_cash_flow_entry
     from fastapi import HTTPException
     import pytest
@@ -354,7 +353,7 @@ def test_duplicate_cash_flow_entry_prevention(client: TestClient, authenticated_
     accounts = client.get("/api/v1/treasury/accounts", headers=headers).json()
     acc_id = accounts[0]["id"]
 
-    db = SessionLocal()
+    db = test_session
     fake_source_id = str(uuid.uuid4())
     try:
         # First entry succeeds

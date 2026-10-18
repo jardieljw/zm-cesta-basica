@@ -15,6 +15,7 @@ from app.models.purchases import Purchase
 from app.models.sales import SalesReceivable
 from app.models.dispatches import StockDispatch
 from app.models.base import utc_now
+from app.core.business_dates import business_today, business_day_start
 from app.schemas.financial import (
     FinancialAccountCreate,
     FinancialAccountUpdate,
@@ -465,24 +466,34 @@ def record_payable_payment(db: Session, payable_id: str, data: PayablePaymentCre
     ).scalar_one_or_none()
 
     if not payable:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Obrigacao a pagar '{payable_id}' nao encontrada.")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail={"error_code": "PAYABLE_NOT_FOUND", "message": "Conta a pagar não encontrada."})
+
+    # The callback runs under the existing BEGIN IMMEDIATE transaction. Replay
+    # is resolved before this callback, including when a prior payment quit the title.
+    if data.expected_balance_cents is not None and data.expected_balance_cents != payable.balance_cents:
+        raise HTTPException(status_code=409, detail={"error_code": "PAYABLE_BALANCE_CHANGED", "message": "O saldo mudou. Confira o valor atualizado antes de registrar."})
+
+    if data.expected_balance_cents is not None and data.payment_method.upper() not in {"DINHEIRO", "PIX", "BOLETO", "TRANSFERENCIA", "CHEQUE", "CARTAO_CREDITO", "OUTRO"}:
+        raise HTTPException(status_code=400, detail={"error_code": "PAYABLE_PAYMENT_METHOD_INVALID", "message": "Selecione uma forma de pagamento válida."})
 
     if payable.status not in ["OPEN", "PARTIAL"]:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Apenas titulos abertos ou parciais podem receber pagamentos. Status atual: {payable.status}.",
+            detail={"error_code": "PAYABLE_NOT_OPEN", "message": "Esta conta não está aberta para pagamento."},
         )
 
     if data.amount_cents > payable.balance_cents:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Valor informado ({data.amount_cents} centavos) excede o saldo devedor restante ({payable.balance_cents} centavos).",
+            detail={"error_code": "PAYABLE_AMOUNT_EXCEEDS_BALANCE", "message": "O valor informado excede o saldo em aberto."},
         )
 
-    acc = get_financial_account(db, data.account_id)
+    acc = (get_financial_account(db, data.account_id)
+           if data.account_id is not None else get_default_financial_account(db))
     payment_id = str(uuid.uuid4())
     now = utc_now()
-    payment_date = data.payment_date or now
+    payment_date = (business_day_start(data.payment_business_date)
+                    if data.payment_business_date is not None else data.payment_date or now)
 
     payment = PayablePayment(
         id=payment_id,
@@ -723,7 +734,7 @@ def list_accounts_payable(
         stmt = stmt.where(AccountPayable.nature == nature.upper())
     if overdue_only:
         stmt = stmt.where(
-            AccountPayable.due_date < utc_now(),
+            func.date(AccountPayable.due_date) < business_today(utc_now()).isoformat(),
             AccountPayable.status.in_(["OPEN", "PARTIAL"]),
         )
 

@@ -1,6 +1,13 @@
 import os
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, status
+from typing import Optional
+from fastapi import APIRouter, Depends, HTTPException, status, Header
+from secrets import compare_digest
+from app.core.database import get_db
+from app.core.security import hash_token
+from app.core.new_database import create_and_activate_database
+from sqlalchemy import select
+from app.models.idempotency import IdempotencyRecord
 from sqlalchemy.orm import Session
 from app.core.config import settings
 from app.core.backup import create_backup, restore_backup, list_backups, BackupError
@@ -11,9 +18,31 @@ from app.schemas.backup import (
     BackupItem,
     BackupRestoreRequest,
     BackupRestoreResponse,
+    NewDatabaseRequest, NewDatabaseResponse,
 )
 
 router = APIRouter()
+
+@router.post('/backup/new-database', response_model=NewDatabaseResponse)
+def new_database(req: NewDatabaseRequest,
+                 authorization: Optional[str] = Header(None),
+                 key: str = Header(..., alias='X-Idempotency-Key'),
+                 current_device: PairedDevice = Depends(get_current_device),
+                 db: Session = Depends(get_db)):
+    parts = (authorization or '').split()
+    if len(parts) != 2 or parts[0].lower() != 'bearer' or not compare_digest(hash_token(parts[1]), current_device.token_hash):
+        raise HTTPException(401, detail={'error_code': 'UNAUTHORIZED', 'message': 'Token valido obrigatorio.'})
+    if not key.strip() or len(key) > 100:
+        raise HTTPException(422, detail={'error_code': 'VALIDATION_ERROR', 'message': 'Chave de operacao invalida.'})
+    bind = db.get_bind()
+    db.close()
+    try:
+        return create_and_activate_database(bind, key.strip(), req.model_dump())
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(500, detail={'error_code': 'NEW_DATABASE_FAILED',
+            'message': 'Nao foi possivel ativar o novo banco. O backup de seguranca foi preservado.'})
 
 @router.post("/backup/create", response_model=BackupCreateResponse)
 def trigger_backup(
@@ -56,6 +85,7 @@ def get_backups(
 def trigger_restore(
     req: BackupRestoreRequest,
     current_device: PairedDevice = Depends(get_current_device),
+    db: Session = Depends(get_db),
 ):
     """Restores database from an existing backup after verifying integrity.
 
@@ -77,10 +107,26 @@ def trigger_restore(
         )
 
     try:
+        bind = db.get_bind()
+        db.close()
+        # Maintenance receipts survive restoration too: a lost response must not
+        # re-execute a database replacement after an operator restored old data.
+        with Session(bind) as receipt_db:
+            receipts = receipt_db.scalars(select(IdempotencyRecord).where(
+                IdempotencyRecord.operation_type == 'NEW_DATABASE')).all()
+            receipt_data = [{column.name: getattr(record, column.name)
+                for column in IdempotencyRecord.__table__.columns} for record in receipts]
+        bind.dispose()
         safety = create_backup(tag="pre_restore")
         res = restore_backup(backup_file)
-        from app.core.database import engine
-        engine.dispose()
+        bind.dispose()
+        with Session(bind) as receipt_db:
+            for record in receipt_data:
+                exists = receipt_db.scalar(select(IdempotencyRecord).where(
+                    IdempotencyRecord.idempotency_key == record['idempotency_key']))
+                if exists is None:
+                    receipt_db.add(IdempotencyRecord(**record))
+            receipt_db.commit()
         return BackupRestoreResponse(
             status=res["status"],
             restored_from=res["restored_from"],

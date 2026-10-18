@@ -1,21 +1,139 @@
 # Arquitetura, Governança Técnica e Diretrizes Permanentes
+
+**17/10/2026 — Receber revisado:** o [guia](docs/PILOTO_RECEBER_REVISADO.md)
+registra o segundo percurso incremental, com contrato aditivo e preservação de
+venda/estoque. Máquina de apresentação e motor de recuperação compartilhados,
+com métodos/identificadores separados. Lista Receber usa recorte compacto e
+paginação. Não altera tabelas, instalação ou organização global nesta entrega.
 ## ZM Cesta Básica — Sistema de Gestão de Estoque, Produção, Vendas e Financeiro
 
 **Documento Canônico de Engenharia e Princípios de Arquitetura**  
+
+Para entender o comportamento atual de cada fluxo, consulte o
+[índice das mecânicas](docs/README.md). Os guias relacionam interface, serviços,
+endpoints, tabelas, exemplos e limitações; este documento define a governança técnica.
 **Versão:** 6.0 (Fases 1 a 9 Concluídas e Homologadas: Gestão Completa, Relatórios, Impressão, Backup Quente, Instalação Windows e Entrega de Produção)
 **Status do Projeto:** Fases 1 a 9 Concluídas e Homologadas (180 testes backend e 93 testes Flutter aprovados; compilações nativas Windows x64 e Android release APK geradas; análise estática 100% limpa)
 **Topologia:** Monólito Modular em Rede Local Privada (Wi-Fi/Ethernet) sem dependência de nuvem  
 **Público-alvo:** Desenvolvedores, Engenheiros de Software e Agentes de Inteligência Artificial
 
+**16/10/2026 — piloto de pagamento revisado:** o
+[guia do incremento](docs/PILOTO_PAGAR_REVISADO.md) registra o fluxo real de Pagar,
+com corpo/chave persistidos, retomada, precondição aditiva do saldo na transação e
+dia civil representado em UTC. Hashes legados e regras do livro-caixa preservados;
+sem migração nova. Tema/navegação globais e Receber não foram migrados nesse recorte.
+
+
+> **Escopo atual do cliente — 13/10/2026:** as telas de produção em lote,
+> desmontagem, expedição/conferência, responsáveis e tesouraria estão arquivadas.
+> As descrições dessas fases abaixo são referência histórica e de domínio.
+> O backend e os dados históricos são preservados para os fluxos compartilhados.
+> Consulte [client/_archive/README.md](client/_archive/README.md) antes de restaurar
+> funções. Não reintroduzir menus, relatórios ou serviços exclusivos arquivados
+> sem solicitação do usuário. Montagem na venda segue ativa; pagamentos não exigem seleção de contas.
+
+> **Dashboard e financeiro simplificados:** o aplicativo usa `dashboard/business-summary`
+> e `reports/business-financial-summary`, com vendas, compras, estoque, confirmações,
+> pendências, custo vendido e resultado gerencial. Não exibir saldos de caixa/contas,
+> depósitos manuais ou projeção de tesouraria. As confirmações preservam a auditoria
+> interna; contas financeiras não são selecionadas pelo operador. Consultar
+> [client/_archive/DASHBOARD.md](client/_archive/DASHBOARD.md) antes de evoluir esses fluxos.
+
+> **Catálogo — exclusão autorizada de cadastros nunca utilizados (14/10/2026):**
+> produtos sem vínculos em receitas (qualquer versão), compras (qualquer status),
+> itens de produção e movimentações podem ser excluídos definitivamente por uma
+> ação explícita com confirmação e revalidação transacional. Embalagens nunca
+> utilizadas podem ser removidas junto com o cadastro. Produtos com vínculos ou
+> histórico continuam protegidos; a inativação mantém suas regras. Ver
+> [docs/PRODUTOS_E_FORMAS_DE_COMPRA.md](docs/PRODUTOS_E_FORMAS_DE_COMPRA.md).
+
 ---
 
 ## 1. Visão Geral e Princípios Fundamentais
+
+**Base de extratos/faturas — 15/10/2026:** primeiro incremento exclusivamente no
+backend, documentado em [base financeira e conciliação](docs/BASE_FINANCEIRA_E_CONCILIACAO.md).
+As tabelas novas preservam documentos e ocorrências conferidas separadamente do
+livro-caixa. Conciliação vincula evidência a movimentos existentes; não cria
+pagamentos ou dívidas. As migrações `fa0d1e2f4310`, `fb1e2f3a5411` e `fc2f3a4b6512` foram
+preparadas para essa base; não criar suas tabelas no startup por `create_all`.
+Há [leitores CSV multibanco e prévias versionadas](docs/IMPORTACAO_CSV_MULTIBANCO.md)
+no backend. Em 16/10 foi acrescentado [PDF automático por adaptadores](docs/IMPORTACAO_PDF_FINANCEIRO.md),
+com layouts Nubank/PicPay e prévia bloqueada quando houver erro. OCR, senha,
+outros layouts, OFX, OAuth Gmail, integração contábil de faturas e front-end
+continuam etapas posteriores. PDF reutiliza o relatório imutável de prévias;
+não acrescenta migração ou efeitos ao livro-caixa.
+As [correções de revisão](docs/CORRECAO_REVISAO_FINANCEIRA.md) acrescentam decisões
+imutáveis e mudanças de associação dos identificadores; consultas operacionais
+usam a decisão atual. Não reescrever as ocorrências ou os eventos originais.
+Para retomar, consultar a [memória financeira](docs/MEMORIA_IMPLEMENTACAO_FINANCEIRA.md)
+e a [homologação com originais](docs/HOMOLOGACAO_IMPORTACAO_FINANCEIRA.md).
+
+A [arquitetura semântica de faturas](docs/ARQUITETURA_SEMANTICA_DE_FATURAS.md)
+registra decisões, fontes e a evolução planejada de procedência/conferência.
+READY da prévia comprova leitura, não cobertura entre formatos. Divergências
+reais CSV/PDF foram verificadas; não criar obrigações ou ajustes para fechar
+essas diferenças. A [conferência e procedência](docs/CONFERENCIA_E_PROCEDENCIA_DE_FATURAS.md)
+foi implementada no backend, com três tabelas aditivas pela migração fd3 e
+pareceres imutáveis na prévia; vínculo com statement é opcional e histórico.
+VERIFIED desta camada compara transcrições e não autoriza obrigação. A base
+original foi observada em fc2; fd3 foi validada somente em cópia. Integração
+com títulos e liquidação continua futura.
+
+> **Novo banco — 14/10/2026:** a criação explicitamente confirmada pelo operador
+> gera backup obrigatório verificado, prepara um banco vazio com Alembic e o ativa
+> no caminho central existente. Preserva pareamentos e comprovantes de manutenção,
+> aguarda requisições em andamento e impede repetição da operação. Não usar esse
+> fluxo como correção de histórico. Consultar
+> [docs/NOVO_BANCO_DE_DADOS.md](docs/NOVO_BANCO_DE_DADOS.md).
+
+> **Configurações por plataforma — 14/10/2026:** a edição de URL, fingerprint e
+> token nas configurações é destinada ao computador. No Windows, salvar a conexão
+> pode autenticar o terminal no servidor local via `pairing/local-master`, somente
+> com HTTPS e endereço de loopback. Outros servidores usam token existente ou PIN.
+> O Android mantém o pareamento por QR code ou preenchimento manual na tela de
+> pareamento. A autenticação é confirmada por endpoint protegido, não apenas pela
+> presença de um token salvo. Consulte
+> [docs/CONFIGURACAO_E_AUTENTICACAO.md](docs/CONFIGURACAO_E_AUTENTICACAO.md).
 
 Este documento estabelece as regras mandatórias de engenharia, governança arquitetural e boas práticas para todo o ciclo de vida do sistema **ZM Cesta Básica**. Qualquer desenvolvimento futuro — realizado por engenheiros humanos ou agentes de IA — deve obedecer estritamente a estas diretrizes.
 
 ### Os 6 Princípios Permanentes de Engenharia
 
 ### 1.1. Arquitetura Evolutiva (Monólito Modular)
+
+**Integração autorizada — 14/10/2026:** o catálogo de tipos de cesta passa a
+oferecer registro de montagem padrão e histórico por tipo. As páginas novas
+reutilizam `production` e `inventory`, sem restaurar telas originais ou criar
+livro de estoque paralelo. A revisão informa a versão da receita; a confirmação
+revalida essa versão e os produtos. Reenvios incertos mantêm payload e chave
+localmente para retomada segura. Não há migração de tabelas nesta integração.
+Ver [Montagens e histórico](docs/MONTAGENS_E_HISTORICO.md).
+
+**Personalização de montagem — 14/10/2026:** Registrar montagem pode copiar a
+receita ativa para uma composição local, sem alterar o cadastro. Reutilizar
+`AssemblyCompositionEditor` para editar produtos e quantidades por cesta. O
+backend revalida `allows_customization` na prévia e na confirmação. Manter a
+composição e a identidade do pedido em retomadas incertas. Saldo personalizado
+permanece por lote; saldo padrão permanece por tipo. O histórico mostra o saldo
+personalizado fornecido pela API. A seleção de lote na venda segue como próxima
+etapa; não misturar esses estoques. Ver [Montagens](docs/MONTAGENS_E_HISTORICO.md).
+
+**Exclusão de tipos — regra aprovada em 14/10/2026:** a lixeira distingue apagar
+cadastro/receitas nunca usados de retirar do catálogo um tipo com histórico.
+Para o segundo caso, o usuário confirmou conservar registros anteriores.
+`removed_at` marca a retirada e `is_active=false` impede novas operações.
+Vendas não canceladas, saldo por lote/local/custódia e saídas abertas bloqueiam
+ambos os modos. Revalidar na transação de exclusão; consultas da interface são
+informativas. Nunca apagar/desconectar movimentos, vendas ou montagens como
+consequência de excluir do catálogo. Migração com backup e verificação em cópia
+preenchida. Ver [Exclusão de tipos](docs/EXCLUSAO_DE_TIPOS_DE_CESTA.md).
+
+**Leitura do mapa modular:** os módulos abaixo incluem capacidades preservadas
+no backend e não correspondem todos a menus ativos. Produção em lote,
+desmontagem separada, expedição, responsáveis e tesouraria tiveram as telas
+arquivadas em 13/10/2026. Montagem na venda e serviços financeiros compartilhados
+continuam ativos. Ver [funções arquivadas](docs/FUNCOES_ARQUIVADAS.md).
 O sistema é estruturado como um **Monólito Modular** de alta coesão e baixo acoplamento:
 - **Separação Rígida de Responsabilidades:**
   - `estoque / inventory`: Livro-razão contábil *append-only*, sub-localizações de custódia (armazém da loja `STORE` vs. responsabilidade externa em trânsito `TRANSIT`), cálculo dinâmico de saldos e ajustes manuais de balanço com justificativa auditável.
@@ -24,7 +142,7 @@ O sistema é estruturado como um **Monólito Modular** de alta coesão e baixo a
   - `compras / purchases`: Entrada de insumos de fornecedores, conversão automática de embalagens, atualização do CMPM e estornos contábeis condicionados a saldo.
   - `montagem / production` (Fase 4 - Homologada): Ordens de montagem, consumo atômico de insumos valorizados pelo CMPM, rastreamento de lote padrão vs. personalizado com snapshot imutável, apuração do custo unitário do lote e desmontagem com triagem física de intactos (`STORE`) e perdas (`ASSEMBLY_LOSS`).
   - `vendas / sales` (Fase 5 - Homologada): Vendas de balcão e rotas, baixa atômica de produto acabado, cadastro de clientes (`customers`), contas a receber com parcelamento e quitações parciais (`sales_receivables`), congelamento do CMV e montagem simultânea sob demanda sem duplo consumo.
-  - `expedicao / dispatch` (Fase 6 - Próxima / Simplificada): Registro simples de saídas físicas de cestas, vinculação à pessoa responsável (sem login/sem complexidade de frota ou roteirização), conferência física de retorno (vendidas, devolvidas intactas ao armazém, avariadas com perda e itens ainda sob custódia) e acerto financeiro segregado (dinheiro físico a repassar vs. pagamentos recebidos diretamente na conta da empresa via Pix/cartão).
+  - `expedicao / dispatch` (Fase 6 histórica; interface arquivada): Backend preservado para saídas físicas, responsáveis, conferência, perdas e acertos. Essas funções não têm menus ativos no cliente atual.
   - `financeiro / financial` (Fase 7): Gestão financeira completa, tesouraria, contas financeiras da empresa (`financial_accounts`), contas a pagar de fornecedores e despesas (`accounts_payable`), distinção entre despesas empresariais e retiradas pessoais dos sócios, e livro-caixa imutável (`cash_flow_entries`).
   - `relatorios_e_impressao / reports` (Fase 8): DRE Gerencial com CMV real do razão, margens brutas, fluxo de caixa, exportação de planilhas digitais (CSV e XLSX), relatórios preenchidos automaticamente em PDF, formulários em branco A4 com espaçamento para escrita manual à caneta, e módulo de impressão direta multiplataforma no Flutter (Windows Spooler e Android Print Spooler com compatibilidade para Epson Wi-Fi e rota de contingência para salvar/compartilhar PDF).
   - `infraestrutura / core`: Segurança TLS local, certificado autoassinado com fingerprint SHA-256, pareamento por PIN de 6 dígitos, tokens Bearer com hash SHA-256 no SQLite, transações atômicas sob `BEGIN IMMEDIATE`, durabilidade `PRAGMA synchronous = FULL`, `PRAGMA journal_mode = WAL`, `IdempotencyManager` e rotinas de backup quente.
@@ -35,8 +153,19 @@ O sistema é estruturado como um **Monólito Modular** de alta coesão e baixo a
 ---
 
 ### 1.2. Evolução Segura e Preservação de Comportamento
+
+**Contrato permanente — reforçado pelo usuário em 14/10/2026:** consultar
+[regras de integridade e evolução](docs/REGRAS_DE_INTEGRIDADE_E_EVOLUCAO.md).
+Preservar histórico, referências, unidades, datas e valores registrados ao evoluir
+a interface e o backend. Distinguir ocultar um campo de apagar sua informação;
+validar migrações sobre dados existentes e prever recuperação. Não interpretar
+uma preferência funcional como autorização para enfraquecer essas proteções.
 1. **Inspeção Prévia Obrigatória:** Antes de editar código, inspecionar arquivos afetados e identificar todos os pontos de consumo.
 2. **Avaliação de Impacto e Não-Regressão:** Executar a suíte completa de testes automatizados (`pytest backend/tests -v` e `flutter test`), mantendo 100% de aprovação verde (atualmente 180 testes de backend e 93 testes de front-end aprovados).
+   - **Isolamento de testes:** redirecionar também a engine usada no startup e
+     fábricas internas de sessão para bancos temporários; substituir apenas
+     get_db não protege contra SessionLocal ou lifespan. Restaurar settings ao
+     fim da fixture. Testes nunca gravam no banco real da empresa.
 3. **Proibição de Exclusão ou Substituição Silenciosa:** Proibido remover ou alterar endpoints, schemas ou regras homologadas sem autorização explícita do usuário.
 4. **Evolução do Banco via Migrações Versionadas:** Schema gerenciado exclusivamente pelo Alembic com suporte bidirecional a `upgrade()` e `downgrade()`.
 5. **Rastreabilidade Contábil Imutável:** O livro-razão `inventory_movements` e o livro-caixa `cash_flow_entries` são estritamente *append-only* (protegidos por triggers nativos contra `UPDATE` e `DELETE`). Correções ocorrem exclusivamente por lançamentos reversos rastreáveis (estornos).
@@ -44,9 +173,70 @@ O sistema é estruturado como um **Monólito Modular** de alta coesão e baixo a
 ---
 
 ### 1.3. Front-End Adaptativo e Componentização Centralizada
+
+**Entrega FE-055 — 17/10/2026:** navegação nas cinco áreas, tema compartilhado, preferências locais de aparência e resumos ligados aos serviços existentes estão implementados. Validação final: 334 testes Flutter, 436 de backend, análise sem pendências e build Windows Release concluído. Consultar [integração da interface aprovada](docs/INTEGRACAO_INTERFACE_APROVADA.md) e [evidências](docs/validacoes_frontend/fe-055-integracao-2026-10-17/README.md). As notas de planejamento abaixo são históricas nesse recorte. Regras do domínio permanecem no backend; não foram introduzidos IA, migrações ou novas dependências de execução. Fidelidade integral de todas as telas e homologação em aparelhos Android/iPhone ainda não estão certificadas.
+
+**Direção de produto — 15/10/2026:** o
+[manual de arquitetura do front-end](docs/ARQUITETURA_FRONTEND.md) registra a
+fundação da próxima interface, com prioridade mobile em Android e iPhone e
+adaptação para Windows. O usuário escolheu abrir na visão geral do negócio,
+com acesso direto ao Financeiro. A área financeira deverá reunir pagar e
+receber e comportar a evolução de contas, cartões, extratos e faturas, conforme
+os contratos próprios. O trabalho atual continua sendo de planejamento gradual;
+navegação, tema global e integração nativa iOS ainda precisam de suas entregas.
+
+**Planejamento visual — 14/10/2026:** consultar o
+[plano da nova arquitetura de design](docs/PLANO_ARQUITETURA_DE_DESIGN.md).
+O usuário solicitou alinhamento do plano e comparação de direções visuais antes
+de implementar. O documento é um rascunho de proposta; não autoriza aplicar um
+tema global nem alterar telas, regras financeiras ou dados nesta etapa.
+
+- **Botões flutuantes e rolagem:** manter a ação principal como FAB sobre o conteúdo, conforme preferência do usuário. Reservar espaço apenas no final da rolagem com `fabScrollPadding`, em `client/lib/utils/scroll_layout.dart`. Não criar uma barra fixa que reduza a área visível. O espaço considera a altura do botão no tema, margem e área segura. Consulte [docs/LAYOUT_E_ACOES_DE_PAGINA.md](docs/LAYOUT_E_ACOES_DE_PAGINA.md).
 - **Mobile First com Adaptação Desktop:** Experiência prioritária em Android (toque no galpão/rotas) e fluida no Windows Desktop (telas amplas, tabelas densas e atalhos de teclado).
+- **Filtros acessíveis em janelas estreitas:** opções não podem ficar cortadas e depender de um arraste horizontal indisponível para o mouse. Preferir `Wrap` para filtros rápidos, distribuindo-os em novas linhas conforme a largura. Se uma faixa horizontal for necessária, oferecer navegação visível e utilizável com mouse e toque. Verificar redimensionamento com a tela aberta e acesso à última opção. Reutilizar `ResponsiveFilterBar` em `client/lib/widgets/shared/` nas faixas de filtros das páginas; consultar [layout e ações](docs/LAYOUT_E_ACOES_DE_PAGINA.md).
 - **Componentes Compartilhados:** Reutilização em `client/lib/widgets/shared/` de campos monetários, botões com spinner integrado, cartões padronizados e tabelas responsivas.
 - **Gerenciamento de Estado:** `StatefulWidget` com serviços assíncronos desacoplados por tela e `ValueNotifier` para estados globais de aplicação.
+
+#### Transições suaves de conteúdo condicionado a escolhas
+
+**Diretriz aprovada pelo usuário em 14/10/2026:** quando uma escolha mostra,
+oculta ou substitui informações, evitar mudanças bruscas de altura e posição.
+Usar animação curta e discreta de tamanho e opacidade, com entrada e saída
+suaves. O espaço do conteúdo ocultado deve se recolher gradualmente, sem deixar
+um vazio permanente; ao reaparecer, deve se expandir da mesma forma.
+
+- Manter os controles principais estáveis e preservar preenchimento, foco e
+  rolagem. Não reconstruir ou limpar campos apenas para animar uma informação.
+- Coordenar tamanho e opacidade para que os campos seguintes se desloquem
+  suavemente. Preferir recursos declarativos do Flutter, como `AnimatedSize`
+  e `AnimatedSwitcher`, e reutilizar um componente compartilhado quando o
+  padrão se repetir. Evitar lógica de animação duplicada em cada tela.
+- Como referência visual, usar duração aproximada de 200–250 ms e curva suave,
+  ajustando ao componente. A interação e a regra de negócio não devem aguardar
+  o fim da animação. Alternâncias rápidas devem convergir à escolha mais recente.
+- Respeitar a preferência de redução de movimento da plataforma. Conteúdo
+  oculto não deve continuar recebendo interação ou sendo anunciado como visível
+  por recursos de acessibilidade. A seleção deve ser identificável além da cor.
+- Tratar carregamento, sucesso e erro como estados distintos. Não apresentar
+  falha de consulta como saldo zero nem aplicar resposta antiga a outra seleção.
+
+**Aplicação na Nova Venda — implementada no código em 14/10/2026:**
+usar “Pronta” à esquerda e “Montar” à direita, com o toggle no meio. “Pronta”
+é o padrão e usa verde; “Montar” usa laranja. O toggle acompanha a cor da opção
+selecionada, cujo nome também é destacado. A explicação correspondente aparece
+abaixo. O indicador “Cestas prontas disponíveis: X” aparece somente em “Pronta”,
+para o tipo de cesta selecionado. Ao escolher “Montar”, o indicador desaparece
+com redução suave de opacidade e altura; os campos seguintes sobem suavemente.
+Ao voltar a “Pronta”, ele reaparece com expansão suave e consulta o saldo atual,
+mostrando o estado de carregamento enquanto aguarda a resposta. Antes de
+selecionar um tipo, orientar a seleção sem exibir um saldo fictício.
+
+Esta diretriz trata da apresentação: os contratos de venda e a persistência
+mantêm suas regras. `AnimatedReveal`, em
+`client/lib/widgets/shared/animated_reveal.dart`, centraliza a transição do
+indicador. A tela distingue carregamento, falha e saldo zero, permite repetir
+uma consulta com erro e ignora respostas anteriores à seleção/consulta atual.
+O comportamento depende de recompilar e distribuir o cliente atualizado.
 
 ---
 
@@ -72,6 +262,15 @@ A suíte de testes deve permanecer 100% verde a cada commit, combinando:
 ## 2. Diretrizes Técnicas e Decisões Canônicas de Negócio
 
 ### 2.1. Precisão do Custo Médio Ponderado Móvel (CMPM) em Escala Fixa (Microcentavos)
+
+**Política de estoque de cestas — 14/10/2026:** `tracks_finished_stock` ligado
+permite cesta pronta ou montagem na venda; desligado exige montagem na venda.
+O backend rejeita venda pronta, produção antecipada e ajuste de cestas quando
+desligado. Desativar com saldo pronto é bloqueado. Os movimentos de montagem e
+cancelamento continuam preservados; um cancelamento pode devolver cestas físicas,
+exigindo ativar a opção para vendê-las como prontas. Ver
+[tipos de cesta](docs/TIPOS_DE_CESTA.md) e
+[proposta de evolução](docs/EVOLUCAO_DO_MODULO_DE_CESTAS.md).
 Para produtos cuja unidade-base seja fracionária (gramas `G`, mililitros `ML`), o custo unitário por unidade-base pode ser uma fração de centavo (ex.: 1kg de arroz a R$ 5,50 $\rightarrow$ 1 grama custa R$ 0,0055 = 0,55 centavos).
 - **Representação Numérica Exata:**
   O CMPM unitário da unidade-base de estoque é representado como um **inteiro de escala fixa em microcentavos** (`cost_price_microcents INTEGER`):
@@ -89,6 +288,10 @@ Para produtos cuja unidade-base seja fracionária (gramas `G`, mililitros `ML`),
 ---
 
 ### 2.2. Saídas Físicas, Custódia e Integração com o Domínio de Vendas (Prevenção de Dupla Baixa)
+
+> **Interface arquivada:** esta seção conserva as regras do backend e do
+> histórico de custódia. Não descreve uma rotina disponível nos menus atuais
+> nem autoriza restaurar telas de expedição ou responsáveis.
 A rotina operacional de uma pequena empresa de cestas básicas envolve a saída física de mercadorias sob responsabilidade temporária de colaboradores ou entregadores:
 1. **Pessoas Responsáveis (`responsible_persons`):** Cadastro simples de quem retira as cestas (nome, telefone, status ativo; sem contas de login ou credenciais criptográficas).
 2. **Registro de Saída Física (`stock_dispatches` e `dispatch_items`):**
@@ -109,6 +312,9 @@ A rotina operacional de uma pequena empresa de cestas básicas envolve a saída 
 ---
 
 ### 2.3. Conferência de Estoque, Equação de 4 Termos e Tratamento de Divergências
+
+> **Conferência de expedição arquivada na interface.** As regras abaixo
+> continuam como referência para os registros e serviços preservados.
 No retorno da pessoa responsável ao término do dia ou da rota, o sistema realiza o fechamento operacional:
 1. **Equação Canônica Completa de Conferência de Cestas:**
    Contempla rigorosamente todas as possibilidades físicas, incluindo itens ainda não acertados ou pendentes:
@@ -123,6 +329,9 @@ No retorno da pessoa responsável ao término do dia ou da rota, o sistema reali
 ---
 
 ### 2.4. Acerto Financeiro, Segregação de Meios de Pagamento e Prevenção de Duplicidades
+
+> **Acerto de rota arquivado na interface.** Não confundir esta rotina
+> histórica com os recebimentos e pagamentos ativos de balcão.
 Para evitar qualquer confusão entre faturamento total da rota e o dinheiro físico que deve entrar no cofre da empresa:
 1. **Segregação Obrigatória dos Meios de Pagamento:**
    - **Dinheiro Físico em Mãos:** Papel-moeda recebido pelo responsável proveniente de vendas à vista na rota ou de cobranças de fiados. Este montante físico **deve ser conferido e entregue em mãos à empresa**.
@@ -152,6 +361,12 @@ Para evitar qualquer confusão entre faturamento total da rota e o dinheiro fís
 ---
 
 ### 2.6. Módulo de Relatórios, Planilhas Digitais, Formulários A4 e Impressão Direta (Fase 8)
+
+> **Escopo atual:** a seção conserva o projeto original do módulo. A interface
+> oferece seis relatórios e formulários A, B e D. Relatórios exclusivos de
+> montagem/expedição, formulário C e visões de tesouraria estão arquivados.
+> Dashboard e financeiro usam as consultas simplificadas. Ver
+> [relatórios atuais](docs/RELATORIOS_E_IMPRESSAO.md).
 
 Para apoiar a gestão diária, o arquivamento formal e a rotina manual de prancheta e caneta no galpão, a Fase 8 fornecerá um motor completo de relatórios e impressão com 4 modalidades de saída:
 
@@ -301,6 +516,12 @@ Nenhum código de IA adicionado neste momento. Arquitetura desacoplada via Provi
 ---
 
 ## 6. Mapa Geral de Fases Atualizado
+
+**Registro histórico de implementação e homologação.** “Concluída” abaixo
+significa que a fase foi entregue originalmente, não que suas telas estejam
+ativas. Fase 4: telas de produção/desmontagem arquivadas, motor compartilhado
+ativo. Fase 6: interface arquivada. Fase 7: tesouraria arquivada, contas a pagar e
+pagamentos ativos. Fase 8: relatórios reduzidos e financeiro simplificado.
 
 ```
 [FASE 1] Fundação Arquitetural, TLS, Pareamento, WAL & Esqueleto Flutter ----> [CONCLUÍDA & HOMOLOGADA]

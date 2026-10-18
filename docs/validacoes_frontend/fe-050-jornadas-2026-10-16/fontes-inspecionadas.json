@@ -1,0 +1,233 @@
+{
+  "decision": "FE-050",
+  "date": "2026-10-16",
+  "scope": "Bounded static local source inspection, not installed-app or production verification.",
+  "files": [
+    {
+      "path": "client/lib/views/payables_view.dart",
+      "sha256": "50692fea71297ff54e29347e645776603cdbbf7d9207a85ab8844943dc10af80",
+      "markers": [
+        {
+          "marker": "_showPaymentDialog",
+          "firstLine": 520
+        },
+        {
+          "marker": "_requestVersion",
+          "firstLine": 21
+        }
+      ]
+    },
+    {
+      "path": "client/lib/views/receivables_view.dart",
+      "sha256": "2b6d1e3425325a57b1f28d91710dd287aed9272aa11d29c7e85cc16bb38d3a26",
+      "markers": [
+        {
+          "marker": "_showPaymentDialog",
+          "firstLine": 136
+        }
+      ]
+    },
+    {
+      "path": "client/lib/services/payable_service.dart",
+      "sha256": "c8c8d3d6a8ad1e06656f08e12d4a4dcaddb29316cf60992d1d3c38dd43d4445c",
+      "markers": [
+        {
+          "marker": "recordPayment",
+          "firstLine": 74
+        },
+        {
+          "marker": "idempotencyKey",
+          "firstLine": 63
+        }
+      ]
+    },
+    {
+      "path": "client/lib/services/receivable_service.dart",
+      "sha256": "14da739f8db4c3ca424ee0ecd31e699e929b1c8059b01dc83b5d644c4f7abbeb",
+      "markers": [
+        {
+          "marker": "recordPayment",
+          "firstLine": 72
+        },
+        {
+          "marker": "idempotencyKey",
+          "firstLine": 75
+        }
+      ]
+    },
+    {
+      "path": "client/lib/models/account_payable.dart",
+      "sha256": "f6c731038c4a75ddadbb33a510cdcd719850fbf265dd03ec4a942ae20a3e48e6",
+      "markers": [
+        {
+          "marker": "class PayablePaymentCreate",
+          "firstLine": 185
+        }
+      ]
+    },
+    {
+      "path": "client/lib/models/sales_receivable.dart",
+      "sha256": "97b49f0c85ea7cc8ff1ec2582de534a21be6b2867c307efad677aefdf82fa29e",
+      "markers": [
+        {
+          "marker": "class ReceivablePaymentCreate",
+          "firstLine": 57
+        }
+      ]
+    },
+    {
+      "path": "client/lib/core/api_client.dart",
+      "sha256": "d08c8401e1f9cf491a912ac69c6b545d3902b99665ea65b36b3ba69046957641",
+      "markers": [
+        {
+          "marker": "_buildHeaders",
+          "firstLine": 74
+        },
+        {
+          "marker": "customIdempotencyKey",
+          "firstLine": 75
+        }
+      ]
+    },
+    {
+      "path": "client/lib/services/basket_assembly_service.dart",
+      "sha256": "d2524607043af7ba469872f3c8de1883f320e0354bb04608e2b02bcf3d346cdc",
+      "markers": [
+        {
+          "marker": "SharedPreferences",
+          "firstLine": 38
+        }
+      ]
+    },
+    {
+      "path": "client/lib/services/backup_service.dart",
+      "sha256": "2e7165dae39ab7ba399f77843a11b866e337042ace3b490108648777146a9528",
+      "markers": [
+        {
+          "marker": "SharedPreferences",
+          "firstLine": 16
+        }
+      ]
+    },
+    {
+      "path": "backend/app/core/idempotency.py",
+      "sha256": "2a3448c6f4b28e7e52de1a7cea0b0b9f45236fe8f841c93b3b668f4e766a7c4a",
+      "markers": [
+        {
+          "marker": "def process_transactional_idempotency",
+          "firstLine": 39
+        }
+      ]
+    },
+    {
+      "path": "backend/app/api/v1/payables.py",
+      "sha256": "4c7336cc9d6e7c4594b4c529ec6609e9088d8b269530e30544cee1aa6b3bd2e2",
+      "markers": [
+        {
+          "marker": "def serialize_payable",
+          "firstLine": 35
+        },
+        {
+          "marker": "def post_payable_payment",
+          "firstLine": 173
+        }
+      ]
+    },
+    {
+      "path": "backend/app/api/v1/receivables.py",
+      "sha256": "8d307b742dc3e0783c9768cb7f94ddcc7ed4927be4e69b4ba98002aeafeecce5",
+      "markers": [
+        {
+          "marker": "def serialize_receivable",
+          "firstLine": 31
+        },
+        {
+          "marker": "def post_receivable_payment",
+          "firstLine": 141
+        }
+      ]
+    },
+    {
+      "path": "backend/app/schemas/financial.py",
+      "sha256": "03ae6f5e7bde40c05726ef363175d919f062c54aa81e6de576bc2952810358da",
+      "markers": [
+        {
+          "marker": "class PayablePaymentCreate",
+          "firstLine": 127
+        }
+      ]
+    },
+    {
+      "path": "backend/app/schemas/receivables.py",
+      "sha256": "0bb3358b9d6dc9fe967e1822723aa522af0940113788ab5effd763c5c18e8afb",
+      "markers": [
+        {
+          "marker": "class ReceivablePaymentCreate",
+          "firstLine": 5
+        }
+      ]
+    },
+    {
+      "path": "backend/app/services/financial.py",
+      "sha256": "26d99a573bc0b1441c580ad9c7b3da06c10efa13d185f74678989f9db8703c25",
+      "markers": [
+        {
+          "marker": "def list_accounts_payable",
+          "firstLine": 688
+        },
+        {
+          "marker": "def record_payable_payment",
+          "firstLine": 456
+        }
+      ]
+    },
+    {
+      "path": "backend/app/services/receivables.py",
+      "sha256": "71c5bd6f5787bd761fa1e9d93d1f94bfb391573561cfb1293efa43a42face95f",
+      "markers": [
+        {
+          "marker": "def list_receivables",
+          "firstLine": 17
+        },
+        {
+          "marker": "def record_receivable_payment",
+          "firstLine": 114
+        }
+      ]
+    },
+    {
+      "path": "backend/app/services/business_dashboard.py",
+      "sha256": "b60bb4c4c21923d31408fb650e1508292993384a0c9d26e8fa1feb80aef4b7b9",
+      "markers": [
+        {
+          "marker": "def resolve_business_period",
+          "firstLine": 32
+        },
+        {
+          "marker": "def get_business_dashboard",
+          "firstLine": 55
+        }
+      ]
+    },
+    {
+      "path": "backend/tests/test_payables.py",
+      "sha256": "fed762413b0b763b5fa8d2df12b9a5fe8ce26e63a4c9ca263f27a157c115d3b8",
+      "markers": [
+        {
+          "marker": "def test_payable_idempotency",
+          "firstLine": 244
+        }
+      ]
+    },
+    {
+      "path": "backend/tests/test_receivables.py",
+      "sha256": "dded78a446d8e9ba6272d990c137f79adbae28c84d059e87f6ad8123f59f29f1",
+      "markers": [
+        {
+          "marker": "def test_receivable_payment_idempotency",
+          "firstLine": 150
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+--- a/client/test/phase8_models_test.dart
++++ b/client/test/phase8_models_test.dart
+@@ -1,5 +1,5 @@
+ import 'package:flutter_test/flutter_test.dart';
+-import 'package:zm_cesta_basica_client/models/dashboard.dart';
++import '../_archive/models/dashboard_legacy.dart';
+ import 'package:zm_cesta_basica_client/models/report.dart';
+ 
+ void main() {

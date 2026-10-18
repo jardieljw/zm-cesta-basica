@@ -1,0 +1,182 @@
+{
+  "date": "2026-10-16",
+  "decision": "FE-052",
+  "note": "Local preservation. README and manifest excluded; not a Git commit.",
+  "files": [
+    {
+      "path": "acabamento-integrado-zm-preview.html",
+      "bytes": 189269,
+      "sha256": "cf6af34f8b39c101fa913dd2226058596dad6d4641f849a22a322d56f7556d0f"
+    },
+    {
+      "path": "acabamento-integrado-zm.html",
+      "bytes": 87452,
+      "sha256": "774f5bbce0ccbc8048818a2daa24531804619551432113795a00a6dbe4eaf53f"
+    },
+    {
+      "path": "acabamento-regressao.json",
+      "bytes": 66394,
+      "sha256": "b801a56baee33e4bdbd88c43d668190cb8bf2646398bc5e9d4760ed13bd02af5"
+    },
+    {
+      "path": "acabamento-verificacao.json",
+      "bytes": 61083,
+      "sha256": "47e7b4c69a46795ce4d2205d1a0760649a936af4676c595755f250090b9ad445"
+    },
+    {
+      "path": "acabamento.css",
+      "bytes": 5100,
+      "sha256": "21e840d6f3af82a3b85391d5993c3a02410f44e163b7463f5d695c3d8b9474f6"
+    },
+    {
+      "path": "check-acabamento.cjs",
+      "bytes": 13200,
+      "sha256": "4490500b2f3cabdf17778e5def4c0d218b33ee4efe7cbb8de509125c0a704d21"
+    },
+    {
+      "path": "check-regressao.cjs",
+      "bytes": 11630,
+      "sha256": "3ca8aff868c0dae6a28c416cf4e995af61e8d74a5bc4e3d05edf63a837fbad8b"
+    },
+    {
+      "path": "edge-filtros-abertos.png",
+      "bytes": 145636,
+      "sha256": "7a9599566c199d138a616f433d24ed2993643014f00987f3dcebd6ef3ff32866"
+    },
+    {
+      "path": "edge-inicio-acabamento.png",
+      "bytes": 144298,
+      "sha256": "8f94854149140fef517c1f8ff693a7e86837b6ef4bf4c59d89181e082f23f818"
+    },
+    {
+      "path": "edge-inicio-dia-dark.png",
+      "bytes": 125566,
+      "sha256": "b0c74ca02ccc7e8e989f877b8f7461ebe8e1847e259e7710999d6b1b3ec73a6d"
+    },
+    {
+      "path": "edge-inicio-dia-light.png",
+      "bytes": 140694,
+      "sha256": "4c74a0215804fc0977b04f779b326637eb0d4ebfd3f1f5bdf9181d53467ef739"
+    },
+    {
+      "path": "edge-inicio-semana-claro.png",
+      "bytes": 147788,
+      "sha256": "72b5cc1ec2db54e5eda5efa2127c94d77d9b2cb772feb0d8b2087fca92adcd8e"
+    },
+    {
+      "path": "edge-negocio-computador.png",
+      "bytes": 143648,
+      "sha256": "e791e6dc580ee42d80a60ec846651691ff18ec72e5fc829dd2c0813fba52af95"
+    },
+    {
+      "path": "edge-negocio-mes.png",
+      "bytes": 109661,
+      "sha256": "4ed67b92ebdc1ebd8fab230a902984f37dbf002af51ef9b725d75a354ac9506e"
+    },
+    {
+      "path": "edge-pagar-escuro-formulario.png",
+      "bytes": 120935,
+      "sha256": "c45b425330b6329d7540d4672319920e2fe9269d76e0be5cf5da1a60d2335804"
+    },
+    {
+      "path": "edge-pagar-escuro-parcial.png",
+      "bytes": 109408,
+      "sha256": "84815810f0a1c72ea2d5f2d3c7ae0c29072d4d3a6468d88f41467e8be2b39ed8"
+    },
+    {
+      "path": "edge-receber-claro-celular.png",
+      "bytes": 131968,
+      "sha256": "a315966bb786899a3df9dcb4409bb11dfb351466862750ab0188611be92af953"
+    },
+    {
+      "path": "edge-receber-computador.png",
+      "bytes": 174512,
+      "sha256": "f933a0231c4cea92a7ddb4f89fd72edce73571c9293cb97efc31800091d50344"
+    },
+    {
+      "path": "edge-receber-escuro-computador.png",
+      "bytes": 168906,
+      "sha256": "10347f3b64e3df2f8ac4f31ae04a96a8de7f2f205ba27b50e62c1a204dc926d4"
+    },
+    {
+      "path": "gerar-revisao.py",
+      "bytes": 2475,
+      "sha256": "39376c9672e5ba2f3fb6e6b103019879accc9c67f015684950497d4ba5f7cb40"
+    },
+    {
+      "path": "lista-financeira.js",
+      "bytes": 2412,
+      "sha256": "777b5a60f0ac440437ca151f4e34074fcb63387df1cafce163414321181d3532"
+    },
+    {
+      "path": "origem-e-alteracoes.json",
+      "bytes": 1535,
+      "sha256": "320e05d4058137f6aef35c3905e62ff06ba44e3cebd5080565b8ecb1be5c0a3f"
+    },
+    {
+      "path": "saude-e-preservacao.json",
+      "bytes": 1828,
+      "sha256": "54394f2b1f38ac818626c0adb88a19c389a3eb19786c8c0fe72412fc7f537cc9"
+    },
+    {
+      "path": "webkit-filtros-abertos.png",
+      "bytes": 161646,
+      "sha256": "7d9a3c75e371839a862167ba479af62fb9b075d88307c349c7da66b6d24e1039"
+    },
+    {
+      "path": "webkit-inicio-acabamento.png",
+      "bytes": 138803,
+      "sha256": "2d4eccd176fdd1d20b76a3fd232cc56d03798deb50b42fb7c8434cd72e249781"
+    },
+    {
+      "path": "webkit-inicio-dia-dark.png",
+      "bytes": 75603,
+      "sha256": "098c13ba2553d3f74cd612871a0e555ac7de1a1a6de5002f7784ed8c6df04aa8"
+    },
+    {
+      "path": "webkit-inicio-dia-light.png",
+      "bytes": 136543,
+      "sha256": "b8d83c239b67ebd04c3e0a7a98bcfcb6979115dd068c9893fae22aac83dcb063"
+    },
+    {
+      "path": "webkit-inicio-semana-claro.png",
+      "bytes": 143160,
+      "sha256": "f1fbbed69d322214bdb2cab3c1ed52ae8b3665194ee30f2f3ac7f699ef16bf9e"
+    },
+    {
+      "path": "webkit-negocio-computador.png",
+      "bytes": 187294,
+      "sha256": "c23f80a723bbec9c646d84408c867436c1204b6c11180f2d1e38f51bb3537120"
+    },
+    {
+      "path": "webkit-negocio-mes.png",
+      "bytes": 130421,
+      "sha256": "b63f4d0fc0209645b35ed4abb9d50606444a37d7d3693d5b5d54eabcd0ece373"
+    },
+    {
+      "path": "webkit-pagar-escuro-formulario.png",
+      "bytes": 82906,
+      "sha256": "a11f856b56061ada4f6a039fb4f4fcb1dfbc479e3ba943e14f43106845676d4b"
+    },
+    {
+      "path": "webkit-pagar-escuro-parcial.png",
+      "bytes": 62448,
+      "sha256": "2a5c0c4b72d4b63dc77810c4c2aa13f90dd2a808592108c820ad09187651e34f"
+    },
+    {
+      "path": "webkit-receber-claro-celular.png",
+      "bytes": 132091,
+      "sha256": "cc53b01519a32fd184f3770ef55e91cd1f2d07221508a8f47e3d7492c3dc0324"
+    },
+    {
+      "path": "webkit-receber-computador.png",
+      "bytes": 213892,
+      "sha256": "b0f60edb612b4fd5ba7e489bb5d85cb3675e49280d36539366400689d95d8b7c"
+    },
+    {
+      "path": "webkit-receber-escuro-computador.png",
+      "bytes": 87057,
+      "sha256": "ec3ff6a35ec1baca844fa7fb33d73310d61ba605e4039846306705405a28b0f4"
+    }
+  ]
+}

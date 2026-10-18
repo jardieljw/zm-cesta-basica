@@ -13,7 +13,7 @@ class AuthService {
 
   AuthService({ApiClient? apiClient, SecureStorageService? storage})
       : _storage = storage ?? SecureStorageService(),
-        _apiClient = apiClient ?? ApiClient();
+        _apiClient = apiClient ?? ApiClient(storage: storage);
 
   Future<String> _getOrCreateDevicePublicId() async {
     String? id = await _storage.getDevicePublicId();
@@ -51,7 +51,8 @@ class AuthService {
     await _storage.saveFingerprint(tlsFingerprint);
 
     final devicePublicId = await _getOrCreateDevicePublicId();
-    final deviceName = customDeviceName ?? (Platform.isAndroid ? 'Tablet Android' : 'Terminal Windows');
+    final deviceName = customDeviceName ??
+        (Platform.isAndroid ? 'Tablet Android' : 'Terminal Windows');
 
     final body = {
       'pin_code': pinCode,
@@ -82,7 +83,8 @@ class AuthService {
     );
   }
 
-  Future<DeviceAuthCredentials> pairWithQrPayload(String qrPayloadString) async {
+  Future<DeviceAuthCredentials> pairWithQrPayload(
+      String qrPayloadString) async {
     final Map<String, dynamic> data = json.decode(qrPayloadString);
     final qrData = QrPayloadData.fromJson(data);
 

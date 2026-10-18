@@ -1,0 +1,95 @@
+{
+  "date": "2026-10-16",
+  "decisions": [
+    "FE-041",
+    "FE-042",
+    "FE-043"
+  ],
+  "scope": "Fictional connected preview only; original accepted homepage preserved; no Flutter/API/business data changes",
+  "files": [
+    {
+      "file": "negocio-em-foco-zm.html",
+      "origin": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\negocio-em-foco-zm.html",
+      "bytes": 53376,
+      "sha256": "37b4ee4d1da14a45ec29996d867b9d5ce22f8ef291fdeda85aac084731d0c385"
+    },
+    {
+      "file": "negocio-em-foco-zm-preview.html",
+      "origin": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\negocio-em-foco-zm-preview.html",
+      "bytes": 146654,
+      "sha256": "2509f1b2d8951332230af8cd8af9615d6acd832d30add9966221ef1303217c55"
+    },
+    {
+      "file": "check-negocio-em-foco.cjs",
+      "origin": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\check-negocio-em-foco.cjs",
+      "bytes": 13865,
+      "sha256": "c2f0fe25550934b9cb14a799b7d85b2205d1c5b56cfa2f289bd3ef8341f799f8"
+    },
+    {
+      "file": "negocio-em-foco-verificacao.json",
+      "origin": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\negocio-em-foco-verificacao.json",
+      "bytes": 11442,
+      "sha256": "d92d1c80dbd285428b458751a5c2fc379fdc17ba9cc6a5c3fe26765aa9bc1978"
+    },
+    {
+      "file": "foco-edge-inicio-celular.png",
+      "origin": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\foco-edge-inicio-celular.png",
+      "bytes": 79310,
+      "sha256": "75a2d30e6149166c3137c1db5d1bacc4e6a8f51f723dc294f56bcc248b907138"
+    },
+    {
+      "file": "foco-edge-inicio-escuro.png",
+      "origin": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\foco-edge-inicio-escuro.png",
+      "bytes": 72879,
+      "sha256": "e579eb2ff08215ed00de0c6591c65a6fef51ba216990b6bde9ec22a97ef6924d"
+    },
+    {
+      "file": "foco-edge-inicio-windows.png",
+      "origin": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\foco-edge-inicio-windows.png",
+      "bytes": 76155,
+      "sha256": "2858e644b36360d83f5ba7282435fe9064814b5aa19df5baad9457fe2ca298fa"
+    },
+    {
+      "file": "foco-edge-pagamento-celular.png",
+      "origin": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\foco-edge-pagamento-celular.png",
+      "bytes": 57715,
+      "sha256": "6b701a98885c73b1cb11a1f1c3abf61c11cb3ac9b21364ffbf4677624d646b67"
+    },
+    {
+      "file": "foco-edge-calendario-320.png",
+      "origin": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\foco-edge-calendario-320.png",
+      "bytes": 14819,
+      "sha256": "0bcff8272f4ece49e27cf6eb18d9cc74ec3e1f06ca384bdaf60063797a60a245"
+    },
+    {
+      "file": "foco-webkit-inicio-celular.png",
+      "origin": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\foco-webkit-inicio-celular.png",
+      "bytes": 66665,
+      "sha256": "006029f8f064bc62ce52c371159c69839985e14ac93a8cbbd64fed648bd6edc4"
+    },
+    {
+      "file": "foco-webkit-inicio-escuro.png",
+      "origin": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\foco-webkit-inicio-escuro.png",
+      "bytes": 62266,
+      "sha256": "3b933e0055634a10de9b88f93bfa09554ece9a561d98ebd45745e862ba5925fb"
+    },
+    {
+      "file": "foco-webkit-inicio-windows.png",
+      "origin": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\foco-webkit-inicio-windows.png",
+      "bytes": 64783,
+      "sha256": "bd5cec68af2c1dc803841fc4b65267a39675ba3b7e29d1302225d5a34018020b"
+    },
+    {
+      "file": "foco-webkit-pagamento-celular.png",
+      "origin": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\foco-webkit-pagamento-celular.png",
+      "bytes": 52204,
+      "sha256": "326092d2230c357c7ce8db8127838baba8a78c082c287749ade41faea82e3428"
+    },
+    {
+      "file": "foco-webkit-calendario-320.png",
+      "origin": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\foco-webkit-calendario-320.png",
+      "bytes": 12648,
+      "sha256": "ed9af8c0b070fd77b6e323f92589cc2de9d747d7f419ce4b8f580762dcf6567a"
+    }
+  ]
+}

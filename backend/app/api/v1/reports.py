@@ -7,6 +7,8 @@ from app.core.database import get_db
 from app.api.deps import get_current_device
 from app.models.auth import PairedDevice
 from app.schemas.reports import ReportResponse
+from app.schemas.form_print import FormExportRequest
+from app.services.business_dashboard import get_business_financial_report
 from app.services.reports import (
     get_report_sales_dispatches,
     get_report_assembly,
@@ -27,6 +29,21 @@ from app.services.report_exporters import (
 router = APIRouter()
 
 
+@router.get("/reports/business-financial-summary", response_model=ReportResponse)
+def business_financial_report(
+    filter_type: str = Query("today"),
+    date: Optional[str] = Query(None),
+    start_date: Optional[str] = Query(None),
+    end_date: Optional[str] = Query(None),
+    month: Optional[int] = Query(None, ge=1, le=12),
+    year: Optional[int] = Query(None, ge=2000, le=2200),
+    db: Session = Depends(get_db),
+    device: PairedDevice = Depends(get_current_device),
+):
+    return get_business_financial_report(db, filter_type=filter_type, date_str=date,
+        start_date_str=start_date, end_date_str=end_date, month=month, year=year)
+
+
 @router.get("/reports/sales-dispatches", response_model=ReportResponse)
 def report_sales_dispatches(
     filter_type: str = Query("today"),
@@ -39,6 +56,7 @@ def report_sales_dispatches(
     customer_id: Optional[str] = Query(None),
     responsible_id: Optional[str] = Query(None),
     sale_mode: Optional[str] = Query(None),
+    include_dispatches: bool = Query(True),
     db: Session = Depends(get_db),
     device: PairedDevice = Depends(get_current_device),
 ):
@@ -54,6 +72,7 @@ def report_sales_dispatches(
         customer_id=customer_id,
         responsible_id=responsible_id,
         sale_mode=sale_mode,
+        include_dispatches=include_dispatches,
     )
 
 
@@ -245,6 +264,7 @@ def export_report(
     status: Optional[str] = Query(None),
     nature: Optional[str] = Query(None),
     sale_mode: Optional[str] = Query(None),
+    include_dispatches: bool = Query(True),
     is_custom: Optional[bool] = Query(None),
     movement_type: Optional[str] = Query(None),
     only_below_min: bool = Query(False),
@@ -267,6 +287,7 @@ def export_report(
             db=db, filter_type=filter_type, date_str=date, start_date_str=start_date,
             end_date_str=end_date, month=month, year=year, basket_type_id=basket_type_id,
             customer_id=customer_id, responsible_id=responsible_id, sale_mode=sale_mode,
+            include_dispatches=include_dispatches,
         )
     elif report_type == "assembly":
         report_data = get_report_assembly(
@@ -298,6 +319,11 @@ def export_report(
     elif report_type == "physical-inventory":
         report_data = get_report_physical_inventory(
             db=db, category=category, only_below_min=only_below_min,
+        )
+    elif report_type == "business-financial-summary":
+        report_data = get_business_financial_report(
+            db, filter_type=filter_type, date_str=date, start_date_str=start_date,
+            end_date_str=end_date, month=month, year=year,
         )
     elif report_type == "financial-summary":
         report_data = get_report_financial_summary(
@@ -372,3 +398,23 @@ def export_blank_template_xlsx(
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'}
     )
+
+
+@router.post('/reports/blank-templates/{form_type}/export')
+def export_configured_form(
+    form_type: str, request: FormExportRequest,
+    device: PairedDevice = Depends(get_current_device),
+):
+    """Export the displayed snapshot with presentation options. No database writes."""
+    try:
+        canonical = get_blank_form_data(form_type)
+        report = request.report
+        if report.metadata.report_type not in {f'blank-{form_type}', f'audit-{form_type}'}:
+            raise ValueError('O documento não corresponde ao modelo selecionado.')
+        if len(report.columns) != len(report.headers) or any(c not in canonical.columns for c in report.columns):
+            raise ValueError('Colunas incompatíveis com o modelo.')
+        content = export_blank_template_to_xlsx(form_type, report=report, options=request.options)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail={'error_code': 'VALIDATION_ERROR', 'message': str(exc)})
+    return Response(content=content, media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        headers={'Content-Disposition': f'attachment; filename="formulario_{form_type}.xlsx"'})

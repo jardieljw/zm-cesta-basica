@@ -1,0 +1,328 @@
+--- a/client/lib/l10n/app_localizations.dart
++++ b/client/lib/l10n/app_localizations.dart
+@@ -3466,12 +3466,6 @@
+   /// **'O valor do pagamento deve ser maior que zero.'**
+   String get payablePaymentAmountMustBePositive;
+ 
+-  /// No description provided for @payableSelectAccount.
+-  ///
+-  /// In pt, this message translates to:
+-  /// **'Conta Financeira de Saída'**
+-  String get payableSelectAccount;
+-
+   /// No description provided for @payableNoPayables.
+   ///
+   /// In pt, this message translates to:
+@@ -3637,7 +3631,7 @@
+   /// No description provided for @homeDashboardDescription.
+   ///
+   /// In pt, this message translates to:
+-  /// **'Visão consolidada operacional, faturamento e livro-caixa'**
++  /// **'Vendas, estoque, recebimentos, pagamentos e resultado'**
+   String get homeDashboardDescription;
+ 
+   /// No description provided for @moduleReports.
+@@ -3778,48 +3772,18 @@
+   /// **'Estoque em Nível Regular'**
+   String get dashboardStockNormal;
+ 
+-  /// No description provided for @dashboardSectionFinancial.
+-  ///
+-  /// In pt, this message translates to:
+-  /// **'Financeiro & Tesouraria'**
+-  String get dashboardSectionFinancial;
+-
+-  /// No description provided for @dashboardOpenReceivables.
+-  ///
+-  /// In pt, this message translates to:
+-  /// **'A Receber (Em Aberto)'**
+-  String get dashboardOpenReceivables;
+-
+   /// No description provided for @dashboardOverdueReceivables.
+   ///
+   /// In pt, this message translates to:
+   /// **'A Receber Vencidos'**
+   String get dashboardOverdueReceivables;
+ 
+-  /// No description provided for @dashboardEffectiveReceived.
+-  ///
+-  /// In pt, this message translates to:
+-  /// **'Recebimentos Efetivos'**
+-  String get dashboardEffectiveReceived;
+-
+-  /// No description provided for @dashboardOpenPayables.
+-  ///
+-  /// In pt, this message translates to:
+-  /// **'A Pagar (Em Aberto)'**
+-  String get dashboardOpenPayables;
+-
+   /// No description provided for @dashboardOverduePayables.
+   ///
+   /// In pt, this message translates to:
+   /// **'A Pagar Vencidos'**
+   String get dashboardOverduePayables;
+ 
+-  /// No description provided for @dashboardEffectivePaid.
+-  ///
+-  /// In pt, this message translates to:
+-  /// **'Pagamentos Efetuados'**
+-  String get dashboardEffectivePaid;
+-
+   /// No description provided for @dashboardCashInflow.
+   ///
+   /// In pt, this message translates to:
+@@ -3838,18 +3802,6 @@
+   /// **'Saldo Disponível (Tesouraria)'**
+   String get dashboardTreasuryBalance;
+ 
+-  /// No description provided for @dashboardProjectedCash.
+-  ///
+-  /// In pt, this message translates to:
+-  /// **'Saldo de Caixa Projetado'**
+-  String get dashboardProjectedCash;
+-
+-  /// No description provided for @dashboardProjectionNotice.
+-  ///
+-  /// In pt, this message translates to:
+-  /// **'Atenção: Valores projetados são estimativas futuras e NÃO constituem dinheiro disponível em caixa.'**
+-  String get dashboardProjectionNotice;
+-
+   /// No description provided for @reportsTitle.
+   ///
+   /// In pt, this message translates to:
+@@ -4672,12 +4624,6 @@
+   /// **'A data de vencimento é obrigatória para compras pendentes.'**
+   String get purchasePaymentDueDateRequired;
+ 
+-  /// No description provided for @purchasePaymentFinancialAccountLabel.
+-  ///
+-  /// In pt, this message translates to:
+-  /// **'Conta Financeira de Liquidação'**
+-  String get purchasePaymentFinancialAccountLabel;
+-
+   /// No description provided for @purchasePaymentPendingNotice.
+   ///
+   /// In pt, this message translates to:
+@@ -4803,6 +4749,222 @@
+   /// In pt, this message translates to:
+   /// **'Falha ao restaurar backup: {error}'**
+   String backupRestoreErrorMsg(String error);
++
++  /// No description provided for @companyFinanceTitle.
++  ///
++  /// In pt, this message translates to:
++  /// **'Recebimentos, pagamentos e resultado'**
++  String get companyFinanceTitle;
++
++  /// No description provided for @companyFinancialReportTitle.
++  ///
++  /// In pt, this message translates to:
++  /// **'Resultado, recebimentos e pagamentos'**
++  String get companyFinancialReportTitle;
++
++  /// No description provided for @companyPaymentsScope.
++  ///
++  /// In pt, this message translates to:
++  /// **'Valores confirmados no período selecionado, incluindo os estornos registrados nesse período.'**
++  String get companyPaymentsScope;
++
++  /// No description provided for @companyReceived.
++  ///
++  /// In pt, this message translates to:
++  /// **'Recebimentos confirmados'**
++  String get companyReceived;
++
++  /// No description provided for @companyPaid.
++  ///
++  /// In pt, this message translates to:
++  /// **'Pagamentos confirmados'**
++  String get companyPaid;
++
++  /// No description provided for @companyPaymentDifference.
++  ///
++  /// In pt, this message translates to:
++  /// **'Diferença entre recebido e pago'**
++  String get companyPaymentDifference;
++
++  /// No description provided for @companyDifferenceExplanation.
++  ///
++  /// In pt, this message translates to:
++  /// **'Compara os movimentos do período. Não representa saldo bancário nem lucro.'**
++  String get companyDifferenceExplanation;
++
++  /// No description provided for @companyResultTitle.
++  ///
++  /// In pt, this message translates to:
++  /// **'Resultado das vendas no período'**
++  String get companyResultTitle;
++
++  /// No description provided for @companyResultExplanation.
++  ///
++  /// In pt, this message translates to:
++  /// **'As vendas a prazo entram no valor vendido, mesmo antes do recebimento. As outras despesas são consideradas quando pagas.'**
++  String get companyResultExplanation;
++
++  /// No description provided for @companySalesRevenue.
++  ///
++  /// In pt, this message translates to:
++  /// **'Valor das vendas'**
++  String get companySalesRevenue;
++
++  /// No description provided for @companySoldCost.
++  ///
++  /// In pt, this message translates to:
++  /// **'Custo das cestas vendidas'**
++  String get companySoldCost;
++
++  /// No description provided for @companyGrossProfit.
++  ///
++  /// In pt, this message translates to:
++  /// **'Lucro bruto das vendas'**
++  String get companyGrossProfit;
++
++  /// No description provided for @companyOperatingExpenses.
++  ///
++  /// In pt, this message translates to:
++  /// **'Outras despesas do negócio pagas'**
++  String get companyOperatingExpenses;
++
++  /// No description provided for @companyOperatingResult.
++  ///
++  /// In pt, this message translates to:
++  /// **'Resultado gerencial do período'**
++  String get companyOperatingResult;
++
++  /// No description provided for @companyCostExplanation.
++  ///
++  /// In pt, this message translates to:
++  /// **'O custo dos insumos vendidos já está no custo das cestas. As compras de estoque não são descontadas novamente do lucro bruto. Retiradas pessoais são mostradas separadamente.'**
++  String get companyCostExplanation;
++
++  /// No description provided for @companyPendingTitle.
++  ///
++  /// In pt, this message translates to:
++  /// **'Contas ainda pendentes'**
++  String get companyPendingTitle;
++
++  /// No description provided for @companyPendingScope.
++  ///
++  /// In pt, this message translates to:
++  /// **'Totais atuais de todas as contas em aberto. Os vencimentos no período aparecem abaixo.'**
++  String get companyPendingScope;
++
++  /// No description provided for @companyPendingReceivable.
++  ///
++  /// In pt, this message translates to:
++  /// **'Total pendente a receber'**
++  String get companyPendingReceivable;
++
++  /// No description provided for @companyPendingPayable.
++  ///
++  /// In pt, this message translates to:
++  /// **'Total pendente a pagar'**
++  String get companyPendingPayable;
++
++  /// No description provided for @companyReceivableDueInPeriod.
++  ///
++  /// In pt, this message translates to:
++  /// **'A receber com vencimento no período'**
++  String get companyReceivableDueInPeriod;
++
++  /// No description provided for @companyPayableDueInPeriod.
++  ///
++  /// In pt, this message translates to:
++  /// **'A pagar com vencimento no período'**
++  String get companyPayableDueInPeriod;
++
++  /// No description provided for @companyReceivedDetails.
++  ///
++  /// In pt, this message translates to:
++  /// **'Recebimentos confirmados no período'**
++  String get companyReceivedDetails;
++
++  /// No description provided for @companyPaidDetails.
++  ///
++  /// In pt, this message translates to:
++  /// **'Pagamentos confirmados no período'**
++  String get companyPaidDetails;
++
++  /// No description provided for @companyNoPayments.
++  ///
++  /// In pt, this message translates to:
++  /// **'Nenhum registro confirmado neste período.'**
++  String get companyNoPayments;
++
++  /// No description provided for @companyPaidStatus.
++  ///
++  /// In pt, this message translates to:
++  /// **'Recebida'**
++  String get companyPaidStatus;
++
++  /// No description provided for @companyPartialStatus.
++  ///
++  /// In pt, this message translates to:
++  /// **'Recebida parcialmente'**
++  String get companyPartialStatus;
++
++  /// No description provided for @companyPendingStatus.
++  ///
++  /// In pt, this message translates to:
++  /// **'A receber'**
++  String get companyPendingStatus;
++
++  /// No description provided for @companyStockAvailable.
++  ///
++  /// In pt, this message translates to:
++  /// **'Disponível'**
++  String get companyStockAvailable;
++
++  /// No description provided for @companyMissingCost.
++  ///
++  /// In pt, this message translates to:
++  /// **'Há {count} venda(s) com custo incompleto. O resultado gerencial precisa ser conferido.'**
++  String companyMissingCost(int count);
++
++  /// No description provided for @companyStockPaid.
++  ///
++  /// In pt, this message translates to:
++  /// **'Compras de estoque pagas: {value}'**
++  String companyStockPaid(String value);
++
++  /// No description provided for @companyWithdrawalsPaid.
++  ///
++  /// In pt, this message translates to:
++  /// **'Retiradas pessoais pagas: {value}'**
++  String companyWithdrawalsPaid(String value);
++
++  /// No description provided for @companyOverdueAmount.
++  ///
++  /// In pt, this message translates to:
++  /// **'Vencido: {value}'**
++  String companyOverdueAmount(String value);
++
++  /// No description provided for @companyPaymentDescription.
++  ///
++  /// In pt, this message translates to:
++  /// **'{method} · {date}'**
++  String companyPaymentDescription(String method, String date);
++
++  /// No description provided for @companyPurchasesTitle.
++  ///
++  /// In pt, this message translates to:
++  /// **'Compras registradas no período'**
++  String get companyPurchasesTitle;
++
++  /// No description provided for @companyPurchaseCount.
++  ///
++  /// In pt, this message translates to:
++  /// **'{count} compra(s) confirmada(s)'**
++  String companyPurchaseCount(int count);
++
++  /// No description provided for @companyPurchasesExplanation.
++  ///
++  /// In pt, this message translates to:
++  /// **'Inclui compras pagas e a prazo. Os pagamentos confirmados aparecem separadamente no financeiro.'**
++  String get companyPurchasesExplanation;
+ }
+ 
+ class _AppLocalizationsDelegate

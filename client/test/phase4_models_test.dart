@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zm_cesta_basica_client/models/production_batch.dart';
+import '../_archive/models/production_batch.dart';
 
 void main() {
   group('Phase 4 ProductionBatch Model Tests', () {

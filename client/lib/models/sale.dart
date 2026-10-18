@@ -103,6 +103,7 @@ class SaleCreate {
 
 class SaleItem {
   final String id;
+  final bool assembledOnDemand;
   final String basketTypeId;
   final String? basketTypeName;
   final String? productionBatchId;
@@ -115,6 +116,7 @@ class SaleItem {
 
   SaleItem({
     required this.id,
+    this.assembledOnDemand = false,
     required this.basketTypeId,
     this.basketTypeName,
     this.productionBatchId,
@@ -129,6 +131,7 @@ class SaleItem {
   factory SaleItem.fromJson(Map<String, dynamic> json) {
     return SaleItem(
       id: json['id'] as String,
+      assembledOnDemand: json['assembled_on_demand'] as bool? ?? false,
       basketTypeId: json['basket_type_id'] as String,
       basketTypeName: json['basket_type_name'] as String?,
       productionBatchId: json['production_batch_id'] as String?,
@@ -210,7 +213,9 @@ class Sale {
       totalAmountCents: (json['total_amount_cents'] as num).toInt(),
       totalCostCents: (json['total_cost_cents'] as num?)?.toInt() ?? 0,
       grossMarginCents: (json['gross_margin_cents'] as num?)?.toInt() ?? 0,
-      canceledAt: json['canceled_at'] != null ? DateTime.parse(json['canceled_at'] as String) : null,
+      canceledAt: json['canceled_at'] != null
+          ? DateTime.parse(json['canceled_at'] as String)
+          : null,
       cancellationReason: json['cancellation_reason'] as String?,
       notes: json['notes'] as String?,
       items: (json['items'] as List<dynamic>)
@@ -220,7 +225,8 @@ class Sale {
       receivableDueDate: json['receivable_due_date'] != null
           ? DateTime.parse(json['receivable_due_date'] as String)
           : null,
-      receivableBalanceCents: (json['receivable_balance_cents'] as num?)?.toInt(),
+      receivableBalanceCents:
+          (json['receivable_balance_cents'] as num?)?.toInt(),
       receivableStatus: json['receivable_status'] as String?,
     );
   }

@@ -1,0 +1,217 @@
+<style>
+#zm-navigation-demo {width:100%;}
+#zm-navigation-demo .stage {padding:16px 0;min-height:970px;display:flex;justify-content:center;align-items:flex-start;}
+#zm-navigation-demo .app {--page:light-dark(#f6f7f9,#141518);--surface:light-dark(#ffffff,#24262b);--ink:light-dark(#222730,#eef0f5);--sub:light-dark(#5c6472,#b6becb);--line:light-dark(#e0e4eb,#454b57);--accent:light-dark(#2866ae,#a7caff);--accent-ink:light-dark(#ffffff,#142947);--soft:light-dark(#edf4fd,#2b3e57);--warn:light-dark(#80501a,#f2c78d);--warn-fill:light-dark(#fff2df,#4b3b29);--shadow:light-dark(#16243e18,#00000055);--radius:18px; width:100%;max-width:420px;position:relative;overflow:clip;background:var(--page);color:var(--ink);border:1px solid var(--line);border-radius:26px;box-shadow:0 15px 45px var(--shadow);font:15px/1.45 'Segoe UI',system-ui,sans-serif;}
+#zm-navigation-demo .app * {box-sizing:border-box;}
+#zm-navigation-demo button {font:inherit;color:inherit;min-height:44px;border:0;background:transparent;border-radius:12px;transition:background 160ms ease,transform 160ms ease;}
+#zm-navigation-demo button:hover {background:var(--soft);}
+#zm-navigation-demo button:active {transform:scale(.985);}
+#zm-navigation-demo .app h2,#zm-navigation-demo .app h3,#zm-navigation-demo .app p {margin:0;}
+#zm-navigation-demo .app h2 {font-size:23px;font-weight:500;letter-spacing:-.6px;}
+#zm-navigation-demo .app h3 {font-size:16px;font-weight:500;}
+#zm-navigation-demo .demo-label {padding:13px 96px 13px 18px;font-size:11px;color:var(--sub);border-bottom:1px solid var(--line);background:var(--surface);}
+#zm-navigation-demo .frame {display:grid;grid-template-areas:'header' 'content' 'nav';grid-template-columns:minmax(0,1fr);}
+#zm-navigation-demo .app-header {grid-area:header;display:flex;align-items:center;gap:10px;padding:20px 18px 12px;}
+#zm-navigation-demo .app-header > div {min-width:0;}
+#zm-navigation-demo .brand {color:var(--sub);font-size:12px;margin-bottom:3px;}
+#zm-navigation-demo .back {width:44px;flex-shrink:0;background:var(--surface);box-shadow:0 2px 8px var(--shadow);}
+#zm-navigation-demo .back svg {width:18px;height:18px;}
+#zm-navigation-demo .content {grid-area:content;padding:0 18px 24px;min-height:650px;min-width:0;}
+#zm-navigation-demo .content-inner {display:grid;gap:20px;}
+#zm-navigation-demo .context {font-size:12px;color:var(--sub);padding-bottom:2px;}
+#zm-navigation-demo .hero {padding:22px;border-radius:var(--radius);background:var(--surface);box-shadow:0 5px 20px var(--shadow);}
+#zm-navigation-demo .hero.finance {background:linear-gradient(135deg,var(--surface),var(--soft));}
+#zm-navigation-demo .two {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:18px 0;}
+#zm-navigation-demo .label {font-size:12px;color:var(--sub);display:block;}
+#zm-navigation-demo .amount {font-size:23px;display:block;margin-top:4px;font-weight:500;font-variant-numeric:tabular-nums;letter-spacing:-.5px;overflow-wrap:anywhere;}
+#zm-navigation-demo .number {font-size:26px;font-weight:500;display:block;margin-top:4px;}
+#zm-navigation-demo .primary {background:var(--accent);color:var(--accent-ink);padding:12px 16px;display:flex;gap:10px;align-items:center;justify-content:center;font-weight:500;width:100%;border-radius:14px;}
+#zm-navigation-demo .primary:hover {background:var(--accent);box-shadow:0 4px 14px var(--shadow);}
+#zm-navigation-demo .primary svg {width:17px;height:17px;}
+#zm-navigation-demo .section-header {display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:12px;}
+#zm-navigation-demo .section-header small {font-size:12px;color:var(--sub);}
+#zm-navigation-demo .tile {padding:16px;background:var(--surface);border-radius:var(--radius);box-shadow:0 3px 14px var(--shadow);}
+#zm-navigation-demo .tile-pair {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+#zm-navigation-demo .row {display:flex;align-items:center;gap:12px;padding:16px 12px;min-height:76px;text-align:left;width:100%;background:var(--surface);border-radius:14px;}
+#zm-navigation-demo .row > .copy {flex:1;min-width:0;}
+#zm-navigation-demo .row .title {display:block;font-weight:500;overflow-wrap:anywhere;}
+#zm-navigation-demo .row .subtitle {display:block;font-size:12px;color:var(--sub);margin-top:4px;overflow-wrap:anywhere;}
+#zm-navigation-demo .row .value {font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap;}
+#zm-navigation-demo .row .arrow {color:var(--sub);width:16px;height:16px;flex-shrink:0;}
+#zm-navigation-demo .row-icon {width:40px;height:40px;background:var(--soft);color:var(--accent);border-radius:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+#zm-navigation-demo .row-icon svg {width:19px;height:19px;}
+#zm-navigation-demo .rows {display:grid;gap:8px;}
+#zm-navigation-demo .tag {display:inline-block;background:var(--warn-fill);color:var(--warn);border-radius:20px;font-size:11px;padding:3px 8px;margin-top:6px;}
+#zm-navigation-demo .neutral-tag {background:var(--soft);color:var(--sub);}
+#zm-navigation-demo .tabs {display:flex;gap:5px;padding:5px;background:var(--surface);border-radius:16px;}
+#zm-navigation-demo .tabs button {flex:1;padding:8px 6px;}
+#zm-navigation-demo .tabs button[aria-pressed=true] {background:var(--accent);color:var(--accent-ink);box-shadow:0 2px 6px var(--shadow);}
+#zm-navigation-demo .navigation {grid-area:nav;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:8px 6px 12px;background:var(--surface);border-top:1px solid var(--line);}
+#zm-navigation-demo .navigation button {display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-size:11px;min-height:60px;padding:6px 2px;color:var(--sub);}
+#zm-navigation-demo .navigation button svg {width:20px;height:20px;}
+#zm-navigation-demo .navigation button[aria-current=page] {background:var(--soft);color:var(--accent);font-weight:500;}
+#zm-navigation-demo .details {background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:0 4px 14px var(--shadow);}
+#zm-navigation-demo .detail-line {display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);}
+#zm-navigation-demo .detail-line:last-child {border-bottom:0;}
+#zm-navigation-demo .detail-line span:first-child {color:var(--sub);}
+#zm-navigation-demo .detail-line span:last-child {text-align:right;}
+#zm-navigation-demo .detail-amount {font-size:32px;font-weight:500;font-variant-numeric:tabular-nums;margin:8px 0 4px;}
+#zm-navigation-demo .note {font-size:12px;color:var(--sub);}
+#zm-navigation-demo .result-message {padding:18px;background:var(--soft);border-radius:var(--radius);}
+#zm-navigation-demo .result-message p {margin-top:6px;color:var(--sub);}
+#zm-navigation-demo .desktop {max-width:none;border-radius:20px;}
+#zm-navigation-demo .desktop .frame {grid-template-areas:'nav header' 'nav content';grid-template-columns:140px minmax(0,1fr);}
+#zm-navigation-demo .desktop .navigation {display:flex;flex-direction:column;justify-content:flex-start;border-top:0;border-right:1px solid var(--line);padding:18px 10px;gap:8px;}
+#zm-navigation-demo .desktop .navigation button {flex-direction:row;justify-content:flex-start;min-height:48px;gap:10px;font-size:13px;padding:10px;}
+#zm-navigation-demo .desktop .navigation button svg {flex-shrink:0;}
+#zm-navigation-demo .desktop .content {min-height:760px;}
+#zm-navigation-demo .desktop .demo-label {padding-right:100px;}
+#zm-navigation-demo .desktop .app-header {padding:24px 22px 12px;}
+#zm-navigation-demo .desktop .content {padding:0 22px 28px;}
+#zm-navigation-demo .product[data-motion=false] button {transition:none;transform:none;}
+#zm-navigation-demo [hidden] {display:none!important;}
+@media(max-width:550px) {
+ #zm-navigation-demo .stage {padding:10px 0;min-height:1030px;}
+ #zm-navigation-demo .desktop .frame {grid-template-areas:'header' 'content' 'nav';grid-template-columns:minmax(0,1fr);}
+ #zm-navigation-demo .desktop .navigation {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border:0;border-top:1px solid var(--line);padding:8px 6px 12px;gap:2px;}
+ #zm-navigation-demo .desktop .navigation button {flex-direction:column;justify-content:center;gap:6px;font-size:11px;padding:6px 2px;min-height:60px;}
+ #zm-navigation-demo .desktop .content {min-height:650px;padding:0 16px 24px;}
+ #zm-navigation-demo .desktop .app-header {padding:20px 16px 12px;}
+ #zm-navigation-demo .desktop .demo-label {padding-right:90px;}
+ #zm-navigation-demo .two {gap:12px;}
+ #zm-navigation-demo .amount {font-size:21px;}
+ #zm-navigation-demo .row {padding:14px 10px;gap:9px;}
+}
+@media(prefers-reduced-motion:reduce) {#zm-navigation-demo button {transition:none!important;transform:none!important;}}
+</style>
+<div id="zm-navigation-demo" class="viz-carousel viz-dotted-background" aria-label="Proposta de navegação do aplicativo" data-previous-label="Anterior" data-next-label="Próxima">
+ <section data-variant="No celular" aria-label="Proposta no celular"><div class="stage"><div class="app product mobile" data-device="mobile" aria-label="Navegação no celular"></div></div></section>
+ <section data-variant="No computador" aria-label="Proposta no computador" hidden><div class="stage"><div class="app product desktop" data-device="desktop" aria-label="Navegação no computador"></div></div></section>
+</div>
+<template id="zm-navigation-shell">
+ <div class="demo-label">Proposta de navegação · Dados de exemplo</div>
+ <div class="frame">
+  <header class="app-header"><button class="back cursor-interaction" type="button" aria-label="Voltar" hidden><i data-lucide="arrow-left" aria-hidden="true"></i></button><div><div class="brand">ZM Cesta Básica</div><h2 class="page-title">Visão geral</h2></div></header>
+  <main class="content"><div class="content-inner"></div></main>
+  <nav class="navigation" aria-label="Áreas do aplicativo">
+   <button class="cursor-interaction" type="button" data-area="inicio" aria-current="page"><i data-lucide="house" aria-hidden="true"></i><span>Início</span></button>
+   <button class="cursor-interaction" type="button" data-area="financeiro"><i data-lucide="wallet" aria-hidden="true"></i><span>Financeiro</span></button>
+   <button class="cursor-interaction" type="button" data-area="vendas"><i data-lucide="shopping-bag" aria-hidden="true"></i><span>Vendas</span></button>
+   <button class="cursor-interaction" type="button" data-area="estoque"><i data-lucide="package" aria-hidden="true"></i><span>Estoque</span></button>
+   <button class="cursor-interaction" type="button" data-area="mais"><i data-lucide="ellipsis" aria-hidden="true"></i><span>Mais</span></button>
+  </nav>
+ </div>
+</template>
+<template id="zm-nav-inicio">
+ <p class="context">Hoje, 15 de outubro</p>
+ <section class="hero finance"><h3>Seu financeiro nesta semana</h3><div class="two"><div><span class="label">A pagar</span><strong class="amount">R$ 1.280,00</strong></div><div><span class="label">A receber</span><strong class="amount">R$ 1.950,00</strong></div></div><button type="button" class="primary cursor-interaction" data-go="financeiro:resumo">Abrir Financeiro<i data-lucide="arrow-right" aria-hidden="true"></i></button></section>
+ <section><div class="section-header"><h3>Seu negócio hoje</h3></div><div class="tile-pair"><button class="tile cursor-interaction" type="button" data-go="vendas:resumo"><span class="label">Cestas vendidas</span><strong class="number">8</strong></button><button class="tile cursor-interaction" type="button" data-go="vendas:resumo"><span class="label">Valor das vendas</span><strong class="amount">R$ 1.240,00</strong></button></div></section>
+ <section><div class="section-header"><h3>Precisa da sua atenção</h3></div><div class="rows"><button class="row cursor-interaction" type="button" data-go="financeiro:pagar"><span class="row-icon"><i data-lucide="calendar-clock" aria-hidden="true"></i></span><span class="copy"><span class="title">2 contas a pagar</span><span class="subtitle">Vencem nesta semana</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button><button class="row cursor-interaction" type="button" data-go="estoque:produtos"><span class="row-icon"><i data-lucide="package-search" aria-hidden="true"></i></span><span class="copy"><span class="title">Arroz abaixo do mínimo</span><span class="subtitle">Conferir produtos e reposição</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button></div></section>
+</template>
+<template id="zm-nav-financeiro">
+ <p class="context">Financeiro</p>
+ <div class="tabs" aria-label="Visões do Financeiro"><button type="button" class="cursor-interaction" data-finance="resumo" aria-pressed="true">Resumo</button><button type="button" class="cursor-interaction" data-finance="pagar" aria-pressed="false">Pagar</button><button type="button" class="cursor-interaction" data-finance="receber" aria-pressed="false">Receber</button></div>
+ <div class="finance-content"></div>
+</template>
+<template id="zm-nav-financeiro-resumo">
+ <section class="hero"><span class="label">Nesta semana</span><div class="two"><div><span class="label">A pagar</span><strong class="amount">R$ 1.280,00</strong></div><div><span class="label">A receber</span><strong class="amount">R$ 1.950,00</strong></div></div></section>
+ <section><div class="section-header"><h3>Organizar seu financeiro</h3></div><div class="rows"><button type="button" class="row cursor-interaction" data-go="financeiro:contas"><span class="row-icon"><i data-lucide="landmark" aria-hidden="true"></i></span><span class="copy"><span class="title">Contas e cartões</span><span class="subtitle">Seus bancos em um só lugar</span><span class="tag neutral-tag">Proposta futura</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button><button type="button" class="row cursor-interaction" data-go="financeiro:documentos"><span class="row-icon"><i data-lucide="files" aria-hidden="true"></i></span><span class="copy"><span class="title">Extratos e faturas</span><span class="subtitle">Documentos e revisão de importações</span><span class="tag neutral-tag">Proposta futura</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button></div></section>
+</template>
+<template id="zm-nav-pagar">
+ <section><div class="section-header"><h3>A pagar nesta semana</h3><small>2 contas</small></div><div class="rows"><button class="row cursor-interaction" type="button" data-go="financeiro:conta-fornecedor"><span class="copy"><span class="title">Fornecedor de alimentos</span><span class="subtitle">Compra de produtos · 16 out.</span><span class="tag">Em aberto</span></span><span class="value">R$ 680,00</span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button><button class="row cursor-interaction" type="button" data-go="financeiro:conta-embalagens"><span class="copy"><span class="title">Fornecedor de embalagens</span><span class="subtitle">Compra de embalagens · 18 out.</span><span class="tag">Em aberto</span></span><span class="value">R$ 600,00</span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button></div></section>
+</template>
+<template id="zm-nav-receber">
+ <section><div class="section-header"><h3>A receber nesta semana</h3><small>2 contas</small></div><div class="rows"><button class="row cursor-interaction" type="button" data-go="financeiro:conta-ana"><span class="copy"><span class="title">Ana Souza</span><span class="subtitle">Venda de cestas · 17 out.</span><span class="tag">Em aberto</span></span><span class="value">R$ 1.250,00</span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button><button class="row cursor-interaction" type="button" data-go="financeiro:conta-bruno"><span class="copy"><span class="title">Bruno Lima</span><span class="subtitle">Saldo de venda · 18 out.</span><span class="tag">Parcial</span></span><span class="value">R$ 700,00</span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button></div></section>
+</template>
+<template id="zm-nav-estoque">
+ <p class="context">Produtos, compras e cestas</p><div class="rows">
+  <button class="row cursor-interaction" type="button" data-go="estoque:produtos"><span class="row-icon"><i data-lucide="package" aria-hidden="true"></i></span><span class="copy"><span class="title">Produtos</span><span class="subtitle">Cadastros e posição de estoque</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="estoque:compras"><span class="row-icon"><i data-lucide="truck" aria-hidden="true"></i></span><span class="copy"><span class="title">Compras</span><span class="subtitle">Entradas e fornecedores</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="estoque:cestas"><span class="row-icon"><i data-lucide="shopping-basket" aria-hidden="true"></i></span><span class="copy"><span class="title">Cestas e montagens</span><span class="subtitle">Tipos, composição e histórico de montagem</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="estoque:movimentacoes"><span class="row-icon"><i data-lucide="history" aria-hidden="true"></i></span><span class="copy"><span class="title">Movimentações</span><span class="subtitle">O que entrou e saiu do estoque</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+ </div>
+</template>
+<template id="zm-nav-vendas">
+ <p class="context">Hoje, 15 de outubro</p><section class="hero"><span class="label">Vendas do dia</span><strong class="detail-amount">R$ 1.240,00</strong><span class="label">8 cestas vendidas</span></section><div class="rows"><button class="row cursor-interaction" type="button" data-go="vendas:venda"><span class="copy"><span class="title">Venda de 8 cestas</span><span class="subtitle">Conferir itens, cliente e pagamento</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button><button class="row cursor-interaction" type="button" data-go="vendas:clientes"><span class="row-icon"><i data-lucide="users" aria-hidden="true"></i></span><span class="copy"><span class="title">Clientes</span><span class="subtitle">Cadastros e histórico</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button></div>
+</template>
+<template id="zm-nav-mais">
+ <p class="context">Documentos e ferramentas do aplicativo</p><div class="rows">
+  <button class="row cursor-interaction" type="button" data-go="mais:relatorios"><span class="row-icon"><i data-lucide="chart-no-axes-combined" aria-hidden="true"></i></span><span class="copy"><span class="title">Relatórios</span><span class="subtitle">Consultar e exportar os dados</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="mais:impressao"><span class="row-icon"><i data-lucide="printer" aria-hidden="true"></i></span><span class="copy"><span class="title">Impressão e formulários</span><span class="subtitle">PDF e folhas para preencher à caneta</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="mais:configuracoes"><span class="row-icon"><i data-lucide="settings" aria-hidden="true"></i></span><span class="copy"><span class="title">Configurações e conexão</span><span class="subtitle">Aparência, servidor e pareamento</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+  <button class="row cursor-interaction" type="button" data-go="mais:backup"><span class="row-icon"><i data-lucide="database-backup" aria-hidden="true"></i></span><span class="copy"><span class="title">Backup</span><span class="subtitle">Cópias de segurança e recuperação</span></span><i class="arrow" data-lucide="chevron-right" aria-hidden="true"></i></button>
+ </div>
+</template>
+<script>
+(() => {
+ const root=document.getElementById('zm-navigation-demo');
+ const areas={inicio:'Visão geral',financeiro:'Financeiro',vendas:'Vendas',estoque:'Estoque',mais:'Mais'};
+ const children={
+  'financeiro:conta-fornecedor':{title:'Fornecedor de alimentos',label:'Valor a pagar',amount:'R$ 680,00',lines:[['Situação','Em aberto'],['Vencimento','16 de outubro'],['Origem','Compra de produtos'],['Forma prevista','Boleto']]},
+  'financeiro:conta-embalagens':{title:'Fornecedor de embalagens',label:'Valor a pagar',amount:'R$ 600,00',lines:[['Situação','Em aberto'],['Vencimento','18 de outubro'],['Origem','Compra de embalagens']]},
+  'financeiro:conta-ana':{title:'Ana Souza',label:'Saldo a receber',amount:'R$ 1.250,00',lines:[['Situação','Em aberto'],['Vencimento','17 de outubro'],['Origem','Venda de cestas']]},
+  'financeiro:conta-bruno':{title:'Bruno Lima',label:'Saldo a receber',amount:'R$ 700,00',lines:[['Situação','Parcial'],['Vencimento','18 de outubro'],['Origem','Venda de cestas']]},
+  'financeiro:contas':{title:'Contas e cartões',future:true,rows:[['Banco de exemplo','Conta da empresa · final 0821'],['Cartão de exemplo','Faturas e parcelas']]},
+  'financeiro:documentos':{title:'Extratos e faturas',future:true,rows:[['Fatura de outubro','Cartão de exemplo · Em revisão'],['Extrato de outubro','Banco de exemplo · Conferido']]},
+  'estoque:produtos':{title:'Produtos',rows:[['Arroz · pacote de 5 kg','12 pacotes disponíveis · Abaixo do mínimo'],['Óleo · frasco de 900 ml','36 frascos disponíveis'],['Café · pacote de 250 g','24 pacotes disponíveis']]},
+  'estoque:compras':{title:'Compras',rows:[['Compra de alimentos','Fornecedor de alimentos · R$ 680,00'],['Compra de embalagens','Fornecedor de embalagens · R$ 600,00']]},
+  'estoque:cestas':{title:'Cestas e montagens',rows:[['Cesta Básica Completa','Composição e montagens'],['Cesta de Carne','Composição e montagens']],basket:true},
+  'estoque:movimentacoes':{title:'Movimentações',rows:[['Entrada de produtos','Compra confirmada'],['Montagem de 8 cestas','Consumo de produtos e entrada de cestas'],['Venda de 8 cestas','Saída de cestas prontas']]},
+  'estoque:cesta-basica':{title:'Cesta Básica Completa',rows:[['Composição','Consultar produtos e quantidades'],['Registrar montagem','Padrão ou personalizada'],['Histórico de montagens','Registros anteriores']]},
+  'vendas:clientes':{title:'Clientes',rows:[['Ana Souza','Cadastro e histórico financeiro'],['Bruno Lima','Cadastro e histórico financeiro']]},
+  'vendas:venda':{title:'Detalhe da venda',label:'Total da venda',amount:'R$ 1.240,00',lines:[['Quantidade','8 cestas'],['Situação','Confirmada'],['Origem','Estoque de cestas prontas']]},
+  'mais:relatorios':{title:'Relatórios',rows:[['Vendas por período','Consultar e exportar'],['Resumo financeiro','Consultar e exportar'],['Posição de estoque','Consultar e exportar']]},
+  'mais:impressao':{title:'Impressão e formulários',rows:[['Relatório preenchido','Pré-visualizar, salvar PDF ou imprimir'],['Formulário em branco','Folha para preencher à caneta']]},
+  'mais:configuracoes':{title:'Configurações e conexão',rows:[['Aparência','Tema, cores e acessibilidade'],['Conexão com o servidor','Disponibilidade e pareamento']]},
+  'mais:backup':{title:'Backup',rows:[['Cópias de segurança','Consultar backups'],['Recuperação','Fluxo com revisão e confirmação']]}
+ };
+ const states={};
+ const snapshot=()=>Object.fromEntries(Object.entries(states).map(([key,s])=>[key,{area:s.area,stacks:s.stacks,design:{...s.design}}]));
+ const save=device=>{if(window.openai?.setWidgetState)window.openai.setWidgetState({modelContent:{prototype:'Navegação ZM',device,area:states[device].area,page:states[device].stacks[states[device].area].at(-1),productionImplementation:false},privateContent:{devices:snapshot()}}).catch(()=>{});};
+ const icon=name=>{const el=document.createElement('i');el.dataset.lucide=name;el.setAttribute('aria-hidden','true');return el;};
+ const make=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e;};
+ for(const app of root.querySelectorAll('.app')) {
+  const device=app.dataset.device;
+  app.appendChild(document.getElementById('zm-navigation-shell').content.cloneNode(true));
+  const s={area:'inicio',stacks:Object.fromEntries(Object.keys(areas).map(key=>[key,['resumo']])),design:{appearance:'chat',radius:18}};states[device]=s;
+  const content=app.querySelector('.content-inner'),title=app.querySelector('.page-title'),back=app.querySelector('.back');
+  const renderDesign=()=>{app.style.colorScheme=s.design.appearance==='chat'?'light dark':s.design.appearance;app.style.setProperty('--radius',s.design.radius+'px');};
+  const navigate=(area,page='resumo')=>{s.area=area;if(s.stacks[area].at(-1)!==page)s.stacks[area].push(page);render();save(device);};
+  function renderDetail(data) {
+   if(data.future){const status=make('p','context','Exemplo de uma função planejada');content.appendChild(status);}
+   if(data.amount){const hero=make('section','hero');hero.append(make('span','label',data.label),make('div','detail-amount',data.amount));content.appendChild(hero);}
+   if(data.lines){const box=make('section','details');for(const [label,value] of data.lines){const row=make('div','detail-line');row.append(make('span','',label),make('span','',value));box.appendChild(row);}content.appendChild(box);}
+   if(data.rows){const rows=make('div','rows');data.rows.forEach(([name,description],index)=>{
+    const row=make(data.basket&&index===0?'button':'div','row'+(data.basket&&index===0?' cursor-interaction':''));
+    const copy=make('span','copy');copy.append(make('span','title',name),make('span','subtitle',description));row.appendChild(copy);
+    if(data.basket&&index===0){row.type='button';row.dataset.go='estoque:cesta-basica';const arrow=icon('chevron-right');arrow.className='arrow';row.appendChild(arrow);}rows.appendChild(row);
+   });content.appendChild(rows);}
+   const note=make('p','note','Dados ilustrativos. Esta prévia mostra onde encontrar as informações.');content.appendChild(note);
+  }
+  function render() {
+   const page=s.stacks[s.area].at(-1),key=s.area+':'+page;
+   content.replaceChildren();back.hidden=s.stacks[s.area].length<=1;
+   app.querySelectorAll('[data-area]').forEach(button=>{if(button.dataset.area===s.area)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current');});
+   if(children[key]){title.textContent=children[key].title;content.appendChild(make('p','context',areas[s.area]));renderDetail(children[key]);}
+   else if(s.area==='financeiro'){
+    title.textContent='Financeiro';content.appendChild(document.getElementById('zm-nav-financeiro').content.cloneNode(true));
+    const tab=['resumo','pagar','receber'].includes(page)?page:'resumo';
+    content.querySelectorAll('[data-finance]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.finance===tab)));
+    const target=content.querySelector('.finance-content');target.style.display='grid';target.style.gap='20px';target.appendChild(document.getElementById(tab==='resumo'?'zm-nav-financeiro-resumo':'zm-nav-'+tab).content.cloneNode(true));
+   }else {title.textContent=areas[s.area];content.appendChild(document.getElementById('zm-nav-'+s.area).content.cloneNode(true));}
+   if(globalThis.lucide)lucide.createIcons({attrs:{width:18,height:18}});
+  }
+  app.addEventListener('click',event=>{
+   const button=event.target.closest('button');if(!button||!app.contains(button))return;
+   if(button.dataset.area){s.area=button.dataset.area;render();save(device);}
+   else if(button.dataset.go){const [area,page]=button.dataset.go.split(':');navigate(area,page);}
+   else if(button.dataset.finance){s.stacks.financeiro=[...s.stacks.financeiro.slice(0,-1),button.dataset.finance];render();save(device);}
+  });
+  back.addEventListener('click',()=>{if(s.stacks[s.area].length>1)s.stacks[s.area].pop();render();save(device);});
+  const restore=saved=>{if(!saved)return;if(areas[saved.area])s.area=saved.area;if(saved.stacks)for(const area of Object.keys(areas)){const stack=saved.stacks[area];if(Array.isArray(stack)&&stack.length&&stack.every(page=>typeof page==='string'&&(page==='resumo'||(area==='financeiro'&&['pagar','receber'].includes(page))||children[area+':'+page])))s.stacks[area]=[...stack];}if(saved.design)Object.assign(s.design,saved.design);renderDesign();render();};
+  s.restore=restore;restore(window.openai?.widgetState?.privateContent?.devices?.[device]);renderDesign();render();
+  if(globalThis.Tweak){const tweak=new Tweak({container:app,onChange:renderDesign});tweak.addSelect(s.design,'appearance',{label:'Aparência',options:[{label:'Seguir o chat',value:'chat'},{label:'Claro',value:'light'},{label:'Escuro',value:'dark'}]});tweak.addSlider(s.design,'radius',{label:'Cantos dos painéis',min:10,max:26,step:2,unit:'px'});}
+ }
+ window.addEventListener('openai:set_globals',event=>{const saved=event.detail?.globals?.widgetState?.privateContent?.devices;if(saved)for(const [device,s] of Object.entries(states))s.restore(saved[device]);});
+})();
+</script>

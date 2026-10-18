@@ -1,0 +1,97 @@
+{
+  "date": "2026-10-16",
+  "decision": "FE-049",
+  "note": "Local preservation; README and this manifest excluded from their own hashes. Not a Git commit.",
+  "files": [
+    {
+      "path": "check-organizacao.cjs",
+      "bytes": 11607,
+      "sha256": "f65576276526dc117b075e6f5b0d8fccc8a2b8ccee388d94a3689c5154ed94de"
+    },
+    {
+      "path": "edge-inicio-dia-dark.png",
+      "bytes": 70822,
+      "sha256": "fe19ebd6533c3183fd2392593d7cf77d6b56ee8483bd8cf66a856d9e24745e30"
+    },
+    {
+      "path": "edge-inicio-dia-light.png",
+      "bytes": 70397,
+      "sha256": "551a90446fbd621e5c3b97f463ba55058a34e128d502231e84c3f2aa7e8b89d4"
+    },
+    {
+      "path": "edge-inicio-semana-claro.png",
+      "bytes": 75267,
+      "sha256": "0a9925492a61f2ebda9bd84fd297ac7ea7a9ea58c6cc4aaed1feeae5b3736ffc"
+    },
+    {
+      "path": "edge-negocio-computador.png",
+      "bytes": 52010,
+      "sha256": "bb8817354e4cda464054d74fc99693fe97726e48d8033000eec8ddba15f37149"
+    },
+    {
+      "path": "edge-negocio-mes.png",
+      "bytes": 47707,
+      "sha256": "4acd39a1b289cb5aee0f437a70f99724878323477444206768b7920b3a848f1d"
+    },
+    {
+      "path": "gerar-revisao.py",
+      "bytes": 5450,
+      "sha256": "357a9a3020b1f4d9f063b46e7ca5b8bae1d75894c7684274c3b325174226fc6b"
+    },
+    {
+      "path": "organizacao-integrada-zm-preview.html",
+      "bytes": 183632,
+      "sha256": "f9bffe6d10cfaa19f7496e00f0f977b61351bcb91df47761a77e200ac12493eb"
+    },
+    {
+      "path": "organizacao-integrada-zm.html",
+      "bytes": 82368,
+      "sha256": "613beab1e444448ba69c46dc26fbc4ab1072661915c1aa695a8f6b53314a6a6d"
+    },
+    {
+      "path": "organizacao-pages.js",
+      "bytes": 7622,
+      "sha256": "32290de67fcbd3946e8cc0324c6723b18fd400efe2a966be804b762eb11a0e68"
+    },
+    {
+      "path": "organizacao-verificacao.json",
+      "bytes": 69036,
+      "sha256": "06d3940534658e67559d1b98380d876e92e3cffe138f2980ffa1c9aa21a923db"
+    },
+    {
+      "path": "organizacao.css",
+      "bytes": 2168,
+      "sha256": "6029b4750596c7952f52fc071c4b5807b1bcee1c334175c7150709933e55373e"
+    },
+    {
+      "path": "origem-e-alteracoes.json",
+      "bytes": 2796,
+      "sha256": "28ea85f9c2c9861ab123d496ca7cf338801da7615de2061e2ca928b7a0dc3237"
+    },
+    {
+      "path": "webkit-inicio-dia-dark.png",
+      "bytes": 49925,
+      "sha256": "b02e37d0d36124bf539a710439541b1917f13045cb5fd82a3827f0af53b7e423"
+    },
+    {
+      "path": "webkit-inicio-dia-light.png",
+      "bytes": 49344,
+      "sha256": "5943834f8d052662a75dbb15aaab349567b55a7e10a311fccd6ed08e205133e7"
+    },
+    {
+      "path": "webkit-inicio-semana-claro.png",
+      "bytes": 52214,
+      "sha256": "79e29669fd817de126f656a142711ecc3df02197cd90fa00f454d74e20e4d6a9"
+    },
+    {
+      "path": "webkit-negocio-computador.png",
+      "bytes": 46989,
+      "sha256": "ba5607203df45b5fccadb5fb8921c3241b0cac4f9efa3cd1bff0af57f5306044"
+    },
+    {
+      "path": "webkit-negocio-mes.png",
+      "bytes": 42052,
+      "sha256": "ae45439e32f384775dad234e161e7e35a98896a9417d4ec824d6389ded0798c5"
+    }
+  ]
+}

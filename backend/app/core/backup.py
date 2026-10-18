@@ -39,7 +39,7 @@ def create_backup(
     settings.ensure_directories()
 
     if destination_path is None:
-        timestamp_str = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d_%H%M%S")
+        timestamp_str = datetime.datetime.now(datetime.timezone.utc).strftime("%Y%m%d_%H%M%S_%f")
         dest = settings.BACKUP_DIR / f"estoque_backup_{tag}_{timestamp_str}.db"
     else:
         dest = destination_path

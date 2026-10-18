@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-17",
+  "decision": "FE-054",
+  "note": "Local evidence. README and manifest excluded; not a Git commit.",
+  "files": [
+    {
+      "path": "confirmacao-consulta-falhou.png",
+      "bytes": 140573,
+      "sha256": "2731c703269a008b360d5498adf89b2b884d979d21c8d411f4cadeb953281b07"
+    },
+    {
+      "path": "lista-filtros-compactos.png",
+      "bytes": 96218,
+      "sha256": "f88ae4d7a32298379b6c8bb028bc81dea19b4e8d3c0bf1c2f044b3aab4e6e78f"
+    },
+    {
+      "path": "resultados.txt",
+      "bytes": 754,
+      "sha256": "db51c19466558f1635f0294a5af2b3d583d2e236ea9cfc9e767fab84da47770d"
+    },
+    {
+      "path": "retomada-celular.png",
+      "bytes": 127134,
+      "sha256": "292a12b243f8a64a7f78146e41b118c8753f039c8e13e3f05235efef2e6edd23"
+    },
+    {
+      "path": "revisao-320-100.png",
+      "bytes": 80090,
+      "sha256": "2144b15f99fdd16e0a196d00aa25f9ee0591b5e4776c59ff8353abec52406b1a"
+    },
+    {
+      "path": "revisao-320-200.png",
+      "bytes": 72819,
+      "sha256": "4b9c229a76440f2e4aa1f093f737683c6ddc07ecb063599181743a4e9a58e67e"
+    },
+    {
+      "path": "revisao-390-200-escuro.png",
+      "bytes": 80621,
+      "sha256": "d6dbd95a89edeb90791bb4437da119d31b48d29bb15b938cab0f176c8c2d2f70"
+    },
+    {
+      "path": "revisao-celular.png",
+      "bytes": 111648,
+      "sha256": "ae594137ea35e2d508814995dc3c9c45dff2f967c1b328b233a01c9adcc86a43"
+    },
+    {
+      "path": "revisao-computador.png",
+      "bytes": 357938,
+      "sha256": "0bcbccd4a5466f4cd9d953ed431d627e3aa2c02fd58e0e1a1d5466adf5604533"
+    },
+    {
+      "path": "venda-origem-celular.png",
+      "bytes": 120818,
+      "sha256": "e3be1e5b364f8cb2de49d16091c5e4762e5abbce53c8e4b9442672234268a0f8"
+    },
+    {
+      "path": "verificacao.json",
+      "bytes": 8149,
+      "sha256": "79aff1f4c3bf8838f7bbff40a4c9b462bb0b15ff5ac421f66a0daf2714589fb5"
+    }
+  ]
+}

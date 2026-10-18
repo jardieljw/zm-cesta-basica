@@ -9,6 +9,7 @@ from app.models.movements import InventoryMovement
 from app.models.products import Product, BasketType
 from app.models.base import utc_now
 from app.schemas.movements import StockAdjustmentCreate, StockAdjustmentResponse
+from app.services.basket_stock_policy import require_finished_stock
 
 def get_product_stock(db: Session, product_id: str) -> int:
     """Calculates live on-hand stock for a product from the append-only ledger."""
@@ -218,6 +219,7 @@ def execute_stock_adjustment(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Cesta '{basket.name}' esta inativa e nao permite ajustes manuais de estoque.",
             )
+        require_finished_stock(basket)
         target_basket_type_id = basket.id
         previous_stock = get_basket_stock(db, data.basket_type_id)
 

@@ -1,0 +1,228 @@
+{
+  "date": "2026-10-17",
+  "decision": "FE-054",
+  "status": "scoped_receivable_and_shared_payment_journeys_verified",
+  "baseline": {
+    "backendPassed": 420,
+    "flutterPassed": 274
+  },
+  "final": {
+    "backendPassed": 436,
+    "backendWarnings": 14,
+    "flutterPassed": 319,
+    "analysis": "no issues",
+    "windowsDebugBuild": "succeeded"
+  },
+  "scope": "Existing-title Receber, statement/compact filters/pagination/origin, shared local UI/recovery with Pagar",
+  "logs": [
+    {
+      "path": "tmp/fe-054-backend-baseline-verified.log",
+      "bytes": 1471,
+      "sha256": "e817153b27f3f088205b85b829da4bba84e9b6d49dbe34d466b076aa01d0616e"
+    },
+    {
+      "path": "tmp/fe-054-flutter-baseline-retry.log",
+      "bytes": 78906,
+      "sha256": "5410c56c214c654b16d7dc5707893e73c6c3f0ad3f761c244ee620c903ec59e4"
+    },
+    {
+      "path": "tmp/fe-054-coordinator-focused.log",
+      "bytes": 10949,
+      "sha256": "8421cbcd6340c4ccf3f6b3e692b313e3896709560bb56d6273e999d88dd0b8e7"
+    },
+    {
+      "path": "tmp/fe-054-ui-targeted.log",
+      "bytes": 9042,
+      "sha256": "96521144045dea7c18a1fc04dd2f2813d59e994227786755d9cb98426efd7a83"
+    },
+    {
+      "path": "tmp/fe-054-backend-final.log",
+      "bytes": 1553,
+      "sha256": "757e321a4c4b03ef6eae6ca50c08551f59d3f26119d39282b3250bab4c827b5c"
+    },
+    {
+      "path": "tmp/fe-054-flutter-final.log",
+      "bytes": 86830,
+      "sha256": "acad818776d26e13de1d2adf70646acf86887b012ec7a8791d62fb176098ca1c"
+    },
+    {
+      "path": "tmp/fe-054-analyze-final.log",
+      "bytes": 99,
+      "sha256": "90f1d65d0072b450aa6b7a01be6d9d9ff2d5710f19748cc1ba0e07b04efde5fa"
+    },
+    {
+      "path": "tmp/fe-054-windows-build.log",
+      "bytes": 143,
+      "sha256": "b77e2e44bd954592121aa33f130c96859119aaba75072a59759185a6008ab4c9"
+    }
+  ],
+  "sources": [
+    {
+      "path": "backend/app/schemas/receivables.py",
+      "bytes": 2893,
+      "sha256": "e2beaf7786df7dabc43052843fd2292adb0ec22afff65ad078228d6a2f492c7e"
+    },
+    {
+      "path": "backend/app/api/v1/receivables.py",
+      "bytes": 9731,
+      "sha256": "e2bea78a53bd0d5e04b3c683b8326d371702f4a1927e58ec0958fb9924f5debf"
+    },
+    {
+      "path": "backend/app/services/receivables.py",
+      "bytes": 12666,
+      "sha256": "66f7a24b936b3dfd6ebd2bf4cc378a3407ce30668aae3748d6a9f772efff1faf"
+    },
+    {
+      "path": "backend/tests/test_receivable_payment_review.py",
+      "bytes": 14486,
+      "sha256": "0e53967332f14dc8d18c49d34e392bec1aa532756aef865520751e98c2a2c150"
+    },
+    {
+      "path": "client/lib/models/sales_receivable.dart",
+      "bytes": 6596,
+      "sha256": "05042dd63d3f6a9c1d65b719c59c9dac4eacbb77c11a390ff540360024e44c9d"
+    },
+    {
+      "path": "client/lib/services/receivable_service.dart",
+      "bytes": 3719,
+      "sha256": "d278fceaa26b2ed0a8f2846a1c9138158ed5b81e2e303c4d0359397a9601590d"
+    },
+    {
+      "path": "client/lib/services/receivable_payment_coordinator.dart",
+      "bytes": 7190,
+      "sha256": "ee3b7054b49c50fd44fb7294ea2fa824770e941917bb0ce14e2778cc2ad82243"
+    },
+    {
+      "path": "client/lib/services/payable_payment_coordinator.dart",
+      "bytes": 7100,
+      "sha256": "12875b4cf5530af8956250792682a669cc933dcf1efe6e66f0deeddb96d4fd68"
+    },
+    {
+      "path": "client/lib/services/reviewed_payment_coordinator.dart",
+      "bytes": 6687,
+      "sha256": "1f9c56a10b6098f676d8fd0e9ce96417897a38fbb3608c3fb0ff941fb94ea21c"
+    },
+    {
+      "path": "client/lib/widgets/shared/reviewed_payment_contract.dart",
+      "bytes": 3722,
+      "sha256": "5deab9db84a4033bf8f83e598d5d71685f5d43a58c753a38feb7ced96d0ab264"
+    },
+    {
+      "path": "client/lib/widgets/shared/reviewed_payment_view.dart",
+      "bytes": 25599,
+      "sha256": "550f5390d7afeda1b3799bf5f04273dabfcb1facd5d3e8fdab0e1eee115a487c"
+    },
+    {
+      "path": "client/lib/widgets/shared/financial_surface.dart",
+      "bytes": 4053,
+      "sha256": "367311a7332022f50b937abf3f2c78832aca4a37e0fcfdfb2e20858d27d39020"
+    },
+    {
+      "path": "client/lib/views/receivable_payment_view.dart",
+      "bytes": 6110,
+      "sha256": "a1ba7ab636fc85357c2edf6a35b759ba3796a117ce52056dd070fba138a1f118"
+    },
+    {
+      "path": "client/lib/views/payable_payment_view.dart",
+      "bytes": 5460,
+      "sha256": "3c95b5d4586b90c115455cc32985611b77ca8d25fca03b31a7b52d7fb4d21f80"
+    },
+    {
+      "path": "client/lib/views/receivables_view.dart",
+      "bytes": 40891,
+      "sha256": "45f7c369a5007b7e704ec3300480e48116585046034996bdaa74272c888369d5"
+    },
+    {
+      "path": "client/lib/views/sale_origin_view.dart",
+      "bytes": 6121,
+      "sha256": "f2f341f642e5c0277cada6e5e25b061853c8db5fa5026bb41e573fe909470b48"
+    },
+    {
+      "path": "client/lib/utils/api_error_mapper.dart",
+      "bytes": 4957,
+      "sha256": "8b4cf47da4718068305db703204b7fb95f989ec3b3608c1ad0bfc7c1ac586faf"
+    },
+    {
+      "path": "client/lib/l10n/app_pt.arb",
+      "bytes": 100894,
+      "sha256": "413c135b013c42ea854a245b9d4f65b031973d7fdda47a113cddc428d7b3ae9b"
+    },
+    {
+      "path": "client/lib/l10n/app_localizations.dart",
+      "bytes": 208285,
+      "sha256": "379e3d5758f4d1973395ccf1645cb7da7c0f813573ba7cd4226378f532b28e67"
+    },
+    {
+      "path": "client/lib/l10n/app_localizations_pt.dart",
+      "bytes": 101866,
+      "sha256": "287ba1fea749950dc8d7e19b7ebcb72e2c0a485535c34e1326359a22925cbea9"
+    },
+    {
+      "path": "client/test/receivable_payment_recovery_test.dart",
+      "bytes": 17154,
+      "sha256": "f7fa53c34306558a8974f91c384894eb4cc820da9535198b8e246ad684e6405c"
+    },
+    {
+      "path": "client/test/receivable_payment_view_test.dart",
+      "bytes": 22906,
+      "sha256": "2a7f6b7ea1725cb025cd317ddcb82785f791bb9ff0c8e79c91c1192d27ce6397"
+    },
+    {
+      "path": "client/test/helpers/receivable_payment_fake.dart",
+      "bytes": 3374,
+      "sha256": "a6b8efff6da2cc1c6473978caca0c9f942bf85dae5823d468183b495a961c308"
+    },
+    {
+      "path": "client/test/helpers/receivable_payment_ui_fake.dart",
+      "bytes": 5075,
+      "sha256": "2e98d0709dacf3060a484041a8111e3c8766f682823f232c6ce0e72059fec513"
+    },
+    {
+      "path": "client/test/page_filters_responsive_test.dart",
+      "bytes": 5399,
+      "sha256": "c2a1040a7888abc342f6815bde2219e81573e9ad8c7f4b85e33b3f69a83b3fe7"
+    }
+  ],
+  "build": [
+    {
+      "path": "client/build/windows/x64/runner/Debug/zm_cesta_basica_client.exe",
+      "bytes": 1271808,
+      "sha256": "d1db4ff3e7f87d592a5a645a95050b4cf15b9d2254ff9593efac406c0caeb740"
+    },
+    {
+      "path": "client/build/windows/x64/runner/Debug/data/flutter_assets/kernel_blob.bin",
+      "bytes": 95310088,
+      "sha256": "b7f4982d9295c64c1f98cd91df0892ac8fbd9fca288a9bb19db21fe5e5ebab73"
+    }
+  ],
+  "archives": [
+    {
+      "manifest": "docs/referencias_frontend/rodada-acabamento-2026-10-16/manifesto.json",
+      "filesVerified": 35,
+      "allUnchanged": true
+    },
+    {
+      "manifest": "docs/validacoes_frontend/fe-053-piloto-pagar-2026-10-16/manifesto.json",
+      "filesVerified": 8,
+      "allUnchanged": true
+    }
+  ],
+  "visual": {
+    "kind": "Flutter widget captures using synthetic services/fixtures; not installed-app or physical-device screenshots",
+    "sizes": [
+      "320x740 at 100% and 200%",
+      "390x844 at 200%, dark",
+      "1100x900 at 100%"
+    ],
+    "stepEntry": "review begins at top; customer identity checked as visible at supported test scales",
+    "materialLimit": "Widget-test shadow rasterization can differ from native runtime; no claim of exact web/native font or glass equivalence"
+  },
+  "safety": {
+    "companyDatabaseUsed": false,
+    "installedUpdated": false,
+    "newMigrations": false,
+    "newDependencies": false,
+    "gitCommitCreated": false
+  },
+  "next": "Integrate main areas and real summaries, preserve recovered reading/navigation; validate native devices and coordinate server/client update separately"
+}

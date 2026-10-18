@@ -1,0 +1,30 @@
+--- a/client/lib/services/reports_service.dart
++++ b/client/lib/services/reports_service.dart
+@@ -24,6 +24,7 @@
+     bool onlyBelowMin = false,
+   }) async {
+     final params = <String>['filter_type=$filterType'];
++    if (reportType == 'sales') params.add('include_dispatches=false');
+     if (date != null && date.isNotEmpty) params.add('date=$date');
+     if (startDate != null && startDate.isNotEmpty) params.add('start_date=$startDate');
+     if (endDate != null && endDate.isNotEmpty) params.add('end_date=$endDate');
+@@ -39,7 +40,7 @@
+     if (onlyBelowMin) params.add('only_below_min=true');
+ 
+     final query = '?${params.join('&')}';
+-    final response = await _client.get('/api/v1/reports/$reportType$query');
++    final response = await _client.get('/api/v1/reports/${reportType == 'sales' ? 'sales-dispatches' : reportType}$query');
+     return ReportResponse.fromJson(response as Map<String, dynamic>);
+   }
+ 
+@@ -62,7 +63,9 @@
+       });
+     }
+     final query = '?${params.join('&')}';
+-    return await _client.getBytes('/api/v1/reports/$reportType/export$query');
++    final endpoint = reportType == 'sales' ? 'sales-dispatches' : reportType;
++    final salesFilter = reportType == 'sales' ? '&include_dispatches=false' : '';
++    return await _client.getBytes('/api/v1/reports/$endpoint/export$query$salesFilter');
+   }
+ 
+   Future<List<int>> downloadBlankTemplateXlsx(String formType, {bool filled = false}) async {

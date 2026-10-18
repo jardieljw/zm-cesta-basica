@@ -23,6 +23,18 @@ from app.models.financial import (
     AccountPayable,
     PayablePayment,
 )
+from app.models.financial_imports import (
+    FinancialSource, FinancialDocument, FinancialStatement, FinancialStatementItem,
+    FinancialTransaction, FinancialTransactionIdentity, FinancialReconciliation, FinancialImportAudit,
+    FinancialImportPreview,
+    FinancialReviewCorrection, FinancialIdentityChange,
+)
+from app.models.financial_bill_assessments import (
+    FinancialBillAssessment, FinancialBillEvidence, FinancialBillAssessmentLink,
+)
+from app.models.financial_bill_semantics import (
+    FinancialBillSemanticReview, FinancialBillSemanticItem, FinancialBillObligation,
+)
 
 __all__ = [
     "Base",

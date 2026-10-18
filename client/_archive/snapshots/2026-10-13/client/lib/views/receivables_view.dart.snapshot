@@ -1,0 +1,870 @@
+import 'package:flutter/material.dart';
+import '../models/sales_receivable.dart';
+import '../models/financial_account.dart';
+import '../services/receivable_service.dart';
+import '../services/treasury_service.dart';
+import '../l10n/l10n_extension.dart';
+import '../utils/formatters.dart';
+import '../utils/api_error_mapper.dart';
+
+class ReceivablesView extends StatefulWidget {
+  const ReceivablesView({super.key});
+
+  @override
+  State<ReceivablesView> createState() => _ReceivablesViewState();
+}
+
+class _ReceivablesViewState extends State<ReceivablesView> {
+  final ReceivableService _receivableService = ReceivableService();
+  final TreasuryService _treasuryService = TreasuryService();
+
+  List<SalesReceivable> _receivables = [];
+  bool _isLoading = true;
+  String? _errorMessage;
+  String? _statusFilter;
+  bool _overdueOnly = false;
+  bool _showAdvancedFilters = false;
+
+  DateTime? _saleDateFrom;
+  DateTime? _saleDateTo;
+  DateTime? _dueDateFrom;
+  DateTime? _dueDateTo;
+  final TextEditingController _customerController = TextEditingController();
+  final TextEditingController _basketTypeController = TextEditingController();
+  final TextEditingController _minAmountController = TextEditingController();
+  final TextEditingController _maxAmountController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadReceivables();
+  }
+
+  @override
+  void dispose() {
+    _customerController.dispose();
+    _basketTypeController.dispose();
+    _minAmountController.dispose();
+    _maxAmountController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadReceivables() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final minCents = _minAmountController.text.trim().isNotEmpty
+          ? _parseToCents(_minAmountController.text)
+          : null;
+      final maxCents = _maxAmountController.text.trim().isNotEmpty
+          ? _parseToCents(_maxAmountController.text)
+          : null;
+
+      final items = await _receivableService.getReceivables(
+        status: _statusFilter,
+        overdueOnly: _overdueOnly,
+        customerId: _customerController.text.trim().isNotEmpty ? _customerController.text.trim() : null,
+        basketTypeId: _basketTypeController.text.trim().isNotEmpty ? _basketTypeController.text.trim() : null,
+        saleDateFrom: _saleDateFrom,
+        saleDateTo: _saleDateTo,
+        dueDateFrom: _dueDateFrom,
+        dueDateTo: _dueDateTo,
+        minAmountCents: minCents,
+        maxAmountCents: maxCents,
+      );
+      setState(() {
+        _receivables = items;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = ApiErrorMapper.toLocalizedMessage(e, context.l10n);
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _clearFilters() {
+    setState(() {
+      _statusFilter = null;
+      _overdueOnly = false;
+      _saleDateFrom = null;
+      _saleDateTo = null;
+      _dueDateFrom = null;
+      _dueDateTo = null;
+      _customerController.clear();
+      _basketTypeController.clear();
+      _minAmountController.clear();
+      _maxAmountController.clear();
+    });
+    _loadReceivables();
+  }
+
+  int get _totalBalanceCents {
+    int sum = 0;
+    for (final r in _receivables) {
+      if (r.status == 'OPEN' || r.status == 'PARTIAL') {
+        sum += r.balanceCents;
+      }
+    }
+    return sum;
+  }
+
+  int get _openCount => _receivables.where((r) => r.status == 'OPEN').length;
+  int get _partialCount => _receivables.where((r) => r.status == 'PARTIAL').length;
+
+  int _parseToCents(String text) {
+    final cleaned = text.replaceAll('R\$', '').replaceAll(' ', '').replaceAll('.', '').replaceAll(',', '.').trim();
+    final val = double.tryParse(cleaned) ?? 0.0;
+    return (val * 100).round();
+  }
+
+  Future<void> _showPaymentDialog(SalesReceivable receivable) async {
+    final l10n = context.l10n;
+    final initialVal = (receivable.balanceCents / 100.0).toStringAsFixed(2).replaceAll('.', ',');
+    final amountController = TextEditingController(text: initialVal);
+    final notesController = TextEditingController();
+    String paymentMethod = 'CASH';
+    String? selectedAccountId;
+    List<FinancialAccount> accounts = [];
+    bool isLoadingAccounts = true;
+    bool isSaving = false;
+    String? payError;
+
+    try {
+      accounts = await _treasuryService.getAccounts(isActive: true);
+      if (accounts.isNotEmpty) {
+        selectedAccountId = accounts.firstWhere((a) => a.isDefault, orElse: () => accounts.first).id;
+      }
+      isLoadingAccounts = false;
+    } catch (_) {
+      isLoadingAccounts = false;
+    }
+
+    if (!mounted) return;
+
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: Text(l10n.receivableRecordPayment),
+              content: SizedBox(
+                width: 460,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (payError != null) ...[
+                      Text(payError!, style: const TextStyle(color: Colors.red)),
+                      const SizedBox(height: 8),
+                    ],
+                    Text(
+                      '${l10n.customerName}: ${receivable.customerName}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      '${l10n.receivableRemainingBalance}: ${AppFormatters.formatCurrency(receivable.balanceCents)}',
+                      style: const TextStyle(color: Colors.black54),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: amountController,
+                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                      decoration: InputDecoration(
+                        labelText: l10n.receivablePaymentAmount,
+                        prefixText: 'R\$ ',
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    if (isLoadingAccounts)
+                      const LinearProgressIndicator()
+                    else
+                      DropdownButtonFormField<String>(
+                        initialValue: selectedAccountId,
+                        decoration: InputDecoration(
+                          labelText: l10n.payableSelectAccount,
+                          border: const OutlineInputBorder(),
+                        ),
+                        items: accounts.map((a) {
+                          return DropdownMenuItem(
+                            value: a.id,
+                            child: Text('${a.name} (${AppFormatters.formatCurrency(a.currentBalanceCents)})'),
+                          );
+                        }).toList(),
+                        onChanged: (val) {
+                          if (val != null) setDialogState(() => selectedAccountId = val);
+                        },
+                      ),
+                    const SizedBox(height: 12),
+                    DropdownButtonFormField<String>(
+                      initialValue: paymentMethod,
+                      decoration: InputDecoration(
+                        labelText: l10n.receivablePaymentMethod,
+                        border: const OutlineInputBorder(),
+                      ),
+                      items: [
+                        DropdownMenuItem(value: 'CASH', child: Text(l10n.salePaymentModeCash)),
+                        DropdownMenuItem(value: 'PIX', child: Text(l10n.salePaymentModePix)),
+                        DropdownMenuItem(value: 'CARD', child: Text(l10n.salePaymentModeCard)),
+                      ],
+                      onChanged: (val) {
+                        if (val != null) setDialogState(() => paymentMethod = val);
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: notesController,
+                      decoration: InputDecoration(
+                        labelText: l10n.receivablePaymentNotes,
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: isSaving ? null : () => Navigator.pop(ctx),
+                  child: Text(l10n.commonCancel),
+                ),
+                ElevatedButton(
+                  onPressed: isSaving
+                      ? null
+                      : () async {
+                          final cents = _parseToCents(amountController.text);
+                          if (cents <= 0) {
+                            setDialogState(() => payError = l10n.receivablePaymentAmountMustBePositive);
+                            return;
+                          }
+                          if (cents > receivable.balanceCents) {
+                            setDialogState(() => payError = l10n.receivablePaymentAmountExceedsBalance);
+                            return;
+                          }
+
+                          setDialogState(() {
+                            isSaving = true;
+                            payError = null;
+                          });
+
+                          try {
+                            await _receivableService.recordPayment(
+                              receivable.id,
+                              ReceivablePaymentCreate(
+                                amountCents: cents,
+                                paymentMethod: paymentMethod,
+                                accountId: selectedAccountId,
+                                notes: notesController.text.trim().isNotEmpty ? notesController.text.trim() : null,
+                              ),
+                            );
+                            if (mounted) {
+                              Navigator.pop(ctx);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text(l10n.receivablePaymentSuccess)),
+                              );
+                              _loadReceivables();
+                            }
+                          } catch (e) {
+                            setDialogState(() {
+                              isSaving = false;
+                              payError = ApiErrorMapper.toLocalizedMessage(e, l10n);
+                            });
+                          }
+                        },
+                  child: isSaving
+                      ? const SizedBox(
+                          width: 16,
+                          height: 16,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                        )
+                      : Text(l10n.commonConfirm),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  Widget _buildRepassBadge(BuildContext context, ReceivablePayment p) {
+    final l10n = context.l10n;
+    Color bg;
+    Color fg;
+    String text;
+
+    switch (p.repassStatus) {
+      case 'PENDING_REPASS':
+        bg = Colors.orange.shade100;
+        fg = Colors.orange.shade900;
+        text = l10n.receivableRepassPending;
+        break;
+      case 'REPASSED':
+        bg = Colors.blue.shade100;
+        fg = Colors.blue.shade900;
+        text = l10n.receivableRepassDone;
+        break;
+      default:
+        bg = Colors.green.shade100;
+        fg = Colors.green.shade900;
+        text = l10n.receivableRepassDirect;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(6)),
+      child: Text(text, style: TextStyle(fontSize: 10, color: fg, fontWeight: FontWeight.bold)),
+    );
+  }
+
+  Future<void> _showHistoryDialog(SalesReceivable receivable) async {
+    final l10n = context.l10n;
+
+    await showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          return FutureBuilder<SalesReceivable>(
+            future: _receivableService.getReceivable(receivable.id),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError || !snapshot.hasData) {
+                return AlertDialog(
+                  content: Text(ApiErrorMapper.toLocalizedMessage(snapshot.error, l10n)),
+                  actions: [
+                    TextButton(onPressed: () => Navigator.pop(ctx), child: Text(l10n.commonClose)),
+                  ],
+                );
+              }
+
+              final detail = snapshot.data!;
+              return AlertDialog(
+                title: Text(l10n.receivablePaymentsHistory),
+                content: SizedBox(
+                  width: 520,
+                  child: detail.payments.isEmpty
+                      ? Center(child: Text(l10n.receivableNoPayments))
+                      : ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: detail.payments.length,
+                          separatorBuilder: (_, __) => const Divider(height: 1),
+                          itemBuilder: (context, index) {
+                            final p = detail.payments[index];
+                            final isConfirmed = p.status == 'CONFIRMED';
+
+                            return ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              leading: Icon(
+                                isConfirmed ? Icons.check_circle : Icons.cancel,
+                                color: isConfirmed ? Colors.green : Colors.grey,
+                              ),
+                              title: Row(
+                                children: [
+                                  Text(
+                                    AppFormatters.formatCurrency(p.amountCents),
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      decoration: isConfirmed ? null : TextDecoration.lineThrough,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  _buildRepassBadge(context, p),
+                                ],
+                              ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${AppFormatters.formatDateTime(p.paymentDate)} via ${p.paymentMethod}${p.accountName != null ? ' (${p.accountName})' : ''}',
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                  if (!isConfirmed && p.reversalReason != null)
+                                    Text(
+                                      'Estornado: ${p.reversalReason}',
+                                      style: const TextStyle(fontSize: 11, color: Colors.red),
+                                    ),
+                                  if (p.notes != null)
+                                    Text(
+                                      p.notes!,
+                                      style: const TextStyle(fontSize: 11, color: Colors.black54),
+                                    ),
+                                ],
+                              ),
+                              trailing: isConfirmed
+                                  ? IconButton(
+                                      icon: const Icon(Icons.undo, color: Colors.orange),
+                                      tooltip: l10n.receivableReversePayment,
+                                      onPressed: () async {
+                                        final reasonCtrl = TextEditingController();
+                                        final confirm = await showDialog<bool>(
+                                          context: context,
+                                          builder: (dCtx) => AlertDialog(
+                                            title: Text(l10n.receivableReversePayment),
+                                            content: TextField(
+                                              controller: reasonCtrl,
+                                              decoration: InputDecoration(
+                                                labelText: l10n.receivableReverseReason,
+                                                border: const OutlineInputBorder(),
+                                              ),
+                                            ),
+                                            actions: [
+                                              TextButton(onPressed: () => Navigator.pop(dCtx, false), child: Text(l10n.commonCancel)),
+                                              ElevatedButton(onPressed: () => Navigator.pop(dCtx, true), child: Text(l10n.commonConfirm)),
+                                            ],
+                                          ),
+                                        );
+
+                                        if (confirm == true && reasonCtrl.text.trim().isNotEmpty) {
+                                          try {
+                                            await _receivableService.cancelPayment(p.id, reasonCtrl.text.trim());
+                                            setDialogState(() {});
+                                            _loadReceivables();
+                                          } catch (err) {
+                                            if (mounted) {
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                SnackBar(content: Text(ApiErrorMapper.toLocalizedMessage(err, l10n))),
+                                              );
+                                            }
+                                          }
+                                        }
+                                      },
+                                    )
+                                  : null,
+                            );
+                          },
+                        ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx),
+                    child: Text(l10n.commonClose),
+                  ),
+                ],
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildFilterBar(BuildContext context) {
+    final l10n = context.l10n;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: DropdownButtonFormField<String?>(
+                  initialValue: _statusFilter,
+                  decoration: InputDecoration(
+                    labelText: l10n.commonStatus,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  ),
+                  items: [
+                    DropdownMenuItem(value: null, child: Text(l10n.categoryAll)),
+                    DropdownMenuItem(value: 'OPEN', child: Text(l10n.receivableStatusOpen)),
+                    DropdownMenuItem(value: 'PARTIAL', child: Text(l10n.receivableStatusPartial)),
+                    DropdownMenuItem(value: 'PAID', child: Text(l10n.receivableStatusPaid)),
+                    DropdownMenuItem(value: 'CANCELED', child: Text(l10n.receivableStatusCanceled)),
+                  ],
+                  onChanged: (val) {
+                    setState(() => _statusFilter = val);
+                    _loadReceivables();
+                  },
+                ),
+              ),
+              const SizedBox(width: 8),
+              FilterChip(
+                label: Text(l10n.receivableOverdue),
+                selected: _overdueOnly,
+                onSelected: (val) {
+                  setState(() => _overdueOnly = val);
+                  _loadReceivables();
+                },
+              ),
+              const SizedBox(width: 8),
+              FilterChip(
+                avatar: Icon(_showAdvancedFilters ? Icons.expand_less : Icons.tune, size: 16),
+                label: Text(_showAdvancedFilters ? l10n.receivableFilterHideAdvanced : l10n.receivableFilterAdvanced),
+                selected: _showAdvancedFilters,
+                onSelected: (val) {
+                  setState(() => _showAdvancedFilters = val);
+                },
+              ),
+              const SizedBox(width: 4),
+              IconButton(
+                icon: const Icon(Icons.refresh),
+                tooltip: l10n.commonRefresh,
+                onPressed: _loadReceivables,
+              ),
+            ],
+          ),
+          if (_showAdvancedFilters) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade50,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 8,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      OutlinedButton.icon(
+                        icon: const Icon(Icons.date_range, size: 16),
+                        label: Text(
+                          _saleDateFrom != null && _saleDateTo != null
+                              ? '${AppFormatters.formatDate(_saleDateFrom!)} - ${AppFormatters.formatDate(_saleDateTo!)}'
+                              : l10n.receivableFilterPeriod,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        onPressed: () async {
+                          final range = await showDateRangePicker(
+                            context: context,
+                            firstDate: DateTime(2020),
+                            lastDate: DateTime(2035),
+                            initialDateRange: _saleDateFrom != null && _saleDateTo != null
+                                ? DateTimeRange(start: _saleDateFrom!, end: _saleDateTo!)
+                                : null,
+                          );
+                          if (range != null) {
+                            setState(() {
+                              _saleDateFrom = range.start;
+                              _saleDateTo = range.end;
+                            });
+                          }
+                        },
+                      ),
+                      OutlinedButton.icon(
+                        icon: const Icon(Icons.event_available, size: 16),
+                        label: Text(
+                          _dueDateFrom != null && _dueDateTo != null
+                              ? '${AppFormatters.formatDate(_dueDateFrom!)} - ${AppFormatters.formatDate(_dueDateTo!)}'
+                              : l10n.receivableFilterDuePeriod,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        onPressed: () async {
+                          final range = await showDateRangePicker(
+                            context: context,
+                            firstDate: DateTime(2020),
+                            lastDate: DateTime(2035),
+                            initialDateRange: _dueDateFrom != null && _dueDateTo != null
+                                ? DateTimeRange(start: _dueDateFrom!, end: _dueDateTo!)
+                                : null,
+                          );
+                          if (range != null) {
+                            setState(() {
+                              _dueDateFrom = range.start;
+                              _dueDateTo = range.end;
+                            });
+                          }
+                        },
+                      ),
+                      SizedBox(
+                        width: 170,
+                        child: TextField(
+                          controller: _customerController,
+                          decoration: InputDecoration(
+                            labelText: l10n.receivableFilterCustomer,
+                            isDense: true,
+                            border: const OutlineInputBorder(),
+                          ),
+                          onSubmitted: (_) => _loadReceivables(),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 170,
+                        child: TextField(
+                          controller: _basketTypeController,
+                          decoration: InputDecoration(
+                            labelText: l10n.receivableFilterBasketType,
+                            isDense: true,
+                            border: const OutlineInputBorder(),
+                          ),
+                          onSubmitted: (_) => _loadReceivables(),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 140,
+                        child: TextField(
+                          controller: _minAmountController,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          decoration: InputDecoration(
+                            labelText: l10n.receivableFilterMinValue,
+                            prefixText: 'R\$ ',
+                            isDense: true,
+                            border: const OutlineInputBorder(),
+                          ),
+                          onSubmitted: (_) => _loadReceivables(),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 140,
+                        child: TextField(
+                          controller: _maxAmountController,
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                          decoration: InputDecoration(
+                            labelText: l10n.receivableFilterMaxValue,
+                            prefixText: 'R\$ ',
+                            isDense: true,
+                            border: const OutlineInputBorder(),
+                          ),
+                          onSubmitted: (_) => _loadReceivables(),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton.icon(
+                        icon: const Icon(Icons.clear_all, size: 16),
+                        label: Text(l10n.receivableFilterClear),
+                        onPressed: _clearFilters,
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.search, size: 16),
+                        label: Text(l10n.receivableFilterApply),
+                        onPressed: _loadReceivables,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  String _formatStatus(BuildContext context, String status) {
+    final l10n = context.l10n;
+    switch (status) {
+      case 'OPEN':
+        return l10n.receivableStatusOpen;
+      case 'PARTIAL':
+        return l10n.receivableStatusPartial;
+      case 'PAID':
+        return l10n.receivableStatusPaid;
+      case 'CANCELED':
+        return l10n.receivableStatusCanceled;
+      default:
+        return status;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.receivablesTitle),
+      ),
+      body: Column(
+        children: [
+          _buildSummaryHeader(context),
+          _buildFilterBar(context),
+          const Divider(height: 1),
+          Expanded(
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _errorMessage != null
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
+                            const SizedBox(height: 12),
+                            ElevatedButton(
+                              onPressed: _loadReceivables,
+                              child: Text(l10n.commonRefresh),
+                            ),
+                          ],
+                        ),
+                      )
+                    : _receivables.isEmpty
+                        ? Center(child: Text(l10n.receivablesEmpty))
+                        : ListView.builder(
+                            padding: const EdgeInsets.all(16.0),
+                            itemCount: _receivables.length,
+                            itemBuilder: (context, index) {
+                              return _buildReceivableCard(context, _receivables[index]);
+                            },
+                          ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryHeader(BuildContext context) {
+    final l10n = context.l10n;
+
+    return Container(
+      color: Colors.amber.shade50,
+      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildSummaryItem(
+            l10n.receivablesSummaryTotal,
+            AppFormatters.formatCurrency(_totalBalanceCents),
+            Colors.red.shade700,
+          ),
+          _buildSummaryItem(
+            l10n.receivablesSummaryOpen,
+            _openCount.toString(),
+            Colors.orange.shade800,
+          ),
+          _buildSummaryItem(
+            l10n.receivablesSummaryPartial,
+            _partialCount.toString(),
+            Colors.blue.shade800,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryItem(String label, String value, Color color) {
+    return Column(
+      children: [
+        Text(label, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: color),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildReceivableCard(BuildContext context, SalesReceivable r) {
+    final l10n = context.l10n;
+    final isSettled = r.status == 'PAID';
+
+    return Card(
+      elevation: 2,
+      margin: const EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        r.customerName,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      ),
+                      Text(
+                        l10n.receivableDueDateLabel(AppFormatters.formatDate(r.dueDate)),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: r.isOverdue ? Colors.red.shade700 : Colors.black54,
+                          fontWeight: r.isOverdue ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                      if (r.saleDate != null)
+                        Text(
+                          'Data da venda: ${AppFormatters.formatDate(r.saleDate!)}',
+                          style: const TextStyle(fontSize: 12, color: Colors.black45),
+                        ),
+                    ],
+                  ),
+                ),
+                Text(
+                  AppFormatters.formatCurrency(r.balanceCents),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                    color: isSettled ? Colors.green.shade700 : (r.isOverdue ? Colors.red.shade700 : Colors.black87),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                Chip(
+                  label: Text(_formatStatus(context, r.status), style: const TextStyle(fontSize: 11)),
+                  backgroundColor: isSettled ? Colors.green.shade50 : Colors.orange.shade50,
+                ),
+                if (r.isOverdue && !isSettled)
+                  Chip(
+                    label: Text(l10n.receivableOverdue, style: const TextStyle(fontSize: 11, color: Colors.white)),
+                    backgroundColor: Colors.red.shade700,
+                  ),
+                if (r.basketTypesSummary != null && r.basketTypesSummary!.isNotEmpty)
+                  Chip(
+                    label: Text(l10n.receivablesBasketsPrefix(r.basketTypesSummary!), style: const TextStyle(fontSize: 11)),
+                    backgroundColor: Colors.grey.shade200,
+                  ),
+              ],
+            ),
+            const Divider(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '${l10n.receivableOriginalAmount}: ${AppFormatters.formatCurrency(r.originalAmountCents)} | ${l10n.receivablePaidAmount}: ${AppFormatters.formatCurrency(r.paidAmountCents)}',
+                  style: const TextStyle(fontSize: 12, color: Colors.black54),
+                ),
+                Row(
+                  children: [
+                    if (r.paymentsCount > 0)
+                      IconButton(
+                        tooltip: l10n.receivablePaymentsHistory,
+                        icon: const Icon(Icons.history, size: 20),
+                        onPressed: () => _showHistoryDialog(r),
+                      ),
+                    if (!isSettled && r.status != 'CANCELED')
+                      ElevatedButton.icon(
+                        onPressed: () => _showPaymentDialog(r),
+                        icon: const Icon(Icons.price_check, size: 16),
+                        label: Text(l10n.receivableRecordPayment),
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

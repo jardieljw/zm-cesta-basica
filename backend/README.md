@@ -1,8 +1,42 @@
 # ZM Cesta Básica — Backend FastAPI e Banco de Dados SQLite
 
+**Receber revisado — 17/10/2026:** o [guia do incremento](../docs/PILOTO_RECEBER_REVISADO.md)
+descreve saldo/dia civil/capacidade, preservação da venda e recuperação comum
+com Pagar. Cliente e servidor correspondentes são necessários; sem migração
+nova ou substituição automática da instalação.
+
+**Pagamento revisado — 16/10/2026:** o [piloto de Pagar](../docs/PILOTO_PAGAR_REVISADO.md)
+acrescenta saldo revisado e data civil como campos opcionais, capacidade no detalhe
+e erros estruturados, preservando hashes legados. Cliente e servidor precisam das
+versões correspondentes; esse incremento não requer migração de banco.
+
+Para regras e efeitos de cada operação no banco, consulte o
+[índice das mecânicas do app](../docs/README.md).
+
+**Base financeira — 15/10/2026:** o backend oferece documentos bancários/cartões,
+dados estruturados, revisão de duplicidades e conciliação de evidências em
+`/api/v1/financial-imports`, incluindo prévias CSV multibanco configuráveis e um
+adaptador de conta Nubank. PDF/OFX e sincronização Gmail continuam futuros.
+As migrações `fa0d1e2f4310`, `fb1e2f3a5411` e `fc2f3a4b6512` exigem backup verificado antes do uso;
+a inicialização não cria essas tabelas automaticamente. Consulte o
+[guia da base financeira](../docs/BASE_FINANCEIRA_E_CONCILIACAO.md).
+O contrato de leitura está no [guia CSV multibanco](../docs/IMPORTACAO_CSV_MULTIBANCO.md).
+A [correção de revisão](../docs/CORRECAO_REVISAO_FINANCEIRA.md) conserva decisões
+anteriores e exige tratar explicitamente conciliações ativas.
+Para continuar em outra sessão, ler a [memória financeira](../docs/MEMORIA_IMPLEMENTACAO_FINANCEIRA.md).
+A [homologação](../docs/HOMOLOGACAO_IMPORTACAO_FINANCEIRA.md) usa ferramenta
+offline com banco descartável, sem usar o banco da empresa.
+
+**16/10 — procedência de faturas:** o [guia](../docs/CONFERENCIA_E_PROCEDENCIA_DE_FATURAS.md)
+descreve documentos de controles, transcrição manual, pareceres imutáveis e
+vínculo opcional de confirmação, sem criar obrigações. Migração `fd3a4b5c7613`,
+após fc2, exclusivamente por Alembic. A base original foi observada em fc2 por
+leitura; fd3 foi validada somente em cópia. Sem as três tabelas novas o módulo
+retorna 503, portanto atualizar servidor/migração juntos após backup verificado.
+
 Servidor de aplicação local de alta durabilidade, projetado sob os princípios de **Monólito Modular** para gerenciamento de estoque, compras, receitas, montagem de cestas e vendas.
 
-Consulte o documento canônico de diretrizes de engenharia em **[ARCHITECTURE.md](../ARCHITECTURE.md)**.
+Consulte o documento canônico de diretrizes de engenharia em **[ARCHITECTURE.md](../ARCHITECTURE.md)** e o guia de referência e pendências em **[docs/ARQUITETURA_BACKEND.md](../docs/ARQUITETURA_BACKEND.md)**.
 
 ---
 
@@ -70,12 +104,20 @@ backend/
 4. **Idempotência Transacional Genérica:**
    - Mutações exigem cabeçalho `X-Idempotency-Key`. Reenvios de rede com o mesmo payload recebem a resposta gravada em cache sem reprocessar regras ou duplicar estoques. Modificações no payload com a mesma chave resultam em `HTTP 409 Conflict`.
 5. **Soft Delete de Itens de Catálogo:**
-   - Produtos e tipos de cestas utilizam inativação lógica (`is_active = False`). Exclusão física é proibida para manter a integridade histórica de transações passadas.
+   - Produtos e tipos de cestas utilizam inativação lógica (`is_active = False`). Produtos com vínculos ou histórico não podem ser excluídos fisicamente. Cadastros nunca utilizados podem ser excluídos pela ação explícita `/products/{id}/permanent`, após verificação transacional de receitas, compras, montagens e movimentos.
    - Produtos ativos em receitas ativas não podem ser inativados sem antes gerar uma nova versão da receita sem o produto.
 
 ---
 
 ## 🛠️ Comandos de Manutenção e Testes
+
+**Importação financeira — 16/10/2026:** o [guia PDF](../docs/IMPORTACAO_PDF_FINANCEIRO.md)
+documenta `pdf_auto`, adaptadores Nubank/PicPay, erros bloqueantes e homologação
+sem efeitos financeiros. Instalar dependências no ambiente Python do servidor,
+incluindo `pdfplumber==0.11.10`; versões transitivas constam no lock. A extração
+usa esse Python em processo separado. Não está homologada em executável
+congelado nem integrada ao Flutter. Reutiliza as tabelas de prévias; não aplica
+migrações no banco da empresa. Novos layouts, OCR/senha e Gmail são futuros.
 
 ```powershell
 # Ativar venv

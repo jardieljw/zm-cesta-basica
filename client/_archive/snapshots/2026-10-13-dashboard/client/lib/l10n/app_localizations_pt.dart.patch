@@ -1,0 +1,207 @@
+--- a/client/lib/l10n/app_localizations_pt.dart
++++ b/client/lib/l10n/app_localizations_pt.dart
+@@ -1934,9 +1934,6 @@
+       'O valor do pagamento deve ser maior que zero.';
+ 
+   @override
+-  String get payableSelectAccount => 'Conta Financeira de Saída';
+-
+-  @override
+   String get payableNoPayables => 'Nenhuma obrigação a pagar encontrada.';
+ 
+   @override
+@@ -2023,7 +2020,7 @@
+ 
+   @override
+   String get homeDashboardDescription =>
+-      'Visão consolidada operacional, faturamento e livro-caixa';
++      'Vendas, estoque, recebimentos, pagamentos e resultado';
+ 
+   @override
+   String get moduleReports => 'Relatórios & Planilhas';
+@@ -2097,27 +2094,12 @@
+   String get dashboardStockNormal => 'Estoque em Nível Regular';
+ 
+   @override
+-  String get dashboardSectionFinancial => 'Financeiro & Tesouraria';
+-
+-  @override
+-  String get dashboardOpenReceivables => 'A Receber (Em Aberto)';
+-
+-  @override
+   String get dashboardOverdueReceivables => 'A Receber Vencidos';
+ 
+   @override
+-  String get dashboardEffectiveReceived => 'Recebimentos Efetivos';
+-
+-  @override
+-  String get dashboardOpenPayables => 'A Pagar (Em Aberto)';
+-
+-  @override
+   String get dashboardOverduePayables => 'A Pagar Vencidos';
+ 
+   @override
+-  String get dashboardEffectivePaid => 'Pagamentos Efetuados';
+-
+-  @override
+   String get dashboardCashInflow => 'Entradas de Caixa';
+ 
+   @override
+@@ -2125,13 +2107,6 @@
+ 
+   @override
+   String get dashboardTreasuryBalance => 'Saldo Disponível (Tesouraria)';
+-
+-  @override
+-  String get dashboardProjectedCash => 'Saldo de Caixa Projetado';
+-
+-  @override
+-  String get dashboardProjectionNotice =>
+-      'Atenção: Valores projetados são estimativas futuras e NÃO constituem dinheiro disponível em caixa.';
+ 
+   @override
+   String get reportsTitle => 'Relatórios Gerenciais e Planilhas';
+@@ -2616,10 +2591,6 @@
+       'A data de vencimento é obrigatória para compras pendentes.';
+ 
+   @override
+-  String get purchasePaymentFinancialAccountLabel =>
+-      'Conta Financeira de Liquidação';
+-
+-  @override
+   String purchasePaymentPendingNotice(String date) {
+     return 'Esta compra gerará uma obrigação em aberto no módulo de Contas a Pagar com vencimento em $date.';
+   }
+@@ -2699,4 +2670,132 @@
+   String backupRestoreErrorMsg(String error) {
+     return 'Falha ao restaurar backup: $error';
+   }
++
++  @override
++  String get companyFinanceTitle => 'Recebimentos, pagamentos e resultado';
++
++  @override
++  String get companyFinancialReportTitle =>
++      'Resultado, recebimentos e pagamentos';
++
++  @override
++  String get companyPaymentsScope =>
++      'Valores confirmados no período selecionado, incluindo os estornos registrados nesse período.';
++
++  @override
++  String get companyReceived => 'Recebimentos confirmados';
++
++  @override
++  String get companyPaid => 'Pagamentos confirmados';
++
++  @override
++  String get companyPaymentDifference => 'Diferença entre recebido e pago';
++
++  @override
++  String get companyDifferenceExplanation =>
++      'Compara os movimentos do período. Não representa saldo bancário nem lucro.';
++
++  @override
++  String get companyResultTitle => 'Resultado das vendas no período';
++
++  @override
++  String get companyResultExplanation =>
++      'As vendas a prazo entram no valor vendido, mesmo antes do recebimento. As outras despesas são consideradas quando pagas.';
++
++  @override
++  String get companySalesRevenue => 'Valor das vendas';
++
++  @override
++  String get companySoldCost => 'Custo das cestas vendidas';
++
++  @override
++  String get companyGrossProfit => 'Lucro bruto das vendas';
++
++  @override
++  String get companyOperatingExpenses => 'Outras despesas do negócio pagas';
++
++  @override
++  String get companyOperatingResult => 'Resultado gerencial do período';
++
++  @override
++  String get companyCostExplanation =>
++      'O custo dos insumos vendidos já está no custo das cestas. As compras de estoque não são descontadas novamente do lucro bruto. Retiradas pessoais são mostradas separadamente.';
++
++  @override
++  String get companyPendingTitle => 'Contas ainda pendentes';
++
++  @override
++  String get companyPendingScope =>
++      'Totais atuais de todas as contas em aberto. Os vencimentos no período aparecem abaixo.';
++
++  @override
++  String get companyPendingReceivable => 'Total pendente a receber';
++
++  @override
++  String get companyPendingPayable => 'Total pendente a pagar';
++
++  @override
++  String get companyReceivableDueInPeriod =>
++      'A receber com vencimento no período';
++
++  @override
++  String get companyPayableDueInPeriod => 'A pagar com vencimento no período';
++
++  @override
++  String get companyReceivedDetails => 'Recebimentos confirmados no período';
++
++  @override
++  String get companyPaidDetails => 'Pagamentos confirmados no período';
++
++  @override
++  String get companyNoPayments => 'Nenhum registro confirmado neste período.';
++
++  @override
++  String get companyPaidStatus => 'Recebida';
++
++  @override
++  String get companyPartialStatus => 'Recebida parcialmente';
++
++  @override
++  String get companyPendingStatus => 'A receber';
++
++  @override
++  String get companyStockAvailable => 'Disponível';
++
++  @override
++  String companyMissingCost(int count) {
++    return 'Há $count venda(s) com custo incompleto. O resultado gerencial precisa ser conferido.';
++  }
++
++  @override
++  String companyStockPaid(String value) {
++    return 'Compras de estoque pagas: $value';
++  }
++
++  @override
++  String companyWithdrawalsPaid(String value) {
++    return 'Retiradas pessoais pagas: $value';
++  }
++
++  @override
++  String companyOverdueAmount(String value) {
++    return 'Vencido: $value';
++  }
++
++  @override
++  String companyPaymentDescription(String method, String date) {
++    return '$method · $date';
++  }
++
++  @override
++  String get companyPurchasesTitle => 'Compras registradas no período';
++
++  @override
++  String companyPurchaseCount(int count) {
++    return '$count compra(s) confirmada(s)';
++  }
++
++  @override
++  String get companyPurchasesExplanation =>
++      'Inclui compras pagas e a prazo. Os pagamentos confirmados aparecem separadamente no financeiro.';
+ }

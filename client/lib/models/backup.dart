@@ -45,7 +45,9 @@ class BackupItemModel {
 
   String get formattedSize {
     if (sizeBytes < 1024) return '$sizeBytes B';
-    if (sizeBytes < 1024 * 1024) return '${(sizeBytes / 1024).toStringAsFixed(1)} KB';
+    if (sizeBytes < 1024 * 1024) {
+      return '${(sizeBytes / 1024).toStringAsFixed(1)} KB';
+    }
     return '${(sizeBytes / (1024 * 1024)).toStringAsFixed(2)} MB';
   }
 }
@@ -77,4 +79,19 @@ class BackupCreateResult {
       createdAt: json['created_at'] as String? ?? '',
     );
   }
+}
+
+class NewDatabaseResult {
+  final String safetyBackupFilename;
+  final String activeDatabasePath;
+  final bool operationReplayed;
+  NewDatabaseResult(
+      {required this.safetyBackupFilename,
+      required this.activeDatabasePath,
+      this.operationReplayed = false});
+  factory NewDatabaseResult.fromJson(Map<String, dynamic> json) =>
+      NewDatabaseResult(
+          safetyBackupFilename: json['safety_backup_filename'] as String,
+          activeDatabasePath: json['active_database_path'] as String,
+          operationReplayed: json['operation_replayed'] == true);
 }

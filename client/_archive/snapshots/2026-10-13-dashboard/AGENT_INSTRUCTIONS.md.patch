@@ -1,0 +1,18 @@
+--- a/AGENT_INSTRUCTIONS.md
++++ b/AGENT_INSTRUCTIONS.md
+@@ -10,7 +10,14 @@
+ > O backend e os dados históricos são preservados para os fluxos compartilhados.
+ > Consulte [client/_archive/README.md](client/_archive/README.md) antes de restaurar
+ > funções. Não reintroduzir menus, relatórios ou serviços exclusivos arquivados
+-> sem solicitação do usuário. Montagem na venda e consulta de contas seguem ativas.
++> sem solicitação do usuário. Montagem na venda segue ativa; pagamentos não exigem seleção de contas.
++
++> **Dashboard e financeiro simplificados:** o aplicativo usa `dashboard/business-summary`
++> e `reports/business-financial-summary`, com vendas, compras, estoque, confirmações,
++> pendências, custo vendido e resultado gerencial. Não exibir saldos de caixa/contas,
++> depósitos manuais ou projeção de tesouraria. As confirmações preservam a auditoria
++> interna; contas financeiras não são selecionadas pelo operador. Consultar
++> [client/_archive/DASHBOARD.md](client/_archive/DASHBOARD.md) antes de evoluir esses fluxos.
+ 
+ ---
+ 

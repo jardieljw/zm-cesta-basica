@@ -1,0 +1,29 @@
+--- a/client/lib/models/account_payable.dart
++++ b/client/lib/models/account_payable.dart
+@@ -174,7 +174,8 @@
+         if (purchaseId != null) 'purchase_id': purchaseId,
+         'total_installments': totalInstallments,
+         if (installmentDueDates != null)
+-          'installment_due_dates': installmentDueDates!.map((d) => d.toIso8601String()).toList(),
++          'installment_due_dates':
++              installmentDueDates!.map((d) => d.toIso8601String()).toList(),
+         'is_recurrent': isRecurrent,
+         if (recurrencePeriod != null) 'recurrence_period': recurrencePeriod,
+         if (notes != null && notes!.trim().isNotEmpty) 'notes': notes!.trim(),
+@@ -183,14 +184,14 @@
+ 
+ class PayablePaymentCreate {
+   final int amountCents;
+-  final String accountId;
++  final String? accountId;
+   final String paymentMethod;
+   final DateTime? paymentDate;
+   final String? notes;
+ 
+   PayablePaymentCreate({
+     required this.amountCents,
+-    required this.accountId,
++    this.accountId,
+     this.paymentMethod = 'BOLETO',
+     this.paymentDate,
+     this.notes,

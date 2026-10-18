@@ -131,6 +131,7 @@ class BasketTypeUpdate(BaseModel):
 
 class BasketTypeResponse(BasketTypeBase):
     id: str
+    removed_at: Optional[datetime.datetime] = None
     active_recipe: Optional[RecipeVersionResponse] = None
 
     model_config = ConfigDict(from_attributes=True)
@@ -141,3 +142,20 @@ class BasketTypeInactivationResponse(BaseModel):
     name: str
     is_active: bool
     message: str
+
+
+class BasketDeletionCheck(BaseModel):
+    id: str
+    name: str
+    can_delete: bool
+    deletion_mode: str
+    reasons: List[str] = []
+    history_reasons: List[str] = []
+
+
+class BasketDeletionResponse(BaseModel):
+    id: str
+    name: str
+    deleted: bool
+    deletion_mode: str
+    removed_recipes_count: int = 0

@@ -7,17 +7,21 @@ echo       COMPILANDO APLICATIVO WINDOWS (RELEASE)
 echo ========================================================
 echo.
 
-rem 1. Localiza o executavel do Flutter (prioriza o PATH de qualquer utilizador)
+rem Forca o Java e o Gradle a usarem UTF-8 nos processos filhos
+set "JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8"
+set "GRADLE_OPTS=-Dfile.encoding=UTF-8 -Dsun.jnu.encoding=UTF-8"
+
+rem 1. Localiza o executavel do Flutter
 set "FLUTTER_CMD="
-where flutter.bat >nul 2>&1 && set "FLUTTER_CMD=flutter.bat"
+if exist "C:\dev\flutter\bin\flutter.bat" set "FLUTTER_CMD=C:\dev\flutter\bin\flutter.bat"
+if not defined FLUTTER_CMD (
+    where flutter.bat >nul 2>&1 && set "FLUTTER_CMD=flutter.bat"
+)
 if not defined FLUTTER_CMD (
     where flutter >nul 2>&1 && set "FLUTTER_CMD=flutter"
 )
-if not defined FLUTTER_CMD if exist "C:\dev\flutter\bin\flutter.bat" (
-    set "FLUTTER_CMD=C:\dev\flutter\bin\flutter.bat"
-)
 if not defined FLUTTER_CMD (
-    echo [ERRO] Flutter nao encontrado no PATH do sistema nem em C:\dev\flutter.
+    echo [ERRO] Flutter nao encontrado em C:\dev\flutter nem no PATH do sistema.
     goto :fim
 )
 

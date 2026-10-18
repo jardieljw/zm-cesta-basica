@@ -1,0 +1,134 @@
+--- a/client/lib/l10n/app_pt.arb
++++ b/client/lib/l10n/app_pt.arb
+@@ -1172,7 +1172,6 @@
+   "payableReversePaymentSuccess": "Pagamento estornado com sucesso",
+   "payablePaymentAmountExceedsBalance": "O valor informado excede o saldo devedor.",
+   "payablePaymentAmountMustBePositive": "O valor do pagamento deve ser maior que zero.",
+-  "payableSelectAccount": "Conta Financeira de Saída",
+   "payableNoPayables": "Nenhuma obrigação a pagar encontrada.",
+   "payableFilterMonth": "Mês",
+   "payableFilterYear": "Ano",
+@@ -1200,7 +1199,7 @@
+   "receivableFilterApply": "Aplicar Filtros",
+   "homePhase8Header": "Fase 8: Dashboard, Relatórios, Planilhas e Impressão",
+   "moduleDashboard": "Dashboard Geral",
+-  "homeDashboardDescription": "Visão consolidada operacional, faturamento e livro-caixa",
++  "homeDashboardDescription": "Vendas, estoque, recebimentos, pagamentos e resultado",
+   "moduleReports": "Relatórios & Planilhas",
+   "homeReportsDescription": "Consultas analíticas, exportação CSV/XLSX e impressão PDF",
+   "moduleBlankForms": "Formulários A4 & Impressão",
+@@ -1224,18 +1223,11 @@
+   "dashboardSectionInventory": "Estoque & Alertas",
+   "dashboardLowStockAlert": "Itens Abaixo do Mínimo",
+   "dashboardStockNormal": "Estoque em Nível Regular",
+-  "dashboardSectionFinancial": "Financeiro & Tesouraria",
+-  "dashboardOpenReceivables": "A Receber (Em Aberto)",
+   "dashboardOverdueReceivables": "A Receber Vencidos",
+-  "dashboardEffectiveReceived": "Recebimentos Efetivos",
+-  "dashboardOpenPayables": "A Pagar (Em Aberto)",
+   "dashboardOverduePayables": "A Pagar Vencidos",
+-  "dashboardEffectivePaid": "Pagamentos Efetuados",
+   "dashboardCashInflow": "Entradas de Caixa",
+   "dashboardCashOutflow": "Saídas de Caixa",
+   "dashboardTreasuryBalance": "Saldo Disponível (Tesouraria)",
+-  "dashboardProjectedCash": "Saldo de Caixa Projetado",
+-  "dashboardProjectionNotice": "Atenção: Valores projetados são estimativas futuras e NÃO constituem dinheiro disponível em caixa.",
+   "reportsTitle": "Relatórios Gerenciais e Planilhas",
+   "reportSalesDispatches": "Vendas e Saídas de Cestas",
+   "reportAssembly": "Montagem e Produção de Cestas",
+@@ -1846,7 +1838,6 @@
+   "purchasePaymentAmountDueLabel": "Valor Devido / Total Financeiro",
+   "purchasePaymentDueDateLabel": "Data de Vencimento",
+   "purchasePaymentDueDateRequired": "A data de vencimento é obrigatória para compras pendentes.",
+-  "purchasePaymentFinancialAccountLabel": "Conta Financeira de Liquidação",
+   "purchasePaymentPendingNotice": "Esta compra gerará uma obrigação em aberto no módulo de Contas a Pagar com vencimento em {date}.",
+   "@purchasePaymentPendingNotice": {
+     "placeholders": {
+@@ -1929,5 +1920,86 @@
+         "type": "String"
+       }
+     }
+-  }
+-}+  },
++  "companyFinanceTitle": "Recebimentos, pagamentos e resultado",
++  "companyFinancialReportTitle": "Resultado, recebimentos e pagamentos",
++  "companyPaymentsScope": "Valores confirmados no período selecionado, incluindo os estornos registrados nesse período.",
++  "companyReceived": "Recebimentos confirmados",
++  "companyPaid": "Pagamentos confirmados",
++  "companyPaymentDifference": "Diferença entre recebido e pago",
++  "companyDifferenceExplanation": "Compara os movimentos do período. Não representa saldo bancário nem lucro.",
++  "companyResultTitle": "Resultado das vendas no período",
++  "companyResultExplanation": "As vendas a prazo entram no valor vendido, mesmo antes do recebimento. As outras despesas são consideradas quando pagas.",
++  "companySalesRevenue": "Valor das vendas",
++  "companySoldCost": "Custo das cestas vendidas",
++  "companyGrossProfit": "Lucro bruto das vendas",
++  "companyOperatingExpenses": "Outras despesas do negócio pagas",
++  "companyOperatingResult": "Resultado gerencial do período",
++  "companyCostExplanation": "O custo dos insumos vendidos já está no custo das cestas. As compras de estoque não são descontadas novamente do lucro bruto. Retiradas pessoais são mostradas separadamente.",
++  "companyPendingTitle": "Contas ainda pendentes",
++  "companyPendingScope": "Totais atuais de todas as contas em aberto. Os vencimentos no período aparecem abaixo.",
++  "companyPendingReceivable": "Total pendente a receber",
++  "companyPendingPayable": "Total pendente a pagar",
++  "companyReceivableDueInPeriod": "A receber com vencimento no período",
++  "companyPayableDueInPeriod": "A pagar com vencimento no período",
++  "companyReceivedDetails": "Recebimentos confirmados no período",
++  "companyPaidDetails": "Pagamentos confirmados no período",
++  "companyNoPayments": "Nenhum registro confirmado neste período.",
++  "companyPaidStatus": "Recebida",
++  "companyPartialStatus": "Recebida parcialmente",
++  "companyPendingStatus": "A receber",
++  "companyStockAvailable": "Disponível",
++  "companyMissingCost": "Há {count} venda(s) com custo incompleto. O resultado gerencial precisa ser conferido.",
++  "@companyMissingCost": {
++    "placeholders": {
++      "count": {
++        "type": "int"
++      }
++    }
++  },
++  "companyStockPaid": "Compras de estoque pagas: {value}",
++  "@companyStockPaid": {
++    "placeholders": {
++      "value": {
++        "type": "String"
++      }
++    }
++  },
++  "companyWithdrawalsPaid": "Retiradas pessoais pagas: {value}",
++  "@companyWithdrawalsPaid": {
++    "placeholders": {
++      "value": {
++        "type": "String"
++      }
++    }
++  },
++  "companyOverdueAmount": "Vencido: {value}",
++  "@companyOverdueAmount": {
++    "placeholders": {
++      "value": {
++        "type": "String"
++      }
++    }
++  },
++  "companyPaymentDescription": "{method} · {date}",
++  "@companyPaymentDescription": {
++    "placeholders": {
++      "method": {
++        "type": "String"
++      },
++      "date": {
++        "type": "String"
++      }
++    }
++  },
++  "companyPurchasesTitle": "Compras registradas no período",
++  "companyPurchaseCount": "{count} compra(s) confirmada(s)",
++  "@companyPurchaseCount": {
++    "placeholders": {
++      "count": {
++        "type": "int"
++      }
++    }
++  },
++  "companyPurchasesExplanation": "Inclui compras pagas e a prazo. Os pagamentos confirmados aparecem separadamente no financeiro."
++}

@@ -1,0 +1,50 @@
+{
+  "scope": "manual_pdf_controls_and_cross_format_amounts",
+  "status": "REVIEW_REQUIRED",
+  "automatic_pdf_reader": false,
+  "cross_format_matching": "signed_amount_multiset_only_not_identity",
+  "samples": [
+    {
+      "alias": "card_a",
+      "csv_rows": 21,
+      "pdf_rows_manually_checked": 19,
+      "visually_checked_pages": [
+        1,
+        3,
+        4
+      ],
+      "declared_total_and_due_date_checked": true,
+      "summary_equation_matches": true,
+      "csv_net_equals_declared_total": false,
+      "pdf_transaction_net_matches_summary_net": true,
+      "signed_amount_multisets_match": false,
+      "csv_unmatched_amount_occurrences": 5,
+      "pdf_unmatched_amount_occurrences": 3,
+      "description_discrepancies_observed": true,
+      "coverage_approved": false
+    },
+    {
+      "alias": "card_b",
+      "csv_rows": 15,
+      "pdf_rows_manually_checked": 16,
+      "visually_checked_pages": [
+        1,
+        4,
+        5,
+        6
+      ],
+      "declared_total_and_due_date_checked": true,
+      "summary_equation_matches": true,
+      "csv_net_equals_declared_total": false,
+      "pdf_transaction_net_matches_summary_net": false,
+      "signed_amount_multisets_match": false,
+      "csv_unmatched_amount_occurrences": 0,
+      "pdf_unmatched_amount_occurrences": 1,
+      "description_discrepancies_observed": true,
+      "coverage_approved": false
+    }
+  ],
+  "production_writes": false,
+  "confirmed": false,
+  "timestamp_utc": "2026-10-16T21:16:22.396746+00:00"
+}

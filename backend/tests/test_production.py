@@ -591,7 +591,7 @@ def test_production_list_and_filters(client, authenticated_device):
         "items": [{"product_id": p["id"], "quantity_in_base_units": 1, "section": "ALIMENTACAO"}]
     }, headers=headers)
 
-    bt2 = client.post("/api/v1/basket-types", json={"code": "BT_F2", "name": "Cesta Beta"}, headers=headers).json()
+    bt2 = client.post("/api/v1/basket-types", json={"code": "BT_F2", "name": "Cesta Beta", "allows_customization": True}, headers=headers).json()
     client.post(f"/api/v1/basket-types/{bt2['id']}/recipes", json={
         "items": [{"product_id": p["id"], "quantity_in_base_units": 2, "section": "ALIMENTACAO"}]
     }, headers=headers)

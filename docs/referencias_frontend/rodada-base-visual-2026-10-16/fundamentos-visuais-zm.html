@@ -1,0 +1,316 @@
+<style>
+#zm-visual-foundations {width:100%;}
+#zm-visual-foundations .stage {display:flex;justify-content:center;align-items:flex-start;padding:14px 0;min-height:max(1160px,var(--zm-stage-reserve,0px));}
+#zm-visual-foundations .specimen {--zm-page:light-dark(#f6f7f9,#141518);--zm-surface:light-dark(#ffffff,#24262b);--zm-ink:light-dark(#222730,#eef0f5);--zm-sub:light-dark(#5c6472,#b6becb);--zm-line:light-dark(#d9dee7,#505867);--zm-accent:light-dark(#2866ae,#a7caff);--zm-accent-ink:light-dark(#ffffff,#142947);--zm-soft:light-dark(#edf4fd,#2b3e57);--zm-ok:light-dark(#246a4e,#a6ddc3);--zm-ok-fill:light-dark(#eaf5ef,#253d33);--zm-bad:light-dark(#a43136,#ffb5b7);--zm-bad-fill:light-dark(#fff0ef,#472c30);--zm-warn:light-dark(#80501a,#f2c78d);--zm-warn-fill:light-dark(#fff2df,#4b3b29);--zm-shadow:light-dark(#16243e13,#00000044);--zm-panel-radius:32px;--zm-field-radius:28px;width:100%;max-width:440px;min-width:0;background:var(--zm-page);color:var(--zm-ink);border:1px solid var(--zm-line);border-radius:28px;box-shadow:0 14px 40px var(--zm-shadow);font:16px/1.45 'Segoe UI',system-ui,sans-serif;container-type:inline-size;}
+#zm-visual-foundations .specimen * {box-sizing:border-box;}
+#zm-visual-foundations .specimen h2,#zm-visual-foundations .specimen h3,#zm-visual-foundations .specimen p {margin:0;}
+#zm-visual-foundations .specimen h2 {font-size:24px;font-weight:500;line-height:1.2;letter-spacing:-.6px;overflow-wrap:anywhere;}
+#zm-visual-foundations .specimen h3 {font-size:18px;font-weight:500;}
+#zm-visual-foundations .specimen strong {font-weight:500;}
+#zm-visual-foundations .specimen :where(button) {font:inherit;min-height:44px;max-width:100%;border:0;border-radius:999px;color:inherit;background:transparent;padding:10px 14px;transition:background 160ms ease,transform 160ms ease;}
+#zm-visual-foundations .specimen button:hover {background:var(--zm-soft);}
+#zm-visual-foundations .specimen button:active {transform:scale(.985);}
+#zm-visual-foundations .specimen button:disabled {opacity:.6;transform:none;}
+#zm-visual-foundations .specimen button svg {width:18px;height:18px;flex-shrink:0;}
+#zm-visual-foundations .specimen input,#zm-visual-foundations .specimen select,#zm-visual-foundations .specimen textarea {font:inherit;color:inherit;}
+#zm-visual-foundations .study-label {font-size:12px;color:var(--zm-sub);padding:14px 96px 14px 20px;border-bottom:1px solid var(--zm-line);}
+#zm-visual-foundations .product-content {display:grid;gap:22px;padding:24px 20px 28px;min-width:0;}
+#zm-visual-foundations .heading {display:grid;gap:6px;}
+#zm-visual-foundations .eyebrow,#zm-visual-foundations .helper {font-size:13px;color:var(--zm-sub);}
+#zm-visual-foundations .person {color:var(--zm-sub);font-size:15px;}
+#zm-visual-foundations .panel {background:var(--zm-surface);border-radius:var(--zm-panel-radius);padding:22px;box-shadow:0 4px 18px var(--zm-shadow);display:grid;gap:22px;min-width:0;}
+#zm-visual-foundations .balance {background:var(--zm-soft);padding:16px 20px;border-radius:var(--zm-panel-radius);display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px;}
+#zm-visual-foundations .balance strong {font-size:22px;white-space:nowrap;font-variant-numeric:tabular-nums;}
+#zm-visual-foundations fieldset {border:0;padding:0;margin:0;min-width:0;}
+#zm-visual-foundations legend {font-size:15px;font-weight:500;padding:0;margin-bottom:12px;}
+#zm-visual-foundations .kind-options {display:flex;border:1px solid var(--zm-line);background:var(--zm-page);padding:5px;border-radius:999px;gap:4px;}
+#zm-visual-foundations .kind-option {display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 8px;min-height:50px;border-radius:999px;flex:1;transition:background 180ms ease,box-shadow 180ms ease;color:var(--zm-sub);}
+#zm-visual-foundations .kind-option:has(input:checked) {background:var(--zm-soft);color:var(--zm-accent);box-shadow:0 2px 9px var(--zm-shadow);}
+#zm-visual-foundations .kind-option input {margin:0;width:18px;height:18px;accent-color:var(--zm-accent);flex-shrink:0;}
+#zm-visual-foundations .mode-caption {margin-top:8px!important;}
+#zm-visual-foundations .partial-reveal {display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows 260ms cubic-bezier(.2,0,0,1),opacity 180ms ease;}
+#zm-visual-foundations .partial-reveal[data-open=true] {grid-template-rows:1fr;opacity:1;}
+#zm-visual-foundations .partial-clip {min-height:0;overflow:hidden;}
+#zm-visual-foundations .partial-clip .field {padding-top:22px;}
+#zm-visual-foundations .field {display:grid;gap:9px;min-width:0;}
+#zm-visual-foundations .field label {font-size:15px;font-weight:500;}
+#zm-visual-foundations .field select,#zm-visual-foundations .field textarea,#zm-visual-foundations .date-control {width:100%;min-width:0;min-height:56px;background:var(--zm-page);border:1px solid var(--zm-line);border-radius:var(--zm-field-radius);padding:14px 16px;font-size:16px;}
+#zm-visual-foundations .field select {appearance:none;padding-right:46px;}
+#zm-visual-foundations .select-wrap {position:relative;}
+#zm-visual-foundations .select-wrap > svg {position:absolute;right:17px;top:calc(50% - 9px);width:18px;height:18px;pointer-events:none;color:var(--zm-sub);}
+#zm-visual-foundations .field textarea {resize:vertical;min-height:96px;}
+#zm-visual-foundations .money-entry {display:flex;align-items:center;gap:10px;background:var(--zm-page);border:1px solid var(--zm-line);border-radius:999px;padding-left:18px;min-width:0;}
+#zm-visual-foundations .money-entry > span {color:var(--zm-sub);}
+#zm-visual-foundations .money-entry input {width:100%;min-width:0;border:0;border-radius:999px;background:transparent;padding:15px 16px 15px 0;min-height:58px;font-size:26px;font-variant-numeric:tabular-nums;}
+#zm-visual-foundations .date-control {display:flex;align-items:center;gap:12px;text-align:left;}
+#zm-visual-foundations .date-value {flex:1;min-width:0;white-space:normal;overflow-wrap:anywhere;}
+#zm-visual-foundations .date-control svg {color:var(--zm-sub);}
+#zm-visual-foundations .primary {display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px 18px;background:var(--zm-accent)!important;color:var(--zm-accent-ink)!important;font-weight:500;}
+#zm-visual-foundations .secondary {display:flex;align-items:center;justify-content:center;gap:8px;width:100%;color:var(--zm-accent)!important;}
+#zm-visual-foundations .actions {display:grid;gap:8px;}
+#zm-visual-foundations .field [aria-invalid=true],#zm-visual-foundations .money-entry:has([aria-invalid=true]) {border-color:var(--zm-bad);}
+#zm-visual-foundations .field-error {font-size:13px;color:var(--zm-bad);}
+#zm-visual-foundations .message {padding:18px;border-radius:var(--zm-field-radius);background:var(--zm-soft);display:grid;gap:8px;}
+#zm-visual-foundations .message p {font-size:14px;}
+#zm-visual-foundations .message.error {background:var(--zm-bad-fill);color:var(--zm-bad);}
+#zm-visual-foundations .message.warning {background:var(--zm-warn-fill);color:var(--zm-warn);}
+#zm-visual-foundations .message.success {background:var(--zm-ok-fill);color:var(--zm-ok);}
+#zm-visual-foundations .message h3 {font-size:16px;}
+#zm-visual-foundations .error-links {display:grid;gap:2px;}
+#zm-visual-foundations .error-links button {text-align:left;font-size:14px;padding:6px 8px;color:var(--zm-bad);}
+#zm-visual-foundations .review-list {margin:0;}
+#zm-visual-foundations .review-line {display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--zm-line);}
+#zm-visual-foundations .review-line:last-child {border-bottom:0;}
+#zm-visual-foundations .review-line dt {color:var(--zm-sub);font-size:14px;}
+#zm-visual-foundations .review-line dd {margin:0;text-align:right;overflow-wrap:anywhere;min-width:0;white-space:pre-wrap;}
+#zm-visual-foundations .result-icon {display:grid;place-items:center;width:48px;height:48px;border-radius:16px;background:var(--zm-ok-fill);color:var(--zm-ok);}
+#zm-visual-foundations .result-icon svg {width:25px;height:25px;}
+#zm-visual-foundations .busy-icon {animation:zm-catalog-spin 1s linear infinite;}
+@keyframes zm-catalog-spin {to {transform:rotate(360deg);}}
+#zm-visual-foundations .query-specimen {max-width:700px;}
+#zm-visual-foundations .query-total {padding:20px;background:var(--zm-surface);border-radius:var(--zm-panel-radius);box-shadow:0 4px 18px var(--zm-shadow);display:grid;gap:6px;}
+#zm-visual-foundations .query-total strong {font-size:30px;line-height:1.2;letter-spacing:-.5px;font-variant-numeric:tabular-nums;}
+#zm-visual-foundations .query-total button {display:flex;align-items:center;gap:8px;justify-content:space-between;text-align:left;padding:10px 0 0;color:var(--zm-accent);}
+#zm-visual-foundations .row {display:flex;align-items:center;gap:12px;text-align:left;width:100%;padding:16px;background:var(--zm-surface);border-radius:24px;min-width:0;}
+#zm-visual-foundations .row > .copy {flex:1;min-width:0;display:grid;gap:5px;}
+#zm-visual-foundations .row .row-value {font-variant-numeric:tabular-nums;white-space:nowrap;}
+#zm-visual-foundations .rows {display:grid;gap:10px;}
+#zm-visual-foundations .tag {display:inline-block;width:max-content;max-width:100%;padding:3px 9px;border-radius:999px;background:var(--zm-soft);color:var(--zm-accent);font-size:12px;}
+#zm-visual-foundations .tag.overdue {background:var(--zm-warn-fill);color:var(--zm-warn);}
+#zm-visual-foundations .table {width:100%;border-collapse:collapse;font-size:14px;}
+#zm-visual-foundations .table th {font-weight:500;color:var(--zm-sub);text-align:left;padding:10px 8px;}
+#zm-visual-foundations .table td {padding:12px 8px;border-top:1px solid var(--zm-line);vertical-align:middle;}
+#zm-visual-foundations .table th:last-child,#zm-visual-foundations .table td:last-child {text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+#zm-visual-foundations .table .row-link {text-align:left;display:grid;gap:5px;padding:6px 0;border-radius:8px;}
+#zm-visual-foundations .table-wrap {display:none;}
+#zm-visual-foundations .criteria {font-size:13px;color:var(--zm-sub);}
+#zm-visual-foundations .criteria summary {min-height:44px;padding:10px 0;}
+#zm-visual-foundations .criteria p {margin-top:6px;}
+#zm-visual-foundations .query-empty {display:grid;gap:14px;background:var(--zm-surface);padding:24px;border-radius:var(--zm-panel-radius);}
+#zm-visual-foundations .query-empty p {color:var(--zm-sub);font-size:15px;}
+#zm-visual-foundations .date-dialog {color:var(--zm-ink);background:var(--zm-surface);border:1px solid var(--zm-line);border-radius:28px;width:min(360px,calc(100% - 24px));max-width:calc(100% - 24px);padding:16px;box-shadow:0 20px 60px var(--zm-shadow);}
+#zm-visual-foundations .date-dialog::backdrop {background:light-dark(#1b284b55,#00000088);}
+#zm-visual-foundations .calendar-heading,#zm-visual-foundations .calendar-period,#zm-visual-foundations .calendar-footer {display:flex;gap:8px;justify-content:space-between;align-items:center;}
+#zm-visual-foundations .calendar-heading h3 {font-size:16px;}
+#zm-visual-foundations .calendar-period {margin:10px 0;}
+#zm-visual-foundations .calendar-period strong {font-size:15px;text-transform:capitalize;}
+#zm-visual-foundations .calendar-period button,#zm-visual-foundations .calendar-close {padding:8px;width:44px;flex-shrink:0;display:grid;place-items:center;}
+#zm-visual-foundations .calendar-week,#zm-visual-foundations .calendar-days {display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:2px;}
+#zm-visual-foundations .calendar-week {font-size:12px;color:var(--zm-sub);text-align:center;margin-bottom:6px;}
+#zm-visual-foundations .calendar-days button {padding:4px 0;border-radius:14px;min-width:0;min-height:44px;font-size:15px;}
+#zm-visual-foundations .calendar-days button[aria-pressed=true] {background:var(--zm-accent);color:var(--zm-accent-ink);}
+#zm-visual-foundations .calendar-days button[aria-current=date]:not([aria-pressed=true]) {background:var(--zm-soft);color:var(--zm-accent);}
+#zm-visual-foundations .calendar-footer {margin-top:10px;}
+#zm-visual-foundations [hidden] {display:none!important;}
+#zm-visual-foundations .specimen[data-motion=false] button,#zm-visual-foundations .specimen[data-motion=false] .kind-option,#zm-visual-foundations .specimen[data-motion=false] .partial-reveal {transition:none;transform:none;}
+#zm-visual-foundations .specimen[data-motion=false] .busy-icon {animation:none;}
+@container(min-width:580px) {#zm-visual-foundations .query-specimen .table-wrap {display:block;}#zm-visual-foundations .query-specimen .rows {display:none;}}
+@container(max-width:350px) {#zm-visual-foundations .product-content {padding:22px 14px 24px;}#zm-visual-foundations .panel {padding:18px;}#zm-visual-foundations .review-line {flex-direction:column;gap:5px;}#zm-visual-foundations .review-line dd {text-align:left;}#zm-visual-foundations .row {flex-wrap:wrap;}#zm-visual-foundations .row .copy {flex-basis:65%;}#zm-visual-foundations .row .row-value {margin-left:auto;}}
+@media(max-width:450px) {#zm-visual-foundations .stage {min-height:max(1300px,var(--zm-stage-reserve,0px));padding:10px 0;}}
+@media(prefers-reduced-motion:reduce) {#zm-visual-foundations .partial-reveal,#zm-visual-foundations .kind-option,#zm-visual-foundations .specimen button {transition:none;}#zm-visual-foundations .busy-icon {animation:none;}}
+#zm-visual-foundations .specimen {--zm-control-edge:light-dark(#7d8796,#7a8495);--zm-field-gap:24px;--zm-panel-inset:24px;}
+#zm-visual-foundations .product-content,#zm-visual-foundations .panel {gap:var(--zm-field-gap);}
+#zm-visual-foundations .panel {padding:var(--zm-panel-inset);}
+#zm-visual-foundations .partial-clip .field {padding-top:var(--zm-field-gap);}
+#zm-visual-foundations .field select,#zm-visual-foundations .field textarea,#zm-visual-foundations .date-control,#zm-visual-foundations .money-entry {border-color:var(--zm-control-edge);background:var(--zm-field,var(--zm-page));}
+#zm-visual-foundations .money-entry {border-radius:var(--zm-field-radius);}
+#zm-visual-foundations .money-entry input {border-radius:inherit;}
+#zm-visual-foundations .specimen ::placeholder {color:var(--zm-sub);opacity:1;}
+#zm-visual-foundations .specimen button {transition:transform 160ms ease;}
+#zm-visual-foundations .kind-option {transition:box-shadow 180ms ease;}
+#zm-visual-foundations .tag:not(.overdue) {background:var(--zm-page);color:var(--zm-sub);}
+@container(max-width:350px) {#zm-visual-foundations .panel {padding:min(20px,var(--zm-panel-inset));}}
+</style>
+<div id="zm-visual-foundations" class="viz-carousel viz-dotted-background" aria-label="Fundamentos visuais compartilhados ZM" data-previous-label="Anterior" data-next-label="Próxima">
+ <section class="stage" data-variant="Formulário" aria-label="Campos e escolhas">
+  <div class="specimen" data-example="fields" aria-label="Campos e escolhas"><div class="study-label">Estudo visual · dados fictícios</div><div class="product-content"></div></div>
+ </section>
+ <section class="stage" data-variant="Estados dos controles" aria-label="Ações e respostas" hidden>
+  <div class="specimen" data-example="actions" aria-label="Ações e respostas"><div class="study-label">Estudo visual · respostas simuladas</div><div class="product-content"></div></div>
+ </section>
+ <section class="stage" data-variant="Lista e detalhe" aria-label="Resumo e lista" hidden>
+  <div class="specimen query-specimen" data-example="query" aria-label="Resumo e lista"><div class="study-label">Estudo visual · dados fictícios</div><div class="product-content"></div></div>
+ </section>
+</div>
+<script>
+(() => {
+ const root=document.getElementById('zm-visual-foundations');
+ const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const money=cents=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(cents/100);
+ const validDate=value=>{if(typeof value!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const [y,m,d]=value.split('-').map(Number);return y>=1900&&y<=9999&&new Date(Date.UTC(y,m-1,d)).toISOString().slice(0,10)===value;};
+ const dateLabel=value=>new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(value+'T00:00:00Z'));
+ const parseMoney=value=>{const clean=value.trim().replace(/^R\$\s*/,'');if(!/^(?:\d+|\d{1,3}(?:\.\d{3})+)(?:,\d{1,2})?$/.test(clean))return null;const [whole,part='']=clean.replaceAll('.','').split(',');const cents=Number(whole)*100+Number(part.padEnd(2,'0'));return Number.isSafeInteger(cents)?cents:null;};
+ const contexts={receive:{title:'Registrar recebimento',person:'Ana Souza · Venda #1042',balance:10000,noun:'recebimento',verb:'recebeu',adjective:'recebido',methods:{PIX:'Pix',CASH:'Dinheiro',CARD:'Cartão',OTHER:'Outro'}},pay:{title:'Registrar pagamento',person:'Fornecedor de alimentos · Conta #208',balance:68000,noun:'pagamento',verb:'pagou',adjective:'pago',methods:{PIX:'Pix',DINHEIRO:'Dinheiro',CARTAO_CREDITO:'Cartão de crédito',BOLETO:'Boleto',TRANSFERENCIA:'Transferência',CHEQUE:'Cheque',OUTRO:'Outro'}}};
+ const blankDraft=()=>({mode:'full',amount:'',date:'2026-10-16',method:'',notes:''});
+ const preferences=window.matchMedia('(prefers-reduced-motion:reduce)');
+ const foundation={appearance:'chat',page:'soft',accent:'#2866ae',spacing:24,panelRadius:32,fieldRadius:28,motion:'standard'};
+ const rgb=hex=>hex.slice(1).match(/../g).map(value=>parseInt(value,16));
+ const hex=channels=>'#'+channels.map(value=>Math.round(value).toString(16).padStart(2,'0')).join('');
+ const blend=(a,b,f)=>hex(rgb(a).map((value,index)=>value*(1-f)+rgb(b)[index]*f));
+ const luminance=color=>rgb(color).map(value=>{const c=value/255;return c<=.04045?c/12.92:((c+.055)/1.055)**2.4;}).reduce((sum,value,index)=>sum+value*[.2126,.7152,.0722][index],0);
+ const contrast=(a,b)=>{const values=[luminance(a),luminance(b)].sort((x,y)=>y-x);return (values[0]+.05)/(values[1]+.05);};
+ function readableTone(seed,backgrounds,dark){for(let step=0;step<=100;step++){const tone=blend(seed,dark?'#ffffff':'#000000',step/100);if(backgrounds.every(background=>contrast(tone,background)>=4.5))return tone;}return dark?'#ffffff':'#000000';}
+ function foundationPalette(dark){
+  const pure=foundation.page==='pure',page=dark?(pure?'#000000':'#141518'):(pure?'#ffffff':'#f6f7f9'),surface=dark?(pure?'#1c1e23':'#24262b'):'#ffffff';
+  const soft=blend(foundation.accent,dark?'#141518':'#ffffff',dark ? .77 : .93);
+  return {page,surface,soft,accent:readableTone(foundation.accent,[page,surface,soft,dark?'#142032':'#ffffff'],dark),accentInk:dark?'#142032':'#ffffff',field:dark?(pure?'#08090b':'#141518'):'#f6f7f9'};
+ }
+ function applyFoundation(app){
+  const light=foundationPalette(false),dark=foundationPalette(true),pairs={page:'page',surface:'surface',soft:'soft',accent:'accent','accent-ink':'accentInk'};
+  app.style.colorScheme=foundation.appearance==='chat'?'light dark':foundation.appearance;
+  for(const [token,key] of Object.entries(pairs))app.style.setProperty('--zm-'+token,`light-dark(${light[key]},${dark[key]})`);
+  app.style.setProperty('--zm-panel-radius',foundation.panelRadius+'px');app.style.setProperty('--zm-field-radius',foundation.fieldRadius+'px');app.style.setProperty('--zm-field-gap',foundation.spacing+'px');app.style.setProperty('--zm-panel-inset',Math.min(24,foundation.spacing)+'px');
+  app.style.setProperty('--zm-field',`light-dark(${light.field},${dark.field})`);
+  app.dataset.motion=String(foundation.motion!=='reduced'&&!preferences.matches);
+  if(app.dataset.motion==='false')app.getAnimations({subtree:true}).forEach(animation=>animation.cancel());
+ }
+ function renderFoundation(){for(const app of root.querySelectorAll('.specimen'))applyFoundation(app);}
+ const states={};
+ const snapshot=()=>Object.fromEntries(Object.entries(states).map(([key,s])=>[key,{design:{...s.design},draft:{...s.draft},page:s.page,operation:s.operation,balance:s.balance,queryRange:s.queryRange,querySource:s.querySource}]));
+ function save(example) {
+  if(!window.openai?.setWidgetState)return;
+  const privateContent={foundationVersion:1,foundation:{...foundation},examples:snapshot()};
+  window.openai.setWidgetState({modelContent:{prototype:'Fundamentos visuais ZM',example,foundation:{...foundation},context:states.fields.design.context,operation:states.actions.operation,query:states.query.design.query,productionImplementation:false},privateContent}).catch(()=>{});
+ }
+ function icons(){globalThis.lucide?.createIcons({attrs:{width:18,height:18}});}
+ function rows(items) {return `<dl class="review-list">${items.map(([label,value])=>`<div class="review-line"><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join('')}</dl>`;}
+ function heading(title,subtitle='Financeiro / Receber') {return `<header class="heading"><p class="eyebrow">${esc(subtitle)}</p><h2>${esc(title)}</h2></header>`;}
+ function primary(label,action,disabled=false,icon='arrow-right'){return `<button type="button" class="primary cursor-interaction" data-action="${action}" ${disabled?'disabled':''}>${icon?`<i data-lucide="${icon}" aria-hidden="true" ${icon==='loader-circle'?'class="busy-icon"':''}></i>`:''}${label}</button>`;}
+ function secondary(label,action){return `<button type="button" class="secondary cursor-interaction" data-action="${action}">${label}</button>`;}
+ for(const app of root.querySelectorAll('.specimen')) {
+  const example=app.dataset.example,content=app.querySelector('.product-content');
+  const s={design:{context:'receive',response:'success',query:'loaded'},draft:blankDraft(),page:example==='query'?'list':'form',operation:'idle',balance:10000,queryRange:'week',querySource:'normal',errors:{},busy:false,queryBusy:false};states[example]=s;
+  let lastContext=s.design.context,lastResponse=s.design.response,lastQuery=s.design.query,timer=null;
+  const reduced=()=>foundation.motion==='reduced'||preferences.matches;
+  function style() {applyFoundation(app);}
+  preferences.addEventListener('change',style);
+  function animate(target=content,calendar=false) {if(reduced()||!target.animate)return;target.getAnimations().forEach(a=>a.cancel());target.animate([{opacity:.55,transform:`translateY(${calendar?8:6}px)`},{opacity:1,transform:'translateY(0)'}],{duration:calendar?180:220,easing:'cubic-bezier(.2,0,0,1)'});}
+  function changed(){render();animate();save(example);}
+  function ctx(){return contexts[s.design.context];}
+  function amount(){return s.draft.mode==='full'?ctx().balance:parseMoney(s.draft.amount);}
+  function fieldAttrs(name,help) {return `id="zm-cat-${name}" data-field="${name}" ${s.errors[name]?'aria-invalid="true"':''} aria-describedby="${help||''}${s.errors[name]?` zm-cat-${name}-error`:''}"`;}
+  function fieldError(name){return s.errors[name]?`<span id="zm-cat-${name}-error" class="field-error">${esc(s.errors[name])}</span>`:'';}
+  function dateField(){return `<div class="field"><label id="zm-cat-date-label" for="zm-cat-date">Data do ${ctx().noun}</label><button type="button" class="date-control cursor-interaction" data-action="calendar" ${fieldAttrs('date')} aria-labelledby="zm-cat-date-label zm-cat-date-value" aria-expanded="false" aria-controls="zm-cat-calendar"><span id="zm-cat-date-value" class="date-value">${dateLabel(s.draft.date)}</span><i data-lucide="calendar-days" aria-hidden="true"></i></button>${fieldError('date')}<dialog class="date-dialog" id="zm-cat-calendar" aria-labelledby="zm-cat-calendar-heading"><div class="calendar-heading"><h3 id="zm-cat-calendar-heading">Data do ${ctx().noun}</h3><button type="button" class="calendar-close cursor-interaction" data-calendar-action="close" aria-label="Fechar calendário"><i data-lucide="x" aria-hidden="true"></i></button></div><div class="calendar-period"><button type="button" class="cursor-interaction" data-calendar-step="-1" aria-label="Mês anterior"><i data-lucide="chevron-left" aria-hidden="true"></i></button><strong data-calendar-period aria-live="polite"></strong><button type="button" class="cursor-interaction" data-calendar-step="1" aria-label="Próximo mês"><i data-lucide="chevron-right" aria-hidden="true"></i></button></div><div class="calendar-week" aria-hidden="true">${['D','S','T','Q','Q','S','S'].map(day=>`<span>${day}</span>`).join('')}</div><div class="calendar-days" role="group" aria-label="Dias do mês"></div><div class="calendar-footer"><button type="button" class="cursor-interaction" data-calendar-action="today">Hoje</button><button type="button" class="cursor-interaction" data-calendar-action="close">Cancelar</button></div></dialog></div>`;}
+  function form() {
+   const c=ctx(),partial=s.draft.mode==='partial';
+   const errors=Object.entries(s.errors);
+   content.innerHTML=`${heading(c.title,'Financeiro / '+(s.design.context==='pay'?'Pagar':'Receber'))}<p class="person">${c.person}</p><div class="balance"><span>Saldo em aberto</span><strong>${money(c.balance)}</strong></div>${errors.length?`<aside class="message error" role="alert"><h3>Confira os campos</h3><div class="error-links">${errors.map(([key,text])=>`<button type="button" class="cursor-interaction" data-focus="${key}">${esc(text)}</button>`).join('')}</div></aside>`:''}<section class="panel" aria-label="Dados do ${c.noun}"><div><fieldset aria-describedby="zm-cat-mode-help"><legend>Tipo de ${c.noun}</legend><div class="kind-options"><label class="kind-option cursor-interaction"><input type="radio" name="zm-cat-mode" value="full" data-mode ${partial?'':'checked'}><span>Integral</span></label><label class="kind-option cursor-interaction"><input type="radio" name="zm-cat-mode" value="partial" data-mode aria-controls="zm-cat-partial" ${partial?'checked':''}><span>Parcial</span></label></div></fieldset><p class="helper mode-caption" id="zm-cat-mode-help">${partial?`Informe apenas o valor ${c.adjective}.`:`Valor integral definido: ${money(c.balance)}.`}</p><div class="partial-reveal" id="zm-cat-partial" data-open="${partial}" aria-hidden="${!partial}" ${partial?'':'inert'}><div class="partial-clip"><div class="field"><label for="zm-cat-amount">Quanto você ${c.verb}?</label><div class="money-entry"><span aria-hidden="true">R$</span><input type="text" inputmode="decimal" autocomplete="off" ${fieldAttrs('amount','zm-cat-amount-help')} value="${esc(s.draft.amount)}" placeholder="0,00" ${partial?'':'disabled'}></div>${fieldError('amount')}<span class="helper" id="zm-cat-amount-help">Até ${money(c.balance)}.</span></div></div></div></div>${dateField()}<div class="field"><label for="zm-cat-method">Como você ${c.verb}?</label><div class="select-wrap"><select class="cursor-interaction" ${fieldAttrs('method')}><option value="">Selecione</option>${Object.entries(c.methods).map(([value,label])=>`<option value="${value}" ${s.draft.method===value?'selected':''}>${label}</option>`).join('')}</select><i data-lucide="chevron-down" aria-hidden="true"></i></div>${fieldError('method')}</div><div class="field"><label for="zm-cat-notes">Observação <span class="helper">(opcional)</span></label><textarea rows="2" maxlength="300" ${fieldAttrs('notes')} placeholder="Uma referência para consultar depois">${esc(s.draft.notes)}</textarea></div><div class="balance"><span>Restará em aberto</span><strong data-remaining aria-live="polite">${amount()!==null&&amount()>0&&amount()<=c.balance?money(c.balance-amount()):'—'}</strong></div>${primary('Revisar '+c.noun,'review')}</section><p class="helper">Registre um ${c.noun} que já aconteceu.</p>`;
+  }
+  function fieldReview(){const c=ctx();content.innerHTML=`${heading('Conferir '+c.noun,'Financeiro / '+(s.design.context==='pay'?'Pagar':'Receber'))}<section class="panel">${rows([['Referência',c.person],['Valor',money(amount())],['Data',dateLabel(s.draft.date)],['Forma',c.methods[s.draft.method]],['Saldo após registro',money(c.balance-amount())],...(s.draft.notes?[['Observação',s.draft.notes]]:[])])}<p class="helper">Confira o valor, a data e a forma antes de registrar.</p>${secondary('Voltar aos campos','edit')}</section>`;}
+  function updateMode() {
+   const partial=s.draft.mode==='partial',panel=content.querySelector('.partial-reveal'),input=content.querySelector('[data-field=amount]');
+   panel.dataset.open=String(partial);panel.setAttribute('aria-hidden',String(!partial));panel.inert=!partial;input.disabled=!partial;
+   content.querySelector('#zm-cat-mode-help').textContent=partial?`Informe apenas o valor ${ctx().adjective}.`:`Valor integral definido: ${money(ctx().balance)}.`;
+   refreshError('amount');updateRemaining();
+  }
+  function updateRemaining() {const target=content.querySelector('[data-remaining]');if(target)target.textContent=amount()!==null&&amount()>0&&amount()<=ctx().balance?money(ctx().balance-amount()):'—';}
+  function validate() {s.errors={};const value=amount();if(s.draft.mode==='partial'&&(value===null||value<=0||value>ctx().balance))s.errors.amount=`Valor: informe mais de zero e até ${money(ctx().balance)}.`;if(!validDate(s.draft.date))s.errors.date='Data: selecione uma data válida.';if(!ctx().methods[s.draft.method])s.errors.method='Forma: selecione como o valor foi '+ctx().adjective+'.';return !Object.keys(s.errors).length;}
+  function refreshError(name){if(!s.errors[name])return;const old={...s.errors};validate();const current=s.errors[name];s.errors={...old};if(!current){delete s.errors[name];content.querySelector(`[data-field=${name}]`)?.removeAttribute('aria-invalid');content.querySelector(`#zm-cat-${name}-error`)?.remove();const link=content.querySelector(`[data-focus=${name}]`);link?.remove();if(!Object.keys(s.errors).length)content.querySelector('.message.error')?.remove();}}
+  function drawCalendar(dialog,focusDate) {
+   const [year,month]=dialog.dataset.month.split('-').map(Number),first=new Date(Date.UTC(year,month-1,1)).getUTCDay(),days=new Date(Date.UTC(year,month,0)).getUTCDate();
+   dialog.querySelector('[data-calendar-period]').textContent=new Intl.DateTimeFormat('pt-BR',{month:'long',year:'numeric',timeZone:'UTC'}).format(new Date(Date.UTC(year,month-1,1)));
+   dialog.querySelector('.calendar-days').innerHTML='<span aria-hidden="true"></span>'.repeat(first)+Array.from({length:days},(_,i)=>{const value=`${year}-${String(month).padStart(2,'0')}-${String(i+1).padStart(2,'0')}`;return `<button type="button" class="cursor-interaction" data-calendar-date="${value}" aria-label="${dateLabel(value)}" aria-pressed="${value===s.draft.date}" ${value==='2026-10-16'?'aria-current="date"':''}>${i+1}</button>`;}).join('');
+   dialog.querySelector('[data-calendar-step="-1"]').disabled=year===1900&&month===1;dialog.querySelector('[data-calendar-step="1"]').disabled=year===9999&&month===12;
+   if(focusDate)dialog.querySelector(`[data-calendar-date="${focusDate}"]`)?.focus();
+  }
+  function openCalendar(){const trigger=content.querySelector('[data-field=date]'),dialog=content.querySelector('.date-dialog');dialog.dataset.month=s.draft.date.slice(0,7);trigger.setAttribute('aria-expanded','true');drawCalendar(dialog);dialog.showModal();dialog.querySelector(`[data-calendar-date="${s.draft.date}"]`)?.focus();animate(dialog,true);dialog.addEventListener('close',()=>{trigger.setAttribute('aria-expanded','false');trigger.focus();},{once:true});}
+  function chooseDate(value){s.draft.date=value;content.querySelector('.date-value').textContent=dateLabel(value);refreshError('date');content.querySelector('.date-dialog').close();save(example);}
+  function actionExample() {
+   const state=s.operation;
+   if(state==='success') {content.innerHTML=`${heading('Recebimento registrado')}<section class="panel"><div class="result-icon"><i data-lucide="check" aria-hidden="true"></i></div><h3 role="status">R$ 100,00 registrados</h3><p class="person">Ana Souza · Venda #1042</p>${rows([['Data','16 de outubro de 2026'],['Forma','Pix'],['Saldo em aberto',money(s.balance)]])}<p class="helper">A venda original continua em R$ 150,00. O recebimento foi acrescentado ao histórico.</p>${secondary('Experimentar novamente','restart')}</section>`;return;}
+   const busy=s.busy,unknown=state==='unknown';
+   let message='';
+   if(state==='failure')message='<aside class="message error" role="alert"><h3>Recebimento não registrado</h3><p>A tentativa foi recusada antes da gravação. Os dados foram mantidos.</p></aside>';
+   if(unknown)message='<aside class="message warning" role="status"><h3>Aguardando confirmação</h3><p>A conexão caiu depois do envio. O recebimento pode ter sido registrado.</p><p>Verifique o registro antes de confirmar outra vez.</p></aside>';
+   content.innerHTML=`${heading('Conferir recebimento')}<section class="panel">${message}${rows([['Cliente','Ana Souza'],['Origem','Venda #1042'],['Valor a registrar','R$ 100,00'],['Data','16 de outubro de 2026'],['Forma','Pix'],['Saldo após confirmação','R$ 0,00']])}<div class="actions">${primary(busy?(unknown?'Verificando…':'Registrando…'):(unknown?'Verificar registro':state==='failure'?'Tentar novamente':'Confirmar recebimento'),unknown?'verify':'confirm',busy,busy?'loader-circle':unknown?'search-check':'check')}${!busy&&!unknown?secondary('Voltar à revisão','restart'):''}</div><p class="helper" role="status" data-operation-status>${busy?(unknown?'Consultando a confirmação desta tentativa.':'Aguarde a confirmação do registro.'):unknown?'O saldo atual ainda não foi atualizado.':'O saldo será atualizado depois da confirmação.'}</p></section>`;
+  }
+  function confirm() {
+   if(s.busy||s.operation==='success'||s.operation==='unknown')return;
+   const response=s.operation==='failure'?'success':s.design.response;
+   s.busy=true;actionExample();icons();
+   timer=setTimeout(()=>{s.busy=false;s.operation=response;s.balance=s.operation==='success'?0:10000;changed();},700);
+  }
+  function verify(){if(s.busy||s.operation!=='unknown')return;s.busy=true;actionExample();icons();timer=setTimeout(()=>{s.busy=false;s.operation='success';s.balance=0;changed();},650);}
+  const queryRecords=()=>s.querySource==='outside'?[{id:'carla',name:'Carla Martins',origin:'Venda #1044',amount:8000,status:'Em aberto',due:'21 out.',date:'2026-10-21',overdue:false}]:[{id:'ana',name:'Ana Souza',origin:'Venda #1042',amount:10000,status:'Parcial',due:'15 out.',date:'2026-10-15',overdue:true},{id:'bruno',name:'Bruno Lima',origin:'Venda #1043',amount:20000,status:'Em aberto',due:'18 out.',date:'2026-10-18',overdue:false}];
+  function queryExample(){
+   const query=s.design.query,records=queryRecords();
+   if(s.page.startsWith('detail:')){const item=records.find(r=>r.id===s.page.slice(7));if(!item){s.page='summary';queryExample();return;}content.innerHTML=`${heading(item.name)}<section class="panel">${rows([['Origem',item.origin],['Saldo em aberto',money(item.amount)],['Situação',item.status+(item.overdue?' · Vencida':'')],['Vencimento',dateLabel(item.date)]])}${secondary('Voltar à lista','list')}</section>`;return;}
+   if(query==='unavailable'||query==='loading'||s.queryBusy){const busy=query==='loading'||s.queryBusy;content.innerHTML=`${heading('Receber')}<p class="person">12 a 18 de outubro de 2026</p><section class="query-empty" role="status" aria-busy="${busy}"><h3>${busy?'Consultando recebimentos…':'Não foi possível consultar'}</h3><p>${busy?'Os valores aparecerão quando a consulta terminar.':'O servidor está indisponível. O total não pôde ser confirmado.'}</p>${primary(busy?'Consultando…':'Tentar novamente','retry-query',busy,busy?'loader-circle':'rotate-cw')}</section>`;return;}
+   if(query==='empty'){content.innerHTML=`${heading('Receber')}<p class="person">12 a 18 de outubro de 2026</p><section class="query-empty" role="status"><h3>Nenhum saldo em aberto nesta semana</h3><p>A consulta foi concluída. Você pode consultar outros vencimentos.</p>${primary('Ver todos os vencimentos','all-dates',false,'calendar-range')}</section>`;return;}
+   if(query==='stale'){content.innerHTML=`${heading('Receber')}<p class="person">12 a 18 de outubro de 2026</p><aside class="message warning" role="status"><h3>Não foi possível atualizar</h3><p>Última consulta: 16 out., às 09:41. Os valores podem ter mudado.</p></aside><section class="query-total"><span class="helper">Saldo na última consulta</span><strong>R$ 300,00</strong><span class="helper">2 vendas · vencimentos de 12 a 18 out.</span></section>${primary('Atualizar consulta','retry-query',false,'rotate-cw')}`;return;}
+   const list=s.page==='list';
+   const total=records.reduce((sum,r)=>sum+r.amount,0);
+   content.innerHTML=`${heading(list?'Contas a receber':'Receber')}<p class="person">${s.queryRange==='all'?'Todos os vencimentos':'12 a 18 de outubro de 2026'}</p><section class="query-total"><span class="helper">Saldo a receber neste recorte</span><strong data-query-total>${money(total)}</strong><span class="helper">${records.length} ${records.length===1?'venda':'vendas'} · todos os registros do recorte</span>${!list?`<button type="button" class="cursor-interaction" data-action="list">Ver ${records.length===1?'a venda':'as '+records.length+' vendas'}<i data-lucide="arrow-right" aria-hidden="true"></i></button>`:''}</section>${list?`<div class="rows">${records.map(item=>`<button type="button" class="row cursor-interaction" data-record="${item.id}"><span class="copy"><strong>${item.name}</strong><span class="helper">${item.origin} · Vence em ${item.due}</span><span class="tag ${item.overdue?'overdue':''}">${item.status}${item.overdue?' · Vencida':''}</span></span><strong class="row-value">${money(item.amount)}</strong><i data-lucide="chevron-right" aria-hidden="true"></i></button>`).join('')}</div><div class="table-wrap"><table class="table"><thead><tr><th scope="col">Cliente e origem</th><th scope="col">Situação</th><th scope="col">Vence em</th><th scope="col">Em aberto</th></tr></thead><tbody>${records.map(item=>`<tr><td><button type="button" class="row-link cursor-interaction" data-record="${item.id}"><strong>${item.name}</strong><span class="helper">${item.origin}</span></button></td><td><span class="tag ${item.overdue?'overdue':''}">${item.status}${item.overdue?' · Vencida':''}</span></td><td>${item.due}</td><td>${money(item.amount)}</td></tr>`).join('')}</tbody></table></div>`:''}<details class="criteria"><summary class="cursor-interaction">O que entra neste resumo?</summary><p>Saldo ainda em aberto das vendas com vencimento ${s.queryRange==='all'?'em qualquer data':'entre 12 e 18 de outubro'}. Inclui recebimentos parciais. Vendas quitadas ficam fora. O total corresponde a todos os registros deste recorte.</p></details>${list?secondary('Voltar ao resumo','summary'):''}`;
+  }
+  function render(){style();if(example==='fields'){if(s.page==='review')fieldReview();else form();}if(example==='actions')actionExample();if(example==='query')queryExample();icons();}
+  function designChanged(){
+   if(s.busy||s.queryBusy){style();return;}
+   if(s.design.context!==lastContext){s.draft=blankDraft();s.errors={};s.page='form';lastContext=s.design.context;}
+   if(s.design.response!==lastResponse){s.operation='idle';s.balance=10000;lastResponse=s.design.response;}
+   if(s.design.query!==lastQuery){s.page='summary';s.queryRange='week';s.querySource='normal';lastQuery=s.design.query;}
+   render();save(example);
+  }
+  content.addEventListener('click',event=>{
+   const button=event.target.closest('button');if(!button||button.disabled)return;
+   if(button.dataset.focus){content.querySelector(`[data-field=${button.dataset.focus}]`)?.focus();return;}
+   if(button.dataset.calendarDate){chooseDate(button.dataset.calendarDate);return;}
+   if(button.dataset.calendarAction){if(button.dataset.calendarAction==='today')chooseDate('2026-10-16');else content.querySelector('.date-dialog').close();return;}
+   if(button.dataset.calendarStep){const dialog=content.querySelector('.date-dialog'),[year,month]=dialog.dataset.month.split('-').map(Number);dialog.dataset.month=new Date(Date.UTC(year,month-1+Number(button.dataset.calendarStep),1)).toISOString().slice(0,7);drawCalendar(dialog);return;}
+   if(button.dataset.record){s.page='detail:'+button.dataset.record;changed();return;}
+   const action=button.dataset.action;
+   if(action==='calendar')openCalendar();
+   if(action==='review'){if(validate()){s.page='review';changed();}else{render();content.querySelector(`[data-field=${Object.keys(s.errors)[0]}]`)?.focus();}}
+   if(action==='edit'){s.page='form';changed();}
+   if(action==='confirm')confirm();
+   if(action==='verify')verify();
+   if(action==='restart'){if(timer)clearTimeout(timer);s.busy=false;s.operation='idle';s.balance=10000;changed();}
+   if(['list','summary'].includes(action)){s.page=action;changed();}
+   if(action==='all-dates'){s.design.query='loaded';lastQuery='loaded';s.querySource='outside';s.queryRange='all';s.page='summary';changed();}
+   if(action==='retry-query'&&!s.queryBusy){s.queryBusy=true;render();timer=setTimeout(()=>{s.queryBusy=false;s.design.query='loaded';lastQuery='loaded';s.page='summary';s.queryRange='week';s.querySource='normal';changed();},650);}
+  });
+  content.addEventListener('change',event=>{
+   if(event.target.hasAttribute('data-mode')){s.draft.mode=event.target.value;updateMode();save(example);return;}
+   const name=event.target.dataset.field;if(name){s.draft[name]=event.target.value;refreshError(name);save(example);}
+  });
+  content.addEventListener('input',event=>{const name=event.target.dataset.field;if(!name)return;s.draft[name]=event.target.value;refreshError(name);updateRemaining();});
+  content.addEventListener('keydown',event=>{
+   const value=event.target.dataset.calendarDate;if(!value)return;
+   if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End','PageUp','PageDown'].includes(event.key))return;
+   event.preventDefault();const date=new Date(value+'T00:00:00Z'),dialog=content.querySelector('.date-dialog');
+   if(event.key==='ArrowLeft')date.setUTCDate(date.getUTCDate()-1);if(event.key==='ArrowRight')date.setUTCDate(date.getUTCDate()+1);if(event.key==='ArrowUp')date.setUTCDate(date.getUTCDate()-7);if(event.key==='ArrowDown')date.setUTCDate(date.getUTCDate()+7);if(event.key==='Home')date.setUTCDate(date.getUTCDate()-date.getUTCDay());if(event.key==='End')date.setUTCDate(date.getUTCDate()+6-date.getUTCDay());
+   if(event.key==='PageUp'||event.key==='PageDown'){const day=date.getUTCDate(),delta=(event.key==='PageUp'?-1:1)*(event.shiftKey?12:1);date.setUTCDate(1);date.setUTCMonth(date.getUTCMonth()+delta);date.setUTCDate(Math.min(day,new Date(Date.UTC(date.getUTCFullYear(),date.getUTCMonth()+1,0)).getUTCDate()));}
+   if(date.getUTCFullYear()>=1900&&date.getUTCFullYear()<=9999){const next=date.toISOString().slice(0,10);dialog.dataset.month=next.slice(0,7);drawCalendar(dialog,next);}
+  });
+  function restore(saved){
+   if(!saved||s.busy||s.queryBusy)return;
+   const allowed={context:['receive','pay'],response:['success','failure','unknown'],query:['loaded','empty','unavailable','loading','stale']};
+   for(const [key,options] of Object.entries(allowed))if(options.includes(saved.design?.[key]))s.design[key]=saved.design[key];
+   if(saved.draft){for(const key of ['amount','method','notes'])if(typeof saved.draft[key]==='string')s.draft[key]=saved.draft[key].slice(0,300);if(validDate(saved.draft.date))s.draft.date=saved.draft.date;if(['full','partial'].includes(saved.draft.mode))s.draft.mode=saved.draft.mode;}
+   if(!ctx().methods[s.draft.method])s.draft.method='';
+   if(example==='fields')s.page=saved.page==='review'&&validate()?'review':'form';
+   if(example==='query'&&['summary','list','detail:ana','detail:bruno','detail:carla'].includes(saved.page))s.page=saved.page;
+   if(example==='query'){s.queryRange=saved.queryRange==='all'?'all':'week';s.querySource=saved.querySource==='outside'?'outside':'normal';}
+   if(example==='actions'&&['idle','failure','unknown','success'].includes(saved.operation)){s.operation=saved.operation;s.balance=s.operation==='success'?0:10000;}
+   lastContext=s.design.context;lastResponse=s.design.response;lastQuery=s.design.query;s.errors={};render();
+  }
+  app._restoreCatalog=restore;
+  render();
+  if(globalThis.Tweak){const tweak=new Tweak({container:app,onChange:designChanged});if(example==='fields')tweak.addSelect(s.design,'context',{label:'Uso dos mesmos controles',options:[{label:'Recebimento',value:'receive'},{label:'Pagamento',value:'pay'}]});if(example==='actions')tweak.addSelect(s.design,'response',{label:'Resposta ao confirmar',options:[{label:'Sucesso confirmado',value:'success'},{label:'Recusa antes de gravar',value:'failure'},{label:'Conexão cai após envio',value:'unknown'}]});if(example==='query')tweak.addSelect(s.design,'query',{label:'Consulta financeira',options:[{label:'Dados confirmados',value:'loaded'},{label:'Sem saldos neste recorte',value:'empty'},{label:'Indisponível',value:'unavailable'},{label:'Carregando',value:'loading'},{label:'Última consulta, sem atualizar',value:'stale'}]});}
+ }
+ function restoreAll(saved){
+  if(saved?.foundationVersion!==1||!saved.examples)return;
+  const design=saved.foundation||{};
+  if(['chat','light','dark'].includes(design.appearance))foundation.appearance=design.appearance;
+  if(['soft','pure'].includes(design.page))foundation.page=design.page;
+  if(['standard','reduced'].includes(design.motion))foundation.motion=design.motion;
+  if(typeof design.accent==='string'&&/^#[0-9a-f]{6}$/i.test(design.accent))foundation.accent=design.accent;
+  for(const [key,min,max] of [['spacing',16,32],['panelRadius',24,40],['fieldRadius',20,32]])if(Number.isFinite(design[key]))foundation[key]=Math.max(min,Math.min(max,design[key]));
+  renderFoundation();for(const app of root.querySelectorAll('.specimen'))app._restoreCatalog(saved.examples[app.dataset.example]);
+ }
+ restoreAll(window.openai?.widgetState?.privateContent);
+ window.addEventListener('openai:set_globals',event=>restoreAll(event.detail?.globals?.widgetState?.privateContent));
+ if(globalThis.Tweak){const tweak=new Tweak({container:root,onChange:()=>{renderFoundation();save('foundation');}});tweak.addSelect(foundation,'appearance',{label:'Aparência compartilhada',options:[{label:'Seguir o chat',value:'chat'},{label:'Claro',value:'light'},{label:'Escuro',value:'dark'}]});tweak.addSelect(foundation,'page',{label:'Fundo',options:[{label:'Superfícies suaves',value:'soft'},{label:'Branco / preto',value:'pure'}]});tweak.addColorPicker(foundation,'accent',{label:'Cor de destaque (base)',reference:'--zm-accent'});tweak.addSlider(foundation,'spacing',{label:'Espaço entre campos',min:16,max:32,step:4,unit:'px',reference:'--zm-field-gap'});tweak.addSlider(foundation,'panelRadius',{label:'Cantos dos painéis',min:24,max:40,step:4,unit:'px',reference:'--zm-panel-radius'});tweak.addSlider(foundation,'fieldRadius',{label:'Cantos dos campos',min:20,max:32,step:4,unit:'px',reference:'--zm-field-radius'});tweak.addSelect(foundation,'motion',{label:'Movimento compartilhado',options:[{label:'Padrão',value:'standard'},{label:'Reduzido',value:'reduced'}]});}
+ let reservedHeight=0,reservedWidth=0,stageFrame=0;
+ new ResizeObserver(()=>{if(stageFrame)return;stageFrame=requestAnimationFrame(()=>{stageFrame=0;const width=Math.round(root.getBoundingClientRect().width);if(width!==reservedWidth){reservedWidth=width;reservedHeight=0;}for(const app of root.querySelectorAll('.specimen'))if(app.getClientRects().length)reservedHeight=Math.max(reservedHeight,Math.ceil(app.getBoundingClientRect().height)+28);const next=reservedHeight+'px';if(root.style.getPropertyValue('--zm-stage-reserve')!==next)root.style.setProperty('--zm-stage-reserve',next);});}).observe(root);
+})();
+</script>

@@ -1,0 +1,775 @@
+--- a/client/lib/models/dispatch.dart
++++ b/client/lib/models/dispatch.dart
+@@ -1,772 +0,0 @@
+-class ResponsiblePerson {
+-  final String id;
+-  final String name;
+-  final String? phone;
+-  final bool isActive;
+-  final String? notes;
+-  final DateTime createdAt;
+-  final DateTime updatedAt;
+-
+-  ResponsiblePerson({
+-    required this.id,
+-    required this.name,
+-    this.phone,
+-    required this.isActive,
+-    this.notes,
+-    required this.createdAt,
+-    required this.updatedAt,
+-  });
+-
+-  factory ResponsiblePerson.fromJson(Map<String, dynamic> json) {
+-    return ResponsiblePerson(
+-      id: json['id'] as String,
+-      name: json['name'] as String,
+-      phone: json['phone'] as String?,
+-      isActive: json['is_active'] as bool? ?? true,
+-      notes: json['notes'] as String?,
+-      createdAt: DateTime.parse(json['created_at'] as String),
+-      updatedAt: DateTime.parse(json['updated_at'] as String),
+-    );
+-  }
+-
+-  Map<String, dynamic> toJson() => {
+-        'name': name,
+-        'phone': phone,
+-        'is_active': isActive,
+-        'notes': notes,
+-      };
+-}
+-
+-class CustodyBasketBalance {
+-  final String basketTypeId;
+-  final String basketTypeName;
+-  final int balance;
+-
+-  CustodyBasketBalance({
+-    required this.basketTypeId,
+-    required this.basketTypeName,
+-    required this.balance,
+-  });
+-
+-  factory CustodyBasketBalance.fromJson(Map<String, dynamic> json) {
+-    return CustodyBasketBalance(
+-      basketTypeId: json['basket_type_id'] as String,
+-      basketTypeName: json['basket_type_name'] as String,
+-      balance: (json['balance'] as num).toInt(),
+-    );
+-  }
+-}
+-
+-class ResponsiblePersonCustody {
+-  final String responsiblePersonId;
+-  final String responsiblePersonName;
+-  final int totalCustodyBaskets;
+-  final List<CustodyBasketBalance> baskets;
+-
+-  ResponsiblePersonCustody({
+-    required this.responsiblePersonId,
+-    required this.responsiblePersonName,
+-    required this.totalCustodyBaskets,
+-    required this.baskets,
+-  });
+-
+-  factory ResponsiblePersonCustody.fromJson(Map<String, dynamic> json) {
+-    return ResponsiblePersonCustody(
+-      responsiblePersonId: json['responsible_person_id'] as String,
+-      responsiblePersonName: json['responsible_person_name'] as String,
+-      totalCustodyBaskets: (json['total_custody_baskets'] as num).toInt(),
+-      baskets: (json['baskets'] as List<dynamic>? ?? [])
+-          .map((e) => CustodyBasketBalance.fromJson(e as Map<String, dynamic>))
+-          .toList(),
+-    );
+-  }
+-}
+-
+-class DispatchItemCreate {
+-  final String basketTypeId;
+-  final String? productionBatchId;
+-  final int quantity;
+-  final int unitPriceCents;
+-  final String? notes;
+-
+-  DispatchItemCreate({
+-    required this.basketTypeId,
+-    this.productionBatchId,
+-    required this.quantity,
+-    this.unitPriceCents = 0,
+-    this.notes,
+-  });
+-
+-  Map<String, dynamic> toJson() => {
+-        'basket_type_id': basketTypeId,
+-        'production_batch_id': productionBatchId,
+-        'quantity': quantity,
+-        'unit_price_cents': unitPriceCents,
+-        'notes': notes,
+-      };
+-}
+-
+-class DispatchItem {
+-  final String id;
+-  final String dispatchId;
+-  final String basketTypeId;
+-  final String? basketTypeName;
+-  final String? productionBatchId;
+-  final int quantity;
+-  final int unitPriceCents;
+-  final int totalPriceCents;
+-  final String? notes;
+-
+-  DispatchItem({
+-    required this.id,
+-    required this.dispatchId,
+-    required this.basketTypeId,
+-    this.basketTypeName,
+-    this.productionBatchId,
+-    required this.quantity,
+-    required this.unitPriceCents,
+-    required this.totalPriceCents,
+-    this.notes,
+-  });
+-
+-  factory DispatchItem.fromJson(Map<String, dynamic> json) {
+-    return DispatchItem(
+-      id: json['id'] as String,
+-      dispatchId: json['dispatch_id'] as String,
+-      basketTypeId: json['basket_type_id'] as String,
+-      basketTypeName: json['basket_type_name'] as String?,
+-      productionBatchId: json['production_batch_id'] as String?,
+-      quantity: (json['quantity'] as num).toInt(),
+-      unitPriceCents: (json['unit_price_cents'] as num?)?.toInt() ?? 0,
+-      totalPriceCents: (json['total_price_cents'] as num?)?.toInt() ?? 0,
+-      notes: json['notes'] as String?,
+-    );
+-  }
+-}
+-
+-class StockDispatchCreate {
+-  final String responsiblePersonId;
+-  final DateTime? dispatchDate;
+-  final String? notes;
+-  final List<DispatchItemCreate> items;
+-
+-  StockDispatchCreate({
+-    required this.responsiblePersonId,
+-    this.dispatchDate,
+-    this.notes,
+-    required this.items,
+-  });
+-
+-  Map<String, dynamic> toJson() => {
+-        'responsible_person_id': responsiblePersonId,
+-        'dispatch_date': dispatchDate?.toIso8601String(),
+-        'notes': notes,
+-        'items': items.map((e) => e.toJson()).toList(),
+-      };
+-}
+-
+-class StockDispatch {
+-  final String id;
+-  final int dispatchNumber;
+-  final String responsiblePersonId;
+-  final String? responsiblePersonName;
+-  final DateTime dispatchDate;
+-  final String status;
+-  final int totalItemsQuantity;
+-  final int totalReferenceAmountCents;
+-  final String? notes;
+-  final DateTime createdAt;
+-  final DateTime updatedAt;
+-
+-  StockDispatch({
+-    required this.id,
+-    required this.dispatchNumber,
+-    required this.responsiblePersonId,
+-    this.responsiblePersonName,
+-    required this.dispatchDate,
+-    required this.status,
+-    required this.totalItemsQuantity,
+-    required this.totalReferenceAmountCents,
+-    this.notes,
+-    required this.createdAt,
+-    required this.updatedAt,
+-  });
+-
+-  factory StockDispatch.fromJson(Map<String, dynamic> json) {
+-    return StockDispatch(
+-      id: json['id'] as String,
+-      dispatchNumber: (json['dispatch_number'] as num).toInt(),
+-      responsiblePersonId: json['responsible_person_id'] as String,
+-      responsiblePersonName: json['responsible_person_name'] as String?,
+-      dispatchDate: DateTime.parse(json['dispatch_date'] as String),
+-      status: json['status'] as String,
+-      totalItemsQuantity: (json['total_items_quantity'] as num).toInt(),
+-      totalReferenceAmountCents: (json['total_reference_amount_cents'] as num?)?.toInt() ?? 0,
+-      notes: json['notes'] as String?,
+-      createdAt: DateTime.parse(json['created_at'] as String),
+-      updatedAt: DateTime.parse(json['updated_at'] as String),
+-    );
+-  }
+-}
+-
+-class StockDispatchDetail extends StockDispatch {
+-  final List<DispatchItem> items;
+-  final int salesCount;
+-  final int returnsCount;
+-  final int lossesCount;
+-  final int expensesCount;
+-  final int repaymentsCount;
+-  final bool hasSettlement;
+-  final String? settlementStatus;
+-
+-  StockDispatchDetail({
+-    required super.id,
+-    required super.dispatchNumber,
+-    required super.responsiblePersonId,
+-    super.responsiblePersonName,
+-    required super.dispatchDate,
+-    required super.status,
+-    required super.totalItemsQuantity,
+-    required super.totalReferenceAmountCents,
+-    super.notes,
+-    required super.createdAt,
+-    required super.updatedAt,
+-    required this.items,
+-    this.salesCount = 0,
+-    this.returnsCount = 0,
+-    this.lossesCount = 0,
+-    this.expensesCount = 0,
+-    this.repaymentsCount = 0,
+-    this.hasSettlement = false,
+-    this.settlementStatus,
+-  });
+-
+-  factory StockDispatchDetail.fromJson(Map<String, dynamic> json) {
+-    final base = StockDispatch.fromJson(json);
+-    return StockDispatchDetail(
+-      id: base.id,
+-      dispatchNumber: base.dispatchNumber,
+-      responsiblePersonId: base.responsiblePersonId,
+-      responsiblePersonName: base.responsiblePersonName,
+-      dispatchDate: base.dispatchDate,
+-      status: base.status,
+-      totalItemsQuantity: base.totalItemsQuantity,
+-      totalReferenceAmountCents: base.totalReferenceAmountCents,
+-      notes: base.notes,
+-      createdAt: base.createdAt,
+-      updatedAt: base.updatedAt,
+-      items: (json['items'] as List<dynamic>? ?? [])
+-          .map((e) => DispatchItem.fromJson(e as Map<String, dynamic>))
+-          .toList(),
+-      salesCount: (json['sales_count'] as num?)?.toInt() ?? 0,
+-      returnsCount: (json['returns_count'] as num?)?.toInt() ?? 0,
+-      lossesCount: (json['losses_count'] as num?)?.toInt() ?? 0,
+-      expensesCount: (json['expenses_count'] as num?)?.toInt() ?? 0,
+-      repaymentsCount: (json['repayments_count'] as num?)?.toInt() ?? 0,
+-      hasSettlement: json['has_settlement'] as bool? ?? false,
+-      settlementStatus: json['settlement_status'] as String?,
+-    );
+-  }
+-}
+-
+-class DispatchReturnCreate {
+-  final String basketTypeId;
+-  final String? productionBatchId;
+-  final int quantity;
+-  final DateTime? returnedAt;
+-  final String? notes;
+-
+-  DispatchReturnCreate({
+-    required this.basketTypeId,
+-    this.productionBatchId,
+-    required this.quantity,
+-    this.returnedAt,
+-    this.notes,
+-  });
+-
+-  Map<String, dynamic> toJson() => {
+-        'basket_type_id': basketTypeId,
+-        'production_batch_id': productionBatchId,
+-        'quantity': quantity,
+-        'returned_at': returnedAt?.toIso8601String(),
+-        'notes': notes,
+-      };
+-}
+-
+-class DispatchReturn {
+-  final String id;
+-  final String dispatchId;
+-  final String basketTypeId;
+-  final String? basketTypeName;
+-  final String? productionBatchId;
+-  final int quantity;
+-  final DateTime returnedAt;
+-  final String? notes;
+-  final DateTime createdAt;
+-
+-  DispatchReturn({
+-    required this.id,
+-    required this.dispatchId,
+-    required this.basketTypeId,
+-    this.basketTypeName,
+-    this.productionBatchId,
+-    required this.quantity,
+-    required this.returnedAt,
+-    this.notes,
+-    required this.createdAt,
+-  });
+-
+-  factory DispatchReturn.fromJson(Map<String, dynamic> json) {
+-    return DispatchReturn(
+-      id: json['id'] as String,
+-      dispatchId: json['dispatch_id'] as String,
+-      basketTypeId: json['basket_type_id'] as String,
+-      basketTypeName: json['basket_type_name'] as String?,
+-      productionBatchId: json['production_batch_id'] as String?,
+-      quantity: (json['quantity'] as num).toInt(),
+-      returnedAt: DateTime.parse(json['returned_at'] as String),
+-      notes: json['notes'] as String?,
+-      createdAt: DateTime.parse(json['created_at'] as String),
+-    );
+-  }
+-}
+-
+-class DispatchLossCreate {
+-  final String basketTypeId;
+-  final String? productionBatchId;
+-  final int quantity;
+-  final String reason;
+-  final DateTime? occurredAt;
+-
+-  DispatchLossCreate({
+-    required this.basketTypeId,
+-    this.productionBatchId,
+-    required this.quantity,
+-    required this.reason,
+-    this.occurredAt,
+-  });
+-
+-  Map<String, dynamic> toJson() => {
+-        'basket_type_id': basketTypeId,
+-        'production_batch_id': productionBatchId,
+-        'quantity': quantity,
+-        'reason': reason,
+-        'occurred_at': occurredAt?.toIso8601String(),
+-      };
+-}
+-
+-class DispatchLoss {
+-  final String id;
+-  final String dispatchId;
+-  final String basketTypeId;
+-  final String? basketTypeName;
+-  final String? productionBatchId;
+-  final int quantity;
+-  final DateTime occurredAt;
+-  final String reason;
+-  final DateTime createdAt;
+-
+-  DispatchLoss({
+-    required this.id,
+-    required this.dispatchId,
+-    required this.basketTypeId,
+-    this.basketTypeName,
+-    this.productionBatchId,
+-    required this.quantity,
+-    required this.occurredAt,
+-    required this.reason,
+-    required this.createdAt,
+-  });
+-
+-  factory DispatchLoss.fromJson(Map<String, dynamic> json) {
+-    return DispatchLoss(
+-      id: json['id'] as String,
+-      dispatchId: json['dispatch_id'] as String,
+-      basketTypeId: json['basket_type_id'] as String,
+-      basketTypeName: json['basket_type_name'] as String?,
+-      productionBatchId: json['production_batch_id'] as String?,
+-      quantity: (json['quantity'] as num).toInt(),
+-      occurredAt: DateTime.parse(json['occurred_at'] as String),
+-      reason: json['reason'] as String,
+-      createdAt: DateTime.parse(json['created_at'] as String),
+-    );
+-  }
+-}
+-
+-class DispatchExpenseCreate {
+-  final int amountCents;
+-  final String description;
+-  final String? receiptRef;
+-  final String? authorizedBy;
+-  final DateTime? expenseDate;
+-
+-  DispatchExpenseCreate({
+-    required this.amountCents,
+-    required this.description,
+-    this.receiptRef,
+-    this.authorizedBy,
+-    this.expenseDate,
+-  });
+-
+-  Map<String, dynamic> toJson() => {
+-        'amount_cents': amountCents,
+-        'description': description,
+-        'receipt_ref': receiptRef,
+-        'authorized_by': authorizedBy,
+-        'expense_date': expenseDate?.toIso8601String(),
+-      };
+-}
+-
+-class DispatchExpense {
+-  final String id;
+-  final String dispatchId;
+-  final DateTime expenseDate;
+-  final int amountCents;
+-  final String description;
+-  final String? receiptRef;
+-  final String? authorizedBy;
+-  final DateTime createdAt;
+-
+-  DispatchExpense({
+-    required this.id,
+-    required this.dispatchId,
+-    required this.expenseDate,
+-    required this.amountCents,
+-    required this.description,
+-    this.receiptRef,
+-    this.authorizedBy,
+-    required this.createdAt,
+-  });
+-
+-  factory DispatchExpense.fromJson(Map<String, dynamic> json) {
+-    return DispatchExpense(
+-      id: json['id'] as String,
+-      dispatchId: json['dispatch_id'] as String,
+-      expenseDate: DateTime.parse(json['expense_date'] as String),
+-      amountCents: (json['amount_cents'] as num).toInt(),
+-      description: json['description'] as String,
+-      receiptRef: json['receipt_ref'] as String?,
+-      authorizedBy: json['authorized_by'] as String?,
+-      createdAt: DateTime.parse(json['created_at'] as String),
+-    );
+-  }
+-}
+-
+-class DispatchRepaymentCreate {
+-  final int amountCents;
+-  final String paymentMethod;
+-  final String? receivedBy;
+-  final DateTime? repaymentDate;
+-  final String? notes;
+-
+-  DispatchRepaymentCreate({
+-    required this.amountCents,
+-    this.paymentMethod = 'CASH',
+-    this.receivedBy,
+-    this.repaymentDate,
+-    this.notes,
+-  });
+-
+-  Map<String, dynamic> toJson() => {
+-        'amount_cents': amountCents,
+-        'payment_method': paymentMethod,
+-        'received_by': receivedBy,
+-        'repayment_date': repaymentDate?.toIso8601String(),
+-        'notes': notes,
+-      };
+-}
+-
+-class DispatchRepayment {
+-  final String id;
+-  final String dispatchId;
+-  final DateTime repaymentDate;
+-  final int amountCents;
+-  final String paymentMethod;
+-  final String? receivedBy;
+-  final String? notes;
+-  final DateTime createdAt;
+-
+-  DispatchRepayment({
+-    required this.id,
+-    required this.dispatchId,
+-    required this.repaymentDate,
+-    required this.amountCents,
+-    required this.paymentMethod,
+-    this.receivedBy,
+-    this.notes,
+-    required this.createdAt,
+-  });
+-
+-  factory DispatchRepayment.fromJson(Map<String, dynamic> json) {
+-    return DispatchRepayment(
+-      id: json['id'] as String,
+-      dispatchId: json['dispatch_id'] as String,
+-      repaymentDate: DateTime.parse(json['repayment_date'] as String),
+-      amountCents: (json['amount_cents'] as num).toInt(),
+-      paymentMethod: json['payment_method'] as String? ?? 'CASH',
+-      receivedBy: json['received_by'] as String?,
+-      notes: json['notes'] as String?,
+-      createdAt: DateTime.parse(json['created_at'] as String),
+-    );
+-  }
+-}
+-
+-class DispatchItemReconciliation {
+-  final String basketTypeId;
+-  final String basketTypeName;
+-  final String? productionBatchId;
+-  final int dispatchedQty;
+-  final int soldQty;
+-  final int returnedQty;
+-  final int lostQty;
+-  final int remainingCustodyQty;
+-  final int discrepancyQty;
+-
+-  DispatchItemReconciliation({
+-    required this.basketTypeId,
+-    required this.basketTypeName,
+-    this.productionBatchId,
+-    required this.dispatchedQty,
+-    required this.soldQty,
+-    required this.returnedQty,
+-    required this.lostQty,
+-    required this.remainingCustodyQty,
+-    required this.discrepancyQty,
+-  });
+-
+-  factory DispatchItemReconciliation.fromJson(Map<String, dynamic> json) {
+-    return DispatchItemReconciliation(
+-      basketTypeId: json['basket_type_id'] as String,
+-      basketTypeName: json['basket_type_name'] as String,
+-      productionBatchId: json['production_batch_id'] as String?,
+-      dispatchedQty: (json['dispatched_qty'] as num).toInt(),
+-      soldQty: (json['sold_qty'] as num).toInt(),
+-      returnedQty: (json['returned_qty'] as num).toInt(),
+-      lostQty: (json['lost_qty'] as num).toInt(),
+-      remainingCustodyQty: (json['remaining_custody_qty'] as num).toInt(),
+-      discrepancyQty: (json['discrepancy_qty'] as num).toInt(),
+-    );
+-  }
+-}
+-
+-class DispatchSettlement {
+-  final String id;
+-  final String dispatchId;
+-  final String auditedBy;
+-  final DateTime settledAt;
+-  final int totalDispatchedQty;
+-  final int totalSoldQty;
+-  final int totalReturnedQty;
+-  final int totalLostQty;
+-  final int totalRemainingCustodyQty;
+-  final int basketDiscrepancyQty;
+-  final int expectedCashCents;
+-  final int actualRepaidCashCents;
+-  final int cashDiscrepancyCents;
+-  final int directCompanyReceivedCents;
+-  final String status;
+-  final String? notes;
+-  final String? investigationNotes;
+-  final DateTime createdAt;
+-  final DateTime updatedAt;
+-
+-  DispatchSettlement({
+-    required this.id,
+-    required this.dispatchId,
+-    required this.auditedBy,
+-    required this.settledAt,
+-    required this.totalDispatchedQty,
+-    required this.totalSoldQty,
+-    required this.totalReturnedQty,
+-    required this.totalLostQty,
+-    required this.totalRemainingCustodyQty,
+-    required this.basketDiscrepancyQty,
+-    required this.expectedCashCents,
+-    required this.actualRepaidCashCents,
+-    required this.cashDiscrepancyCents,
+-    required this.directCompanyReceivedCents,
+-    required this.status,
+-    this.notes,
+-    this.investigationNotes,
+-    required this.createdAt,
+-    required this.updatedAt,
+-  });
+-
+-  factory DispatchSettlement.fromJson(Map<String, dynamic> json) {
+-    return DispatchSettlement(
+-      id: json['id'] as String,
+-      dispatchId: json['dispatch_id'] as String,
+-      auditedBy: json['audited_by'] as String,
+-      settledAt: DateTime.parse(json['settled_at'] as String),
+-      totalDispatchedQty: (json['total_dispatched_qty'] as num).toInt(),
+-      totalSoldQty: (json['total_sold_qty'] as num).toInt(),
+-      totalReturnedQty: (json['total_returned_qty'] as num).toInt(),
+-      totalLostQty: (json['total_lost_qty'] as num).toInt(),
+-      totalRemainingCustodyQty: (json['total_remaining_custody_qty'] as num).toInt(),
+-      basketDiscrepancyQty: (json['basket_discrepancy_qty'] as num).toInt(),
+-      expectedCashCents: (json['expected_cash_cents'] as num).toInt(),
+-      actualRepaidCashCents: (json['actual_repaid_cash_cents'] as num).toInt(),
+-      cashDiscrepancyCents: (json['cash_discrepancy_cents'] as num).toInt(),
+-      directCompanyReceivedCents: (json['direct_company_received_cents'] as num?)?.toInt() ?? 0,
+-      status: json['status'] as String,
+-      notes: json['notes'] as String?,
+-      investigationNotes: json['investigation_notes'] as String?,
+-      createdAt: DateTime.parse(json['created_at'] as String),
+-      updatedAt: DateTime.parse(json['updated_at'] as String),
+-    );
+-  }
+-}
+-
+-class DispatchReconciliation {
+-  final String dispatchId;
+-  final int dispatchNumber;
+-  final String responsiblePersonId;
+-  final String responsiblePersonName;
+-  final DateTime dispatchDate;
+-  final String dispatchStatus;
+-
+-  // 4-term physical equation totals
+-  final int totalDispatchedQty;
+-  final int totalSoldQty;
+-  final int totalReturnedQty;
+-  final int totalLostQty;
+-  final int totalRemainingCustodyQty;
+-  final int basketDiscrepancyQty;
+-
+-  // Financial equation
+-  final int cashSalesCents;
+-  final int directCompanyReceivedCents;
+-  final int creditSalesCents;
+-  final int cashDebtCollectedCents;
+-  final int expensesCents;
+-  final int expectedCashCents;
+-  final int actualRepaidCashCents;
+-  final int pendingCashCents;
+-  final int cashDiscrepancyCents;
+-
+-  // Flags
+-  final bool hasBasketDiscrepancy;
+-  final bool hasCashDiscrepancy;
+-
+-  // Details
+-  final List<DispatchItemReconciliation> itemsReconciliation;
+-  final List<DispatchReturn> returns;
+-  final List<DispatchLoss> losses;
+-  final List<DispatchExpense> expenses;
+-  final List<DispatchRepayment> repayments;
+-  final DispatchSettlement? latestSettlement;
+-
+-  DispatchReconciliation({
+-    required this.dispatchId,
+-    required this.dispatchNumber,
+-    required this.responsiblePersonId,
+-    required this.responsiblePersonName,
+-    required this.dispatchDate,
+-    required this.dispatchStatus,
+-    required this.totalDispatchedQty,
+-    required this.totalSoldQty,
+-    required this.totalReturnedQty,
+-    required this.totalLostQty,
+-    required this.totalRemainingCustodyQty,
+-    required this.basketDiscrepancyQty,
+-    required this.cashSalesCents,
+-    required this.directCompanyReceivedCents,
+-    required this.creditSalesCents,
+-    required this.cashDebtCollectedCents,
+-    required this.expensesCents,
+-    required this.expectedCashCents,
+-    required this.actualRepaidCashCents,
+-    required this.pendingCashCents,
+-    required this.cashDiscrepancyCents,
+-    required this.hasBasketDiscrepancy,
+-    required this.hasCashDiscrepancy,
+-    required this.itemsReconciliation,
+-    required this.returns,
+-    required this.losses,
+-    required this.expenses,
+-    required this.repayments,
+-    this.latestSettlement,
+-  });
+-
+-  factory DispatchReconciliation.fromJson(Map<String, dynamic> json) {
+-    return DispatchReconciliation(
+-      dispatchId: json['dispatch_id'] as String,
+-      dispatchNumber: (json['dispatch_number'] as num).toInt(),
+-      responsiblePersonId: json['responsible_person_id'] as String,
+-      responsiblePersonName: json['responsible_person_name'] as String,
+-      dispatchDate: DateTime.parse(json['dispatch_date'] as String),
+-      dispatchStatus: json['dispatch_status'] as String,
+-      totalDispatchedQty: (json['total_dispatched_qty'] as num).toInt(),
+-      totalSoldQty: (json['total_sold_qty'] as num).toInt(),
+-      totalReturnedQty: (json['total_returned_qty'] as num).toInt(),
+-      totalLostQty: (json['total_lost_qty'] as num).toInt(),
+-      totalRemainingCustodyQty: (json['total_remaining_custody_qty'] as num).toInt(),
+-      basketDiscrepancyQty: (json['basket_discrepancy_qty'] as num).toInt(),
+-      cashSalesCents: (json['cash_sales_cents'] as num).toInt(),
+-      directCompanyReceivedCents: (json['direct_company_received_cents'] as num?)?.toInt() ?? 0,
+-      creditSalesCents: (json['credit_sales_cents'] as num).toInt(),
+-      cashDebtCollectedCents: (json['cash_debt_collected_cents'] as num).toInt(),
+-      expensesCents: (json['expenses_cents'] as num).toInt(),
+-      expectedCashCents: (json['expected_cash_cents'] as num).toInt(),
+-      actualRepaidCashCents: (json['actual_repaid_cash_cents'] as num).toInt(),
+-      pendingCashCents: (json['pending_cash_cents'] as num).toInt(),
+-      cashDiscrepancyCents: (json['cash_discrepancy_cents'] as num).toInt(),
+-      hasBasketDiscrepancy: json['has_basket_discrepancy'] as bool? ?? false,
+-      hasCashDiscrepancy: json['has_cash_discrepancy'] as bool? ?? false,
+-      itemsReconciliation: (json['items_reconciliation'] as List<dynamic>? ?? [])
+-          .map((e) => DispatchItemReconciliation.fromJson(e as Map<String, dynamic>))
+-          .toList(),
+-      returns: (json['returns'] as List<dynamic>? ?? [])
+-          .map((e) => DispatchReturn.fromJson(e as Map<String, dynamic>))
+-          .toList(),
+-      losses: (json['losses'] as List<dynamic>? ?? [])
+-          .map((e) => DispatchLoss.fromJson(e as Map<String, dynamic>))
+-          .toList(),
+-      expenses: (json['expenses'] as List<dynamic>? ?? [])
+-          .map((e) => DispatchExpense.fromJson(e as Map<String, dynamic>))
+-          .toList(),
+-      repayments: (json['repayments'] as List<dynamic>? ?? [])
+-          .map((e) => DispatchRepayment.fromJson(e as Map<String, dynamic>))
+-          .toList(),
+-      latestSettlement: json['latest_settlement'] != null
+-          ? DispatchSettlement.fromJson(json['latest_settlement'] as Map<String, dynamic>)
+-          : null,
+-    );
+-  }
+-}
+-
+-class DispatchSettlementCreate {
+-  final String auditedBy;
+-  final DateTime? settledAt;
+-  final String? notes;
+-  final String? investigationNotes;
+-
+-  DispatchSettlementCreate({
+-    required this.auditedBy,
+-    this.settledAt,
+-    this.notes,
+-    this.investigationNotes,
+-  });
+-
+-  Map<String, dynamic> toJson() => {
+-        'audited_by': auditedBy,
+-        'settled_at': settledAt?.toIso8601String(),
+-        'notes': notes,
+-        'investigation_notes': investigationNotes,
+-      };
+-}
+-
+-class DispatchSettlementInvestigationUpdate {
+-  final String investigationNotes;
+-  final bool markAsResolved;
+-
+-  DispatchSettlementInvestigationUpdate({
+-    required this.investigationNotes,
+-    this.markAsResolved = false,
+-  });
+-
+-  Map<String, dynamic> toJson() => {
+-        'investigation_notes': investigationNotes,
+-        'mark_as_resolved': markAsResolved,
+-      };
+-}

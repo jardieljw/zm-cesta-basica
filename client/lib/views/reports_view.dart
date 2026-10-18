@@ -1,6 +1,9 @@
+import '../utils/adaptive_ui_color.dart';
+import '../widgets/shared/responsive_filter_bar.dart';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:printing/printing.dart';
+import 'package:pdf/pdf.dart';
 import '../models/report.dart';
 import '../services/reports_service.dart';
 import '../utils/report_pdf_builder.dart';
@@ -19,7 +22,7 @@ class ReportsView extends StatefulWidget {
 class _ReportsViewState extends State<ReportsView> {
   final ReportsService _reportsService = ReportsService();
 
-  String _selectedReportType = 'sales-dispatches';
+  String _selectedReportType = 'sales';
   bool _isLoading = false;
   bool _isExporting = false;
   String? _errorMessage;
@@ -36,15 +39,22 @@ class _ReportsViewState extends State<ReportsView> {
   int _selectedYear = DateTime.now().year;
   bool _onlyBelowMin = false;
 
-  final List<Map<String, String>> _availableReports = [
-    {'type': 'sales-dispatches', 'title': 'Vendas e Saídas de Cestas'},
-    {'type': 'assembly', 'title': 'Montagem e Produção de Cestas'},
-    {'type': 'purchases-movements', 'title': 'Compras e Movimentações do Razão'},
-    {'type': 'receivables', 'title': 'Contas a Receber, Pagamentos e Quitações'},
+  List<Map<String, String>> get _availableReports => [
+    {'type': 'sales', 'title': context.l10n.salesTitle},
+    {
+      'type': 'purchases-movements',
+      'title': 'Compras e Movimentações do Razão',
+    },
+    {
+      'type': 'receivables',
+      'title': 'Contas a Receber, Pagamentos e Quitações',
+    },
     {'type': 'payables', 'title': 'Contas a Pagar, Vencimentos e Pagamentos'},
-    {'type': 'dispatch-settlements', 'title': 'Conferência de Saídas e Repasses de Rota'},
     {'type': 'physical-inventory', 'title': 'Estoque Atual e Contagem Física'},
-    {'type': 'financial-summary', 'title': 'DRE Gerencial e Demonstrativo Financeiro'},
+    {
+      'type': 'business-financial-summary',
+      'title': context.l10n.companyFinancialReportTitle,
+    },
   ];
 
   @override
@@ -93,7 +103,9 @@ class _ReportsViewState extends State<ReportsView> {
         date: filters['date'],
         startDate: filters['start_date'],
         endDate: filters['end_date'],
-        month: filters['month'] != null ? int.tryParse(filters['month']!) : null,
+        month: filters['month'] != null
+            ? int.tryParse(filters['month']!)
+            : null,
         year: filters['year'] != null ? int.tryParse(filters['year']!) : null,
         onlyBelowMin: _onlyBelowMin,
       );
@@ -121,7 +133,8 @@ class _ReportsViewState extends State<ReportsView> {
       );
 
       final extension = format.toLowerCase();
-      final fileName = 'relatorio_${_selectedReportType}_${DateTime.now().millisecondsSinceEpoch}.$extension';
+      final fileName =
+          'relatorio_${_selectedReportType}_${DateTime.now().millisecondsSinceEpoch}.$extension';
 
       await Printing.sharePdf(
         bytes: Uint8List.fromList(bytes),
@@ -161,7 +174,13 @@ class _ReportsViewState extends State<ReportsView> {
         builder: (_) => PdfViewerScreen(
           title: rep.metadata.title,
           fileName: 'relatorio_$_selectedReportType.pdf',
-          buildPdf: (format) => ReportPdfBuilder.buildReportPdf(rep, isLandscape: isLandscape),
+          initialPageFormat: isLandscape
+              ? PdfPageFormat.a4.landscape
+              : PdfPageFormat.a4,
+          buildPdf: (format) => ReportPdfBuilder.buildReportPdf(
+            rep,
+            isLandscape: format.width > format.height,
+          ),
         ),
       ),
     );
@@ -170,7 +189,9 @@ class _ReportsViewState extends State<ReportsView> {
   String _formatCellValue(dynamic value, String col) {
     if (value == null) return '';
     final colLower = col.toLowerCase();
-    if (colLower.endsWith('_cents') || colLower.contains('valor') || colLower.contains('preco')) {
+    if (colLower.endsWith('_cents') ||
+        colLower.contains('valor') ||
+        colLower.contains('preco')) {
       if (value is int) {
         return AppFormatters.formatCurrency(value);
       } else if (value is double) {
@@ -180,10 +201,16 @@ class _ReportsViewState extends State<ReportsView> {
     if (value is DateTime) {
       return AppFormatters.formatDateTime(value);
     }
-    if (value is String && (colLower.contains('date') || colLower.contains('data') || colLower.contains('at') || colLower.contains('vencimento'))) {
+    if (value is String &&
+        (colLower.contains('date') ||
+            colLower.contains('data') ||
+            colLower.contains('at') ||
+            colLower.contains('vencimento'))) {
       final parsed = DateTime.tryParse(value);
       if (parsed != null) {
-        return value.contains('T') ? AppFormatters.formatDateTime(parsed) : AppFormatters.formatDate(parsed);
+        return value.contains('T')
+            ? AppFormatters.formatDateTime(parsed)
+            : AppFormatters.formatDate(parsed);
       }
     }
     return value.toString();
@@ -223,7 +250,7 @@ class _ReportsViewState extends State<ReportsView> {
               )
             else if (_errorMessage != null)
               Card(
-                color: Colors.red.shade50,
+                color: adaptiveUiSurface(context, Colors.red.shade50),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
@@ -233,7 +260,10 @@ class _ReportsViewState extends State<ReportsView> {
                       Expanded(
                         child: Text(
                           _errorMessage!,
-                          style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
@@ -273,8 +303,13 @@ class _ReportsViewState extends State<ReportsView> {
               initialValue: _selectedReportType,
               isExpanded: true,
               decoration: InputDecoration(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
               items: _availableReports.map((r) {
                 return DropdownMenuItem(
@@ -306,7 +341,7 @@ class _ReportsViewState extends State<ReportsView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Wrap(
+            ResponsiveFilterBar(
               spacing: 8,
               runSpacing: 8,
               alignment: WrapAlignment.center,
@@ -400,7 +435,11 @@ class _ReportsViewState extends State<ReportsView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(context.l10n.commonSelectedDateLabel(AppFormatters.formatDate(_selectedDate))),
+                  Text(
+                    context.l10n.commonSelectedDateLabel(
+                      AppFormatters.formatDate(_selectedDate),
+                    ),
+                  ),
                   const SizedBox(width: 8),
                   TextButton.icon(
                     icon: const Icon(Icons.calendar_today, size: 16),
@@ -425,10 +464,12 @@ class _ReportsViewState extends State<ReportsView> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(context.l10n.commonPeriodLabel(
-                    AppFormatters.formatDate(_selectedRange.start),
-                    AppFormatters.formatDate(_selectedRange.end),
-                  )),
+                  Text(
+                    context.l10n.commonPeriodLabel(
+                      AppFormatters.formatDate(_selectedRange.start),
+                      AppFormatters.formatDate(_selectedRange.end),
+                    ),
+                  ),
                   const SizedBox(width: 8),
                   TextButton.icon(
                     icon: const Icon(Icons.date_range, size: 16),
@@ -456,7 +497,10 @@ class _ReportsViewState extends State<ReportsView> {
                   DropdownButton<int>(
                     value: _selectedMonth,
                     items: List.generate(12, (i) => i + 1).map((m) {
-                      return DropdownMenuItem(value: m, child: Text(context.l10n.commonMonthNumber(m)));
+                      return DropdownMenuItem(
+                        value: m,
+                        child: Text(context.l10n.commonMonthNumber(m)),
+                      );
                     }).toList(),
                     onChanged: (val) {
                       if (val != null) {
@@ -545,7 +589,9 @@ class _ReportsViewState extends State<ReportsView> {
           ),
           icon: const Icon(Icons.table_chart, color: Colors.green),
           label: Text(_isExporting ? 'Exportando...' : l10n.reportExportXlsx),
-          onPressed: _report == null || _isLoading || _isExporting ? null : () => _exportFile('xlsx'),
+          onPressed: _report == null || _isLoading || _isExporting
+              ? null
+              : () => _exportFile('xlsx'),
         ),
         OutlinedButton.icon(
           style: OutlinedButton.styleFrom(
@@ -553,7 +599,9 @@ class _ReportsViewState extends State<ReportsView> {
           ),
           icon: const Icon(Icons.file_present, color: Colors.blueGrey),
           label: Text(_isExporting ? 'Exportando...' : l10n.reportExportCsv),
-          onPressed: _report == null || _isLoading || _isExporting ? null : () => _exportFile('csv'),
+          onPressed: _report == null || _isLoading || _isExporting
+              ? null
+              : () => _exportFile('csv'),
         ),
       ],
     );
@@ -563,9 +611,11 @@ class _ReportsViewState extends State<ReportsView> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.blue.shade50,
+        color: adaptiveUiSurface(context, Colors.blue.shade50),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.blue.shade200),
+        border: Border.all(
+          color: adaptiveUiSurface(context, Colors.blue.shade200),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -576,18 +626,28 @@ class _ReportsViewState extends State<ReportsView> {
               children: [
                 Text(
                   meta.title,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.blue.shade900),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                    color: adaptiveUiText(context, Colors.blue.shade900),
+                  ),
                 ),
                 Text(
                   'Filtro: ${meta.filterInfo.label} | Total: ${meta.totalRows} registro(s)',
-                  style: const TextStyle(fontSize: 12, color: Colors.black87),
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
                 ),
               ],
             ),
           ),
           Text(
             AppFormatters.formatDateTime(meta.generatedAt),
-            style: const TextStyle(fontSize: 11, color: Colors.black54),
+            style: TextStyle(
+              fontSize: 11,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),
@@ -608,7 +668,10 @@ class _ReportsViewState extends State<ReportsView> {
                 const SizedBox(height: 12),
                 Text(
                   l10n.reportEmpty,
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                  style: TextStyle(
+                    color: adaptiveUiText(context, Colors.grey.shade600),
+                    fontSize: 14,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -626,12 +689,17 @@ class _ReportsViewState extends State<ReportsView> {
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DataTable(
-            headingRowColor: WidgetStateProperty.all(Colors.grey.shade100),
+            headingRowColor: WidgetStateProperty.all(
+              adaptiveUiSurface(context, Colors.grey.shade100),
+            ),
             columns: report.headers.map((h) {
               return DataColumn(
                 label: Text(
                   h,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13,
+                  ),
                 ),
               );
             }).toList(),
@@ -657,7 +725,7 @@ class _ReportsViewState extends State<ReportsView> {
 
     return Card(
       elevation: 2,
-      color: Colors.blueGrey.shade50,
+      color: adaptiveUiSurface(context, Colors.blueGrey.shade50),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -666,11 +734,19 @@ class _ReportsViewState extends State<ReportsView> {
           children: [
             Row(
               children: [
-                Icon(Icons.calculate, color: Colors.blueGrey.shade800, size: 20),
+                Icon(
+                  Icons.calculate,
+                  color: adaptiveUiText(context, Colors.blueGrey.shade800),
+                  size: 20,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   l10n.reportTotals,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.blueGrey.shade900),
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: adaptiveUiText(context, Colors.blueGrey.shade900),
+                  ),
                 ),
               ],
             ),
@@ -685,11 +761,21 @@ class _ReportsViewState extends State<ReportsView> {
                   children: [
                     Text(
                       '${ReportPdfBuilder.formatTotalLabel(entry.key)}: ',
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
                     ),
                     Text(
                       valStr,
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.blueGrey.shade900),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                        color: adaptiveUiText(
+                          context,
+                          Colors.blueGrey.shade900,
+                        ),
+                      ),
                     ),
                   ],
                 );

@@ -1,0 +1,18 @@
+--- a/AGENT_INSTRUCTIONS.md
++++ b/AGENT_INSTRUCTIONS.md
+@@ -2,6 +2,15 @@
+ ## ZM Cesta Básica — Sistema de Gestão de Estoque, Produção, Vendas e Financeiro
+ 
+ Este documento estabelece as **diretrizes e o protocolo operacional obrigatório** para qualquer agente de inteligência artificial ou desenvolvedor automatizado que venha a atuar neste projeto em sessões futuras.
++
++
++> **Escopo atual do cliente — 13/10/2026:** as telas de produção em lote,
++> desmontagem, expedição/conferência, responsáveis e tesouraria estão arquivadas.
++> As descrições dessas fases abaixo são referência histórica e de domínio.
++> O backend e os dados históricos são preservados para os fluxos compartilhados.
++> Consulte [client/_archive/README.md](client/_archive/README.md) antes de restaurar
++> funções. Não reintroduzir menus, relatórios ou serviços exclusivos arquivados
++> sem solicitação do usuário. Montagem na venda e consulta de contas seguem ativas.
+ 
+ ---
+ 

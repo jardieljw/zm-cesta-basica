@@ -1,3 +1,5 @@
+import '../core/api_client.dart';
+import '../widgets/shared/responsive_filter_bar.dart';
 import 'package:flutter/material.dart';
 import '../models/stock_summary.dart';
 import '../models/product.dart';
@@ -7,17 +9,19 @@ import '../l10n/l10n_extension.dart';
 import '../utils/formatters.dart';
 import 'stock_adjustment_dialog.dart';
 import 'inventory_movements_view.dart';
+import '../widgets/shared/approved_app_style.dart';
 
 class InventorySummaryView extends StatefulWidget {
-  const InventorySummaryView({super.key});
+  final ApiClient? apiClient;
+  const InventorySummaryView({super.key, this.apiClient});
 
   @override
   State<InventorySummaryView> createState() => _InventorySummaryViewState();
 }
 
 class _InventorySummaryViewState extends State<InventorySummaryView> {
-  final InventoryService _inventoryService = InventoryService();
-  final ProductService _productService = ProductService();
+  late final InventoryService _inventoryService;
+  late final ProductService _productService;
 
   List<ProductStockSummary> _items = [];
   List<Product> _allProducts = [];
@@ -29,6 +33,8 @@ class _InventorySummaryViewState extends State<InventorySummaryView> {
   @override
   void initState() {
     super.initState();
+    _inventoryService = InventoryService(client: widget.apiClient);
+    _productService = ProductService(client: widget.apiClient);
     _loadData();
   }
 
@@ -81,63 +87,91 @@ class _InventorySummaryViewState extends State<InventorySummaryView> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.inventorySummaryHeaderTitle),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.history),
-            tooltip: l10n.inventorySummaryHistoryTooltip,
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const InventoryMovementsView()),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.tune),
-            tooltip: l10n.inventorySummaryAdjustmentTooltip,
-            onPressed: () => _openAdjustmentDialog(),
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: l10n.commonRefresh,
-            onPressed: _loadData,
-          ),
-        ],
-      ),
+    final pColors = AppPalette.of(context);
+
+    return ApprovedPage(
+      title: l10n.inventorySummaryHeaderTitle,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.history),
+          tooltip: l10n.inventorySummaryHistoryTooltip,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const InventoryMovementsView(),
+              ),
+            );
+          },
+        ),
+        IconButton(
+          icon: const Icon(Icons.tune),
+          tooltip: l10n.inventorySummaryAdjustmentTooltip,
+          onPressed: () => _openAdjustmentDialog(),
+        ),
+        IconButton(
+          icon: const Icon(Icons.refresh),
+          tooltip: l10n.commonRefresh,
+          onPressed: _loadData,
+        ),
+      ],
       body: Column(
         children: [
           // Barra de pesquisa e filtro de estoque minimo
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: l10n.inventorySummarySearchHint,
-                      prefixIcon: const Icon(Icons.search),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                TextField(
+                  decoration: InputDecoration(
+                    hintText: l10n.inventorySummarySearchHint,
+                    prefixIcon: const Icon(Icons.search),
+                    filled: true,
+                    fillColor: pColors.surface,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide(color: pColors.line),
                     ),
-                    onChanged: (val) {
-                      _searchQuery = val.trim();
-                      _loadData();
-                    },
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide(color: pColors.line),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide(color: pColors.accent, width: 1.5),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 16,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 12),
-                FilterChip(
-                  label: Text(l10n.inventorySummaryBelowMinFilter),
-                  selected: _belowMinimumOnly,
-                  selectedColor: Colors.red.shade100,
-                  checkmarkColor: Colors.red.shade800,
-                  onSelected: (val) {
-                    setState(() => _belowMinimumOnly = val);
+                  onChanged: (val) {
+                    _searchQuery = val.trim();
                     _loadData();
                   },
+                ),
+                const SizedBox(height: 8),
+                ResponsiveFilterBar(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    FilterChip(
+                      shape: const StadiumBorder(),
+                      side: BorderSide(
+                        color: _belowMinimumOnly
+                            ? Colors.red.shade400
+                            : pColors.line,
+                      ),
+                      label: Text(l10n.inventorySummaryBelowMinFilter),
+                      selected: _belowMinimumOnly,
+                      selectedColor: Colors.red.withValues(alpha: 0.12),
+                      checkmarkColor: Colors.red.shade700,
+                      onSelected: (val) {
+                        setState(() => _belowMinimumOnly = val);
+                        _loadData();
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -148,106 +182,153 @@ class _InventorySummaryViewState extends State<InventorySummaryView> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _errorMessage != null
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.error_outline, size: 48, color: Colors.red.shade300),
-                            const SizedBox(height: 16),
-                            Text(_errorMessage!),
-                            const SizedBox(height: 16),
-                            ElevatedButton(onPressed: _loadData, child: Text(l10n.commonRefresh)),
-                          ],
+                ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.error_outline,
+                          size: 48,
+                          color: Colors.red.shade300,
                         ),
-                      )
-                    : _items.isEmpty
-                        ? Center(child: Text(l10n.inventorySummaryEmpty))
-                        : RefreshIndicator(
-                            onRefresh: _loadData,
-                            child: ListView.separated(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              itemCount: _items.length,
-                              separatorBuilder: (_, __) => const SizedBox(height: 8),
-                              itemBuilder: (context, index) {
-                                final item = _items[index];
-                                return Card(
-                                  elevation: item.isBelowMinimum ? 2 : 1,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    side: item.isBelowMinimum
-                                        ? BorderSide(color: Colors.red.shade300, width: 1.5)
-                                        : BorderSide.none,
+                        const SizedBox(height: 16),
+                        Text(_errorMessage!),
+                        const SizedBox(height: 16),
+                        ElevatedButton(
+                          onPressed: _loadData,
+                          child: Text(l10n.commonRefresh),
+                        ),
+                      ],
+                    ),
+                  )
+                : _items.isEmpty
+                ? Center(child: Text(l10n.inventorySummaryEmpty))
+                : RefreshIndicator(
+                    onRefresh: _loadData,
+                    child: ListView.separated(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      itemCount: _items.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 10),
+                      itemBuilder: (context, index) {
+                        final item = _items[index];
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: pColors.surface,
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(
+                              color: item.isBelowMinimum
+                                  ? Colors.red.withValues(alpha: 0.4)
+                                  : pColors.line,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(18),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 44,
+                                  height: 44,
+                                  decoration: BoxDecoration(
+                                    color: item.isBelowMinimum
+                                        ? Colors.red.withValues(alpha: 0.12)
+                                        : Colors.green.withValues(alpha: 0.12),
+                                    borderRadius: BorderRadius.circular(13),
                                   ),
-                                  child: ListTile(
-                                    contentPadding: const EdgeInsets.all(16),
-                                    leading: CircleAvatar(
-                                      backgroundColor: item.isBelowMinimum
-                                          ? Colors.red.shade100
-                                          : Colors.green.shade100,
-                                      child: Icon(
-                                        item.isBelowMinimum
-                                            ? Icons.warning_amber_rounded
-                                            : Icons.check_circle_outline,
-                                        color: item.isBelowMinimum
-                                            ? Colors.red.shade800
-                                            : Colors.green.shade800,
-                                      ),
-                                    ),
-                                    title: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            item.productName,
-                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                          ),
-                                        ),
-                                        if (item.isBelowMinimum)
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                            decoration: BoxDecoration(
-                                              color: Colors.red.shade600,
-                                              borderRadius: BorderRadius.circular(8),
-                                            ),
+                                  child: Icon(
+                                    item.isBelowMinimum
+                                        ? Icons.warning_amber_rounded
+                                        : Icons.check_circle_outline,
+                                    color: item.isBelowMinimum
+                                        ? Colors.red.shade700
+                                        : Colors.green.shade700,
+                                    size: 22,
+                                  ),
+                                ),
+                                const SizedBox(width: 14),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
                                             child: Text(
-                                              l10n.inventorySummaryStatusAlert,
+                                              item.productName,
                                               style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.bold,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 16,
                                               ),
                                             ),
                                           ),
-                                      ],
-                                    ),
-                                    subtitle: Padding(
-                                      padding: const EdgeInsets.only(top: 8.0),
-                                      child: Row(
+                                          if (item.isBelowMinimum)
+                                            Container(
+                                              padding: const EdgeInsets.symmetric(
+                                                horizontal: 8,
+                                                vertical: 3,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: Colors.red.withValues(alpha: 0.12),
+                                                borderRadius: BorderRadius.circular(999),
+                                              ),
+                                              child: Text(
+                                                l10n.inventorySummaryStatusAlert,
+                                                style: TextStyle(
+                                                  color: Colors.red.shade700,
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                              ),
+                                            ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Row(
                                         children: [
                                           Text(
-                                            l10n.inventorySummaryCurrentStock(AppFormatters.formatQuantity(item.currentStock, item.baseUnit)),
+                                            l10n.inventorySummaryCurrentStock(
+                                              AppFormatters.formatQuantity(
+                                                item.currentStock,
+                                                item.baseUnit,
+                                              ),
+                                            ),
                                             style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: item.isBelowMinimum ? Colors.red.shade800 : Colors.black87,
+                                              fontWeight: FontWeight.w700,
+                                              color: item.isBelowMinimum
+                                                  ? Colors.red.shade700
+                                                  : pColors.ink,
                                             ),
                                           ),
                                           const SizedBox(width: 16),
                                           Text(
-                                            l10n.inventorySummaryMinStock(AppFormatters.formatQuantity(item.minimumStock, item.baseUnit)),
-                                            style: TextStyle(color: Colors.grey.shade600),
+                                            l10n.inventorySummaryMinStock(
+                                              AppFormatters.formatQuantity(
+                                                item.minimumStock,
+                                                item.baseUnit,
+                                              ),
+                                            ),
+                                            style: TextStyle(
+                                              color: pColors.sub,
+                                            ),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                    trailing: IconButton(
-                                      icon: const Icon(Icons.tune),
-                                      tooltip: l10n.inventorySummaryAdjustmentTooltip,
-                                      onPressed: () => _openAdjustmentDialog(item.productId),
-                                    ),
+                                    ],
                                   ),
-                                );
-                              },
+                                ),
+                                IconButton(
+                                  icon: const Icon(Icons.tune),
+                                  tooltip: l10n.inventorySummaryAdjustmentTooltip,
+                                  onPressed: () =>
+                                      _openAdjustmentDialog(item.productId),
+                                ),
+                              ],
                             ),
                           ),
+                        );
+                      },
+                    ),
+                  ),
           ),
         ],
       ),

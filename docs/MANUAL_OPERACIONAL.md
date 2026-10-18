@@ -1,4 +1,8 @@
 # Manual Operacional do Usuário e da Empresa
+
+Para a documentação detalhada e atual de cada fluxo, consulte o
+[índice das mecânicas do app](README.md), com interface, backend, banco,
+exemplos e limitações. Este manual mantém a visão geral da rotina.
 ## ZM Cesta Básica — Sistema de Gestão de Estoque, Produção, Vendas e Financeiro
 
 **Versão do Documento:** 1.0 (Sistema Homologado - Fases 1 a 9)  
@@ -7,22 +11,17 @@
 
 ---
 
+> **Escopo atual (13/10/2026):** Produção em lote/desmontagem, expedição,
+> responsáveis e a tela de tesouraria foram arquivados. Vendas de balcão,
+> montagem durante a venda, compras, fiado, pagamentos e relatórios financeiros
+> continuam ativos. Consulte [o guia de restauração](../client/_archive/README.md).
+
 ## 1. Visão Geral da Rotina Operacional
 
-O sistema **ZM Cesta Básica** foi desenvolvido sob medida para gerenciar com máxima precisão o ciclo de vida completo de uma empresa de montagem e comercialização de cestas básicas. A operação diária é estruturada em 6 macroetapas coordenadas:
-
-```
-┌────────────────┐     ┌────────────────┐     ┌────────────────┐
-│  1. Compras &  │ ──> │  2. Produção & │ ──> │ 3. Expedição & │
-│   Estoque MP   │     │    Montagem    │     │   Custódia     │
-└────────────────┘     └────────────────┘     └────────────────┘
-                                                       │
-┌────────────────┐     ┌────────────────┐              ▼
-│  6. Tesouraria │ <── │ 5. Conferência │ <── ┌────────────────┐
-│  & Financeiro  │     │   & Acerto     │     │  4. Vendas &   │
-└────────────────┘     └────────────────┘     │    Rotas       │
-                                              └────────────────┘
-```
+Compras repõem os insumos. Vendas usam cestas disponíveis na loja ou montam
+as cestas durante a própria venda. Fiados, recebimentos e contas a pagar
+alimentam o financeiro e os relatórios. A montagem e a venda continuam
+preservando a regra de não descontar ingredientes duas vezes.
 
 ---
 
@@ -33,7 +32,7 @@ O sistema **ZM Cesta Básica** foi desenvolvido sob medida para gerenciar com m�
   - `G` (Gramas): Para itens pesáveis secos (arroz, feijão, açúcar, café, farinha, sal).
   - `ML` (Mililitros): Para líquidos (óleo de soja, detergente, vinagre, desinfetante).
   - `UNIT` (Unidade): Para itens unitários indivisíveis (sabonete, esponja de aço, pasta de dente, embalagens plásticas, caixas de papelão).
-- **Estoque Mínimo:** Definido na unidade-base. Quando o saldo atinge ou fica abaixo deste valor, o item é automaticamente destacado em vermelho no **Dashboard** e no relatório de reposição.
+- **Estoque Mínimo:** Definido na unidade-base. As consultas indicam produto abaixo do mínimo quando o saldo é menor que esse valor; igualdade não é inferior ao mínimo. Ver [Estoque e ajustes](ESTOQUE_E_AJUSTES.md).
 
 ### 2.2. Embalagens Comerciais e Fatores de Conversão
 Na compra, fornecedores vendem fardos, caixas e sacos, enquanto a montagem consome unidades ou gramas. O sistema elimina erros manuais:
@@ -67,87 +66,21 @@ $$\text{CMPM}_{\text{novo}} = \frac{(\text{Estoque Atual} \times \text{CMPM Anti
 
 ---
 
-## 5. Produção, Montagem e Triagem de Desmontagem
-
-### 5.1. Ordem de Montagem (Produção em Lote)
-1. Acesse o menu **Produção** e selecione o tipo de cesta a produzir.
-2. Informe a quantidade de cestas a montar. O sistema valida se há saldo suficiente de todos os ingredientes no armazém.
-3. Ao confirmar, o sistema executa uma **transação atômica** (`BEGIN IMMEDIATE`):
-   - Dá baixa imediata de todos os insumos consumidos.
-   - Dá entrada das cestas prontas no estoque vendável da loja (`STORE`).
-   - Apura o custo real total dos insumos e congela de forma imutável o **Custo Unitário da Cesta** (`unit_cost_cents`) para fins de apuração de CMV na DRE.
-
-### 5.2. Desmontagem e Triagem Física de Insumos
-Caso um lote precise ser desmanchado (ex.: cancelamento de pedido ou avaria de embalagem externa):
-- O operador realiza a triagem item por item.
-- Itens intactos retornam formalmente ao estoque vendável (`STORE`).
-- Itens danificados (ex.: saco de açúcar furado) são baixados como perda de montagem (`ASSEMBLY_LOSS`) com justificativa obrigatória, sem gerar saldo falso no sistema.
-
----
-
-## 6. Expedição Física e Custódia de Cestas (`STORE` vs `TRANSIT`)
-
-### 6.1. Cadastro de Responsáveis por Rotas
-No galpão, as cestas saem para entrega sob responsabilidade de entregadores parceiros ou motoristas internos. Eles são cadastrados no menu **Expedição -> Responsáveis** com nome e telefone (sem necessidade de criação de logins ou senhas).
-
-### 6.2. Registro de Saída Física (Romaneio de Expedição)
-1. Antes do caminhão/van sair, registre a saída no menu **Expedição -> Nova Saída**.
-2. Selecione a pessoa responsável e a quantidade de cada tipo de cesta embarcada.
-3. O sistema realiza uma **transferência de custódia contábil**:
-   - Saldo no galpão da loja (`STORE`): **reduzido**.
-   - Saldo em trânsito sob custódia do responsável (`TRANSIT`): **aumentado**.
-
----
-
 ## 7. Registro de Vendas e Prevenção de Duplo Desconto de Estoque
 
 ### 7.1. Vendas de Balcão (Loja Física)
 - Vendas feitas diretamente no galpão (`DIRECT_STORE`) dão baixa nas cestas prontas do estoque da loja (`STORE`).
 
-### 7.2. Vendas em Rota Comercial (Entregadores)
-- Quando o entregador vende uma cesta durante a rota (`COMMERCIAL_ROUTE`), a venda é vinculada ao responsável e à saída física (`dispatch_id`).
-- **Blindagem do Sistema:** A baixa de estoque incide **exclusivamente sobre o saldo em trânsito (`TRANSIT`)** sob custódia daquele motorista. O estoque da loja não sofre nenhum desconto duplo.
-
----
-
-## 8. Conferência de Retorno e Equação de 4 Termos
-
-Ao final do dia ou término da rota, o entregador retorna ao galpão para prestar contas. O sistema aplica a **Equação Canônica de 4 Termos**:
-
-$$\text{Quantidade Retirada} = \text{Vendidas} + \text{Devolvidas Intactas} + \text{Avariadas/Perdidas} + \text{Ainda em Custódia}$$
-
-1. **Vendidas:** Cestas registradas no módulo de vendas durante a rota.
-2. **Devolvidas Intactas:** Cestas perfeitas que retornam ao caminhão e são recolocadas na prateleira do galpão (crédito em `STORE` e débito em `TRANSIT`).
-3. **Avariadas ou Perdidas:** Cestas danificadas no transporte (baixa de `TRANSIT` como `DISPATCH_LOSS` com justificativa obrigatória). **Proibido retorno automático ao estoque vendável**.
-4. **Itens que Permanecem sob Custódia:** Cestas que permanecerão na van para entrega na manhã seguinte continuam sob responsabilidade do motorista.
-5. **Divergências:** Se a soma não bater com as retiradas, o sistema registra formalmente a diferença como `PENDING_INVESTIGATION`.
-
----
-
-## 9. Acerto Financeiro da Rota e Segregação de Meios de Pagamento
-
-Para evitar cobrar do motorista valores que ele não recebeu em mãos:
-
-### 9.1. Segregação Mandatória
-- **Dinheiro Físico em Mãos:** Papel-moeda recebido de vendas à vista ou de cobranças de fiados antigos na rota. Este valor **deve ser conferido e entregue fisicamente ao caixa da empresa**.
-- **Pagamentos Recebidos Diretamente na Conta da Empresa (Pix / Cartão da Loja):** Quando o cliente faz Pix para o CNPJ da ZM ou passa o cartão na maquininha fixa, o valor entra diretamente na conta bancária da empresa. **O sistema não cobra esse valor do motorista**.
-- **Despesas Autorizadas Abatidas:** Gastos com combustível ou pedágio autorizados pela gerência são abatidos do dinheiro físico a entregar, mediante comprovante e justificativa.
-
-### 9.2. Fórmula do Repasse em Dinheiro
-$$\text{Dinheiro Físico a Entregar} = \text{Vendas à Vista em Dinheiro} + \text{Cobranças de Fiado em Dinheiro} - \text{Despesas de Viagem}$$
-
----
-
 ## 10. Vendas a Prazo (Fiado), Cobranças e Quitações
 
 1. O cliente pode ser cadastrado previamente com limite de crédito e dados de contato.
-2. Ao registrar uma venda a prazo (`INSTALLMENT` ou `CREDIT_TERM`), o sistema gera títulos em **Contas a Receber**.
+2. Ao registrar uma venda a prazo (`CREDIT_TERM`), o sistema gera um título em **Contas a Receber**. Recebimentos parciais são registrados nesse título; ver [Contas a receber](CONTAS_A_RECEBER.md).
 3. O cliente pode amortizar o valor em parcelas ou valor avulso. Cada pagamento registra o meio utilizado e abate o saldo devedor.
 4. Quando o saldo zera, o título é marcado automaticamente como `PAID` (Quitado).
 
 ---
 
-## 11. Contas a Pagar e Livro-Caixa da Tesouraria
+## 11. Contas a Pagar e Confirmações de Pagamento
 
 1. **Contas a Pagar:** Registro de obrigações com fornecedores de insumos e contas fixas (aluguel, energia, água, internet, manutenção).
 2. **Classificação entre Empresa e Sócios:**
@@ -161,17 +94,38 @@ $$\text{Dinheiro Físico a Entregar} = \text{Vendas à Vista em Dinheiro} + \tex
 
 ### 12.1. Dashboard Operacional e Financeiro
 Apresenta em tempo real:
-- Total de cestas montadas e vendidas no dia/mês.
+- Total de cestas vendidas no dia/mês.
 - Alertas de produtos abaixo do estoque mínimo.
-- Saldo atual e saldo projetado da tesouraria (considerando contas a pagar e receber nos próximos 30 dias).
-- Painel de motoristas com repasses de dinheiro pendentes.
+- Recebimentos e pagamentos confirmados, pendências e vencimentos.
+- Custo das cestas vendidas, lucro bruto e resultado gerencial após outras despesas pagas.
+- Compras confirmadas no período, pagas ou a prazo.
 
 ### 12.2. Exportação de Planilhas e Relatórios Preenchidos
-Todos os 8 relatórios do sistema podem ser visualizados na tela, baixados em formato de planilha digital (CSV e XLSX) ou gerados em PDF paginado formatado para papel A4.
+Os 6 relatórios ativos do aplicativo podem ser visualizados na tela, baixados em formato de planilha digital (CSV e XLSX) ou gerados em PDF paginado formatado para papel A4.
 
 ### 12.3. Formulários em Branco para Preenchimento Manual à Caneta
-Para facilitar o trabalho no pátio onde não há computadores disponíveis, o sistema disponibiliza 4 formulários A4 padronizados com linhas largas (8 a 10 mm de altura) para escrita à mão:
+Para facilitar o trabalho no pátio onde não há computadores disponíveis, o sistema disponibiliza 3 formulários A4 padronizados com linhas largas (8 a 10 mm de altura) para escrita à mão:
 - **Formulário A:** Vendas Fiadas, Pagamentos e Quitação.
 - **Formulário B:** Contas a Pagar e Despesas.
-- **Formulário C:** Saídas Físicas e Romaneio de Conferência Diária.
 - **Formulário D:** Balanço Físico de Estoque (Inventário / Prancheta).
+
+### Controle financeiro simplificado
+
+Ao confirmar um recebimento de fiado ou um pagamento de obrigação, informar
+valor e forma de pagamento. Não é necessário selecionar uma conta com saldo.
+As confirmações aparecem no dashboard; pagamentos parciais mantêm o restante
+pendente. Estornos também são considerados, sem apagar registros históricos.
+
+O valor das vendas inclui vendas a prazo ainda não recebidas. O lucro bruto é
+esse valor menos o custo das cestas vendidas. O resultado gerencial desconta as
+outras despesas pagas no período. Compras de estoque vinculadas não são
+novamente descontadas do lucro bruto. A diferença entre recebido e pago é uma
+comparação do período, não dinheiro depositado no aplicativo.
+
+### Catálogo e formas de compra
+
+Produtos nunca utilizados podem ser excluídos definitivamente pela ação própria
+no catálogo. Produtos com vínculos ou histórico devem ser preservados e, quando
+cabível, inativados. A embalagem comercial é a forma de compra, como pacote, saco
+ou caixa; quantidade e preço se referem à forma selecionada. Consulte
+[Produtos e formas de compra](PRODUTOS_E_FORMAS_DE_COMPRA.md) para exemplos completos.

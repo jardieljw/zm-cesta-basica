@@ -29,10 +29,12 @@ class SaleService {
       queryParams.add('payment_mode=${Uri.encodeComponent(paymentMode)}');
     }
     if (startDate != null) {
-      queryParams.add('start_date=${Uri.encodeComponent(startDate.toIso8601String())}');
+      queryParams.add(
+          'start_date=${Uri.encodeComponent(startDate.toIso8601String())}');
     }
     if (endDate != null) {
-      queryParams.add('end_date=${Uri.encodeComponent(endDate.toIso8601String())}');
+      queryParams
+          .add('end_date=${Uri.encodeComponent(endDate.toIso8601String())}');
     }
 
     final query = '?${queryParams.join('&')}';
@@ -58,10 +60,12 @@ class SaleService {
     return Sale.fromJson(response as Map<String, dynamic>);
   }
 
-  Future<Sale> cancelSale(String id, String reason, {String? idempotencyKey}) async {
+  Future<Sale> cancelSale(String id, String reason,
+      {String? idempotencyKey,
+      List<String> unassembledItemIds = const []}) async {
     final response = await _client.post(
       '/api/v1/sales/$id/cancel',
-      body: {'reason': reason},
+      body: {'reason': reason, 'unassembled_item_ids': unassembledItemIds},
       idempotencyKey: idempotencyKey,
     );
     return Sale.fromJson(response as Map<String, dynamic>);

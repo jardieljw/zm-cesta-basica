@@ -1,0 +1,29 @@
+--- a/client/lib/views/dashboard_view.dart
++++ b/client/lib/views/dashboard_view.dart
+@@ -738,8 +738,6 @@
+                 columnWidths: const {
+                   0: FlexColumnWidth(2),
+                   1: FlexColumnWidth(1),
+-                  2: FlexColumnWidth(1),
+-                  3: FlexColumnWidth(1),
+                 },
+                 children: [
+                   TableRow(
+@@ -747,8 +745,6 @@
+                     children: [
+                       Padding(padding: const EdgeInsets.all(8), child: Text(context.l10n.dashboardStockColBasket, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                       Padding(padding: const EdgeInsets.all(8), child: Text(context.l10n.dashboardStockColStore, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+-                      Padding(padding: const EdgeInsets.all(8), child: Text(context.l10n.dashboardStockColTransit, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+-                      Padding(padding: const EdgeInsets.all(8), child: Text(context.l10n.dashboardStockColTotal, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                     ],
+                   ),
+                   ...inv.basketStock.map((b) {
+@@ -756,8 +752,6 @@
+                       children: [
+                         Padding(padding: const EdgeInsets.all(8), child: Text(b.name, style: const TextStyle(fontSize: 12))),
+                         Padding(padding: const EdgeInsets.all(8), child: Text('${b.stockStore}', style: const TextStyle(fontSize: 12))),
+-                        Padding(padding: const EdgeInsets.all(8), child: Text('${b.stockTransit}', style: const TextStyle(fontSize: 12))),
+-                        Padding(padding: const EdgeInsets.all(8), child: Text('${b.totalStock}', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold))),
+                       ],
+                     );
+                   }),

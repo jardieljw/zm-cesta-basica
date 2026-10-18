@@ -74,7 +74,8 @@ def serialize_batch(b: ProductionBatch, db: Session) -> ProductionBatchResponse:
         is_custom=b.is_custom,
         is_direct_sale=b.is_direct_sale,
         custom_description=b.custom_description,
-        occurred_at=b.occurred_at,
+        occurred_at=(b.occurred_at.replace(tzinfo=datetime.timezone.utc)
+                     if b.occurred_at.tzinfo is None else b.occurred_at.astimezone(datetime.timezone.utc)),
         unit_cost_cents=b.unit_cost_cents,
         total_cost_cents=b.total_cost_cents,
         canceled_at=b.canceled_at,
@@ -225,11 +226,16 @@ def create_batch(
         response_model = serialize_batch(loaded, session)
         return status.HTTP_201_CREATED, response_model.model_dump(mode="json")
 
+    payload = data.model_dump(mode="json")
+    # Retain the legacy request hash when this new, optional guard is omitted.
+    if data.expected_recipe_version_number is None:
+        payload.pop("expected_recipe_version_number")
+
     result = process_transactional_idempotency(
         db=db,
         idempotency_key=idempotency_key,
         operation_type="PRODUCTION_BATCH",
-        payload=data.model_dump(mode="json"),
+        payload=payload,
         business_callback=_execute,
     )
     return result.to_json_dict()

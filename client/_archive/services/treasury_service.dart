@@ -1,0 +1,143 @@
+import '../../lib/core/api_client.dart';
+import '../models/financial_account.dart';
+import '../models/cash_flow_entry.dart';
+
+class TreasuryService {
+  final ApiClient _client;
+
+  TreasuryService({ApiClient? client}) : _client = client ?? ApiClient();
+
+  // ==================== FINANCIAL ACCOUNTS ====================
+
+  Future<List<FinancialAccount>> getAccounts({
+    bool? isActive,
+    String? accountType,
+  }) async {
+    final params = <String>[];
+    if (isActive != null) params.add('is_active=$isActive');
+    if (accountType != null && accountType.isNotEmpty) {
+      params.add('account_type=${Uri.encodeComponent(accountType)}');
+    }
+    final query = params.isNotEmpty ? '?${params.join('&')}' : '';
+    final response = await _client.get('/api/v1/treasury/accounts$query');
+    final list = response as List<dynamic>? ?? [];
+    return list.map((j) => FinancialAccount.fromJson(j as Map<String, dynamic>)).toList();
+  }
+
+  Future<FinancialAccount> getAccount(String id) async {
+    final response = await _client.get('/api/v1/treasury/accounts/$id');
+    return FinancialAccount.fromJson(response as Map<String, dynamic>);
+  }
+
+  Future<FinancialAccount> createAccount(
+    FinancialAccountCreate data, {
+    String? idempotencyKey,
+  }) async {
+    final response = await _client.post(
+      '/api/v1/treasury/accounts',
+      body: data.toJson(),
+      idempotencyKey: idempotencyKey,
+    );
+    return FinancialAccount.fromJson(response as Map<String, dynamic>);
+  }
+
+  Future<FinancialAccount> updateAccount(
+    String id,
+    FinancialAccountUpdate data,
+  ) async {
+    final response = await _client.patch(
+      '/api/v1/treasury/accounts/$id',
+      body: data.toJson(),
+    );
+    return FinancialAccount.fromJson(response as Map<String, dynamic>);
+  }
+
+  // ==================== CASH FLOW ENTRIES ====================
+
+  Future<List<CashFlowEntry>> getEntries({
+    String? accountId,
+    String? entryType,
+    String? category,
+    String? nature,
+    String? sourceType,
+    DateTime? startDate,
+    DateTime? endDate,
+    int limit = 100,
+    int offset = 0,
+  }) async {
+    final params = <String>[
+      'limit=$limit',
+      'offset=$offset',
+    ];
+    if (accountId != null && accountId.isNotEmpty) {
+      params.add('account_id=${Uri.encodeComponent(accountId)}');
+    }
+    if (entryType != null && entryType.isNotEmpty) {
+      params.add('entry_type=${Uri.encodeComponent(entryType)}');
+    }
+    if (category != null && category.isNotEmpty) {
+      params.add('category=${Uri.encodeComponent(category)}');
+    }
+    if (nature != null && nature.isNotEmpty) {
+      params.add('nature=${Uri.encodeComponent(nature)}');
+    }
+    if (sourceType != null && sourceType.isNotEmpty) {
+      params.add('source_type=${Uri.encodeComponent(sourceType)}');
+    }
+    if (startDate != null) {
+      params.add('start_date=${Uri.encodeComponent(startDate.toIso8601String())}');
+    }
+    if (endDate != null) {
+      params.add('end_date=${Uri.encodeComponent(endDate.toIso8601String())}');
+    }
+
+    final query = '?${params.join('&')}';
+    final response = await _client.get('/api/v1/treasury/entries$query');
+    final list = response as List<dynamic>? ?? [];
+    return list.map((j) => CashFlowEntry.fromJson(j as Map<String, dynamic>)).toList();
+  }
+
+  Future<CashFlowEntry> createEntry(
+    CashFlowEntryCreate data, {
+    String? idempotencyKey,
+  }) async {
+    final response = await _client.post(
+      '/api/v1/treasury/entries',
+      body: data.toJson(),
+      idempotencyKey: idempotencyKey,
+    );
+    return CashFlowEntry.fromJson(response as Map<String, dynamic>);
+  }
+
+  // ==================== TRANSFERS ====================
+
+  Future<FinancialTransfer> createTransfer(
+    FinancialTransferCreate data, {
+    String? idempotencyKey,
+  }) async {
+    final response = await _client.post(
+      '/api/v1/treasury/transfers',
+      body: data.toJson(),
+      idempotencyKey: idempotencyKey,
+    );
+    return FinancialTransfer.fromJson(response as Map<String, dynamic>);
+  }
+
+  // ==================== TREASURY SUMMARY ====================
+
+  Future<TreasurySummary> getSummary({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    final params = <String>[];
+    if (startDate != null) {
+      params.add('start_date=${Uri.encodeComponent(startDate.toIso8601String())}');
+    }
+    if (endDate != null) {
+      params.add('end_date=${Uri.encodeComponent(endDate.toIso8601String())}');
+    }
+    final query = params.isNotEmpty ? '?${params.join('&')}' : '';
+    final response = await _client.get('/api/v1/treasury/summary$query');
+    return TreasurySummary.fromJson(response as Map<String, dynamic>);
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-16",
+  "decision": "FE-049",
+  "phase": "planning_and_preview",
+  "productionImplementation": false,
+  "source": {
+    "path": "docs/referencias_frontend/rodada-tipografia-2026-10-16/hierarquia-integrada-zm.html",
+    "sha256": "01f28ece47a54fdd2f989caf351550ff5d6742b6d520799ec97b79e2b4abd071",
+    "decision": "FE-048",
+    "selectedVariant": "Leitura recuperada"
+  },
+  "candidate": {
+    "path": "docs/referencias_frontend/rodada-organizacao-2026-10-16/organizacao-integrada-zm.html",
+    "sha256": "613beab1e444448ba69c46dc26fbc4ab1072661915c1aa695a8f6b53314a6a6d",
+    "rootId": "zm-organization-demo"
+  },
+  "explicitUserDecisions": [
+    "Recovered reading selected; oriented default rejected for excessive size/weight",
+    "Integrated organization appreciated",
+    "Business result moved from Financeiro to sales/customer area",
+    "Central navigation name chosen: Negócio",
+    "Short essential home with Day/Week/Month overview"
+  ],
+  "intentionalChanges": [
+    "Single recovered reading; no typography comparison",
+    "Navigation label Vendas becomes Negócio; internal route key stays vendas",
+    "Home-specific spacing/height compaction; no font reduction",
+    "Home/business summary period shared; current urgency/stock remain independent",
+    "Result formula/quality explanation moved to Negócio with explicit as-of date",
+    "Financial summary has separate current deadline groups for both pay and receive",
+    "Period restored without a state write"
+  ],
+  "preserved": [
+    "First structural stylesheet after root ID substitution",
+    "Navigation column 140, radius 12, spacing and alignment",
+    "All existing destination paths and per-area position",
+    "Field groups 20, field radius 24, panel radius 32, accent default #2866ae",
+    "Integral/partial, hidden amount exclusion, calendar, review/edit and module-specific method keys"
+  ],
+  "proposedDetails": [
+    "Default summary period is week",
+    "Exact Day/Week illustrative sales/cost/expense fixtures",
+    "Compact home composition and current-attention wording"
+  ],
+  "verification": {
+    "report": "organizacao-verificacao.json",
+    "engines": [
+      "edge",
+      "webkit"
+    ],
+    "checksPerEngine": 5,
+    "layouts": 180,
+    "existingSuiteHealth": {
+      "backend": 363,
+      "flutter": 238
+    }
+  },
+  "limits": [
+    "Local HTML demo only; no real API/company database",
+    "Content scaling only, not global/native accessibility certification",
+    "Home fits tested usual widths/reference height; smaller heights/larger text/content can scroll",
+    "Original helper with simulated provider; real host panel not automated",
+    "No Flutter/API implementation, deployment or Git commit"
+  ]
+}

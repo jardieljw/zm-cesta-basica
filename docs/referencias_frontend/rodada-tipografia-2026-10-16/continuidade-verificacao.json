@@ -1,0 +1,28 @@
+{
+  "date": "2026-10-16",
+  "results": [
+    {
+      "engine": "edge",
+      "result": "passed",
+      "checks": [
+        "Restauração sem gravação extra, texto 150% e rascunho sincronizado",
+        "Helper original continua funcionando após restauração, com escala 200% e aparência sem perda de rascunho",
+        "Receber integral usa códigos próprios, quita Ana em 1250 e conserva Bruno com saldo 700"
+      ],
+      "javascriptErrors": [],
+      "limit": "Provedor de anotações simulado; sem painel real do usuário ou API."
+    },
+    {
+      "engine": "webkit",
+      "result": "passed",
+      "checks": [
+        "Restauração sem gravação extra, texto 150% e rascunho sincronizado",
+        "Helper original continua funcionando após restauração, com escala 200% e aparência sem perda de rascunho",
+        "Receber integral usa códigos próprios, quita Ana em 1250 e conserva Bruno com saldo 700"
+      ],
+      "javascriptErrors": [],
+      "limit": "Provedor de anotações simulado; sem painel real do usuário ou API."
+    }
+  ],
+  "sourceSha256": "01f28ece47a54fdd2f989caf351550ff5d6742b6d520799ec97b79e2b4abd071"
+}

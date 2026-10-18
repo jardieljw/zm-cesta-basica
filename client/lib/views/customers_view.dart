@@ -1,3 +1,6 @@
+import '../core/api_client.dart';
+import '../widgets/shared/responsive_filter_bar.dart';
+import '../utils/scroll_layout.dart';
 import 'package:flutter/material.dart';
 import '../models/customer.dart';
 import '../services/customer_service.dart';
@@ -6,16 +9,18 @@ import '../utils/formatters.dart';
 import '../utils/api_error_mapper.dart';
 import 'customer_form_view.dart';
 import 'customer_statement_dialog.dart';
+import '../widgets/shared/approved_app_style.dart';
 
 class CustomersView extends StatefulWidget {
-  const CustomersView({super.key});
+  final ApiClient? apiClient;
+  const CustomersView({super.key, this.apiClient});
 
   @override
   State<CustomersView> createState() => _CustomersViewState();
 }
 
 class _CustomersViewState extends State<CustomersView> {
-  final CustomerService _customerService = CustomerService();
+  late final CustomerService _customerService;
 
   List<Customer> _customers = [];
   bool _isLoading = true;
@@ -26,6 +31,7 @@ class _CustomersViewState extends State<CustomersView> {
   @override
   void initState() {
     super.initState();
+    _customerService = CustomerService(client: widget.apiClient);
     _loadCustomers();
   }
 
@@ -68,7 +74,10 @@ class _CustomersViewState extends State<CustomersView> {
             ElevatedButton(
               onPressed: () => Navigator.pop(ctx, true),
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: Text(l10n.commonConfirm, style: const TextStyle(color: Colors.white)),
+              child: Text(
+                l10n.commonConfirm,
+                style: const TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),
@@ -94,9 +103,9 @@ class _CustomersViewState extends State<CustomersView> {
       try {
         await _customerService.updateCustomer(customer.id, {'is_active': true});
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.customerSavedSuccess)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.customerSavedSuccess)));
           _loadCustomers();
         }
       } catch (e) {
@@ -112,12 +121,21 @@ class _CustomersViewState extends State<CustomersView> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final pColors = AppPalette.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.customersTitle),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
+    return ApprovedPage(
+      title: l10n.customersTitle,
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.refresh),
+          tooltip: l10n.commonRefresh,
+          onPressed: _loadCustomers,
+        ),
+      ],
+      floatingActionButton: FloatingActionButton(
+        shape: const StadiumBorder(),
+        backgroundColor: pColors.accent,
+        foregroundColor: pColors.accentInk,
         onPressed: () async {
           final res = await Navigator.push<bool>(
             context,
@@ -125,42 +143,90 @@ class _CustomersViewState extends State<CustomersView> {
           );
           if (res == true) _loadCustomers();
         },
-        icon: const Icon(Icons.person_add),
-        label: Text(l10n.customerNew),
+        tooltip: l10n.customerNew,
+        child: const Icon(Icons.person_add),
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 TextField(
                   decoration: InputDecoration(
                     hintText: '${l10n.commonSearch}...',
                     prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    filled: true,
+                    fillColor: pColors.surface,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 18,
+                      vertical: 14,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide(color: pColors.line),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(24),
+                      borderSide: BorderSide(color: pColors.line),
+                    ),
                   ),
                   onChanged: (val) {
                     _searchQuery = val.trim();
                     _loadCustomers();
                   },
                 ),
-                const SizedBox(height: 12),
-                Row(
+                const SizedBox(height: 10),
+                ResponsiveFilterBar(
                   children: [
                     FilterChip(
                       label: Text(l10n.customerActive),
                       selected: _activeFilter == true,
+                      selectedColor: pColors.soft,
+                      backgroundColor: pColors.surface,
+                      labelStyle: TextStyle(
+                        color: _activeFilter == true
+                            ? pColors.accent
+                            : pColors.ink,
+                        fontWeight: _activeFilter == true
+                            ? FontWeight.w600
+                            : FontWeight.w400,
+                        fontSize: 13,
+                      ),
+                      shape: StadiumBorder(
+                        side: BorderSide(
+                          color: _activeFilter == true
+                              ? pColors.accent
+                              : pColors.line,
+                        ),
+                      ),
                       onSelected: (sel) {
                         setState(() => _activeFilter = sel ? true : null);
                         _loadCustomers();
                       },
                     ),
-                    const SizedBox(width: 8),
                     FilterChip(
                       label: Text(l10n.customerInactive),
                       selected: _activeFilter == false,
+                      selectedColor: pColors.soft,
+                      backgroundColor: pColors.surface,
+                      labelStyle: TextStyle(
+                        color: _activeFilter == false
+                            ? pColors.accent
+                            : pColors.ink,
+                        fontWeight: _activeFilter == false
+                            ? FontWeight.w600
+                            : FontWeight.w400,
+                        fontSize: 13,
+                      ),
+                      shape: StadiumBorder(
+                        side: BorderSide(
+                          color: _activeFilter == false
+                              ? pColors.accent
+                              : pColors.line,
+                        ),
+                      ),
                       onSelected: (sel) {
                         setState(() => _activeFilter = sel ? false : null);
                         _loadCustomers();
@@ -175,34 +241,44 @@ class _CustomersViewState extends State<CustomersView> {
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _errorMessage != null
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(_errorMessage!, style: const TextStyle(color: Colors.red)),
-                            const SizedBox(height: 12),
-                            ElevatedButton(
-                              onPressed: _loadCustomers,
-                              child: Text(l10n.commonRefresh),
-                            ),
-                          ],
-                        ),
-                      )
-                    : _customers.isEmpty
-                        ? Center(
-                            child: Text(
-                              l10n.customersEmpty,
-                              style: const TextStyle(color: Colors.black54),
-                            ),
-                          )
-                        : ListView.builder(
-                            padding: const EdgeInsets.only(left: 16, right: 16, bottom: 80),
-                            itemCount: _customers.length,
-                            itemBuilder: (context, index) {
-                              final customer = _customers[index];
-                              return _buildCustomerCard(context, customer);
-                            },
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _errorMessage!,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Colors.red),
                           ),
+                          const SizedBox(height: 12),
+                          ApprovedSecondaryButton(
+                            text: l10n.commonRefresh,
+                            onPressed: _loadCustomers,
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : _customers.isEmpty
+                ? Center(
+                    child: Text(
+                      l10n.customersEmpty,
+                      style: TextStyle(
+                        color: pColors.sub,
+                        fontSize: 15,
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    padding: fabScrollPadding(context, top: 0, extended: false),
+                    itemCount: _customers.length,
+                    itemBuilder: (context, index) {
+                      final customer = _customers[index];
+                      return _buildCustomerCard(context, customer);
+                    },
+                  ),
           ),
         ],
       ),
@@ -211,24 +287,36 @@ class _CustomersViewState extends State<CustomersView> {
 
   Widget _buildCustomerCard(BuildContext context, Customer customer) {
     final l10n = context.l10n;
+    final pColors = AppPalette.of(context);
     final hasDebt = customer.currentDebtCents > 0;
 
     return Card(
-      elevation: 2,
+      elevation: 0,
       margin: const EdgeInsets.only(bottom: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: pColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(24),
+        side: BorderSide(color: pColors.line),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(18.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  backgroundColor: customer.isActive ? Colors.blue.shade100 : Colors.grey.shade200,
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: customer.isActive ? pColors.soft : pColors.page,
+                    borderRadius: BorderRadius.circular(13),
+                    border: Border.all(color: pColors.line),
+                  ),
                   child: Icon(
                     Icons.person,
-                    color: customer.isActive ? Colors.blue.shade800 : Colors.grey.shade600,
+                    size: 20,
+                    color: customer.isActive ? pColors.accent : pColors.sub,
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -238,31 +326,58 @@ class _CustomersViewState extends State<CustomersView> {
                     children: [
                       Text(
                         customer.name,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: pColors.ink,
+                        ),
                       ),
                       if (customer.documentCpfCnpj != null)
                         Text(
                           customer.documentCpfCnpj!,
-                          style: const TextStyle(fontSize: 13, color: Colors.black54),
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: pColors.sub,
+                          ),
                         ),
                     ],
                   ),
                 ),
                 if (!customer.isActive)
-                  Chip(
-                    label: Text(l10n.customerInactive, style: const TextStyle(fontSize: 11)),
-                    backgroundColor: Colors.grey.shade200,
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: pColors.warnFill,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      l10n.customerInactive,
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: pColors.warn,
+                      ),
+                    ),
                   ),
               ],
             ),
-            const Divider(height: 24),
+            Divider(height: 24, color: pColors.line),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(l10n.customerCurrentDebt, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                    Text(
+                      l10n.customerCurrentDebt,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: pColors.sub,
+                      ),
+                    ),
                     const SizedBox(height: 2),
                     Text(
                       AppFormatters.formatCurrency(customer.currentDebtCents),
@@ -277,30 +392,49 @@ class _CustomersViewState extends State<CustomersView> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text(l10n.customerCreditLimit, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+                    Text(
+                      l10n.customerCreditLimit,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: pColors.sub,
+                      ),
+                    ),
                     const SizedBox(height: 2),
                     Text(
                       customer.creditLimitCents > 0
-                          ? AppFormatters.formatCurrency(customer.creditLimitCents)
+                          ? AppFormatters.formatCurrency(
+                              customer.creditLimitCents,
+                            )
                           : l10n.customerCreditLimitUnlimited,
-                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        color: pColors.ink,
+                      ),
                     ),
                   ],
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 14),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton.icon(
+                OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    shape: const StadiumBorder(),
+                    side: BorderSide(color: pColors.line),
+                    foregroundColor: pColors.ink,
+                    visualDensity: VisualDensity.compact,
+                  ),
                   onPressed: () {
                     showDialog(
                       context: context,
-                      builder: (_) => CustomerStatementDialog(customer: customer),
+                      builder: (_) =>
+                          CustomerStatementDialog(customer: customer),
                     );
                   },
-                  icon: const Icon(Icons.receipt_long, size: 18),
+                  icon: const Icon(Icons.receipt_long, size: 16),
                   label: Text(l10n.customerStatement),
                 ),
                 const SizedBox(width: 8),
@@ -310,17 +444,25 @@ class _CustomersViewState extends State<CustomersView> {
                   onPressed: () async {
                     final res = await Navigator.push<bool>(
                       context,
-                      MaterialPageRoute(builder: (_) => CustomerFormView(customer: customer)),
+                      MaterialPageRoute(
+                        builder: (_) => CustomerFormView(customer: customer),
+                      ),
                     );
                     if (res == true) _loadCustomers();
                   },
                 ),
                 IconButton(
-                  tooltip: customer.isActive ? l10n.customerInactivate : l10n.customerActive,
+                  tooltip: customer.isActive
+                      ? l10n.customerInactivate
+                      : l10n.customerActive,
                   icon: Icon(
-                    customer.isActive ? Icons.block : Icons.check_circle_outline,
+                    customer.isActive
+                        ? Icons.block
+                        : Icons.check_circle_outline,
                     size: 20,
-                    color: customer.isActive ? Colors.red.shade400 : Colors.green.shade600,
+                    color: customer.isActive
+                        ? Colors.red.shade400
+                        : Colors.green.shade600,
                   ),
                   onPressed: () => _toggleCustomerActive(customer),
                 ),

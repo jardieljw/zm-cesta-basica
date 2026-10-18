@@ -1,0 +1,127 @@
+{
+  "date": "2026-10-16",
+  "decision": "FE-048",
+  "note": "Local preservation, not a Git commit. README and this manifest excluded from their own hash list.",
+  "files": [
+    {
+      "path": "check-hierarquia-integrada.cjs",
+      "bytes": 15083,
+      "sha256": "3043607e862d729d53d3753bda81a33e008f9f318c93f878f85602886642c492"
+    },
+    {
+      "path": "check-restauracao-e-receber.cjs",
+      "bytes": 6088,
+      "sha256": "2bc615ae48305dab85cd2de438511a78d574dfa000627940cbc0409351a3a469"
+    },
+    {
+      "path": "continuidade-verificacao.json",
+      "bytes": 1180,
+      "sha256": "0b10c5c45b14b047c0e2dc564e94cf4c495234132460fb47ccc17ca5873b582f"
+    },
+    {
+      "path": "gerar-revisao.py",
+      "bytes": 4591,
+      "sha256": "3a97b02defae792dca3d09b71746a6f30402386048bfde678e33e2212bd301cb"
+    },
+    {
+      "path": "hierarquia-edge-composicao-680-200-480.png",
+      "bytes": 115715,
+      "sha256": "50ccb8a239f7010f761d0b0be91c82577c6fc0fca9cfb4056d2b583a3cb47209"
+    },
+    {
+      "path": "hierarquia-edge-everyday-desktop-1024-light-100-home.png",
+      "bytes": 102553,
+      "sha256": "b840c5cabf6610d9a9d864d42a79d261d7c3a66c6403f71e9dbf971f270d7684"
+    },
+    {
+      "path": "hierarquia-edge-everyday-mobile-390-dark-100-home.png",
+      "bytes": 76638,
+      "sha256": "3ba0824b07f9c7610493c2011da518106422608fc84b27991863a093a210bd7d"
+    },
+    {
+      "path": "hierarquia-edge-everyday-mobile-390-light-100-home.png",
+      "bytes": 76613,
+      "sha256": "25b9c68a011436bf4928363f6ccb94850a216d5c6f7697730e9ed4deb70bba0c"
+    },
+    {
+      "path": "hierarquia-edge-stress-mobile-320-dark-200-detail.png",
+      "bytes": 126256,
+      "sha256": "30e2b1cc7ee955b4dc2f31768e58d3b8b3f108f6ac23c7d982e606833f48372d"
+    },
+    {
+      "path": "hierarquia-edge-stress-mobile-320-dark-200-review.png",
+      "bytes": 122037,
+      "sha256": "6af1f6151fbaf0eabad15371eabf7ebfec078a01b1eb496374b7faf10cea4e5a"
+    },
+    {
+      "path": "hierarquia-integrada-zm-preview.html",
+      "bytes": 178867,
+      "sha256": "9264ae4bfed7812f753f7c65176dfaa78cbef5bfe4fc4a0ac566bdfc301f3f7e"
+    },
+    {
+      "path": "hierarquia-integrada-zm.html",
+      "bytes": 79397,
+      "sha256": "01f28ece47a54fdd2f989caf351550ff5d6742b6d520799ec97b79e2b4abd071"
+    },
+    {
+      "path": "hierarquia-verificacao-edge.json",
+      "bytes": 105956,
+      "sha256": "16a48a2bdfa722690020a96368bc825377ab986356f2ade39bf939728130d360"
+    },
+    {
+      "path": "hierarquia-verificacao-webkit.json",
+      "bytes": 105958,
+      "sha256": "de19b30fa39d578d8772254297c145d871c3a24794c9ae9f5d596cabb6a4a849"
+    },
+    {
+      "path": "hierarquia-verificacao.json",
+      "bytes": 220859,
+      "sha256": "61e88f93ddbed8692c74e32fc2ed4d099cb05807a61529a4d3c24d7a64af7229"
+    },
+    {
+      "path": "hierarquia-webkit-composicao-680-200-480.png",
+      "bytes": 88422,
+      "sha256": "9e0e7a91d5db6596cab267b4fecf7481410ff3887cef16fc72057cfa286e82b5"
+    },
+    {
+      "path": "hierarquia-webkit-everyday-desktop-1024-light-100-home.png",
+      "bytes": 57801,
+      "sha256": "535d8dd18ffc0367fb75dd779774cc3694d609301fa5d160c505ee02028b3c7d"
+    },
+    {
+      "path": "hierarquia-webkit-everyday-mobile-390-dark-100-home.png",
+      "bytes": 51052,
+      "sha256": "4f131b522f78e281705a4b6b2f801f624bdc2a194eafdb8b4aef57e3cda275c6"
+    },
+    {
+      "path": "hierarquia-webkit-everyday-mobile-390-light-100-home.png",
+      "bytes": 49492,
+      "sha256": "96bdb6de4b551180b6751a555394c474a4234e5f73e333616886012efe1521d9"
+    },
+    {
+      "path": "hierarquia-webkit-stress-mobile-320-dark-200-detail.png",
+      "bytes": 92378,
+      "sha256": "87ad26a50fba8af0f33e951090f6f726429399b111c8b95125a6df9b89311a3b"
+    },
+    {
+      "path": "hierarquia-webkit-stress-mobile-320-dark-200-review.png",
+      "bytes": 87824,
+      "sha256": "00e559f91cca87045938864f3a7e6ca4edccdcbf8b1d64d5a82acec709813fbd"
+    },
+    {
+      "path": "origem-e-alteracoes.json",
+      "bytes": 2728,
+      "sha256": "3627cfe7891b1c8f74cb5f36f8d7dde921a6ead80a12a6728ed1d78c716b86ee"
+    },
+    {
+      "path": "tipografia.css",
+      "bytes": 6529,
+      "sha256": "15f6d52b386fbdf5a08777e1cc4953d2d6de79904b7c5143e5ae85bbd9b4cb6d"
+    },
+    {
+      "path": "tipografia.js",
+      "bytes": 3768,
+      "sha256": "b0124df95d0b680358da8ddc5a7185813b43d3c0b924a2622c79a0c25376e70b"
+    }
+  ]
+}

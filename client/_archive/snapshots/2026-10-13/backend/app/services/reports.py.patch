@@ -1,0 +1,28 @@
+--- a/backend/app/services/reports.py
++++ b/backend/app/services/reports.py
+@@ -628,6 +628,7 @@
+     customer_id: Optional[str] = None,
+     responsible_id: Optional[str] = None,
+     sale_mode: Optional[str] = None,
++    include_dispatches: bool = True,
+ ) -> ReportResponse:
+     start_dt, end_dt, filter_info = resolve_date_filter(
+         filter_type, date_str, start_date_str, end_date_str, month, year
+@@ -646,7 +647,7 @@
+     sales = sales_q.order_by(Sale.sale_date.desc()).all()
+ 
+     # 2. Dispatches (only when not filtering specifically by customer or sale_mode)
+-    if customer_id or sale_mode:
++    if not include_dispatches or customer_id or sale_mode:
+         dispatches = []
+     else:
+         disp_q = db.query(StockDispatch).filter(StockDispatch.status != "CANCELED")
+@@ -744,7 +745,7 @@
+ 
+     metadata = ReportMetadata(
+         report_type="sales-dispatches",
+-        title="Relatório de Vendas e Saídas de Cestas",
++        title="Relatório de Vendas e Saídas de Cestas" if include_dispatches else "Relatório de Vendas de Cestas",
+         generated_at=datetime.datetime.now(datetime.timezone.utc),
+         filter_info=filter_info,
+         total_rows=len(rows),

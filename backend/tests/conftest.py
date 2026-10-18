@@ -14,6 +14,8 @@ from app.core.database import get_db, configure_sqlite_pragmas, enforce_begin_im
 from app.core.security import generate_self_signed_cert, generate_device_token, hash_token
 from app.models import Base, PairedDevice
 from app.main import app
+import app.main as app_main
+import app.core.database as database_module
 
 @pytest.fixture(scope="session")
 def test_temp_dir():
@@ -51,8 +53,12 @@ def test_session(test_engine) -> Generator[Session, None, None]:
         session.close()
 
 @pytest.fixture(scope="function")
-def client(test_engine, test_session, tmp_path) -> Generator[TestClient, None, None]:
+def client(test_engine, test_session, tmp_path, monkeypatch) -> Generator[TestClient, None, None]:
     TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
+    # Both the HTTP dependencies and startup/internal sessions must use the test DB.
+    monkeypatch.setattr(app_main, 'engine', test_engine)
+    monkeypatch.setattr(database_module, 'engine', test_engine)
+    monkeypatch.setattr(database_module, 'SessionLocal', TestingSessionLocal)
     def override_get_db():
         session = TestingSessionLocal()
         try:
@@ -65,10 +71,11 @@ def client(test_engine, test_session, tmp_path) -> Generator[TestClient, None, N
     # Ensure certs exist in temporary location for tests
     test_certs = tmp_path / "certs"
     test_certs.mkdir(parents=True, exist_ok=True)
-    settings.CERTS_DIR = test_certs
-    settings.BACKUP_DIR = tmp_path / "backups"
+    monkeypatch.setattr(settings, 'CERTS_DIR', test_certs)
+    monkeypatch.setattr(settings, 'BACKUP_DIR', tmp_path / "backups")
     settings.BACKUP_DIR.mkdir(parents=True, exist_ok=True)
-    settings.DATABASE_PATH = Path(test_session.bind.url.database)
+    monkeypatch.setattr(settings, 'DATABASE_PATH', Path(test_session.bind.url.database))
+    monkeypatch.setattr(settings, 'DATABASE_URL', str(test_engine.url))
 
     cert_path = test_certs / "server.crt"
     key_path = test_certs / "server.key"

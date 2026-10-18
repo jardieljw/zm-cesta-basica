@@ -1,0 +1,145 @@
+{
+  "consolidado_em": "2026-10-16",
+  "rodada": "Catalogo minimo de componentes",
+  "situacao": "Previa e verificacao locais concluidas; proposta em avaliacao",
+  "arquivos": [
+    {
+      "arquivo": "catalogo-componentes-zm.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-componentes-zm.html",
+      "sha256": "42ea4ed5b760280a73f3868acdd20b536720491a5583897e5da8de5562766fa7",
+      "bytes": 42519
+    },
+    {
+      "arquivo": "catalogo-componentes-zm-preview.html",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-componentes-zm-preview.html",
+      "sha256": "3dfd0c30e8695a9bbf870a5a17682a48ed010c1501a66c6785aee76d9bd720f5",
+      "bytes": 129829
+    },
+    {
+      "arquivo": "check-catalogo-componentes.cjs",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\check-catalogo-componentes.cjs",
+      "sha256": "1a013800088396c769d1cad32a1962ff9e7277a9bf14ef68c9aa9e18dffce5f2",
+      "bytes": 16497
+    },
+    {
+      "arquivo": "catalogo-componentes-verificacao.json",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-componentes-verificacao.json",
+      "sha256": "d57b8516d9114f0b1f5ca76670968d1d823f78e09e12cd927f06f3245d8a2eee",
+      "bytes": 36192
+    },
+    {
+      "arquivo": "catalogo-edge-erros.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-edge-erros.png",
+      "sha256": "980b601a995065fc009be9d2b5684f11d35b3a769bc623af385a33e2270e68b9",
+      "bytes": 69080
+    },
+    {
+      "arquivo": "catalogo-edge-escuro.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-edge-escuro.png",
+      "sha256": "3344ff0af10c7c29b8a2ef341c071b89db2a190254b7a4d1ee43df196d2c20da",
+      "bytes": 52073
+    },
+    {
+      "arquivo": "catalogo-edge-indisponivel.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-edge-indisponivel.png",
+      "sha256": "c8420d883524055a5bf25dc8441f501e6b9a8d995199ccb0e3e6dedeac71d0bd",
+      "bytes": 20600
+    },
+    {
+      "arquivo": "catalogo-edge-integral.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-edge-integral.png",
+      "sha256": "27745cf23d5ea9b87a7946ad3932d6357840848ef886e0de063d376beca3b370",
+      "bytes": 52299
+    },
+    {
+      "arquivo": "catalogo-edge-parcial.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-edge-parcial.png",
+      "sha256": "d9a5abba4f097ed510558ff54f7ca1cb95bafacc605f6e11c33229ad937c2a42",
+      "bytes": 60796
+    },
+    {
+      "arquivo": "catalogo-edge-recusa.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-edge-recusa.png",
+      "sha256": "4b7694d2d5d3a5f12fb45ccaf26d215b9f959d64bb2d502ffad18a99393709c8",
+      "bytes": 35789
+    },
+    {
+      "arquivo": "catalogo-edge-sem-confirmacao.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-edge-sem-confirmacao.png",
+      "sha256": "42bbfb7cf1825838610d5089fb400c799fde9072c5189e51072a8966deb92318",
+      "bytes": 35704
+    },
+    {
+      "arquivo": "catalogo-edge-sucesso.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-edge-sucesso.png",
+      "sha256": "dc64ff74b282fa99b249a81e802a74d9405591bfab1b50b441656d939fba7a53",
+      "bytes": 27933
+    },
+    {
+      "arquivo": "catalogo-edge-tabela.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-edge-tabela.png",
+      "sha256": "2fe9534a96bd6304ed54f1dbb520231ba725292664e6f57c19a26b9ad164a5d6",
+      "bytes": 46989
+    },
+    {
+      "arquivo": "catalogo-edge-ultima-consulta.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-edge-ultima-consulta.png",
+      "sha256": "2bc2ec704a85bb4a49071783a3837762accf2f303bda4d08aaf5f64b8ab1d6e7",
+      "bytes": 32672
+    },
+    {
+      "arquivo": "catalogo-webkit-erros.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-webkit-erros.png",
+      "sha256": "063dd109a94558919885f439913adf09d6d9eced1ecf52d3864eb7ed56b1d8aa",
+      "bytes": 61507
+    },
+    {
+      "arquivo": "catalogo-webkit-indisponivel.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-webkit-indisponivel.png",
+      "sha256": "26131490f94fcae0eac04dd308eed0a42ea01ff94abc88700cb263f18a31c34e",
+      "bytes": 16255
+    },
+    {
+      "arquivo": "catalogo-webkit-integral.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-webkit-integral.png",
+      "sha256": "d556e6f9ec80f85e160be609ed91cdec46ca60035d842b1a8e1c576410b0d300",
+      "bytes": 45554
+    },
+    {
+      "arquivo": "catalogo-webkit-parcial.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-webkit-parcial.png",
+      "sha256": "c38860d0503b82e124dff11a7f448c8f3f60f585cfb9c8373b0ed27d4b19a885",
+      "bytes": 51109
+    },
+    {
+      "arquivo": "catalogo-webkit-recusa.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-webkit-recusa.png",
+      "sha256": "398ffe7f70131cfd870d37621c2680c69d2e00b297fe309120645f0f664e31f7",
+      "bytes": 30561
+    },
+    {
+      "arquivo": "catalogo-webkit-sem-confirmacao.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-webkit-sem-confirmacao.png",
+      "sha256": "26001c3e2135e3c1ca7da55ad5988383df7517dd97c835f5d9aff64bd600297c",
+      "bytes": 31060
+    },
+    {
+      "arquivo": "catalogo-webkit-sucesso.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-webkit-sucesso.png",
+      "sha256": "8e1da3bf80d94ea0c75ee401e78869b137afe5b54f329ceb317c36f8f15dfe46",
+      "bytes": 23423
+    },
+    {
+      "arquivo": "catalogo-webkit-tabela.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-webkit-tabela.png",
+      "sha256": "1f5ee470d1250d3211455d3d22e9e8e8994c6fcfb50573684efd2cfbdff3ce8d",
+      "bytes": 30577
+    },
+    {
+      "arquivo": "catalogo-webkit-ultima-consulta.png",
+      "origem": "C:\\Users\\jardi\\.codex\\visualizations\\2026\\10\\14\\01a13be2-5658-7881-a6a2-24d698fcc1cd\\catalogo-webkit-ultima-consulta.png",
+      "sha256": "c85c099d0c24c0a078bfa7d5654ff6f0ecc5808788314e27a7899d5042c7dfaf",
+      "bytes": 22941
+    }
+  ]
+}

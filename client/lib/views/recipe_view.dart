@@ -1,3 +1,4 @@
+import '../utils/scroll_layout.dart';
 import 'package:flutter/material.dart';
 import '../models/basket_type.dart';
 import '../models/product.dart';
@@ -5,6 +6,7 @@ import '../services/basket_service.dart';
 import '../services/product_service.dart';
 import '../l10n/l10n_extension.dart';
 import '../utils/formatters.dart';
+import '../widgets/shared/approved_app_style.dart';
 
 class RecipeView extends StatefulWidget {
   final BasketType basketType;
@@ -33,7 +35,9 @@ class _RecipeViewState extends State<RecipeView> {
     setState(() => _isLoading = true);
     try {
       final list = await _basketService.getRecipeVersions(widget.basketType.id);
-      RecipeVersion? active = list.where((v) => v.status == 'ACTIVE').firstOrNull ?? list.firstOrNull;
+      RecipeVersion? active =
+          list.where((v) => v.status == 'ACTIVE').firstOrNull ??
+          list.firstOrNull;
 
       setState(() {
         _versions = list;
@@ -59,7 +63,9 @@ class _RecipeViewState extends State<RecipeView> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(context.l10n.recipeLoadProductsError(e.toString()))),
+          SnackBar(
+            content: Text(context.l10n.recipeLoadProductsError(e.toString())),
+          ),
         );
       }
       return;
@@ -99,7 +105,9 @@ class _RecipeViewState extends State<RecipeView> {
       builder: (ctx) => StatefulBuilder(
         builder: (context, setDialogState) {
           return Dialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
             child: Container(
               padding: const EdgeInsets.all(24),
               width: 650,
@@ -112,14 +120,22 @@ class _RecipeViewState extends State<RecipeView> {
                     children: [
                       Text(
                         l10n.recipeDialogTitle,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(ctx)),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(ctx),
+                      ),
                     ],
                   ),
                   Text(
                     l10n.recipeDialogSubtitle,
-                    style: const TextStyle(color: Colors.black54, fontSize: 13),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      fontSize: 13,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   TextField(
@@ -134,19 +150,30 @@ class _RecipeViewState extends State<RecipeView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(l10n.recipeDialogItemsTitle(draftItems.length), style: const TextStyle(fontWeight: FontWeight.bold)),
+                      Text(
+                        l10n.recipeDialogItemsTitle(draftItems.length),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       TextButton.icon(
                         icon: const Icon(Icons.add, size: 18),
                         label: Text(l10n.recipeAddIngredient),
                         onPressed: () {
                           // Adiciona primeiro produto ativo ainda nao na lista
-                          final available = activeProducts.where(
-                            (p) => !draftItems.any((it) => it['product_id'] == p.id),
-                          ).toList();
+                          final available = activeProducts
+                              .where(
+                                (p) => !draftItems.any(
+                                  (it) => it['product_id'] == p.id,
+                                ),
+                              )
+                              .toList();
 
                           if (available.isEmpty) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(l10n.recipeDialogAllProductsAdded)),
+                              SnackBar(
+                                content: Text(
+                                  l10n.recipeDialogAllProductsAdded,
+                                ),
+                              ),
                             );
                             return;
                           }
@@ -194,20 +221,41 @@ class _RecipeViewState extends State<RecipeView> {
                                         flex: 4,
                                         child: DropdownButtonFormField<String>(
                                           isExpanded: true,
-                                          initialValue: item['product_id'] as String,
-                                          items: activeProducts.map((p) => DropdownMenuItem(
-                                            value: p.id,
-                                            child: Text('${p.name} (${p.baseUnit})', overflow: TextOverflow.ellipsis),
-                                          )).toList(),
+                                          initialValue:
+                                              item['product_id'] as String,
+                                          items: activeProducts
+                                              .map(
+                                                (p) => DropdownMenuItem(
+                                                  value: p.id,
+                                                  child: Text(
+                                                    '${p.name} (${p.baseUnit})',
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              )
+                                              .toList(),
                                           onChanged: (val) {
                                             if (val != null) {
-                                              if (draftItems.any((it) => it != item && it['product_id'] == val)) {
-                                                ScaffoldMessenger.of(context).showSnackBar(
-                                                  SnackBar(content: Text(l10n.recipeDialogDuplicateItem)),
+                                              if (draftItems.any(
+                                                (it) =>
+                                                    it != item &&
+                                                    it['product_id'] == val,
+                                              )) {
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      l10n.recipeDialogDuplicateItem,
+                                                    ),
+                                                  ),
                                                 );
                                                 return;
                                               }
-                                              setDialogState(() => item['product_id'] = val);
+                                              setDialogState(
+                                                () => item['product_id'] = val,
+                                              );
                                             }
                                           },
                                         ),
@@ -216,16 +264,22 @@ class _RecipeViewState extends State<RecipeView> {
                                       Expanded(
                                         flex: 2,
                                         child: TextFormField(
-                                          initialValue: item['quantity_in_base_units'].toString(),
+                                          initialValue:
+                                              item['quantity_in_base_units']
+                                                  .toString(),
                                           keyboardType: TextInputType.number,
                                           decoration: InputDecoration(
-                                            labelText: l10n.recipeDialogQtyLabel(selectedProd.baseUnit),
+                                            labelText: l10n
+                                                .recipeDialogQtyLabel(
+                                                  selectedProd.baseUnit,
+                                                ),
                                             border: const OutlineInputBorder(),
                                           ),
                                           onChanged: (val) {
                                             final n = int.tryParse(val.trim());
                                             if (n != null && n > 0) {
-                                              item['quantity_in_base_units'] = n;
+                                              item['quantity_in_base_units'] =
+                                                  n;
                                             }
                                           },
                                         ),
@@ -234,24 +288,46 @@ class _RecipeViewState extends State<RecipeView> {
                                       Expanded(
                                         flex: 3,
                                         child: DropdownButtonFormField<String>(
-                                          initialValue: item['section'] as String,
+                                          initialValue:
+                                              item['section'] as String,
                                           items: [
-                                            DropdownMenuItem(value: 'ALIMENTACAO', child: Text(l10n.categoryFood)),
-                                            DropdownMenuItem(value: 'LIMPEZA', child: Text(l10n.categoryCleaning)),
-                                            DropdownMenuItem(value: 'CARNE', child: Text(l10n.categoryMeat)),
-                                            DropdownMenuItem(value: 'OUTROS', child: Text(l10n.categoryOthers)),
+                                            DropdownMenuItem(
+                                              value: 'ALIMENTACAO',
+                                              child: Text(l10n.categoryFood),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'LIMPEZA',
+                                              child: Text(
+                                                l10n.categoryCleaning,
+                                              ),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'CARNE',
+                                              child: Text(l10n.categoryMeat),
+                                            ),
+                                            DropdownMenuItem(
+                                              value: 'OUTROS',
+                                              child: Text(l10n.categoryOthers),
+                                            ),
                                           ],
                                           onChanged: (val) {
                                             if (val != null) {
-                                              setDialogState(() => item['section'] = val);
+                                              setDialogState(
+                                                () => item['section'] = val,
+                                              );
                                             }
                                           },
                                         ),
                                       ),
                                       IconButton(
-                                        icon: const Icon(Icons.delete_outline, color: Colors.red),
+                                        icon: const Icon(
+                                          Icons.delete_outline,
+                                          color: Colors.red,
+                                        ),
                                         onPressed: () {
-                                          setDialogState(() => draftItems.removeAt(index));
+                                          setDialogState(
+                                            () => draftItems.removeAt(index),
+                                          );
                                         },
                                       ),
                                     ],
@@ -263,30 +339,45 @@ class _RecipeViewState extends State<RecipeView> {
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(48)),
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(48),
+                    ),
                     onPressed: () async {
                       if (draftItems.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(l10n.recipeDialogValidationMinItems)),
+                          SnackBar(
+                            content: Text(l10n.recipeDialogValidationMinItems),
+                          ),
                         );
                         return;
                       }
                       Navigator.pop(ctx);
                       try {
-                        await _basketService.createRecipeVersion(widget.basketType.id, {
-                          'notes': notesCtrl.text.trim().isNotEmpty ? notesCtrl.text.trim() : null,
-                          'items': draftItems,
-                        });
+                        await _basketService
+                            .createRecipeVersion(widget.basketType.id, {
+                              'notes': notesCtrl.text.trim().isNotEmpty
+                                  ? notesCtrl.text.trim()
+                                  : null,
+                              'items': draftItems,
+                            });
                         _loadVersions();
                         if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(l10n.recipeDialogSaveSuccess)),
+                            SnackBar(
+                              content: Text(l10n.recipeDialogSaveSuccess),
+                            ),
                           );
                         }
                       } catch (e) {
                         if (mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(context.l10n.recipeDialogSaveError(e.toString()))),
+                            SnackBar(
+                              content: Text(
+                                context.l10n.recipeDialogSaveError(
+                                  e.toString(),
+                                ),
+                              ),
+                            ),
                           );
                         }
                       }
@@ -305,81 +396,101 @@ class _RecipeViewState extends State<RecipeView> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final pColors = AppPalette.of(context);
     final l10n = context.l10n;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.recipeAppTitle(widget.basketType.name)),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            tooltip: l10n.commonRefresh,
-            onPressed: _loadVersions,
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        icon: const Icon(Icons.playlist_add),
-        label: Text(l10n.recipeNewVersionButton),
+    return ApprovedPage(
+      title: l10n.recipeAppTitle(widget.basketType.name),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.refresh),
+          tooltip: l10n.commonRefresh,
+          onPressed: _loadVersions,
+        ),
+      ],
+      floatingActionButton: FloatingActionButton(
+        shape: const StadiumBorder(),
+        tooltip: l10n.recipeNewVersionButton,
+        backgroundColor: pColors.accent,
+        foregroundColor: pColors.accentInk,
         onPressed: _showNewRecipeVersionDialog,
+        child: const Icon(Icons.playlist_add),
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : _versions.isEmpty
-              ? Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(32.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.receipt_long_outlined, size: 64, color: Colors.grey.shade400),
-                        const SizedBox(height: 16),
-                        Text(
-                          l10n.recipeEmptyVersions,
-                          style: const TextStyle(fontSize: 16, color: Colors.black54),
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton.icon(
-                          icon: const Icon(Icons.add),
-                          label: Text(l10n.recipeCreateFirstVersion),
-                          onPressed: _showNewRecipeVersionDialog,
-                        ),
-                      ],
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.receipt_long_outlined,
+                      size: 64,
+                      color: pColors.sub,
                     ),
-                  ),
-                )
-              : SingleChildScrollView(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      _buildImmutabilityBanner(theme),
-                      const SizedBox(height: 16),
-                      _buildVersionSelectorCard(theme),
-                      const SizedBox(height: 16),
-                      if (_selectedVersion != null) _buildRecipeItemsSection(theme, _selectedVersion!),
-                    ],
-                  ),
+                    const SizedBox(height: 16),
+                    Text(
+                      l10n.recipeEmptyVersions,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: pColors.sub,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        shape: const StadiumBorder(),
+                        backgroundColor: pColors.accent,
+                        foregroundColor: pColors.accentInk,
+                      ),
+                      icon: const Icon(Icons.add),
+                      label: Text(l10n.recipeCreateFirstVersion),
+                      onPressed: _showNewRecipeVersionDialog,
+                    ),
+                  ],
                 ),
+              ),
+            )
+          : SingleChildScrollView(
+              padding: fabScrollPadding(
+                context,
+                horizontal: 0,
+                top: 0,
+                extended: false,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildImmutabilityBanner(pColors),
+                  const SizedBox(height: 16),
+                  _buildVersionSelectorCard(pColors),
+                  const SizedBox(height: 16),
+                  if (_selectedVersion != null)
+                    _buildRecipeItemsSection(theme, pColors, _selectedVersion!),
+                ],
+              ),
+            ),
     );
   }
 
-  Widget _buildImmutabilityBanner(ThemeData theme) {
+  Widget _buildImmutabilityBanner(AppPalette pColors) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.blue.shade50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.blue.shade300),
+        color: pColors.soft,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: pColors.line),
       ),
       child: Row(
         children: [
-          const Icon(Icons.lock_clock, color: Colors.blue),
+          Icon(Icons.lock_clock, color: pColors.accent),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               context.l10n.recipeImmutabilityBanner,
-              style: const TextStyle(fontSize: 13, color: Colors.blueGrey),
+              style: TextStyle(fontSize: 13, color: pColors.ink, fontWeight: FontWeight.w500),
             ),
           ),
         ],
@@ -387,20 +498,26 @@ class _RecipeViewState extends State<RecipeView> {
     );
   }
 
-  Widget _buildVersionSelectorCard(ThemeData theme) {
+  Widget _buildVersionSelectorCard(AppPalette pColors) {
     final l10n = context.l10n;
 
-    return Card(
-      elevation: 1,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return Container(
+      decoration: BoxDecoration(
+        color: pColors.surface,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: pColors.line),
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(18.0),
         child: Row(
           children: [
-            const Icon(Icons.history, color: Colors.blueGrey),
+            Icon(Icons.history, color: pColors.sub),
             const SizedBox(width: 12),
-            Text(l10n.recipeVersionDisplayed, style: const TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(width: 8),
+            Text(
+              l10n.recipeVersionDisplayed,
+              style: TextStyle(fontWeight: FontWeight.w700, color: pColors.ink),
+            ),
+            const SizedBox(width: 12),
             DropdownButton<String>(
               value: _selectedVersion?.id,
               items: _versions.map((v) {
@@ -412,17 +529,26 @@ class _RecipeViewState extends State<RecipeView> {
                       Text(l10n.recipeVersionItem(v.versionNumber)),
                       const SizedBox(width: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 3,
+                        ),
                         decoration: BoxDecoration(
-                          color: isActive ? Colors.green.shade100 : Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(4),
+                          color: isActive
+                              ? Colors.green.withValues(alpha: 0.12)
+                              : pColors.soft,
+                          borderRadius: BorderRadius.circular(999),
                         ),
                         child: Text(
-                          isActive ? l10n.recipeStatusActive : l10n.recipeStatusArchived,
+                          isActive
+                              ? l10n.recipeStatusActive
+                              : l10n.recipeStatusArchived,
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
-                            color: isActive ? Colors.green.shade800 : Colors.black54,
+                            color: isActive
+                                ? Colors.green.shade700
+                                : pColors.sub,
                           ),
                         ),
                       ),
@@ -441,9 +567,8 @@ class _RecipeViewState extends State<RecipeView> {
     );
   }
 
-  Widget _buildRecipeItemsSection(ThemeData theme, RecipeVersion version) {
+  Widget _buildRecipeItemsSection(ThemeData theme, AppPalette pColors, RecipeVersion version) {
     final l10n = context.l10n;
-    // Agrupa itens por secao (ALIMENTACAO, LIMPEZA, CARNE, etc.)
     final Map<String, List<RecipeItem>> grouped = {};
     for (var item in version.items) {
       grouped.putIfAbsent(item.section, () => []).add(item);
@@ -455,23 +580,37 @@ class _RecipeViewState extends State<RecipeView> {
         if (version.notes != null && version.notes!.isNotEmpty)
           Padding(
             padding: const EdgeInsets.only(bottom: 12.0),
-            child: Text(l10n.recipeNotesLabel(version.notes!), style: const TextStyle(fontStyle: FontStyle.italic)),
+            child: Text(
+              l10n.recipeNotesLabel(version.notes!),
+              style: TextStyle(fontStyle: FontStyle.italic, color: pColors.sub),
+            ),
           ),
         ...grouped.entries.map((entry) {
           final section = entry.key;
           final items = entry.value;
 
-          return Card(
-            margin: const EdgeInsets.only(bottom: 16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          return Container(
+            margin: const EdgeInsets.only(bottom: 14),
+            decoration: BoxDecoration(
+              color: pColors.surface,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: pColors.line),
+            ),
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(18),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    l10n.recipeSectionHeader(_formatSection(context, section), items.length),
-                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold, color: theme.colorScheme.primary),
+                    l10n.recipeSectionHeader(
+                      _formatSection(context, section),
+                      items.length,
+                    ),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 16,
+                      color: pColors.accent,
+                    ),
                   ),
                   const Divider(height: 20),
                   ...items.map((it) {
@@ -479,17 +618,33 @@ class _RecipeViewState extends State<RecipeView> {
                       padding: const EdgeInsets.symmetric(vertical: 6.0),
                       child: Row(
                         children: [
-                          const Icon(Icons.check_circle_outline, size: 18, color: Colors.green),
+                          Icon(
+                            Icons.check_circle_outline,
+                            size: 18,
+                            color: Colors.green.shade700,
+                          ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              it.productName ?? l10n.recipeUnknownIngredient(it.productId),
-                              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                              it.productName ??
+                                  l10n.recipeUnknownIngredient(it.productId),
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: pColors.ink,
+                              ),
                             ),
                           ),
                           Text(
-                            AppFormatters.formatQuantity(it.quantityInBaseUnits, it.productBaseUnit ?? 'un'),
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            AppFormatters.formatQuantity(
+                              it.quantityInBaseUnits,
+                              it.productBaseUnit ?? 'un',
+                            ),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                              color: pColors.ink,
+                            ),
                           ),
                         ],
                       ),

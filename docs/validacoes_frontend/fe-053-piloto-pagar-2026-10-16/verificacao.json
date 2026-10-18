@@ -1,0 +1,203 @@
+{
+  "date": "2026-10-16",
+  "decision": "FE-053",
+  "status": "scoped_payable_pilot_implemented_in_source_locally_verified",
+  "logs": [
+    {
+      "path": "tmp/fe-053-backend-baseline.log",
+      "sha256": "183bc5c766268cd6da61df336c18ff68cdcdcdebb56f82fef0820e3f11a6df4c",
+      "passed": 414,
+      "warnings": 14,
+      "seconds": 100.43
+    },
+    {
+      "path": "tmp/fe-053-flutter-baseline.log",
+      "sha256": "f7c3611e9c339dfed7973161c628161aecbc381bbf97672a283a10aa5a54e170",
+      "passed": 238
+    },
+    {
+      "path": "tmp/fe-053-backend-targeted.log",
+      "sha256": "63c3be70a6bb6abd867810b342c54c51a5f96d774f7f394b59277168f7bbaf3e",
+      "passed": 14,
+      "warnings": 1,
+      "seconds": 2.72
+    },
+    {
+      "path": "tmp/fe-053-client-targeted.log",
+      "sha256": "f593bce20fd48f82b06aa31cac5bafd59d98a76817e2c4f9528e163c4e3f039a",
+      "passed": 43
+    },
+    {
+      "path": "tmp/fe-053-backend-final.log",
+      "sha256": "0d6cd8a255e4584680638631aef3d1df3b1bf7a5cf0f6a0b30f750f383e5ce75",
+      "passed": 420,
+      "warnings": 14,
+      "seconds": 104.51
+    },
+    {
+      "path": "tmp/fe-053-flutter-final.log",
+      "sha256": "b3626ad3f56271c3bd676435f33a72b9d68d0424ffbfdbd9f79256aae17d88e1",
+      "passed": 274
+    },
+    {
+      "path": "tmp/fe-053-analyze-final.log",
+      "sha256": "81d6ce9a82b498f80a66860e0d67ea55666f5e22b2f19c9bc972221f901ec858",
+      "result": "no issues"
+    },
+    {
+      "path": "tmp/fe-053-windows-build.log",
+      "sha256": "ab7b75347e4ba4f97861b6513d09912cf14f5c6ff8c39f666a713cb3b224399b",
+      "result": "debug build succeeded"
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "backend/app/core/business_dates.py",
+      "sha256": "3dcd237a0bc16e3a3fb2628814027b3c10365f1130a0748150926044252132ec"
+    },
+    {
+      "path": "backend/app/schemas/financial.py",
+      "sha256": "4494c777c2b5c1785dd6a28815394df68a9fd7cd7096a5923024424e5329a4bf"
+    },
+    {
+      "path": "backend/app/services/financial.py",
+      "sha256": "96e6817bd6435f28aecceacfaff35fa42967560426b65d943b59c1218766a653"
+    },
+    {
+      "path": "backend/app/api/v1/payables.py",
+      "sha256": "95f0c86707cbf0ec39dd2836ecca5010a2134b427809f3c0731ae0397587e740"
+    },
+    {
+      "path": "backend/tests/test_payable_payment_review.py",
+      "sha256": "a82689be8d15711a26472ecc71d71805a28efa1c7ca72631a1c23e919506afd4"
+    },
+    {
+      "path": "client/lib/core/api_client.dart",
+      "sha256": "70e220f9d2c2e4c899cdf9103137c4c3d6fa7b99f67af33392eaa5950fd25824"
+    },
+    {
+      "path": "client/lib/models/account_payable.dart",
+      "sha256": "94ef4716c44260b126439f114e94fe71a0e01b1bde2dd6443ebb8918fb1ba73c"
+    },
+    {
+      "path": "client/lib/services/payable_service.dart",
+      "sha256": "3464b82c6f42abadf33fe07941cb80f94fa7b4aa7c2a9f4bbf1586a052c15e12"
+    },
+    {
+      "path": "client/lib/services/payable_payment_coordinator.dart",
+      "sha256": "0ba37f65771b3fdb3105503fa531b19578fca4bfaf4c415ab5f8a859c54761ab"
+    },
+    {
+      "path": "client/lib/utils/business_dates.dart",
+      "sha256": "55af8c7a4328a9580e415babd34c2630973b2ad209869e56b21ca12cd086d1a9"
+    },
+    {
+      "path": "client/lib/utils/money_input.dart",
+      "sha256": "78739893bd468f5aefb6bb62d3d46fb38dc4a61d14aa2874620245a8d674407a"
+    },
+    {
+      "path": "client/lib/utils/api_error_mapper.dart",
+      "sha256": "8577b7561c620c31e0cf95448f001ab4cccc2b7f1a65aeda85f537d5612b7438"
+    },
+    {
+      "path": "client/lib/views/payable_payment_view.dart",
+      "sha256": "3e6f739f098bf339fdbc92f0327f8aed457e74b2c26c5864ce3fa786f19e8e5f"
+    },
+    {
+      "path": "client/lib/views/payables_view.dart",
+      "sha256": "1aec4e380950264e5d9b0a0c0f60042970ee3215e9ebf8bd7737fba6e6674971"
+    },
+    {
+      "path": "client/lib/widgets/shared/financial_surface.dart",
+      "sha256": "099aa45111df5e64881f10fb7ecc5094820fd3b617dfc5dab1b09720a3299d62"
+    },
+    {
+      "path": "client/lib/l10n/app_pt.arb",
+      "sha256": "9e52b6187cb630861f4c2e4032a38d033cb8437d5e996f34366100eef7030f2e"
+    },
+    {
+      "path": "client/lib/l10n/app_localizations.dart",
+      "sha256": "d55944d9db0b10f3b1379dc8cf2429ced330c49cbe013deef5f31fc9af9c8464"
+    },
+    {
+      "path": "client/lib/l10n/app_localizations_pt.dart",
+      "sha256": "faf7259987e8df93868c662908574b6ce4d51782bdbbe2a8a35554c51c4062b4"
+    },
+    {
+      "path": "client/test/payable_payment_recovery_test.dart",
+      "sha256": "5f7a1c8c86a403241c575d7e396314f1a9fd247fd908be9f2165c83bc609bd44"
+    },
+    {
+      "path": "client/test/payable_payment_view_test.dart",
+      "sha256": "26b13c8ef03036b9f803ac3bc90ca09a15c2aa58ae016bde6316cf2aa94a5f4f"
+    },
+    {
+      "path": "client/test/payment_origin_test.dart",
+      "sha256": "f4c27205c34c0c150d48f450861af54b1c7999c1236705b79177761c9bcbeb86"
+    },
+    {
+      "path": "client/test/helpers/payable_payment_fake.dart",
+      "sha256": "11c869bbf549233bbe3f0c91afbb4d8895306999ebf9591c935bbead79980e57"
+    },
+    {
+      "path": "client/test/payables_responsive_test.dart",
+      "sha256": "7fd11aa523a77a999ff3f3c804df9311556747ecc774f273b74908d6db786c1c"
+    }
+  ],
+  "buildArtifacts": [
+    {
+      "path": "client/build/windows/x64/runner/Debug/zm_cesta_basica_client.exe",
+      "bytes": 1271808,
+      "sha256": "d1db4ff3e7f87d592a5a645a95050b4cf15b9d2254ff9593efac406c0caeb740"
+    },
+    {
+      "path": "client/build/windows/x64/runner/Debug/data/flutter_assets/kernel_blob.bin",
+      "bytes": 95208640,
+      "sha256": "c15a897ec12dcc51ae2313e77aabf417d3916078be4654a670917f0d929cf9bf"
+    }
+  ],
+  "preservedVisualManifest": {
+    "path": "docs/referencias_frontend/rodada-acabamento-2026-10-16/manifesto.json",
+    "entriesUnchanged": 35
+  },
+  "screenshots": [
+    {
+      "path": "revisao-celular.png",
+      "sha256": "635b3bfa2c9514ebb85ad992e4ff1cef9ca01617ec46327fd4140f1eaa18de0a"
+    },
+    {
+      "path": "retomada-celular.png",
+      "sha256": "92b58413519936053c620b634f08ad0e4fc7326f4041429a73eea64aa7ff0b27"
+    },
+    {
+      "path": "confirmacao-consulta-falhou.png",
+      "sha256": "a6b3255c5a2c3011fb72b611f846bf91bf82840117f4e85fceb09608b56f742c"
+    },
+    {
+      "path": "revisao-320-100.png",
+      "sha256": "e988ae0a98b77f7a95d7f61fb6ae62227a3e24b14ef055471cd9f72115498bb6"
+    },
+    {
+      "path": "revisao-320-200.png",
+      "sha256": "d90a9d8c6a970536cfe0a8f9a82071c1b3e8af265cd0c603fae673d3c04abb7e"
+    },
+    {
+      "path": "revisao-390-200-escuro.png",
+      "sha256": "f15115572d4b5bf88a8c854b8fcf5b65b69ae0c98011bdcb1aca684818a07922"
+    },
+    {
+      "path": "revisao-computador.png",
+      "sha256": "4d1a46bc3a47779eee4873857dbf33dc900b67a8514f4e625eec5b7cb80151d9"
+    }
+  ],
+  "installedUpdated": false,
+  "companyDatabaseUsed": false,
+  "newDatabaseMigration": false,
+  "gitCommitCreated": false,
+  "limits": [
+    "Flutter widgets with fake service, backend TestClient with temporary databases; no company-server end-to-end test.",
+    "Local preferences tested through plugin mock; not physical-device process restart.",
+    "Windows debug build only, not an installer or signed distribution.",
+    "Main navigation/theme and Receber are not migrated."
+  ]
+}

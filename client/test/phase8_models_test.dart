@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:zm_cesta_basica_client/models/dashboard.dart';
+import '../_archive/models/dashboard_legacy.dart';
 import 'package:zm_cesta_basica_client/models/report.dart';
 
 void main() {

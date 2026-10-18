@@ -1,0 +1,22 @@
+/* Recovered typography remains unchanged. Compact only the home composition. */
+#zm-organization-demo .stage{min-height:0;padding:10px 0;}
+#zm-organization-demo .app:has(.content[data-screen=inicio]) .app-header{padding-top:14px;padding-bottom:10px;}
+#zm-organization-demo .content[data-screen=inicio]{min-height:0;padding-bottom:14px;}
+#zm-organization-demo .content[data-screen=inicio] .content-inner{gap:12px;}
+#zm-organization-demo .home-period{display:flex;gap:4px;background:var(--surface);padding:4px;border-radius:16px;}
+#zm-organization-demo .home-period button{flex:1;min-width:0;min-height:44px;padding:8px;}
+#zm-organization-demo .home-period [aria-pressed=true]{background:var(--soft);color:var(--accent);font-weight:500;}
+#zm-organization-demo [data-action=result].rec-secondary{display:flex;align-items:center;justify-content:center;gap:10px;}
+#zm-organization-demo [data-action=result].rec-secondary svg{flex-shrink:0;}
+#zm-organization-demo .content[data-screen=inicio] .hero{padding:16px;}
+#zm-organization-demo .content[data-screen=inicio] .two{margin:10px 0 6px;}
+#zm-organization-demo .home-metric{display:block;min-width:0;text-align:left;padding:0;}
+#zm-organization-demo .home-scope{font-size:calc(12px * var(--type-scale));line-height:1.45;color:var(--sub);margin:0 0 12px!important;}
+#zm-organization-demo .content[data-screen=inicio] .primary{min-height:44px;padding:10px 12px;}
+#zm-organization-demo .content[data-screen=inicio] .tile{padding:12px;}
+#zm-organization-demo .content[data-screen=inicio] .section-header{margin-bottom:8px;}
+#zm-organization-demo .home-attention .row{min-height:60px;padding:10px 12px;}
+#zm-organization-demo .home-attention .row>svg{width:16px;flex-shrink:0;}
+#zm-organization-demo .app[data-expanded=true] .home-period{flex-wrap:wrap;}
+#zm-organization-demo .app[data-expanded=true] .home-period button{flex-basis:calc(70px * var(--type-scale));}
+#zm-organization-demo .app[data-adapted=true] .content[data-screen=inicio] .two,#zm-organization-demo .app[data-adapted=true] .content[data-screen=inicio] .tile-pair{grid-template-columns:repeat(auto-fit,minmax(min(100%,calc(120px * var(--type-scale))),1fr));}

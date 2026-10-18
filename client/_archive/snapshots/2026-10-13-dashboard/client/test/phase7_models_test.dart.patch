@@ -1,0 +1,11 @@
+--- a/client/test/phase7_models_test.dart
++++ b/client/test/phase7_models_test.dart
+@@ -2,7 +2,7 @@
+ import 'package:zm_cesta_basica_client/core/api_client.dart';
+ import 'package:zm_cesta_basica_client/models/account_payable.dart';
+ import '../_archive/models/cash_flow_entry.dart';
+-import 'package:zm_cesta_basica_client/models/financial_account.dart';
++import '../_archive/models/financial_account.dart';
+ import 'package:zm_cesta_basica_client/models/sales_receivable.dart';
+ import 'package:zm_cesta_basica_client/services/payable_service.dart';
+ import 'package:zm_cesta_basica_client/services/receivable_service.dart';
