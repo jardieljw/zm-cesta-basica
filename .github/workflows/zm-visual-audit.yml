@@ -1,0 +1,52 @@
+name: ZM visual audit from backup
+
+on:
+  push:
+    branches:
+      - visual-audit/backup-20261019
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capture-flutter-screens:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Checkout audit branch
+        uses: actions/checkout@v4
+
+      - name: Install Flutter SDK
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Record Flutter version
+        run: flutter --version
+
+      - name: Install existing client dependencies
+        working-directory: client
+        run: flutter pub get
+
+      - name: Capture existing FE-052 integration fixtures
+        working-directory: client
+        run: flutter test test/approved_app_integration_test.dart --reporter expanded
+
+      - name: Capture payment and receipt states
+        if: always()
+        working-directory: client
+        run: flutter test test/receivable_payment_view_test.dart test/payable_payment_view_test.dart --reporter expanded
+
+      - name: Upload captured PNG and JSON evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zm-backup-visual-evidence
+          path: |
+            client/build/fe-055-preview/
+            client/build/fe-054-preview/
+            client/build/fe-053-preview/
+          if-no-files-found: warn
+          retention-days: 30
