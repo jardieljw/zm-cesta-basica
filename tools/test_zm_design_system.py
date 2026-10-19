@@ -7,6 +7,11 @@ class DesignGateTests(unittest.TestCase):
         self.assertEqual(report["views"], 38)
         self.assertEqual(report["components"], 20)
         self.assertEqual(report["tokens"], 33)
+        from pathlib import Path
+        root = Path(__file__).resolve().parents[1]
+        manifest = __import__("json").loads((root / "docs/design_system/manifest.json").read_text())
+        self.assertEqual(manifest["branches"]["currentFrontend"], "backup")
+        self.assertFalse(manifest["releaseGate"]["allowMerge"])
 
     def test_reject_new_page_local_styles(self):
         cases = {

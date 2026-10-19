@@ -17,3 +17,12 @@ Solicitar a qualquer agente: "Leia `client/lib/AGENTS.md` e `docs/design_system/
 
 ## Diferença fundamental
 **Spec + catálogo + lint de diff** evitam parte da deriva futura; **não migram automaticamente telas antigas** nem certificam um calendário nativo. As 38 views possuem débito conhecido em `views.json` e precisam ser migradas progressivamente por componente. A próxima migração recomendada é criar pesquisa/filtros compartilhados e fazer as primeiras telas adotá-los. Testes visuais e de interação seguem obrigatórios para o aceite.
+
+## Auditoria independente obrigatória e integração segura
+- **[`manifest.json`](manifest.json)**: registra autoridade, status de implementação e gate de merge bloqueado.
+- **[`AUDITORIA_INDEPENDENTE_2026-10-19.md`](AUDITORIA_INDEPENDENTE_2026-10-19.md)**: confronta Deep Research original com a entrega efetiva, explicitando o que é apenas contrato.
+- **[`INSTRUCOES_CODEX_AUDITORIA_SEGURA.md`](INSTRUCOES_CODEX_AUDITORIA_SEGURA.md)**: tarefa pronta para Codex auditar a viabilidade do PR **SEM ALTERAR** a backup.
+- **[`PLANO_TESTE_VISUAL_E_INTEGRACAO.md`](PLANO_TESTE_VISUAL_E_INTEGRACAO.md)**: gate para testes de Flutter, capturas e futura migração.
+- **[`research/DEEP_RESEARCH_ORIGINAL_2026-10-18.md`](research/DEEP_RESEARCH_ORIGINAL_2026-10-18.md)**: transcrição textual do relatório Deep Research recuperado da Library. Texto original integral em formato bruto também foi preservado como artefato independente.
+
+**Não marcar como pronto para mesclar**: atualmente não há widgets Flutter novos, catálogos Widgetbook, novos goldens homologados ou migração das 38 views. O CI existente é só a primeira camada de fiscalização de estilos adicionados em `views/`.

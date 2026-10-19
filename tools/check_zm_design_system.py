@@ -47,6 +47,25 @@ def validate_contract() -> dict:
         issue("FE-052 changed: do not silently move the reference")
     data = {name: read_json(name) for name in
             ("tokens.json", "components.json", "page_patterns.json", "views.json", "exceptions.json")}
+    manifest = read_json("manifest.json")
+    if manifest.get("branches", {}).get("currentFrontend") != "backup":
+        issue("Canonical frontend source must be EXACT branch backup")
+    if manifest.get("branches", {}).get("legacyMain") != "master":
+        issue("Legacy branch mismatch")
+    if manifest.get("authority", {}).get("sha256") != EXPECTED_SHA:
+        issue("Manifest FE-052 authority mismatch")
+    if manifest.get("releaseGate", {}).get("allowMerge") is not False:
+        issue("Design System may not be marked merge-ready without visual library audit")
+    required_docs = ["AUDITORIA_INDEPENDENTE_2026-10-19.md",
+                     "INSTRUCOES_CODEX_AUDITORIA_SEGURA.md",
+                     "PLANO_TESTE_VISUAL_E_INTEGRACAO.md",
+                     "research/DEEP_RESEARCH_ORIGINAL_2026-10-18.md"]
+    for name in required_docs:
+        if not (DS / name).is_file():
+            issue(f"Missing audited design documentation: {name}")
+    research = (DS / "research/DEEP_RESEARCH_ORIGINAL_2026-10-18.md").read_text(encoding="utf-8")
+    if "contrato executável" not in research or "golden" not in research:
+        issue("Research report not sufficiently recovered")
     ts = data["tokens.json"]["tokens"]
     cs = data["components.json"]["components"]
     ps = data["page_patterns.json"]["patterns"]

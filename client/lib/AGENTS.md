@@ -12,3 +12,5 @@ Antes de editar QUALQUER view Flutter, leia:
 Registrar novas variantes no catálogo e testar claro/escuro, 320/390/430/1100px, escala textual e fluxos completos. Passar em testes funcionais não é aprovação visual. Nunca gerar goldens novos para encobrir diferenças.
 
 Para código legado já diferente, siga `views.json` e corrija **por componente compartilhado**, não com 38 remendos independentes.
+
+Antes de migrar qualquer tela, auditar com `docs/design_system/INSTRUCOES_CODEX_AUDITORIA_SEGURA.md` e `docs/design_system/PLANO_TESTE_VISUAL_E_INTEGRACAO.md`. A branch `backup` é a implementação atual; `master` é legado. O PR #2 atual é **contrato, não biblioteca Flutter nova**. Nem compilar o backup nem passar no lint prova que o frontend novo foi implementado.

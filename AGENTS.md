@@ -19,3 +19,6 @@ Para importação e conciliação financeira, retomar pela
 
 ## Design System (obrigatório em client/lib)
 Antes de alterar qualquer interface, consulte `client/lib/AGENTS.md` e `docs/design_system/CONTRATO_VISUAL_ZM.md`. Reutilize os componentes canônicos; fonte FE-052, não a aparência inconsistente da backup.
+
+## Contrato canônico e auditoria antes de integrar (PR #2)
+Comece por `docs/design_system/manifest.json` e `docs/design_system/CONTRATO_VISUAL_ZM.md`. A pesquisa profunda integral está em `docs/design_system/research/DEEP_RESEARCH_ORIGINAL_2026-10-18.md`. O estado real e limites desta branch estão em `docs/design_system/AUDITORIA_INDEPENDENTE_2026-10-19.md`. Para revisar compatibilidade com a `backup`, execute primeiro a tarefa SOMENTE-LEITURA em `docs/design_system/INSTRUCOES_CODEX_AUDITORIA_SEGURA.md`. Não mescle PR #2 nem reescreva Flutter/backend sem autorização posterior.
