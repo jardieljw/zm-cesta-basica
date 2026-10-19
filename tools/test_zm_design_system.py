@@ -39,7 +39,7 @@ class DesignGateTests(unittest.TestCase):
 
     def test_exceptions_must_be_explicitly_registered(self):
         line = "TextStyle(fontSize: 14) // zm-design-exception: EX-001"
-        self.assertEqual(detect_added(line, set()), ["typography"])
+        self.assertEqual(set(detect_added(line, set())), {"typography", "literal_font_size"})
         self.assertEqual(detect_added(line, {"EX-001"}), [])
 
 if __name__ == "__main__":
