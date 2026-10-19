@@ -93,13 +93,14 @@ void main() {
   setUpAll(() async {
     await AppFormatters.initialize();
     if (Platform.isWindows) {
+      final flutterRoot = Platform.environment['FLUTTER_ROOT'] ?? 'C:/dev/flutter';
       for (final entry in {
         'Segoe UI': 'C:/Windows/Fonts/segoeui.ttf',
         'Segoe UI Semibold': 'C:/Windows/Fonts/seguisb.ttf',
         'Roboto':
-            'C:/dev/flutter/bin/cache/artifacts/material_fonts/roboto-regular.ttf',
+            '$flutterRoot/bin/cache/artifacts/material_fonts/roboto-regular.ttf',
         'MaterialIcons':
-            'C:/dev/flutter/bin/cache/artifacts/material_fonts/materialicons-regular.otf',
+            '$flutterRoot/bin/cache/artifacts/material_fonts/materialicons-regular.otf',
       }.entries) {
         final font = File(entry.value);
         final loader = FontLoader(entry.key)
