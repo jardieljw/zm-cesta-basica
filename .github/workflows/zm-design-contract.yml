@@ -1,0 +1,42 @@
+name: ZM Design System contracts
+'on':
+  push:
+    branches:
+      - 'design-system/canonical-backup-*'
+  pull_request:
+    branches:
+      - backup
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  canonical-contract-and-drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch backup baseline
+        run: |
+          git fetch origin backup:refs/remotes/origin/backup
+
+      - name: Verify FE-052 lock, 38 views, tokens, components and page patterns
+        run: |
+          python tools/check_zm_design_system.py
+
+      - name: Prove guard detects prohibited patterns
+        run: |
+          python -m unittest discover -s tools -p 'test_zm_design_system.py' -v
+
+      - name: Block new page-local styling
+        run: |
+          python tools/check_zm_design_system.py --check-changed --base origin/backup
+
+      - name: Explain scope
+        run: |
+          echo "Static guard OK; visual equivalence to FE-052 still requires Flutter captures/goldens."

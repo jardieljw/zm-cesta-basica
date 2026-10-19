@@ -1,0 +1,133 @@
+{
+  "schema": "zm.design.pages/3.0",
+  "patterns": [
+    {
+      "id": "overview",
+      "title": "Início; resumo por Dia/Semana/Mês",
+      "composition": "ShellHeader -> período -> indicadores -> atenção contextual -> atalhos",
+      "componentIds": [
+        "ZM-SHELL",
+        "ZM-TITLE",
+        "ZM-SURFACE"
+      ],
+      "status": "composition_contract_from_docs",
+      "sources": [
+        "docs/COMPOSICAO_DAS_PAGINAS_FRONTEND.md",
+        "docs/REFERENCIA_ATUAL_FRONTEND.json"
+      ]
+    },
+    {
+      "id": "finance",
+      "title": "Resumo/Pagar/Receber",
+      "composition": "ShellHeader -> tabs -> resumo de saldo -> filtros compactos -> lista tipo extrato -> detalhe -> revisão",
+      "componentIds": [
+        "ZM-SHELL",
+        "ZM-TITLE",
+        "ZM-FILTER",
+        "ZM-LIST-ROW",
+        "ZM-REVIEW"
+      ],
+      "status": "composition_contract_from_docs",
+      "sources": [
+        "docs/COMPOSICAO_DAS_PAGINAS_FRONTEND.md",
+        "docs/REFERENCIA_ATUAL_FRONTEND.json"
+      ]
+    },
+    {
+      "id": "list",
+      "title": "Listagem operacional",
+      "composition": "Header -> pesquisa -> filtros recolhíveis/aplicados -> resultados/empty/loading -> paginação -> ação",
+      "componentIds": [
+        "ZM-TITLE",
+        "ZM-SEARCH",
+        "ZM-FILTER",
+        "ZM-LIST-ROW",
+        "ZM-EMPTY"
+      ],
+      "status": "composition_contract_from_docs",
+      "sources": [
+        "docs/COMPOSICAO_DAS_PAGINAS_FRONTEND.md",
+        "docs/REFERENCIA_ATUAL_FRONTEND.json"
+      ]
+    },
+    {
+      "id": "detail",
+      "title": "Detalhe de registro",
+      "composition": "Header/voltar -> identidade -> situação/saldo -> origem/documento/histórico -> ação contextual",
+      "componentIds": [
+        "ZM-TITLE",
+        "ZM-SURFACE",
+        "ZM-STATUS"
+      ],
+      "status": "composition_contract_from_docs",
+      "sources": [
+        "docs/COMPOSICAO_DAS_PAGINAS_FRONTEND.md",
+        "docs/REFERENCIA_ATUAL_FRONTEND.json"
+      ]
+    },
+    {
+      "id": "form",
+      "title": "Cadastro/edição",
+      "composition": "Header -> contexto -> grupos com labels externos -> validação -> ação principal",
+      "componentIds": [
+        "ZM-TITLE",
+        "ZM-FIELD",
+        "ZM-DATE",
+        "ZM-METHOD",
+        "ZM-ACTION"
+      ],
+      "status": "composition_contract_from_docs",
+      "sources": [
+        "docs/COMPOSICAO_DAS_PAGINAS_FRONTEND.md",
+        "docs/REFERENCIA_ATUAL_FRONTEND.json"
+      ]
+    },
+    {
+      "id": "review",
+      "title": "Operação financeira",
+      "composition": "Contexto -> Integral/Parcial -> data -> forma -> observação -> conferir -> corrigir -> confirmar",
+      "componentIds": [
+        "ZM-CHOICE",
+        "ZM-DATE",
+        "ZM-METHOD",
+        "ZM-NOTES",
+        "ZM-REVIEW"
+      ],
+      "status": "composition_contract_from_docs",
+      "sources": [
+        "docs/COMPOSICAO_DAS_PAGINAS_FRONTEND.md",
+        "docs/REFERENCIA_ATUAL_FRONTEND.json"
+      ]
+    },
+    {
+      "id": "document",
+      "title": "Extrato, importação e relatório",
+      "composition": "Header -> metadados/origem -> corpo legível -> totais -> ações de exportação/retorno",
+      "componentIds": [
+        "ZM-TITLE",
+        "ZM-SURFACE",
+        "ZM-LIST-ROW"
+      ],
+      "status": "composition_contract_from_docs",
+      "sources": [
+        "docs/COMPOSICAO_DAS_PAGINAS_FRONTEND.md",
+        "docs/REFERENCIA_ATUAL_FRONTEND.json"
+      ]
+    },
+    {
+      "id": "settings",
+      "title": "Preferências",
+      "composition": "Header -> grupos de configuração -> preview de tema -> ação contextual/reiniciar",
+      "componentIds": [
+        "ZM-TITLE",
+        "ZM-FIELD",
+        "ZM-CHOICE"
+      ],
+      "status": "composition_contract_from_docs",
+      "sources": [
+        "docs/COMPOSICAO_DAS_PAGINAS_FRONTEND.md",
+        "docs/REFERENCIA_ATUAL_FRONTEND.json"
+      ]
+    }
+  ]
+}

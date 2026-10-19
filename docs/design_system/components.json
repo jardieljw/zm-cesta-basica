@@ -1,0 +1,339 @@
+{
+  "schema": "zm.design.components/3.0",
+  "policy": "Reuse before recreate; current Dart implementations are NOT individually visually certified",
+  "components": [
+    {
+      "id": "ZM-SHELL",
+      "title": "Casca/navegação",
+      "existing": "ApprovedPage + HomeView",
+      "sourcePaths": [
+        "client/lib/widgets/shared/approved_app_style.dart",
+        "client/lib/views/app_shell_view.dart"
+      ],
+      "status": "implemented_reference_candidate",
+      "behavior": "Cinco áreas; barra inferior no celular e lateral no desktop; estado de aba/rolagem preservado",
+      "states": [
+        "shell.home",
+        "shell.finance",
+        "shell.business",
+        "shell.stock",
+        "shell.more"
+      ]
+    },
+    {
+      "id": "ZM-TITLE",
+      "title": "Título de página",
+      "existing": "ApprovedHeader / ApprovedSectionHeader",
+      "sourcePaths": [
+        "client/lib/widgets/shared/approved_app_style.dart"
+      ],
+      "status": "implemented_reference_candidate",
+      "behavior": "Usar papel tipográfico de página e seção; título com quebra de linha; ações consistentes",
+      "states": [
+        "page",
+        "section"
+      ]
+    },
+    {
+      "id": "ZM-SURFACE",
+      "title": "Painel/cartão",
+      "existing": "ApprovedSurface / ApprovedHeroCard",
+      "sourcePaths": [
+        "client/lib/widgets/shared/approved_app_style.dart"
+      ],
+      "status": "implemented_reference_candidate",
+      "behavior": "Painel raio 32; glass discreto nos contextos FE-052; sem sombra/cor inventada",
+      "states": [
+        "panel",
+        "hero"
+      ]
+    },
+    {
+      "id": "ZM-LIST-ROW",
+      "title": "Registro financeiro ou operacional",
+      "existing": "ApprovedRow",
+      "sourcePaths": [
+        "client/lib/widgets/shared/approved_app_style.dart"
+      ],
+      "status": "implemented_reference_candidate",
+      "behavior": "Identidade, valor, situação e contexto com semântica; mobile em blocos, desktop pode ser tabela",
+      "states": [
+        "payable",
+        "receivable",
+        "product",
+        "sale",
+        "stock"
+      ]
+    },
+    {
+      "id": "ZM-SEARCH",
+      "title": "Campo de pesquisa compartilhado",
+      "existing": "missing_canonical_widget",
+      "sourcePaths": [
+        "client/lib/views/customers_view.dart",
+        "client/lib/views/products_view.dart",
+        "client/lib/views/payables_view.dart"
+      ],
+      "status": "requires_consolidation",
+      "behavior": "Um único campo oficial com lupa, texto, limpar, foco, erros, ação de consulta e largura adaptativa; não copiar InputDecoration por tela",
+      "states": [
+        "live",
+        "submit"
+      ]
+    },
+    {
+      "id": "ZM-FILTER",
+      "title": "Filtros compactos recolhíveis",
+      "existing": "ApprovedCollapsibleFilter + ResponsiveFilterBar (latter layout only)",
+      "sourcePaths": [
+        "client/lib/widgets/shared/approved_app_style.dart",
+        "client/lib/widgets/shared/responsive_filter_bar.dart"
+      ],
+      "status": "partial_mixed_implementation",
+      "behavior": "Resumo aplicado visível fechado; expandir/fechar; opções locais; controles aplicar/limpar conforme domínio; sem bloco enorme sempre aberto",
+      "states": [
+        "collapsed",
+        "expanded",
+        "applied",
+        "draft",
+        "loading",
+        "error"
+      ]
+    },
+    {
+      "id": "ZM-FILTER-CHIP",
+      "title": "Chips de critérios",
+      "existing": "missing_canonical_widget",
+      "sourcePaths": [
+        "client/lib/views/payables_view.dart",
+        "client/lib/views/receivables_view.dart",
+        "client/lib/views/purchases_view.dart"
+      ],
+      "status": "requires_consolidation",
+      "behavior": "Estado selecionado, desmarcar e cor semântica; inventário de filtros unificado, opções dependem do módulo",
+      "states": [
+        "selected",
+        "unselected",
+        "disabled"
+      ]
+    },
+    {
+      "id": "ZM-CHOICE",
+      "title": "Seleção exclusiva em cápsula",
+      "existing": "ApprovedChoice",
+      "sourcePaths": [
+        "client/lib/widgets/shared/approved_app_style.dart"
+      ],
+      "status": "implemented_reference_candidate",
+      "behavior": "Integral/Parcial com rádio circular da FE-052; uma única seleção; revelar campo parcial só na opção Parcial",
+      "states": [
+        "selected",
+        "unselected",
+        "disabled",
+        "dependent_reveal"
+      ]
+    },
+    {
+      "id": "ZM-DATE",
+      "title": "Campo de data e calendário",
+      "existing": "ApprovedDateButton + ApprovedCalendarDialog",
+      "sourcePaths": [
+        "client/lib/widgets/shared/approved_app_style.dart"
+      ],
+      "status": "partial_mixed_implementation",
+      "behavior": "Campo 56px raio24 texto completo e ícone final FE-052; diálogo com mês, datas e cancelar; usar data civil/sem horário implícito",
+      "states": [
+        "closed",
+        "open",
+        "selected",
+        "canceled",
+        "disabled",
+        "error",
+        "reduced_motion"
+      ]
+    },
+    {
+      "id": "ZM-FIELD",
+      "title": "Entrada de texto e moeda",
+      "existing": "ApprovedField (container)",
+      "sourcePaths": [
+        "client/lib/widgets/shared/approved_app_style.dart"
+      ],
+      "status": "partial_mixed_implementation",
+      "behavior": "Label externo; controle mínimo 56px, raio24; espaço 20 entre grupos; validação preserva texto",
+      "states": [
+        "empty",
+        "focused",
+        "filled",
+        "invalid",
+        "disabled",
+        "loading"
+      ]
+    },
+    {
+      "id": "ZM-AMOUNT",
+      "title": "Valor monetário",
+      "existing": "ReviewedPaymentView;AppFormatters",
+      "sourcePaths": [
+        "client/lib/widgets/shared/reviewed_payment_view.dart",
+        "client/lib/utils/formatters.dart"
+      ],
+      "status": "partial_mixed_implementation",
+      "behavior": "Valor integral = saldo atual; campo parcial somente após escolha; nunca recomputar negócio no widget",
+      "states": [
+        "full",
+        "partial",
+        "empty",
+        "invalid"
+      ]
+    },
+    {
+      "id": "ZM-METHOD",
+      "title": "Seleção de forma de pagamento",
+      "existing": "DropdownButtonFormField em ReviewedPaymentView",
+      "sourcePaths": [
+        "client/lib/widgets/shared/reviewed_payment_view.dart"
+      ],
+      "status": "requires_consolidation",
+      "behavior": "Opções vêm do módulo; nunca pré-selecionar uma forma fictícia; não confundir códigos Pagar/Receber",
+      "states": [
+        "empty",
+        "selected",
+        "invalid",
+        "disabled"
+      ]
+    },
+    {
+      "id": "ZM-NOTES",
+      "title": "Campo observações",
+      "existing": "TextFormField em ReviewedPaymentView",
+      "sourcePaths": [
+        "client/lib/widgets/shared/reviewed_payment_view.dart"
+      ],
+      "status": "requires_consolidation",
+      "behavior": "Multilinha opcional, preserva rascunho, limite definido por módulo",
+      "states": [
+        "empty",
+        "focused",
+        "filled",
+        "error"
+      ]
+    },
+    {
+      "id": "ZM-ACTION",
+      "title": "Botões primário/secundário",
+      "existing": "ApprovedPrimaryButton + ApprovedSecondaryButton",
+      "sourcePaths": [
+        "client/lib/widgets/shared/approved_app_style.dart"
+      ],
+      "status": "implemented_reference_candidate",
+      "behavior": "Uma ação principal por etapa, estados ocupado/desabilitado, sem ações duplicadas",
+      "states": [
+        "enabled",
+        "disabled",
+        "loading",
+        "error"
+      ]
+    },
+    {
+      "id": "ZM-STATUS",
+      "title": "Badge/status",
+      "existing": "missing_canonical_widget",
+      "sourcePaths": [
+        "client/lib/views/purchases_view.dart",
+        "client/lib/views/payables_view.dart"
+      ],
+      "status": "requires_consolidation",
+      "behavior": "Não usar só cor; texto explícito de vencido, parcial, cancelado, falha; semântica consistente",
+      "states": [
+        "success",
+        "warning",
+        "error",
+        "neutral",
+        "pending"
+      ]
+    },
+    {
+      "id": "ZM-REVIEW",
+      "title": "Revisão e conclusão",
+      "existing": "ReviewedPaymentView",
+      "sourcePaths": [
+        "client/lib/widgets/shared/reviewed_payment_view.dart"
+      ],
+      "status": "implemented_reference_candidate",
+      "behavior": "Conferir data, valor, forma, pessoa e saldo previsto; resultado confirmado só após resposta dos serviços",
+      "states": [
+        "draft",
+        "review",
+        "submitting",
+        "confirmed",
+        "unknown"
+      ]
+    },
+    {
+      "id": "ZM-DIALOG",
+      "title": "Diálogo operacional",
+      "existing": "missing_canonical_widget",
+      "sourcePaths": [
+        "client/lib/views/customer_statement_dialog.dart",
+        "client/lib/views/packagings_dialog.dart"
+      ],
+      "status": "requires_consolidation",
+      "behavior": "Raios, títulos, ações, estados, escopo teclado/foco e saída sem perdas",
+      "states": [
+        "read",
+        "edit",
+        "confirm",
+        "error"
+      ]
+    },
+    {
+      "id": "ZM-EMPTY",
+      "title": "Vazio, erro e carregamento",
+      "existing": "ApprovedWarningBox (parcial)",
+      "sourcePaths": [
+        "client/lib/widgets/shared/approved_app_style.dart"
+      ],
+      "status": "requires_consolidation",
+      "behavior": "Sem dados, erro de consulta, sem permissão, offline, informação antiga; jamais mostrar zero como dado real se API falhou",
+      "states": [
+        "empty",
+        "loading",
+        "error",
+        "offline",
+        "stale"
+      ]
+    },
+    {
+      "id": "ZM-ICON",
+      "title": "Iconografia vetorial",
+      "existing": "ApprovedIcon",
+      "sourcePaths": [
+        "client/lib/widgets/shared/approved_icon.dart"
+      ],
+      "status": "implemented_reference_candidate",
+      "behavior": "Um catálogo único de nomes/tamanhos/cores, fallback rastreado; evitar Icons.* novo em telas",
+      "states": [
+        "navigation",
+        "action",
+        "status",
+        "context"
+      ]
+    },
+    {
+      "id": "ZM-FAB",
+      "title": "Ação contextual flutuante",
+      "existing": "ThemeData.floatingActionButtonTheme + ApprovedPage",
+      "sourcePaths": [
+        "client/lib/widgets/shared/approved_app_style.dart"
+      ],
+      "status": "partial_mixed_implementation",
+      "behavior": "Ação da página não ocultar lista nem conteúdo em 320px; preservar espaço final de scroll",
+      "states": [
+        "enabled",
+        "disabled",
+        "loading"
+      ]
+    }
+  ]
+}

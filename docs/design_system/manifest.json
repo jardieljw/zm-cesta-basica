@@ -1,0 +1,58 @@
+{
+  "$schema": "zm.design.governance/1.0",
+  "id": "zm-frontend",
+  "version": "0.3.1-preintegration",
+  "updatedAt": "2026-10-19",
+  "branches": {
+    "currentFrontend": "backup",
+    "currentFrontendBaselineSha": "79c95cd35cfdf79c762513df866b072a3f700f03",
+    "canonicalSpecification": "design-system/canonical-backup-20261019",
+    "legacyMain": "master"
+  },
+  "authority": {
+    "visualReference": "docs/referencias_frontend/rodada-acabamento-2026-10-16/acabamento-integrado-zm.html",
+    "sha256": "774f5bbce0ccbc8048818a2daa24531804619551432113795a00a6dbe4eaf53f",
+    "researchMethod": "docs/design_system/research/DEEP_RESEARCH_ORIGINAL_2026-10-18.md",
+    "contracts": [
+      "docs/design_system/CONTRATO_VISUAL_ZM.md",
+      "docs/design_system/tokens.json",
+      "docs/design_system/components.json",
+      "docs/design_system/page_patterns.json",
+      "docs/design_system/views.json"
+    ]
+  },
+  "evidence": {
+    "contractCatalog": {
+      "status": "present",
+      "counts": {
+        "tokens": 33,
+        "components": 20,
+        "pagePatterns": 8,
+        "viewFiles": 38
+      }
+    },
+    "flutterVisualLibraryNew": {
+      "status": "not_implemented"
+    },
+    "flutterSourceModifiedOnPr": {
+      "status": false
+    },
+    "backendSourceModifiedOnPr": {
+      "status": false
+    },
+    "goldenCertificationAllPages": {
+      "status": "not_done"
+    },
+    "pythonGuard": {
+      "status": "passed_limited_scope"
+    },
+    "codexIntegrationAudit": {
+      "status": "pending"
+    }
+  },
+  "releaseGate": {
+    "allowMerge": false,
+    "reason": "Specification and limited guard only; Codex audit and functional/visual certification of future UI changes not yet completed."
+  },
+  "decisionPolicy": "Explicit user-approved > FE-052 reference-derived > documented implementation candidate > legacy; unresolved must not be invented."
+}

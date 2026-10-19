@@ -1,0 +1,5 @@
+{
+  "schema": "zm.design.exceptions/1.0",
+  "policy": "Qualquer exceção deve ser identificada por arquivo, razão técnica e responsável; não adicionar para ocultar divergência visual",
+  "exceptions": []
+}
