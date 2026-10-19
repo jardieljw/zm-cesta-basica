@@ -1,0 +1,14 @@
+name: zm_design_system_lab
+description: "Isolated FE-052 component candidate, NOT a certified UI."
+publish_to: none
+version: 0.1.0+1
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+dependencies:
+  flutter:
+    sdk: flutter
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+flutter:
+  uses-material-design: true

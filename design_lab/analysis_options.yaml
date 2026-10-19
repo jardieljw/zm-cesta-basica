@@ -1,0 +1,5 @@
+analyzer:
+  errors:
+    invalid_assignment: error
+    undefined_identifier: error
+    undefined_method: error
