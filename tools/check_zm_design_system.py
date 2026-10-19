@@ -23,6 +23,13 @@ RULES = [
     ("geometry", re.compile(r"\bBorderRadius\.(?:circular|only)\s*\(")),
     ("input_style", re.compile(r"\bInputDecoration\s*\(")),
     ("datepicker", re.compile(r"\bshowDatePicker\s*\(")),
+    ("date_range_picker", re.compile(r"\bshowDateRangePicker\s*\(")),
+    ("independent_page_shell", re.compile(r"\b(?:Scaffold|AppBar)\s*\(")),
+    ("raw_icon_family", re.compile(r"\bIcons\.\w+")),
+    ("raw_filter_control", re.compile(r"\b(?:FilterChip|ChoiceChip|InputChip|ExpansionTile|SegmentedButton)\s*(?:<[^>]*>)?\s*\(")),
+    ("raw_input_control", re.compile(r"\b(?:TextField|TextFormField|DropdownButtonFormField)\s*(?:<[^>]*>)?\s*\(")),
+    ("local_spacing", re.compile(r"\bEdgeInsets\.(?:all|only|symmetric|fromLTRB)\s*\(")),
+    ("literal_font_size", re.compile(r"\bfontSize\s*:\s*\d+(?:\.\d+)?\b")),
 ]
 STATUS = {"confirmed_user", "reference_observed", "pending", "rejected_as_binding"}
 

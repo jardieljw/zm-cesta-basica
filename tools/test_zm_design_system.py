@@ -15,6 +15,19 @@ class DesignGateTests(unittest.TestCase):
             "BorderRadius.circular(12)": "geometry",
             "decoration: InputDecoration(labelText: 'X')": "input_style",
             "await showDatePicker(context: context)": "datepicker",
+            "showDateRangePicker(context: context)": "date_range_picker",
+            "return Scaffold(": "independent_page_shell",
+            "appBar: AppBar(": "independent_page_shell",
+            "icon: const Icon(Icons.add)": "raw_icon_family",
+            "child: FilterChip(": "raw_filter_control",
+            "child: ChoiceChip(": "raw_filter_control",
+            "child: ExpansionTile(": "raw_filter_control",
+            "child: SegmentedButton<bool>(": "raw_filter_control",
+            "child: TextField(": "raw_input_control",
+            "child: TextFormField(": "raw_input_control",
+            "child: DropdownButtonFormField<String>(": "raw_input_control",
+            "padding: EdgeInsets.only(left: 12)": "local_spacing",
+            "fontSize: 14,": "literal_font_size",
         }
         for code, rule in cases.items():
             with self.subTest(code=code):

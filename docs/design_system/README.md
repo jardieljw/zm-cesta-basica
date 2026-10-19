@@ -7,7 +7,7 @@
 - `page_patterns.json`: 8 modelos de páginas.
 - `views.json`: mapa operacional de **38 views** da `backup`, com prioridade e ação.
 - `exceptions.json`: exceções explicitamente registradas (atualmente nenhuma).
-- `tools/check_zm_design_system.py`: verifica SHA imutável da FE-052, integridade dos catálogos e detecta **novo estilo local** em alterações de views.
+- `tools/check_zm_design_system.py`: verifica SHA imutável da FE-052, integridade dos catálogos e detecta **novo estilo local**, calendários nativos, novos filtros, inputs, ícones e cascas independentes em alterações de views. É um detector textual incremental, não substitui revisão nem análise semântica.
 - `client/lib/AGENTS.md`: obriga Codex/IA a ler as regras ao trabalhar no frontend.
 - Workflow GitHub Actions `ZM Design System contracts`: fiscaliza PRs para a backup.
 
