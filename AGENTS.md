@@ -16,3 +16,6 @@ usar dados para interpretar, antecipar necessidades e apresentar informações
 Para importação e conciliação financeira, retomar pela
 [memória financeira](docs/MEMORIA_IMPLEMENTACAO_FINANCEIRA.md) e pelo
 [procedimento de homologação](docs/HOMOLOGACAO_IMPORTACAO_FINANCEIRA.md).
+
+## Design System (obrigatório em client/lib)
+Antes de alterar qualquer interface, consulte `client/lib/AGENTS.md` e `docs/design_system/CONTRATO_VISUAL_ZM.md`. Reutilize os componentes canônicos; fonte FE-052, não a aparência inconsistente da backup.

@@ -1,0 +1,312 @@
+{
+  "schema": "zm.audit.views/3.0",
+  "baseline": "backup",
+  "commit": "79c95cd35cfdf79c762513df866b072a3f700f03",
+  "status": "CODE AUDIT only; NOT all-screen visual certification",
+  "views": [
+    {
+      "file": "client/lib/views/app_appearance_view.dart",
+      "pattern": "preferences",
+      "action": "reuse",
+      "reason": "approved page; validate appearance controls",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/app_finance_view.dart",
+      "pattern": "finance-shell",
+      "action": "adapt",
+      "reason": "custom tabs and ChoiceChip coexist with Approved*",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/app_settings_menu_view.dart",
+      "pattern": "settings-entry",
+      "action": "reuse",
+      "reason": "ApprovedPage and shared components",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/app_shell_view.dart",
+      "pattern": "navigation-shell",
+      "action": "reuse-audit",
+      "reason": "do not replace the 5-area shell; Scaffold here is intentional",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/basket_assemblies_view.dart",
+      "pattern": "list",
+      "action": "adapt",
+      "reason": "custom card styles",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/basket_assembly_form_view.dart",
+      "pattern": "form",
+      "action": "migrate",
+      "reason": "standalone Scaffold, own date/inputs",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/basket_type_form_view.dart",
+      "pattern": "form",
+      "action": "migrate",
+      "reason": "own input and page structure",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/basket_types_view.dart",
+      "pattern": "list",
+      "action": "adapt",
+      "reason": "ApprovedChoice and local filter chips together",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/blank_forms_view.dart",
+      "pattern": "special-document",
+      "action": "audit",
+      "reason": "special export/print screen, do not blindly replace",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/customer_form_view.dart",
+      "pattern": "form",
+      "action": "migrate",
+      "reason": "standalone Scaffold, duplicated form fields",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/customer_statement_dialog.dart",
+      "pattern": "dialog-record",
+      "action": "migrate",
+      "reason": "custom statement content and dialog",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/customers_view.dart",
+      "pattern": "list",
+      "action": "adapt",
+      "reason": "custom search/chip styles",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/dashboard_view.dart",
+      "pattern": "legacy-dashboard",
+      "action": "reachability-review",
+      "reason": "169 local-style indications; check route reachability",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/financial_bill_review_view.dart",
+      "pattern": "review",
+      "action": "migrate",
+      "reason": "standalone Scaffold and mixed approved/local",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/financial_imports_view.dart",
+      "pattern": "document-import",
+      "action": "adapt-split",
+      "reason": "several screens in single Dart file",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/financial_sources_view.dart",
+      "pattern": "list-and-dialog",
+      "action": "adapt",
+      "reason": "approved listing but new source dialog requires rules",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/home_view.dart",
+      "pattern": "alias",
+      "action": "preserve",
+      "reason": "2-line alias, not separate screen",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/inventory_movements_view.dart",
+      "pattern": "list",
+      "action": "adapt",
+      "reason": "several local filters and badge styles",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/inventory_summary_view.dart",
+      "pattern": "list",
+      "action": "adapt",
+      "reason": "own search and data cards",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/packagings_dialog.dart",
+      "pattern": "dialog",
+      "action": "migrate",
+      "reason": "independent modal controls",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/pairing_view.dart",
+      "pattern": "onboarding",
+      "action": "controlled-exception",
+      "reason": "pairing may not use standard shell",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/payable_form_view.dart",
+      "pattern": "form-dialog",
+      "action": "adapt",
+      "reason": "already calls ApprovedDateButton; other fields are local",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/payable_payment_view.dart",
+      "pattern": "adapter",
+      "action": "preserve",
+      "reason": "delegates to shared ReviewedPaymentView",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/payables_view.dart",
+      "pattern": "finance-list",
+      "action": "priority-adapt",
+      "reason": "search field radius 16, custom filters and badges",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/pdf_viewer_screen.dart",
+      "pattern": "document-viewer",
+      "action": "controlled-exception",
+      "reason": "native PDF host may need own Scaffold",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/product_form_view.dart",
+      "pattern": "form",
+      "action": "migrate",
+      "reason": "standalone Scaffold/inputs",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/products_view.dart",
+      "pattern": "list",
+      "action": "priority-adapt",
+      "reason": "ApprovedChoice and ChoiceChip coexist",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/purchase_form_view.dart",
+      "pattern": "form",
+      "action": "migrate",
+      "reason": "large form, native date picker",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/purchases_view.dart",
+      "pattern": "list",
+      "action": "priority-adapt",
+      "reason": "duplicated search filters and result cards",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/receivable_payment_view.dart",
+      "pattern": "adapter",
+      "action": "preserve",
+      "reason": "delegates to shared ReviewedPaymentView",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/receivables_view.dart",
+      "pattern": "finance-list",
+      "action": "priority-adapt",
+      "reason": "ExpansionTile and direct FilterChip instead of canonical collapsed filter",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/recipe_view.dart",
+      "pattern": "form-detail",
+      "action": "adapt",
+      "reason": "ApprovedPage but local cards and type",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/reports_view.dart",
+      "pattern": "report",
+      "action": "migrate",
+      "reason": "standalone Scaffold, filters and date pickers",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/sale_form_view.dart",
+      "pattern": "form",
+      "action": "migrate",
+      "reason": "complex local form and native date",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/sale_origin_view.dart",
+      "pattern": "detail",
+      "action": "reuse",
+      "reason": "ApprovedPage and limited local styles",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/sales_view.dart",
+      "pattern": "list",
+      "action": "priority-adapt",
+      "reason": "local dropdown/filter/card styles",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/settings_view.dart",
+      "pattern": "settings",
+      "action": "migrate",
+      "reason": "standalone Scaffold; preserve settings semantics",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    },
+    {
+      "file": "client/lib/views/stock_adjustment_dialog.dart",
+      "pattern": "dialog",
+      "action": "migrate",
+      "reason": "custom dialog form and validation",
+      "baseline": "backup@79c95cd",
+      "visuallyCertified": false
+    }
+  ]
+}
