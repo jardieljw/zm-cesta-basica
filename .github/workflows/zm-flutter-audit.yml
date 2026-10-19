@@ -59,7 +59,7 @@ jobs:
       - name: Run design lab widget tests
         working-directory: design_lab
         run: flutter test --reporter expanded
-      - name: Audit warning: golden fidelity NOT certified
+      - name: 'Audit warning: golden fidelity NOT certified'
         run: |
           echo "::warning::The candidate passes structural/functional checks only. No approved Flutter golden exists."
           echo "Golden homologation required; do not use as final FE-052 design."
