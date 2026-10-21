@@ -102,6 +102,8 @@ def format_review_summary(db: Session, review: FinancialBillSemanticReview) -> d
 def create_semantic_review(
     db: Session, statement_id: str, data: BillSemanticReviewCreate, actor_id: str,
 ) -> dict:
+    from app.services import financial_import_lifecycle as lifecycle
+    entry = lifecycle.guard_statement(db, statement_id, data)
     statement = base_import.require(db, FinancialStatement, statement_id)
     if statement.statement_type != "CARD_BILL":
         fail("FINANCIAL_BILL_SOURCE_REQUIRED", "Revisao semantica de fatura exige documento do tipo CARD_BILL.")
@@ -154,6 +156,13 @@ def create_semantic_review(
         item_amount = st_item.normalized_data.get("amount_cents", 0)
         cat = item_input.semantic_category
 
+        if cat in {'BILL_PAYMENT', 'REFUND_CREDIT'} and item_amount >= 0:
+            fail('FINANCIAL_BILL_CATEGORY_SIGN', 'Pagamentos e creditos exigem valor negativo no documento.')
+        if cat in {'PURCHASE_BUSINESS', 'PURCHASE_PERSONAL', 'FINANCIAL_CHARGES'} and item_amount <= 0:
+            fail('FINANCIAL_BILL_CATEGORY_SIGN', 'Compras e encargos exigem valor positivo no documento.')
+        if item_input.purchase_id and cat != 'PURCHASE_BUSINESS':
+            fail('FINANCIAL_PURCHASE_LINK_INVALID', 'Vincule compra de estoque somente a compra empresarial.')
+
         if cat == "PREVIOUS_BALANCE":
             previous_balance += item_amount
         elif cat == "PURCHASE_BUSINESS":
@@ -181,27 +190,14 @@ def create_semantic_review(
 
     # Check preview reported_summary for previous_balance
     preview = db.get(FinancialImportPreview, statement.preview_id) if statement.preview_id else None
-    if not preview:
-        preview = db.scalar(
-            select(FinancialImportPreview)
-            .where(
-                FinancialImportPreview.document_id == statement.document_id,
-                FinancialImportPreview.source_id == statement.source_id,
-            )
-            .order_by(FinancialImportPreview.created_at.desc())
-        )
     reported_prev = 0
     if preview and preview.result and "reported_summary" in preview.result:
-        reported_prev = abs(preview.result["reported_summary"].get("previous", 0) or 0)
+        reported_prev = preview.result["reported_summary"].get("previous", 0) or 0
 
-    if previous_balance == 0 and reported_prev > 0:
+    if previous_balance == 0 and reported_prev != 0:
         previous_balance = reported_prev
-    elif reported_prev > 0 and previous_balance != reported_prev:
-        # Check if substituting reported_prev for previous_balance balances the equation
-        declared_total = statement.total_amount_cents or 0
-        test_calc = reported_prev + purchases_business + purchases_personal + financial_charges - payments - refunds
-        if abs(declared_total - test_calc) <= 10:
-            previous_balance = reported_prev
+    elif reported_prev != 0 and previous_balance != reported_prev:
+        fail('FINANCIAL_BILL_PREVIOUS_BALANCE_CONFLICT', 'O saldo anterior classificado diverge do resumo do documento.')
 
     # Equation: Declared Total = Previous Balance + Purchases Business + Purchases Personal + Charges - Payments - Refunds
     declared_total = statement.total_amount_cents or 0
@@ -214,9 +210,7 @@ def create_semantic_review(
         - refunds
     )
     difference = declared_total - calculated_total
-    if abs(difference) <= 10:
-        financial_charges += difference
-        difference = 0
+    if difference == 0:
         is_balanced = True
         status = "APPROVED"
     else:
@@ -255,6 +249,7 @@ def create_semantic_review(
         "difference_cents": difference,
     })
 
+    lifecycle.record_ids(db, entry, 'semantic_review_ids', [review.id])
     return format_review_summary(db, review)
 
 
@@ -269,7 +264,12 @@ def get_current_semantic_review(db: Session, statement_id: str) -> Optional[dict
 def generate_bill_obligations(
     db: Session, statement_id: str, data: BillGenerateObligationsRequest, actor_id: str,
 ) -> List[dict]:
+    from app.services import financial_import_lifecycle as lifecycle
+    entry = lifecycle.guard_statement(db, statement_id, data)
     statement = base_import.require(db, FinancialStatement, statement_id)
+    from app.models.financial_bill_cycles import FinancialBillCycleRevision
+    if db.scalar(select(FinancialBillCycleRevision.id).where(FinancialBillCycleRevision.statement_id == statement_id)):
+        fail('FINANCIAL_BILL_CYCLE_REQUIRED', 'Esta fatura usa o fluxo de cobranca liquida por ciclo.')
     if statement.statement_type != "CARD_BILL":
         fail("FINANCIAL_BILL_SOURCE_REQUIRED", "Apenas faturas de cartao geram obrigacoes consolidadas.")
 
@@ -281,6 +281,30 @@ def generate_bill_obligations(
     ).all()
     if existing_obligations:
         return list_bill_obligations(db, statement_id)
+
+    if statement.due_on is None or statement.total_amount_cents is None:
+        fail('FINANCIAL_IMPORT_HEADER_INVALID', 'A fatura exige vencimento e total declarados.')
+
+    preview = db.get(FinancialImportPreview, statement.preview_id) if statement.preview_id else None
+    if preview is not None:
+        from app.services.financial_readers import READERS
+        active_reader = READERS.get(preview.reader_id)
+        if not active_reader or preview.reader_version != active_reader.version:
+            fail('FINANCIAL_REIMPORT_REQUIRED', 'Reimporte o original com o leitor atualizado antes de gerar novos titulos.')
+        if preview.status != 'READY' or preview.result.get('errors'):
+            fail('FINANCIAL_PREVIEW_INVALID', 'O documento exige correcao antes de gerar titulos.')
+        if preview.reader_id == 'pdf_auto':
+            header = preview.result.get('extracted_header', {})
+            if header.get('due_on') != statement.due_on.isoformat() or header.get('total_amount_cents') != statement.total_amount_cents:
+                fail('FINANCIAL_IMPORT_HEADER_INVALID', 'Confira os controles declarados no documento.')
+
+    represented_cycle = db.scalar(select(FinancialBillObligation.id).join(
+        FinancialStatement, FinancialStatement.id == FinancialBillObligation.statement_id,
+    ).where(FinancialStatement.source_id == statement.source_id,
+            FinancialStatement.due_on == statement.due_on,
+            FinancialStatement.id != statement.id).limit(1))
+    if represented_cycle:
+        fail('FINANCIAL_BILL_CYCLE_ALREADY_REPRESENTED', 'Outra fatura desta origem e vencimento ja possui obrigacoes. Confira os vinculos para evitar duplicidade.')
 
     # Resolve review
     if data.review_id:
@@ -298,6 +322,10 @@ def generate_bill_obligations(
             f"A revisao semantica precisa estar balanceada e aprovada. Diferenca atual: {review.equation_difference_cents} centavos.",
         )
 
+    current = latest_review(db, statement_id)
+    if current.id != review.id:
+        fail("FINANCIAL_BILL_REVISION_CONFLICT", "Confira a revisao vigente antes de gerar obrigacoes.")
+
     # Collect review items with details
     semantic_items = db.scalars(
         select(FinancialBillSemanticItem).where(FinancialBillSemanticItem.review_id == review.id)
@@ -309,6 +337,32 @@ def generate_bill_obligations(
             )
         ).all()
     }
+
+    # Preserve historical reviews but do not authorize new debt using a review
+    # whose components were silently adjusted by older application versions.
+    amounts = {i.id: i.normalized_data['amount_cents'] for i in statement_items.values()}
+    actual_charges = sum(amounts[i.item_id] for i in semantic_items if i.semantic_category == 'FINANCIAL_CHARGES')
+    if actual_charges != review.financial_charges_cents:
+        fail("FINANCIAL_BILL_REVIEW_REQUIRED", "A revisao anterior ajustou valores. Confira uma nova revisao exata.")
+    generated_total = sum(i.amount_cents for i in semantic_items
+                          if i.semantic_category in {'PURCHASE_BUSINESS', 'PURCHASE_PERSONAL', 'FINANCIAL_CHARGES'})
+    if (generated_total != statement.total_amount_cents or review.previous_balance_cents != 0
+            or review.refunds_cents != 0 or review.payments_cents != 0):
+        fail("FINANCIAL_BILL_ALLOCATION_REQUIRED", "Creditos, pagamentos ou saldo anterior exigem alocacao antes de gerar titulos.")
+
+    for item in semantic_items:
+        if not item.purchase_id:
+            continue
+        purchase = base_import.require(db, Purchase, item.purchase_id)
+        payables = db.scalars(select(AccountPayable).where(AccountPayable.purchase_id == purchase.id)).all()
+        linked_items = [i for i in semantic_items if i.purchase_id == purchase.id]
+        same_purchase_amount = sum(i.amount_cents for i in linked_items)
+        prior_amount = db.scalar(select(func.coalesce(func.sum(FinancialBillObligation.amount_cents), 0))
+                                 .where(FinancialBillObligation.purchase_id == purchase.id))
+        if (purchase.status != 'CONFIRMED' or len(payables) != 1 or len(linked_items) != 1
+                or payables[0].status not in {'OPEN', 'PARTIAL'}
+                or same_purchase_amount + prior_amount > payables[0].balance_cents):
+            fail('FINANCIAL_PURCHASE_ALLOCATION_REQUIRED', 'A compra exige conferencia de titulo, parcelas e saldo antes do vinculo.')
 
     due_dt = (
         datetime.datetime.combine(statement.due_on, datetime.time(12, 0))
@@ -330,6 +384,8 @@ def generate_bill_obligations(
                 existing_payable = db.scalar(
                     select(AccountPayable).where(AccountPayable.purchase_id == s_item.purchase_id).limit(1)
                 )
+                if existing_payable is None:
+                    fail('FINANCIAL_PURCHASE_ALLOCATION_REQUIRED', 'Confira a obrigacao existente desta compra.')
                 if existing_payable:
                     obligation = FinancialBillObligation(
                         id=str(uuid.uuid4()),
@@ -345,43 +401,6 @@ def generate_bill_obligations(
                     db.add(obligation)
                     created_obligations.append(obligation)
                     continue
-                else:
-                    # Create AccountPayable linked to purchase
-                    num = generate_next_payable_number(db)
-                    payable = AccountPayable(
-                        id=str(uuid.uuid4()),
-                        payable_number=num,
-                        description=f"Fatura {source.name}: Compra estoque #{s_item.purchase_id[:8]}",
-                        beneficiary=source.name,
-                        category="FORNECEDOR",
-                        nature="BUSINESS",
-                        original_amount_cents=abs(amount),
-                        paid_amount_cents=0,
-                        balance_cents=abs(amount),
-                        due_date=due_dt,
-                        payment_method="CARTAO_CREDITO",
-                        status="OPEN",
-                        purchase_id=s_item.purchase_id,
-                        created_at=now,
-                        updated_at=now,
-                    )
-                    db.add(payable)
-                    db.flush()
-                    obligation = FinancialBillObligation(
-                        id=str(uuid.uuid4()),
-                        statement_id=statement_id,
-                        review_id=review.id,
-                        account_payable_id=payable.id,
-                        component_type="PURCHASE_LINKED",
-                        amount_cents=abs(amount),
-                        purchase_id=s_item.purchase_id,
-                        created_by=actor_id,
-                        created_at=now,
-                    )
-                    db.add(obligation)
-                    created_obligations.append(obligation)
-                    continue
-
             # Unlinked operational business purchase
             num = generate_next_payable_number(db)
             payable = AccountPayable(
@@ -494,6 +513,8 @@ def generate_bill_obligations(
         "review_id": review.id,
         "obligations_count": len(created_obligations),
     })
+    lifecycle.record_ids(db, entry, 'payable_ids', [o.account_payable_id for o in created_obligations])
+    lifecycle.record_ids(db, entry, 'obligation_ids', [o.id for o in created_obligations])
 
     return list_bill_obligations(db, statement_id)
 

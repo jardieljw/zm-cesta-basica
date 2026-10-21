@@ -60,6 +60,27 @@ class FakePaymentService extends PayableService {
   }
 
   @override
+  Future<Map<String, dynamic>> getPayableSummary({
+    DateTime? dueDateFrom,
+    DateTime? dueDateTo,
+    int? month,
+    int? year,
+    String? category,
+    String? beneficiary,
+    String? bankCard,
+    String? merchant,
+    String? status,
+    String? nature,
+    bool overdueOnly = false,
+    int limit = 100,
+    int offset = 0,
+  }) async => {
+    'count': 1,
+    'open_cents': title.balanceCents,
+    'overdue_cents': 0,
+    'paid_cents': title.paidAmountCents,
+  };
+  @override
   Future<List<AccountPayable>> getPayables({
     DateTime? dueDateFrom,
     DateTime? dueDateTo,
@@ -67,6 +88,8 @@ class FakePaymentService extends PayableService {
     int? year,
     String? category,
     String? beneficiary,
+    String? bankCard,
+    String? merchant,
     String? status,
     String? nature,
     bool overdueOnly = false,

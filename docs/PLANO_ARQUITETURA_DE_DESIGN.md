@@ -454,7 +454,8 @@ arquitetura visual. Nenhum widget de produção foi implementado nesta etapa.
 3. Validar a interação proposta de rascunho, Aplicar, Limpar e Atualizar.
 4. Definir se tema escuro fica para uma fase própria e quais páginas migram após
    o piloto. Confirmar separadamente a futura revisão da página principal.
-5. Quando retomar compras, esclarecer datas do boleto e o fluxo de rascunho.
+5. Ao retomar compras, esclarecer datas do boleto e o comportamento de pagamento
+   em rascunhos; editar e excluir rascunhos foi implementado em 20/10/2026.
 
 As próximas revisões devem atualizar este documento com decisão, data e escopo,
 sempre distinguindo preferência, proposta aprovada e comportamento implementado.

@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-19",
+  "scope": "Stage 1: financial import integrity and explicit review; not universal bank certification",
+  "base_commit": "79c95cd35cfdf79c762513df866b072a3f700f03",
+  "tests": {
+    "backend_passed": 480,
+    "backend_warnings": 14,
+    "flutter_passed": 367,
+    "flutter_analysis": "No issues found",
+    "database": "isolated synthetic test databases; no company writes"
+  },
+  "build": {
+    "platform": "Windows Release",
+    "path": "tmp/fi-client-20261019/build/windows/x64/runner/Release",
+    "exe_sha256": "a2cf8c6098391fc9db15911d0ac4e6bb84c2afef560b6d99885d9582a2851596",
+    "source_files_verified": 136,
+    "source_copy_matches_project": true,
+    "release_files": 16,
+    "activation": "Not installed; running server and client preserved"
+  },
+  "reader_versions": {
+    "pdf_auto": "2",
+    "generic_csv": "3",
+    "known_csv": "2"
+  },
+  "company_mutations": false,
+  "new_migration": false,
+  "source_sha256": {
+    "backend/README.md": "0f1d2814efddc785f9b3bae65000993ef514fcd0dbbdc68413cf5d7664ea2d61",
+    "backend/app/api/v1/financial_imports.py": "24ccbc658fe123fa14860c7435d69f23fbf37cd6394004a387e4c7f07dd931a5",
+    "backend/app/schemas/financial_readers.py": "7664993591f7379197f1fbfbafd81cede63c495fc9d919a2110e0ce32179150f",
+    "backend/app/services/financial_bill_semantics.py": "2540a600166bede16b6137707933ed9fd7c0271f6d3901403a733de41622566d",
+    "backend/app/services/financial_imports.py": "6a9ad755ae8a610619d6584641f82d28d2f02e9c3686d2de8cff5b0a21661408",
+    "backend/app/services/financial_pdf_readers.py": "a3a0d5b1919a9d5a21a27feeaa2f7ab03b0729c51822aea62bf6acaa4db36e87",
+    "backend/app/services/financial_previews.py": "cde4dea88cca7cff949ff09862b4061991cb724af7cacd13608a208ab7aa3988",
+    "backend/app/services/financial_readers.py": "db20634cf81f1de224ff99e21c67e37f8c427ded14d9024f9899397b0d2a4dd7",
+    "backend/tests/test_financial_import_safety.py": "fb11f471dfeee8ae0e30019763f90c6ba051f6887bcb65ee9c8f60b05b468b00",
+    "backend/tests/test_financial_readers.py": "db7bce9b7ea344e4912a1ba9d1d468c708a739a731b32ebb297f7c9dac24934b",
+    "backend/tests/test_financial_semantic_obligations.py": "ad73fbf9d4fb76441ab93fb8b1b5c9645624c9f91472f2788019f68370b91dc0",
+    "backend/tests/test_financial_statement_post_treasury.py": "24ac962959a8f3de4aa8189bc1ef95a1f9678b74a0f7d7f068f1501a61b4da72",
+    "client/README.md": "2a58227821149128eadced38a82ddc2c2e02e06e910d354b11a54a49af1a1d63",
+    "client/lib/l10n/app_localizations.dart": "553a1c38d16ef99ca951b8e9672eed70ca4edda0c92fea5c3d99ac9e9c69a9d1",
+    "client/lib/l10n/app_localizations_pt.dart": "241409aa00d0f14e42d9fa484336b9538fa5d341d44a1b4fd2f6262d8dafdaa6",
+    "client/lib/l10n/app_pt.arb": "2111eb51dc53cd7380ea3bc1dd4e4ca0441edba1b832280566662fd962275b4b",
+    "client/lib/services/financial_import_service.dart": "cba9779558b5daf3e9894533f79665a24d741bae27a18747453450525f69b4e4",
+    "client/lib/utils/api_error_mapper.dart": "1de93ed2802b1802dd4f883434279bb819e3bf6f0f170e765418f29b8ed55faf",
+    "client/lib/views/financial_bank_review_view.dart": "61d362982426d8ebcc91af3bba0c7121e0f35fea0c430fa19ebdd01bb1cfba51",
+    "client/lib/views/financial_bill_review_view.dart": "7e3f6b9b9d09d6614739fef73af1f2abc655c9789aa088e8366afef8844b1d5b",
+    "client/lib/views/financial_header_review_view.dart": "2c0df1d21132410d34ce15ec3542b9bbd5705473eb2fcfefa8e32288bd6ae03c",
+    "client/lib/views/financial_imports_view.dart": "1ca39f354aefdefb05d652edeb7bb561240ee8af90ef2f9fd74b66b369faf618",
+    "client/test/financial_header_review_test.dart": "a21a2a29972a6e1bf1540ba5efa060c85c53c00ec72939c7e4a7648b76105504",
+    "client/test/financial_pdf_import_test.dart": "983518de949932755d3c33c90c04a5fbb89273deea8d5b9f8b3e4f605065d9e3",
+    "client/test/financial_semantic_obligations_test.dart": "815ed7e794c7a22564ada3df75a5b93f6bb08b16622b2821755457b73685d282",
+    "client/test/financial_statement_post_treasury_ui_test.dart": "585a20c49c538f1838347c275984714506818781fc9d189cfe6f80ffabbdac8f",
+    "client/test/multibank_and_password_import_test.dart": "1e065c961134252de86badb22eb35a9701edca6a261da3014b1d4a0757286b35"
+  },
+  "synthetic_captures": {
+    "bank-link-safe.png": "a8dc869ca22bea2a9f22af8ce3f966ffd31bc3cb5ab1e27947b9da1dfb5a8076",
+    "bank-occurrence-narrow-enlarged.png": "0c2cbc3b5f542b287646a56ea16574996b39b0b2b0a1d6ed0aa50bc50f10ddd9",
+    "bank-review-safe.png": "e9f438869291f0f157f73d82c35ded7950f4d555ff542d379b0608ae4e95f795",
+    "csv-bank-header-safe.png": "2ff44e5d932b6ce808c973c068b056ba505eaec3b8644b0d6fba87a85f8a363b",
+    "csv-bank-narrow-enlarged.png": "ae78d507d42635c8d933e2bd712a9771593a12eb735db1033511725cbf227da4",
+    "csv-card-header-safe.png": "e89f3733e697704d108fa1f16db421ab0c5a7d7e959b35039e1d2e8dc429f506",
+    "csv-card-narrow-enlarged.png": "997246fa433caf6dc4894e02a8bd204f392e928711760a5b8dafe11d69bb4446"
+  },
+  "recheck": "releitura-sanitizada.json",
+  "remaining": [
+    "Historical obligation and bank movement recovery audit on copy",
+    "Explicit allocation of credits, previous balances and installments",
+    "Assisted CSV direction/currency mapping",
+    "Further original-layout bank homologation",
+    "OCR and structured sources",
+    "Corresponding backend/client activation and frozen PDF packaging"
+  ]
+}

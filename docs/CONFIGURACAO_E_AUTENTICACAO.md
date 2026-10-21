@@ -8,6 +8,27 @@ contratos foram preservados.
 
 Revisão: **15/10/2026**. [Índice](README.md).
 
+### Incidente de certificado em localhost — 19/10/2026
+
+O app exibiu `CERTIFICATE_VERIFY_FAILED` porque duas cópias do servidor estavam
+na porta 8000: a deste projeto em `0.0.0.0` e outra cópia do workspace em
+`127.0.0.1`. A conexão a `https://127.0.0.1:8000` chegava à segunda cópia, cujo
+certificado era diferente. O fingerprint salvo no cliente correspondia ao
+`backend/certs/server.crt` deste projeto; normalizar o texto não resolveria.
+
+Foi encerrada apenas a árvore de processo da cópia conflitante, após conferir
+caminho e argumentos. Banco, certificados e pareamento foram preservados.
+A consulta a `/api/v1/health` passou com HTTP 200, validação HTTPS usando o
+certificado do projeto, banco `ok` e fingerprint informado igual ao salvo.
+No app já aberto, usar **Atualizar** para repetir a consulta. Isso verifica o
+servidor, sem afirmar inspeção visual posterior da janela ou homologação de
+operações financeiras.
+
+Se voltar a ocorrer, verificar primeiro os processos que escutam a porta e seus
+workspaces. Servidores de desenvolvimento de outras cópias devem usar portas
+distintas. Não aceitar automaticamente um certificado diferente nem apagar o
+fingerprint para esconder esse conflito.
+
 A tela apresenta status e verificação da conexão, pareamento e, no Windows,
 o bloco **Rede e conexão** logo abaixo do pareamento de celulares/tablets.
 **Impressão e impressoras** fica em seguida, imediatamente acima dos backups

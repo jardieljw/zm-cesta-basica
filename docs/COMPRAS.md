@@ -1,16 +1,16 @@
-# Compras, entrada de estoque e cancelamento
+# Compras, rascunhos, entrada de estoque e cancelamento
 
-Revisão: **14/10/2026**. [Índice](README.md).
+Revisão: **20/10/2026**. [Índice](README.md).
 
 ## Para que serve e interface
 
-Em **Compras → Nova Compra**, informar fornecedor, itens, forma de compra, quantidade, preço e condição de pagamento. Conferir a quantidade convertida e o total antes de salvar. Na listagem, consultar detalhes e as ações disponíveis para o status da compra.
+Em **Compras → Nova Compra**, informar fornecedor, itens, forma de compra, quantidade, preço e condição de pagamento. Conferir a quantidade convertida e o total antes de salvar. Na listagem, consultar detalhes e as ações disponíveis para o status da compra. No detalhe de um rascunho, editar seus dados e itens ou excluí-lo.
 
 Quantidade e preço são da embalagem selecionada. Sem embalagem, são da unidade-base. Ver [Produtos e formas de compra](PRODUTOS_E_FORMAS_DE_COMPRA.md).
 
 ## Regras do backend
 
-A API cria a compra em `POST /purchases`. Uma compra `DRAFT` registra os itens, mas ainda não repõe o estoque. A criação já confirmada ou `POST /purchases/{id}/confirm` registra a entrada. São validados produtos ativos, embalagens compatíveis e conversões.
+A API cria a compra em `POST /purchases`. Uma compra `DRAFT` registra os itens, mas ainda não repõe o estoque. `PUT /purchases/{id}` substitui os campos editáveis e os itens somente enquanto o status for `DRAFT`; o status continua rascunho. `DELETE /purchases/{id}` remove fisicamente somente um rascunho sem movimentos, obrigação, lançamento financeiro ou vínculo em evidência imutável de fatura. Ambos revalidam o estado no servidor dentro da transação. A criação já confirmada ou `POST /purchases/{id}/confirm` registra a entrada. São validados produtos ativos, embalagens compatíveis e conversões.
 
 Na confirmação, o backend adiciona movimentos `PURCHASE`, atualiza o custo de referência e o custo médio ponderado em microcentavos. O cálculo usa saldo e custo anteriores, quantidade e valor da nova entrada. A compra a prazo gera obrigação em aberto; a compra à vista registra a obrigação quitada, o pagamento e o débito financeiro quando há valor positivo e conta interna resolvida.
 
@@ -18,15 +18,19 @@ Na confirmação, o backend adiciona movimentos `PURCHASE`, atualiza o custo de 
 
 | Tabela | Efeito |
 | --- | --- |
-| `purchases`, `purchase_items` | Cabeçalho, status, pagamento e itens com conversão e valores registrados. |
+| `purchases`, `purchase_items` | Cabeçalho, status, pagamento e itens; edição e exclusão protegidas de rascunhos sem efeitos. |
 | `inventory_movements` | Entrada de produtos na confirmação; movimentos `PURCHASE_CANCEL` no cancelamento confirmado. |
 | `products` | Atualização dos campos de custo na entrada confirmada. |
 | `accounts_payable`, `payable_payments` | Obrigação da compra e confirmação de pagamento conforme a condição. |
 | `cash_flow_entries` | Débito da compra/pagamento e lançamentos inversos quando aplicáveis. |
 
+Editar um rascunho recalcula seu total e substitui seus itens, sem movimentar estoque, atualizar custos ou criar efeitos financeiros. Excluir um rascunho remove o cabeçalho e seus itens; se houver qualquer efeito de estoque, financeiro ou vínculo em evidência de fatura, a API bloqueia a operação. Compras confirmadas e canceladas não podem usar essas operações.
+
 ## Cancelamento e exemplo
 
 `POST /purchases/{id}/cancel` preserva a compra. Em rascunho, muda o status sem estornar estoque que nunca entrou. Em compra confirmada, soma as quantidades por produto e exige saldo para remover a entrada inteira, antes de criar os movimentos inversos. Trata também a obrigação vinculada e os pagamentos conforme o serviço.
+
+O cancelamento de rascunho continua disponível quando se deseja manter o registro no histórico de canceladas. A exclusão é permanente e reservada ao rascunho sem efeitos; ela remove também os itens vinculados.
 
 Comprar três sacos de arroz de 5 kg, a R$ 25,00 cada, registra R$ 75,00 e entrada de 15.000 G. Se restarem apenas 10.000 G, cancelar essa entrada de 15.000 G será bloqueado. O cancelamento não refaz a sequência histórica do custo médio: não interpretar a baixa como recálculo retroativo de todos os custos.
 

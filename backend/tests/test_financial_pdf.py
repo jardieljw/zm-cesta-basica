@@ -83,13 +83,18 @@ def upload_preview(api, source, content, **changes):
                                headers={**api.headers, 'Content-Type': 'application/pdf', 'X-Idempotency-Key': str(uuid.uuid4())})
     assert response.status_code in (200, 201), response.text
     doc = response.json()['document']
-    request = {'source_id': source['id'], 'currency': 'BRL', 'reader_id': 'pdf_auto', **changes}
+    state = api.get('/documents/' + doc['id'] + '/import-state')
+    request = {'source_id': source['id'], 'currency': 'BRL', 'reader_id': 'pdf_auto',
+        'expected_generation': state['current_generation'],
+        **({'explicit_reprocess':True,'expected_root_preview_id':state['root_preview_id']}
+           if state['active_import'] else {}), **changes}
     return api.post('/documents/' + doc['id'] + '/previews', request)['preview'], doc, request
 
 
 def confirm(api, preview, **changes):
     expected = changes.pop('expected', (200, 201))
     return api.post('/previews/' + preview['id'] + '/confirm', {
+        'import_id':preview['import_id'],'expected_generation':preview['generation'],
         'expected_source_id': preview['source_id'], 'expected_result_sha256': preview['result_sha256'],
         'statement_type': preview['extracted_header']['statement_type'], **changes,
     }, expected=expected)

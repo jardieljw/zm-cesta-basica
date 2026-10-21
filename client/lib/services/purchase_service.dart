@@ -42,6 +42,18 @@ class PurchaseService {
     return Purchase.fromJson(response as Map<String, dynamic>);
   }
 
+  Future<Purchase> updateDraftPurchase(
+    String id,
+    Map<String, dynamic> data,
+  ) async {
+    final response = await _client.put('/api/v1/purchases/$id', body: data);
+    return Purchase.fromJson(response as Map<String, dynamic>);
+  }
+
+  Future<void> deleteDraftPurchase(String id) async {
+    await _client.delete('/api/v1/purchases/$id');
+  }
+
   Future<Purchase> confirmPurchase(String id) async {
     final response = await _client.post('/api/v1/purchases/$id/confirm');
     return Purchase.fromJson(response as Map<String, dynamic>);

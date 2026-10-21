@@ -9,24 +9,48 @@ class BasketAssemblyService {
   final ApiClient _client;
   BasketAssemblyService({ApiClient? client}) : _client = client ?? ApiClient();
 
-  Future<Map<String, dynamic>> history(String basketId, int page) async => Map<
-      String, dynamic>.from(await _client.get(
-          '/api/v1/production/batches?basket_type_id=${Uri.encodeComponent(basketId)}&page=$page&page_size=25')
-      as Map);
+  Future<Map<String, dynamic>> history(
+    String basketId,
+    int page, {
+    String? focusBatchId,
+  }) async {
+    if (focusBatchId != null) {
+      final batch = await _client.get(
+        '/api/v1/production/batches/$focusBatchId',
+      );
+      return {
+        'items': [batch],
+        'total_pages': 1,
+      };
+    }
+    return Map<String, dynamic>.from(
+      await _client.get(
+            '/api/v1/production/batches?basket_type_id=${Uri.encodeComponent(basketId)}&page=$page&page_size=25',
+          )
+          as Map,
+    );
+  }
 
-  Future<Map<String, dynamic>> preview(String basketId, int quantity,
-          {String? customDescription,
-          List<Map<String, dynamic>>? customItems}) async =>
-      Map<String, dynamic>.from(await _client.post('/api/v1/production/preview',
+  Future<Map<String, dynamic>> preview(
+    String basketId,
+    int quantity, {
+    String? customDescription,
+    List<Map<String, dynamic>>? customItems,
+  }) async => Map<String, dynamic>.from(
+    await _client.post(
+          '/api/v1/production/preview',
           body: {
             'basket_type_id': basketId,
             'quantity_produced': quantity,
             'is_custom': customItems != null,
             if (customItems != null) 'custom_items': customItems,
             if (customItems != null) 'custom_description': customDescription,
-            'is_direct_sale': false
+            'is_direct_sale': false,
           },
-          isMutation: false) as Map);
+          isMutation: false,
+        )
+        as Map,
+  );
 
   Future<String> _pendingKey(String basketId) async {
     final server =
@@ -54,20 +78,27 @@ class BasketAssemblyService {
     if (previous != null &&
         jsonEncode(previous['payload']) != jsonEncode(payload)) {
       throw ApiException(
-          statusCode: 409,
-          message: 'Pending assembly',
-          errorCode: 'ASSEMBLY_PENDING');
+        statusCode: 409,
+        message: 'Pending assembly',
+        errorCode: 'ASSEMBLY_PENDING',
+      );
     }
     final key = previous?['key'] as String? ?? const Uuid().v4();
-    if (!await prefs.setString(await _pendingKey(basketId),
-        jsonEncode({'key': key, 'payload': payload}))) {
+    if (!await prefs.setString(
+      await _pendingKey(basketId),
+      jsonEncode({'key': key, 'payload': payload}),
+    )) {
       throw StateError('Could not persist request identity');
     }
     try {
-      final response = Map<String, dynamic>.from(await _client.post(
-          '/api/v1/production/batches',
-          body: payload,
-          idempotencyKey: key) as Map);
+      final response = Map<String, dynamic>.from(
+        await _client.post(
+              '/api/v1/production/batches',
+              body: payload,
+              idempotencyKey: key,
+            )
+            as Map,
+      );
       if (response['id'] is! String || response['basket_type_id'] != basketId) {
         throw StateError('Invalid assembly confirmation');
       }
@@ -82,7 +113,7 @@ class BasketAssemblyService {
             'INSUFFICIENT_STOCK',
             'BASKET_STOCK_DISABLED',
             'CUSTOMIZATION_DISABLED',
-            'RECIPE_CHANGED'
+            'RECIPE_CHANGED',
           ].contains(error.errorCode)) {
         await _clearPending(basketId);
       }

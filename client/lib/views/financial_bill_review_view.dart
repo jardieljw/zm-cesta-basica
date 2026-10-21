@@ -3,6 +3,9 @@ import '../services/financial_import_service.dart';
 import '../utils/formatters.dart';
 import '../widgets/shared/approved_app_style.dart';
 import 'payables_view.dart';
+import '../l10n/l10n_extension.dart';
+import '../utils/api_error_mapper.dart';
+import '../widgets/shared/app_operation_scope.dart';
 
 class FinancialBillReviewView extends StatefulWidget {
   final FinancialImportService service;
@@ -17,11 +20,32 @@ class FinancialBillReviewView extends StatefulWidget {
   });
 
   @override
-  State<FinancialBillReviewView> createState() => _FinancialBillReviewViewState();
+  State<FinancialBillReviewView> createState() =>
+      _FinancialBillReviewViewState();
 }
 
 class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
-  bool _busy = false;
+  bool _busyValue = false;
+  AppOperationLock? _lock;
+  bool get _busy => _busyValue;
+  set _busy(bool value) {
+    _busyValue = value;
+    _lock?.setActive(this, value);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _lock = AppOperationScope.maybeOf(context);
+  }
+
+  @override
+  void dispose() {
+    _lock?.setActive(this, false);
+    super.dispose();
+  }
+
+  bool _dirty = false;
   String? _errorMessage;
   FinancialJson? _statement;
   FinancialJson? _review;
@@ -54,23 +78,33 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
       _errorMessage = null;
     });
     try {
-      final st = _statement ?? await widget.service.get(
-        '${FinancialImportService.root}/statements/${widget.statementId}',
-      );
-      final rawItems = await widget.service.rows(
+      final st =
+          _statement ??
+          await widget.service.get(
+            '${FinancialImportService.root}/statements/${widget.statementId}',
+          );
+      final rawItems = await widget.service.allRows(
         '${FinancialImportService.root}/statements/${widget.statementId}/items?limit=500',
       );
-      final currentReview = await widget.service.getSemanticReview(widget.statementId);
-      final currentObligations = await widget.service.getObligations(widget.statementId);
+      final currentReview = await widget.service.getSemanticReview(
+        widget.statementId,
+      );
+      final currentObligations = await widget.service.getObligations(
+        widget.statementId,
+      );
 
       int reportedPrevious = 0;
       final previewId = st['preview_id'] as String?;
       if (previewId != null) {
         try {
-          final prev = await widget.service.get('${FinancialImportService.root}/previews/$previewId');
-          final summary = prev['reported_summary'] as Map? ?? prev['result']?['reported_summary'] as Map?;
+          final prev = await widget.service.get(
+            '${FinancialImportService.root}/previews/$previewId',
+          );
+          final summary =
+              prev['reported_summary'] as Map? ??
+              prev['result']?['reported_summary'] as Map?;
           if (summary != null && summary['previous'] != null) {
-            reportedPrevious = (summary['previous'] as num).abs().toInt();
+            reportedPrevious = (summary['previous'] as num).toInt();
           }
         } catch (_) {}
       }
@@ -87,30 +121,14 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
           }
         }
       } else {
-        // Initial smart guess based on raw description keywords and signs
-        for (final it in rawItems) {
-          final id = it['id'] as String;
-          final desc = (it['normalized_data']?['description'] ?? '').toString().toLowerCase();
-          final amt = (it['normalized_data']?['amount_cents'] ?? 0) as int;
-
-          if (desc.contains('pagamento') || desc.contains('pgto')) {
-            _categorizations[id] = 'BILL_PAYMENT';
-          } else if (amt < 0 || desc.contains('estorno') || desc.contains('crédito') || desc.contains('credito')) {
-            _categorizations[id] = 'REFUND_CREDIT';
-          } else if (desc.contains('juros') || desc.contains('multa') || desc.contains('iof') || desc.contains('anuidade') || desc.contains('tarifa') || desc.contains('saldo em atraso') || desc.contains('encerramento')) {
-            _categorizations[id] = 'FINANCIAL_CHARGES';
-          } else if (desc.contains('saldo anterior') && reportedPrevious == 0) {
-            _categorizations[id] = 'PREVIOUS_BALANCE';
-          } else if (desc.contains('retirada') || desc.contains('particular') || desc.contains('socio')) {
-            _categorizations[id] = 'PURCHASE_PERSONAL';
-          } else {
-            _categorizations[id] = 'PURCHASE_BUSINESS';
-          }
+        for (final item in rawItems) {
+          _categorizations[item['id'] as String] = 'UNCLASSIFIED';
         }
       }
 
       if (mounted) {
         setState(() {
+          _dirty = false;
           _statement = st;
           _items = rawItems;
           _review = currentReview;
@@ -122,7 +140,7 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = e.toString();
+          _errorMessage = ApiErrorMapper.toLocalizedMessage(e, context.l10n);
           _busy = false;
         });
       }
@@ -145,11 +163,12 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
 
   int get _previousBalance {
     final fromItems = _computeSum('PREVIOUS_BALANCE');
-    if (fromItems == 0 && _reportedPreviousBalance > 0) {
+    if (fromItems == 0 && _reportedPreviousBalance != 0) {
       return _reportedPreviousBalance;
     }
     return fromItems;
   }
+
   int get _purchasesBusiness => _computeSum('PURCHASE_BUSINESS');
   int get _purchasesPersonal => _computeSum('PURCHASE_PERSONAL');
   int get _financialCharges => _computeSum('FINANCIAL_CHARGES');
@@ -165,9 +184,20 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
       _refunds;
 
   int get _difference => _declaredTotal - _calculatedTotal;
-  bool get _isBalanced => _difference == 0 || _difference.abs() <= 10;
+  bool get _allClassified =>
+      _items.isNotEmpty &&
+      _items.every(
+        (i) =>
+            _categorizations[i['id']] != null &&
+            _categorizations[i['id']] != 'UNCLASSIFIED',
+      );
+  bool get _isBalanced => _allClassified && _difference == 0;
 
   Future<void> _saveReview() async {
+    if (!_allClassified) {
+      setState(() => _errorMessage = context.l10n.importClassifyRequired);
+      return;
+    }
     setState(() {
       _busy = true;
       _errorMessage = null;
@@ -177,13 +207,14 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
         final id = it['id'] as String;
         return {
           'item_id': id,
-          'semantic_category': _categorizations[id] ?? 'PURCHASE_BUSINESS',
+          'semantic_category': _categorizations[id] ?? 'UNCLASSIFIED',
           if (_linkedPurchases[id] != null) 'purchase_id': _linkedPurchases[id],
         };
       }).toList();
 
       final res = await widget.service.saveSemanticReview(
         widget.statementId,
+        context: FinancialImportService.lifecycleContext(_statement!),
         expectedRevision: (_review?['revision'] as int?) ?? 0,
         items: reviewItems,
         notes: 'Revisão conferida pelo operador',
@@ -193,6 +224,7 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
       if (mounted) {
         setState(() {
           _review = Map<String, dynamic>.from(updatedReview as Map);
+          _dirty = false;
           _busy = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(
@@ -208,7 +240,7 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = e.toString();
+          _errorMessage = ApiErrorMapper.toLocalizedMessage(e, context.l10n);
           _busy = false;
         });
       }
@@ -216,33 +248,41 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
   }
 
   Future<void> _generateObligations() async {
+    if (!_allClassified || !_isBalanced) {
+      setState(() => _errorMessage = context.l10n.importExactRequired);
+      return;
+    }
     setState(() {
       _busy = true;
       _errorMessage = null;
     });
     try {
-      if (_review == null || _review!['id'] == null) {
+      if (_dirty || _review == null || _review!['id'] == null) {
         final reviewItems = _items.map((it) {
           final id = it['id'] as String;
           return {
             'item_id': id,
-            'semantic_category': _categorizations[id] ?? 'PURCHASE_BUSINESS',
-            if (_linkedPurchases[id] != null) 'purchase_id': _linkedPurchases[id],
+            'semantic_category': _categorizations[id] ?? 'UNCLASSIFIED',
+            if (_linkedPurchases[id] != null)
+              'purchase_id': _linkedPurchases[id],
           };
         }).toList();
 
         final res = await widget.service.saveSemanticReview(
           widget.statementId,
+          context: FinancialImportService.lifecycleContext(_statement!),
           expectedRevision: (_review?['revision'] as int?) ?? 0,
           items: reviewItems,
           notes: 'Revisão conferida pelo operador',
         );
         final updatedReview = res.containsKey('review') ? res['review'] : res;
         _review = Map<String, dynamic>.from(updatedReview as Map);
+        _dirty = false;
       }
 
       final obligations = await widget.service.generateObligations(
         widget.statementId,
+        context: FinancialImportService.lifecycleContext(_statement!),
         reviewId: _review?['id'] as String?,
       );
       if (mounted) {
@@ -261,9 +301,9 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
               label: 'Abrir Contas a Pagar',
               textColor: pal.accentInk,
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const PayablesView()),
-                );
+                Navigator.of(
+                  context,
+                ).push(MaterialPageRoute(builder: (_) => const PayablesView()));
               },
             ),
           ),
@@ -272,7 +312,7 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = e.toString();
+          _errorMessage = ApiErrorMapper.toLocalizedMessage(e, context.l10n);
           _busy = false;
         });
       }
@@ -282,144 +322,183 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
   @override
   Widget build(BuildContext context) {
     final pal = AppPalette.of(context);
-    return Scaffold(
-      backgroundColor: pal.page,
-      appBar: AppBar(
+    return PopScope(
+      canPop: !_busy,
+      child: Scaffold(
         backgroundColor: pal.page,
-        foregroundColor: pal.ink,
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
-          'Revisão Semântica da Fatura',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            fontSize: 18,
-            color: pal.ink,
-          ),
-        ),
-        actions: [
-          IconButton(
-            tooltip: 'Atualizar',
-            onPressed: _busy ? null : _load,
-            icon: const Icon(Icons.refresh),
-          ),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          if (_busy) const LinearProgressIndicator(),
-          if (_errorMessage != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Text(
-                _errorMessage!,
-                style: TextStyle(color: pal.warn),
-              ),
+        appBar: AppBar(
+          backgroundColor: pal.page,
+          foregroundColor: pal.ink,
+          surfaceTintColor: Colors.transparent,
+          elevation: 0,
+          title: Text(
+            context.l10n.importReviewBill,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+              color: pal.ink,
             ),
-          _buildStatementSummaryCard(),
-          const SizedBox(height: 16),
-          _buildEquationCard(),
-          const SizedBox(height: 16),
-          if (_obligations.isEmpty && _isBalanced) ...[
-            ApprovedSurface(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.check_circle_outline, color: pal.accent, size: 24),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Equação balanceada! Pronto para lançar.',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: pal.accent,
+          ),
+          actions: [
+            IconButton(
+              tooltip: 'Atualizar',
+              onPressed: _busy ? null : _load,
+              icon: const Icon(Icons.refresh),
+            ),
+          ],
+        ),
+        body: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
+            if (_busy) const LinearProgressIndicator(),
+            if (_errorMessage != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Text(_errorMessage!, style: TextStyle(color: pal.warn)),
+              ),
+            _buildStatementSummaryCard(),
+            const SizedBox(height: 16),
+            _buildEquationCard(),
+            const SizedBox(height: 16),
+            if (_obligations.isEmpty && _isBalanced) ...[
+              ApprovedSurface(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.check_circle_outline,
+                          color: pal.accent,
+                          size: 24,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Equação balanceada! Pronto para lançar.',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: pal.accent,
+                            ),
                           ),
                         ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      context.l10n.importClassifyHelp,
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                    const SizedBox(height: 12),
+                    FilledButton.icon(
+                      key: const ValueKey('top-generate-obligations-btn'),
+                      onPressed: _busy || !_isBalanced
+                          ? null
+                          : _generateObligations,
+                      icon: const Icon(
+                        Icons.account_balance_wallet_outlined,
+                        size: 18,
                       ),
-                    ],
+                      label: const Text('Lançar em Contas a Pagar Agora'),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: pal.accent,
+                        foregroundColor: pal.accentInk,
+                        minimumSize: const Size(0, 40),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        textStyle: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+            if (_obligations.isNotEmpty) ...[
+              _buildObligationsCard(),
+              const SizedBox(height: 16),
+            ],
+            ApprovedSectionHeader(
+              'Classificação Linha a Linha (${_items.length} itens)',
+            ),
+            const SizedBox(height: 8),
+            ..._items.map(_buildItemCard),
+            const SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton.icon(
+                    key: const ValueKey('save-semantic-review-button'),
+                    onPressed: _busy || !_allClassified ? null : _saveReview,
+                    icon: const Icon(Icons.save_outlined),
+                    label: const Text('Salvar Classificação'),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: pal.ink,
+                      side: BorderSide(color: pal.line),
+                      minimumSize: const Size(0, 40),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Clique no botão abaixo para gerar automaticamente todas as parcelas e compras em Contas a Pagar.',
-                    style: TextStyle(fontSize: 13),
-                  ),
-                  const SizedBox(height: 12),
-                  FilledButton.icon(
-                    key: const ValueKey('top-generate-obligations-btn'),
-                    onPressed: _busy ? null : _generateObligations,
-                    icon: const Icon(Icons.account_balance_wallet_outlined, size: 18),
-                    label: const Text('Lançar em Contas a Pagar Agora'),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: FilledButton.icon(
+                    key: const ValueKey('generate-obligations-button'),
+                    onPressed: _busy || !_isBalanced
+                        ? null
+                        : _generateObligations,
+                    icon: const Icon(Icons.account_balance_wallet_outlined),
+                    label: const Text('Gerar Obrigações a Pagar'),
                     style: FilledButton.styleFrom(
                       backgroundColor: pal.accent,
                       foregroundColor: pal.accentInk,
                       minimumSize: const Size(0, 40),
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 32),
           ],
-          if (_obligations.isNotEmpty) ...[
-            _buildObligationsCard(),
-            const SizedBox(height: 16),
-          ],
-          ApprovedSectionHeader('Classificação Linha a Linha (${_items.length} itens)'),
-          const SizedBox(height: 8),
-          ..._items.map(_buildItemCard),
-          const SizedBox(height: 24),
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton.icon(
-                  key: const ValueKey('save-semantic-review-button'),
-                  onPressed: _busy ? null : _saveReview,
-                  icon: const Icon(Icons.save_outlined),
-                  label: const Text('Salvar Classificação'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: pal.ink,
-                    side: BorderSide(color: pal.line),
-                    minimumSize: const Size(0, 40),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: FilledButton.icon(
-                  key: const ValueKey('generate-obligations-button'),
-                  onPressed: _busy || !_isBalanced ? null : _generateObligations,
-                  icon: const Icon(Icons.account_balance_wallet_outlined),
-                  label: const Text('Gerar Obrigações a Pagar'),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: pal.accent,
-                    foregroundColor: pal.accentInk,
-                    minimumSize: const Size(0, 40),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    textStyle: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 32),
-        ],
+        ),
       ),
     );
   }
 
   Widget _buildStatementSummaryCard() {
     final due = _statement?['due_on'] != null
-        ? AppFormatters.formatDate(DateTime.parse(_statement!['due_on'] as String))
+        ? AppFormatters.formatDate(
+            DateTime.parse(_statement!['due_on'] as String),
+          )
         : 'Não informada';
     return ApprovedSurface(
       child: Column(
@@ -431,7 +510,9 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
           ),
           const SizedBox(height: 8),
           Text('Vencimento: $due'),
-          Text('Total Declarado: ${AppFormatters.formatCurrency(_declaredTotal)}'),
+          Text(
+            'Total Declarado: ${AppFormatters.formatCurrency(_declaredTotal)}',
+          ),
           if (_review != null)
             Padding(
               padding: const EdgeInsets.only(top: 6),
@@ -454,8 +535,8 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
     final statusText = isExact
         ? 'BALANCEADA (0 diff)'
         : isTolerated
-            ? 'BALANCEADA (arredondamento: ${AppFormatters.formatCurrency(_difference)})'
-            : 'DIFERENÇA: ${AppFormatters.formatCurrency(_difference)}';
+        ? 'BALANCEADA (arredondamento: ${AppFormatters.formatCurrency(_difference)})'
+        : 'DIFERENÇA: ${AppFormatters.formatCurrency(_difference)}';
 
     return ApprovedSurface(
       child: Column(
@@ -510,7 +591,9 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
   }
 
   Widget _equationRow(String label, int amountCents, {bool bold = false}) {
-    final style = TextStyle(fontWeight: bold ? FontWeight.bold : FontWeight.normal);
+    final style = TextStyle(
+      fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
@@ -531,11 +614,15 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
         children: [
           Text(
             'Obrigações Geradas em Contas a Pagar (${_obligations.length} títulos)',
-            style: Theme.of(context).textTheme.titleSmall?.copyWith(color: pal.accent),
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(color: pal.accent),
           ),
           const SizedBox(height: 8),
           ..._obligations.map((ob) {
-            final num = ob['payable_number'] != null ? '#${ob['payable_number']}' : '';
+            final num = ob['payable_number'] != null
+                ? '#${ob['payable_number']}'
+                : '';
             final desc = ob['description'] ?? 'Obrigação';
             final amt = ob['amount_cents'] as int? ?? 0;
             final nature = ob['nature'] ?? 'BUSINESS';
@@ -565,9 +652,9 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
           FilledButton.icon(
             key: const ValueKey('open-payables-from-review-button'),
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => const PayablesView()),
-              );
+              Navigator.of(
+                context,
+              ).push(MaterialPageRoute(builder: (_) => const PayablesView()));
             },
             icon: const Icon(Icons.arrow_forward, size: 18),
             label: const Text('Abrir em Contas a Pagar'),
@@ -576,8 +663,13 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
               foregroundColor: pal.accent,
               minimumSize: const Size(0, 40),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-              textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              textStyle: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
@@ -592,7 +684,7 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
     final desc = data['description']?.toString() ?? '';
     final date = data['transaction_date']?.toString() ?? '';
     final amt = (data['amount_cents'] as int?) ?? 0;
-    final currentCat = _categorizations[id] ?? 'PURCHASE_BUSINESS';
+    final currentCat = _categorizations[id] ?? 'UNCLASSIFIED';
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
@@ -619,33 +711,44 @@ class _FinancialBillReviewViewState extends State<FinancialBillReviewView> {
               ],
             ),
             const SizedBox(height: 4),
-            Text(
-              date,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+            Text(date, style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               key: ValueKey('category-dropdown-$id'),
               initialValue: currentCat,
               isExpanded: true,
               decoration: InputDecoration(
-                labelText: 'Categoria Semântica',
-                contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                labelText: context.l10n.importClassification,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 8,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              items: _categories.map((c) {
-                return DropdownMenuItem<String>(
-                  value: c['code'],
-                  child: Text(c['label']!),
-                );
-              }).toList(),
-              onChanged: (val) {
-                if (val != null) {
-                  setState(() => _categorizations[id] = val);
-                }
-              },
+              items: [
+                DropdownMenuItem<String>(
+                  value: 'UNCLASSIFIED',
+                  child: Text(context.l10n.importUnclassified),
+                ),
+                ..._categories.map((c) {
+                  return DropdownMenuItem<String>(
+                    value: c['code'],
+                    child: Text(c['label']!),
+                  );
+                }),
+              ],
+              onChanged: _busy
+                  ? null
+                  : (val) {
+                      if (val != null) {
+                        setState(() {
+                          _categorizations[id] = val;
+                          _dirty = true;
+                        });
+                      }
+                    },
             ),
           ],
         ),

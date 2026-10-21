@@ -52,23 +52,82 @@ class CSVOptions(FinancialInput):
 
 
 class FinancialPreviewCreate(FinancialInput):
+    expected_generation: int | None = Field(None, strict=True, ge=0)
+    explicit_reprocess: bool = False
+    expected_root_preview_id: EntityId | None = None
     source_id: EntityId
     currency: str = Field(pattern=r"^[A-Z]{3}$")
     reader_id: str = Field(min_length=1, max_length=50)
     options: CSVOptions | None = None
     password: str | None = Field(None, min_length=1, max_length=100)
+    expected_reader_version: str | None = Field(None, min_length=1, max_length=30)
+    control_preview_id: EntityId | None = None
+    # A cycle declaration is necessary when the detail CSV has no cycle header.
+    cycle_due_on: CalendarDate | None = None
 
     @model_validator(mode="after")
     def options_shape(self):
         from app.services.financial_readers import READERS
         if self.reader_id not in READERS:
             raise ValueError(f"Leitor desconhecido: {self.reader_id}")
+        if self.expected_reader_version is not None and self.expected_reader_version != READERS[self.reader_id].version:
+            raise ValueError("O leitor foi atualizado. Consulte sua versao antes de importar.")
         if (self.reader_id == "generic_csv") != (self.options is not None):
             raise ValueError("CSV generico exige mapeamento; leitor conhecido usa seu proprio contrato.")
+        if self.cycle_due_on is not None and self.control_preview_id is None:
+            raise ValueError('A declaracao de ciclo exige uma previa complementar.')
         return self
 
 
+class FinancialSegmentSelect(FinancialInput):
+    import_id: EntityId | None = None
+    expected_generation: int | None = Field(None, strict=True, ge=1)
+    expected_result_sha256: str = Field(pattern=r'^[a-f0-9]{64}$')
+    segment_key: str = Field(min_length=1, max_length=20)
+    source_id: EntityId
+
+
+class PreviewControl(FinancialInput):
+    field: str
+    value: str | int
+    kind: Literal['HEADER', 'TOTAL', 'MINIMUM', 'SUMMARY_COMPONENT', 'SUBTOTAL', 'OFFER']
+    origin: Literal['DOCUMENT', 'OPERATOR_DECLARATION'] = 'DOCUMENT'
+    page_number: int | None = None
+    line_start: int | None = None
+    raw_text: str
+    document_id: str | None = None
+    reader_id: str | None = None
+    reader_version: str | None = None
+
+
+class PreviewPending(FinancialInput):
+    code: str
+    fields: list[str] = Field(default_factory=list)
+    blocks_header: bool = False
+    blocks_details: bool = False
+
+
+class PreviewItemMeaning(FinancialInput):
+    role: Literal['PURCHASE', 'CHARGE', 'PAYMENT', 'CREDIT', 'PREVIOUS_BALANCE', 'UNKNOWN']
+    purpose: Literal['UNSPECIFIED'] = 'UNSPECIFIED'
+
+
+class PreviewReadiness(FinancialInput):
+    version: Literal[1] = 1
+    header_status: Literal['MISSING', 'CONFLICTING', 'DOCUMENT_VALIDATED', 'OPERATOR_DECLARED']
+    details_status: Literal['SUMMARY_ONLY', 'AVAILABLE_UNRECONCILED', 'RECONCILED']
+    financial_status: Literal['PENDING'] = 'PENDING'
+    total_basis: Literal['DOCUMENT', 'CALCULATED_ONLY', 'MISSING']
+    difference_cents: int | None = None
+    can_prepare_bill: bool = False
+    can_prepare_complete_details: bool = False
+    can_generate_obligations: Literal[False] = False
+    pending: list[PreviewPending] = Field(default_factory=list)
+
+
 class FinancialPreviewConfirm(FinancialInput):
+    import_id: EntityId | None = None
+    expected_generation: int | None = Field(None, strict=True, ge=1)
     assessment_id: EntityId | None = None
     expected_source_id: EntityId
     expected_result_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")

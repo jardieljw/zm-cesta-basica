@@ -1,0 +1,17 @@
+{
+  "status": "PASS",
+  "date": "2026-10-19",
+  "backend_tests": 547,
+  "flutter_tests": 388,
+  "static_analysis": "clean",
+  "previous_backend_deprecation_warnings": 14,
+  "isolated_databases": true,
+  "company_database_migrated": false,
+  "build_or_activation": false,
+  "schema": "ff5c6d7e9815, E2 unchanged; migration tested empty and populated copy",
+  "native_file_picker_verified": false,
+  "physical_devices_verified": false,
+  "https": "https-sanitizado.json",
+  "reading_comparison": "amostras-sanitizadas.json",
+  "visual": "revisao-visual-sanitizada.json"
+}

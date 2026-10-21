@@ -12,6 +12,7 @@ from app.models.auth import PairedDevice
 from app.models.purchases import Purchase, PurchaseItem
 from app.schemas.purchases import (
     PurchaseCreate,
+    PurchaseDraftUpdate,
     PurchaseResponse,
     PurchaseItemResponse,
     PurchaseListResponse,
@@ -20,6 +21,8 @@ from app.schemas.purchases import (
 )
 from app.services.purchases import (
     create_purchase_entity,
+    update_purchase_draft_entity,
+    delete_purchase_draft_entity,
     confirm_purchase_entity,
     cancel_purchase_entity,
 )
@@ -190,6 +193,67 @@ def create_purchase(
     )
 
     return result.to_json_dict()
+
+
+@router.put("/purchases/{purchase_id}", response_model=PurchaseResponse)
+def update_purchase_draft(
+    purchase_id: str,
+    data: PurchaseDraftUpdate,
+    db: Session = Depends(get_db),
+    current_device: PairedDevice = Depends(get_current_device),
+    idempotency_key: Optional[str] = Depends(get_idempotency_key),
+):
+    """Updates editable fields and items only while a purchase remains a draft."""
+    def _execute(session: Session):
+        purchase = update_purchase_draft_entity(session, purchase_id, data)
+        stmt = (
+            select(Purchase)
+            .options(
+                selectinload(Purchase.items).selectinload(PurchaseItem.product),
+                selectinload(Purchase.items).selectinload(PurchaseItem.packaging),
+                selectinload(Purchase.payable),
+            )
+            .where(Purchase.id == purchase.id)
+        )
+        loaded = session.execute(stmt).scalar_one()
+        return status.HTTP_200_OK, serialize_purchase(loaded).model_dump(mode="json")
+
+    result = process_transactional_idempotency(
+        db=db,
+        idempotency_key=idempotency_key,
+        operation_type="PURCHASES_DRAFT_UPDATE",
+        payload={"purchase_id": purchase_id, "data": data.model_dump(mode="json")},
+        business_callback=_execute,
+    )
+    return result.to_json_dict()
+
+
+@router.delete("/purchases/{purchase_id}")
+def delete_purchase_draft(
+    purchase_id: str,
+    db: Session = Depends(get_db),
+    current_device: PairedDevice = Depends(get_current_device),
+    idempotency_key: Optional[str] = Depends(get_idempotency_key),
+):
+    """Permanently removes a draft that has no inventory or financial effects."""
+    def _execute(session: Session):
+        purchase_number = delete_purchase_draft_entity(session, purchase_id)
+        response = {
+            "id": purchase_id,
+            "purchase_number": purchase_number,
+            "message": "Rascunho excluido.",
+        }
+        return status.HTTP_200_OK, response
+
+    result = process_transactional_idempotency(
+        db=db,
+        idempotency_key=idempotency_key,
+        operation_type="PURCHASES_DRAFT_DELETE",
+        payload={"purchase_id": purchase_id},
+        business_callback=_execute,
+    )
+    return result.to_json_dict()
+
 
 @router.post(
     "/purchases/{purchase_id}/confirm",

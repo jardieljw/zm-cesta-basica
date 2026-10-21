@@ -1,0 +1,45 @@
+{
+  "kind": "synthetic widget captures, not native device certification",
+  "viewports": [
+    [
+      320,
+      780,
+      1.7
+    ],
+    [
+      390,
+      844,
+      1.0
+    ],
+    [
+      1200,
+      900,
+      1.0
+    ]
+  ],
+  "reviewed": [
+    "due candidates with pages and unchanged two-cent difference",
+    "separate evidence result for renegotiation",
+    "civil week interval and explicit filter application",
+    "positive payable list with whole-filter summary across pages"
+  ],
+  "source_sha256": {
+    "backend/app/services/financial_compilations.py": "a4be79694f2f4a33736d107b40d33d1ab1bcb01fbf1abea326486f90a5667ea2",
+    "backend/app/services/financial_bill_enrichment.py": "048affe465fb9fca8556d2aa9f8924efa3c62b2e623a29c3ccef3d7705721d6a",
+    "backend/app/services/financial_bill_cycles.py": "a9e24580901ddd3187796bf5743cbcba1d2b852cddbb923da2e4a4c335ce19d0",
+    "backend/app/services/financial_previews.py": "e1350b325c69164b58dd0d0aebbd3aa70d0dbb06928a406e901864a32ff12194",
+    "backend/app/services/financial_pdf_readers.py": "ef3e155981b31ab42b35bdc85cdd52355d68165eb07cf78845e7c3d32b86e634",
+    "backend/app/services/financial_readers.py": "57c52f80f21dd50f64be5b820c97fa86993355667ce7172fe4d410c2135be0d0",
+    "backend/app/services/financial.py": "8d45412072131bd5e4ea602e673fc720b966f505c8a4244f603098e19472f267",
+    "backend/app/api/v1/financial_imports.py": "b93eb98cc6f9251887d7e07b77ab489d870452a625b23c10fb9ceaf32b64aaf5",
+    "backend/app/api/v1/payables.py": "b805190d02be923c955ce4c10c812d001c58bd57623881ab34475a218d358b4c",
+    "client/lib/views/financial_imports_view.dart": "371bf3b705312a1c7b17a1fcdccadb05ee9cf5dd19fa265a88034ebb307b0067",
+    "client/lib/views/financial_bill_integration_view.dart": "8e1ebebb540a3345efc5f3b465ff02cbb9877d8539df0b76eed8770bf78989b9",
+    "client/lib/views/financial_segments_view.dart": "9e48a540c1d22120ce7d3ee4b3309da2d79f7332903bb4d120aa417864f0180e",
+    "client/lib/views/payables_view.dart": "dc3ace558719d4211c774dc7fef4a6379aba5a534b9da46a8ddfb7036a48814a",
+    "client/lib/widgets/payables/payable_filters_panel.dart": "70b635cbc034ba7da6d8d2dcff6ab4b5742fabd28769398b6970215b0d8ae2d2",
+    "client/lib/services/payable_service.dart": "cc18852de407472d97d3b0566b0afd919af820a419b3f2b78d77ce9a39ea95f4",
+    "client/lib/services/financial_import_service.dart": "ce6f8efb134bdbbe70881fbbc0e4b46ddcdda916ece3719ce0c6811e71b4f047",
+    "client/lib/l10n/app_pt.arb": "4d77a8cc0b0f236324fd64ba5f0bd4e7deea6007ff3296faa19b8ea97ccf4352"
+  }
+}

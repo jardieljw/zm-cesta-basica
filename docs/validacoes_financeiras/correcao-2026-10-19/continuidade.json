@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-19",
+  "scope": "Activation and read-only allocation requirements; persisted allocations remain pending",
+  "backend": {
+    "passed": 488,
+    "warnings": 14,
+    "seconds": 95.65,
+    "new_tests": 8
+  },
+  "flutter": {
+    "source_files_unchanged": 136,
+    "previous_passed_reused": 367,
+    "analysis_and_release_reused": true,
+    "suite_rerun": false
+  },
+  "runtime_report": "runtime-https.json",
+  "activation_report": "ativacao.json",
+  "new_migration": false,
+  "business_data_unchanged": true,
+  "native_ui_interaction_certified": false,
+  "source_sha256": {
+    "backend/app/api/v1/financial_imports.py": "fb982fd65a727c3fccfac5c12d7b12205ad025e05d4ebaf3b517888c2334fcae",
+    "backend/app/services/financial_bill_allocations.py": "c2e018ba1f15debcb72d8930d0e47c008081c9dd339cd867e801fd6c0c546c9e",
+    "backend/tests/test_financial_bill_allocations.py": "f55810ea8fe94f0a66a4c74eaf027761fffeed609ad24e55ae341b13673da75f",
+    "scripts/verify_financial_runtime.py": "8ef4a93406cb8142d38ef93642d9d539e3e20274afc48b2a3ba3dce369536aec",
+    "docs/ALOCACOES_DE_FATURA.md": "e81b1cc155bc17f9d4110b6e9954653f4cf2c4662397498724b0375f0a8eb503",
+    "docs/MEMORIA_IMPLEMENTACAO_FINANCEIRA.md": "dac08797a09afd98fff823807ecbb334290c730569b23f945acfe72895e84b17",
+    "docs/CORRECAO_IMPORTACAO_FINANCEIRA_2026-10-19.md": "d065102cfcf0a508ec786029bc3710b45f126742a21c16d23857a93a31c8c5f2"
+  }
+}

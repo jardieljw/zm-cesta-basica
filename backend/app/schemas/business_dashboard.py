@@ -55,6 +55,7 @@ class BusinessFinancialSummary(BaseModel):
     operating_result_cents: int
     stock_purchases_paid_cents: int
     personal_withdrawals_paid_cents: int
+    unclassified_paid_cents: int = 0
     sales_without_cost_count: int
     received_records: List[BusinessPaymentRecord] = Field(default_factory=list)
     paid_records: List[BusinessPaymentRecord] = Field(default_factory=list)

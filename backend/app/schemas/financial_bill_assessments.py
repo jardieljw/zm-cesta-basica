@@ -71,6 +71,8 @@ class BillFindingResolution(EvidenceLocator):
 
 
 class BillAssessmentCreate(FinancialInput):
+    import_id: EntityId | None = None
+    expected_generation: int | None = Field(None, strict=True, ge=1)
     expected_revision: int = Field(strict=True, ge=0)
     expected_source_id: EntityId
     expected_result_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")

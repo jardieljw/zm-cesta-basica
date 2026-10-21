@@ -27,7 +27,11 @@ def options(**changes):
 
 def preview(api, source, content, *, opts=None, reader="generic_csv", **fields):
     document = api.document(content)["document"]
-    request = {"source_id": source["id"], "currency": source["currency"], "reader_id": reader, **fields}
+    state = api.get('/documents/' + document['id'] + '/import-state')
+    request = {"source_id": source["id"], "currency": source["currency"], "reader_id": reader,
+        'expected_generation': state['current_generation'],
+        **({'explicit_reprocess': True, 'expected_root_preview_id': state['root_preview_id']}
+           if state['active_import'] else {}), **fields}
     if reader == "generic_csv":
         request["options"] = opts or options()
     return api.post("/documents/" + document["id"] + "/previews", request)["preview"], document, request
@@ -36,6 +40,7 @@ def preview(api, source, content, *, opts=None, reader="generic_csv", **fields):
 def confirm(api, result, **fields):
     expected = fields.pop("expected", (200, 201))
     return api.post("/previews/" + result["id"] + "/confirm", {
+        'import_id': result['import_id'], 'expected_generation': result['generation'],
         "expected_source_id": result["source_id"], "expected_result_sha256": result["result_sha256"],
         "statement_type": "BANK_STATEMENT", **fields,
     }, expected=expected)
@@ -48,7 +53,7 @@ def test_known_layout_is_only_one_adapter_and_import_never_changes_books(api, te
                '10/07/2025,-50.00,synthetic-a,"Fornecedor, exemplo"\r\n'
                '10/07/2025,-50.00,synthetic-b,"Fornecedor, exemplo"\r\n').encode()
     p, doc, request = preview(api, source, content, reader="nubank_account_csv")
-    assert p["status"] == "READY" and p["reader_version"] == "1" and p["items_count"] == 2
+    assert p["status"] == "READY" and p["reader_version"] == "3" and p["items_count"] == 2
     assert p["totals"] == {"positive_cents": 0, "negative_cents": 10000, "net_cents": -10000}
     assert p["observed_dates"] == {"first": "2025-07-10", "last": "2025-07-10"}
     assert "items" not in p and "result" not in p
@@ -234,7 +239,7 @@ def test_backups_restore_reader_provenance_original_and_statement_link(api, test
         assert db.execute("SELECT content FROM financial_documents WHERE id=?", (doc["id"],)).fetchone()[0] == content
         assert db.execute("SELECT preview_id FROM financial_statements WHERE id=?", (statement["id"],)).fetchone()[0] == p["id"]
         version, stored = db.execute("SELECT reader_version,result FROM financial_import_previews WHERE id=?", (p["id"],)).fetchone()
-        assert version == "2" and json.loads(stored)["items"][0]["data"]["amount_cents"] == -1000
+        assert version == "4" and json.loads(stored)["items"][0]["data"]["amount_cents"] == -1000
         assert db.execute("PRAGMA integrity_check").fetchone() == ("ok",)
         assert db.execute("PRAGMA foreign_key_check").fetchall() == []
 
@@ -285,14 +290,18 @@ def test_crash_during_reader_does_not_leave_partial_preview_or_lock(api, test_en
     assert api.post("/documents/" + doc["id"] + "/previews", data, key="interrupted-preview")["preview"]["status"] == "READY"
 
 
-def test_import_checks_report_divergences_without_fabricating_balances_or_payments(api):
+def test_import_blocks_wrong_totals_and_reports_period_divergence_without_fabricating_balances(api):
     p, _, _ = preview(api, api.source(), b"Data;Valor;Descricao\n10/07/2025;-10,00;x\n")
+    blocked = confirm(api, p, opening_balance_cents=2000, closing_balance_cents=1000,
+        total_inflows_cents=0, total_outflows_cents=999, expected=(409,))
+    assert blocked['detail']['error_code'] == 'FINANCIAL_IMPORT_CONTROL_MISMATCH'
+    assert api.get('/statements') == []
     statement = confirm(api, p, opening_balance_cents=2000, closing_balance_cents=1000,
-        total_inflows_cents=0, total_outflows_cents=999, period_start="2025-07-11", period_end="2025-07-31")["statement"]
+        total_inflows_cents=0, total_outflows_cents=1000, period_start="2025-07-11", period_end="2025-07-31")["statement"]
     checks = {c["code"]: c for c in statement["checks"]}
     assert checks["IMPORTED_INFLOWS_TOTAL"]["matches"]
-    assert checks["IMPORTED_OUTFLOWS_TOTAL"]["difference_cents"] == -1
-    assert not checks["REPORTED_BALANCE_EQUATION"]["matches"]
+    assert checks["IMPORTED_OUTFLOWS_TOTAL"]["matches"]
+    assert checks["REPORTED_BALANCE_EQUATION"]["matches"]
     assert not checks["OBSERVED_DATES_WITHIN_PERIOD"]["matches"]
     assert not statement["affects_ledger"] and not api.get("/transactions")
 
@@ -327,7 +336,7 @@ def test_sign_spacing_requires_opt_in_and_reprocessing_keeps_original_and_invali
     assert invalid["status"] == "INVALID" and invalid["items_count"] == 1
     assert confirm(api, invalid, statement_type="CARD_BILL", expected=(409,))
     fixed, _, request = preview(api, source, content, opts={**opts, "amount_sign_spacing": "OPTIONAL_SINGLE_SPACE"})
-    assert fixed["status"] == "READY" and fixed["reader_version"] == "2"
+    assert fixed["status"] == "READY" and fixed["reader_version"] == "4"
     assert fixed["id"] != invalid["id"] and fixed["document_id"] == doc["id"]
     rows = api.get("/previews/" + fixed["id"] + "/items")
     assert [r["data"]["amount_cents"] for r in rows] == [10000, -2000]
@@ -358,6 +367,6 @@ def test_reader_version_change_creates_new_preview_without_rewriting_v1(api, mon
         patch.setitem(READERS, "generic_csv", CSVReader("generic_csv", "1"))
         old, doc, _ = preview(api, source, content)
     new, _, _ = preview(api, source, content)
-    assert new["id"] != old["id"] and new["reader_version"] == "2"
+    assert new["id"] != old["id"] and new["reader_version"] == "4"
     assert api.get("/previews/" + old["id"])["reader_version"] == "1"
     assert new["document_id"] == old["document_id"] == doc["id"]

@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "date": "2026-10-19",
+  "server_https_health": true,
+  "new_preview_contract_live": true,
+  "financial_auth_required": true,
+  "schema": "fe4b5c6d8714",
+  "migration_applied": false,
+  "verified_backup": true,
+  "business_tables_unchanged": true,
+  "changed_columns_after_client_connection": [
+    "paired_devices.last_seen_at"
+  ],
+  "allocation_requirements_route_live": true,
+  "client_release_files": 16,
+  "client_release_source_files_verified": 136,
+  "client_exe_sha256": "a2cf8c6098391fc9db15911d0ac4e6bb84c2afef560b6d99885d9582a2851596",
+  "pdf_runtime": "Python venv, separate worker; seven authorized PDFs checked over isolated HTTPS",
+  "frozen_backend_certified": false,
+  "native_ui_interaction_certified": false,
+  "active_client_pid": 4772,
+  "active_server_launcher_pid": 1772,
+  "active_server_listen_pid": 17208
+}

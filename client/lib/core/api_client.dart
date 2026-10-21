@@ -158,7 +158,9 @@ class ApiClient {
         return _processResponse(response);
       } catch (e) {
         final isConnError =
-            e is SocketException || e is http.ClientException || e is HttpException;
+            e is SocketException ||
+            e is http.ClientException ||
+            e is HttpException;
         if (isConnError && attempt == 0) {
           _resetClient();
           continue;
@@ -193,7 +195,9 @@ class ApiClient {
         );
       } catch (e) {
         final isConnError =
-            e is SocketException || e is http.ClientException || e is HttpException;
+            e is SocketException ||
+            e is http.ClientException ||
+            e is HttpException;
         if (isConnError && attempt == 0) {
           _resetClient();
           continue;
@@ -230,9 +234,14 @@ class ApiClient {
       _processResponse(response);
       throw StateError('Unexpected export response');
     } catch (e) {
-      if (e is SocketException || e is http.ClientException || e is HttpException) {
+      if (e is SocketException ||
+          e is http.ClientException ||
+          e is HttpException) {
         _resetClient();
-        throw ApiException(statusCode: 0, message: 'Falha de conexao com o servidor local: $e');
+        throw ApiException(
+          statusCode: 0,
+          message: 'Falha de conexao com o servidor local: $e',
+        );
       }
       rethrow;
     }
@@ -260,7 +269,9 @@ class ApiClient {
       );
       return _processResponse(response);
     } catch (e) {
-      if (e is SocketException || e is http.ClientException || e is HttpException) {
+      if (e is SocketException ||
+          e is http.ClientException ||
+          e is HttpException) {
         _resetClient();
         throw ApiException(
           statusCode: 0,
@@ -294,9 +305,14 @@ class ApiClient {
       _resetClient();
       throw ApiException(statusCode: 0, message: 'Upload timeout');
     } catch (e) {
-      if (e is SocketException || e is http.ClientException || e is HttpException) {
+      if (e is SocketException ||
+          e is http.ClientException ||
+          e is HttpException) {
         _resetClient();
-        throw ApiException(statusCode: 0, message: 'Upload connection failed: $e');
+        throw ApiException(
+          statusCode: 0,
+          message: 'Upload connection failed: $e',
+        );
       }
       rethrow;
     }
@@ -326,7 +342,9 @@ class ApiClient {
       );
       return _processResponse(response);
     } catch (e) {
-      if (e is SocketException || e is http.ClientException || e is HttpException) {
+      if (e is SocketException ||
+          e is http.ClientException ||
+          e is HttpException) {
         _resetClient();
         throw ApiException(
           statusCode: 0,
@@ -361,7 +379,9 @@ class ApiClient {
       );
       return _processResponse(response);
     } catch (e) {
-      if (e is SocketException || e is http.ClientException || e is HttpException) {
+      if (e is SocketException ||
+          e is http.ClientException ||
+          e is HttpException) {
         _resetClient();
         throw ApiException(
           statusCode: 0,
@@ -372,17 +392,26 @@ class ApiClient {
     }
   }
 
-  Future<dynamic> delete(String path, {bool isMutation = true}) async {
+  Future<dynamic> delete(
+    String path, {
+    bool isMutation = true,
+    String? idempotencyKey,
+  }) async {
     final client = await _getClient();
     final baseUrl = await _getBaseUrl();
     final uri = Uri.parse('$baseUrl$path');
-    final headers = await _buildHeaders(isMutation: isMutation);
+    final headers = await _buildHeaders(
+      isMutation: isMutation,
+      customIdempotencyKey: idempotencyKey,
+    );
 
     try {
       final response = await client.delete(uri, headers: headers);
       return _processResponse(response);
     } catch (e) {
-      if (e is SocketException || e is http.ClientException || e is HttpException) {
+      if (e is SocketException ||
+          e is http.ClientException ||
+          e is HttpException) {
         _resetClient();
         throw ApiException(
           statusCode: 0,

@@ -506,6 +506,8 @@ def record_payable_payment(db: Session, payable_id: str, data: PayablePaymentCre
         notes=data.notes.strip() if data.notes else None,
         created_at=now,
     )
+    from app.services.financial_payment_composition import snapshot_payment
+    snapshot_payment(db, payable, payment, data.expected_bill_revision)
     db.add(payment)
 
     # Post immutable cash flow debit
@@ -554,6 +556,8 @@ def cancel_payable_payment(db: Session, payment_id: str, data: PayablePaymentCan
         )
 
     payable = payment.payable
+    if payable.superseded_by_id:
+        raise HTTPException(409, detail={'error_code': 'FINANCIAL_BILL_REPLACEMENT_CONFLICT', 'message': 'O saldo deste titulo foi transferido. Confira o vinculo antes de estornar.'})
     acc = get_financial_account(db, payment.account_id)
     now = utc_now()
 
@@ -603,6 +607,10 @@ def cancel_account_payable(db: Session, payable_id: str, data: AccountPayableCan
 
     if not payable:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Obrigacao a pagar '{payable_id}' nao encontrada.")
+
+    from app.models.financial_bill_cycles import FinancialBillCycle
+    if payable.superseded_by_id or db.scalar(select(FinancialBillCycle.id).where(FinancialBillCycle.payable_id == payable.id)):
+        raise HTTPException(409, detail={'error_code': 'FINANCIAL_BILL_REPLACEMENT_CONFLICT', 'message': 'Esta cobranca exige revisao de seus vinculos antes de cancelar.'})
 
     if payable.status == "CANCELED":
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Titulo a pagar ja se encontra cancelado.")
@@ -708,14 +716,39 @@ def list_accounts_payable(
     overdue_only: bool = False,
     limit: int = 100,
     offset: int = 0,
+    source_id: Optional[str] = None,
+    merchant: Optional[str] = None,
+    summary_only: bool = False,
+    source_query: Optional[str] = None,
 ) -> List[AccountPayable]:
     """Lists accounts payable with multi-criteria filtering."""
-    stmt = select(AccountPayable).options(selectinload(AccountPayable.payments))
+    from app.services.financial_import_removals import hidden_payables
+    stmt = select(AccountPayable).options(selectinload(AccountPayable.payments)).where(AccountPayable.id.not_in(hidden_payables(db)))
 
     if due_date_from:
-        stmt = stmt.where(AccountPayable.due_date >= due_date_from)
+        stmt = stmt.where(func.date(AccountPayable.due_date) >= due_date_from.date().isoformat())
     if due_date_to:
-        stmt = stmt.where(AccountPayable.due_date <= due_date_to)
+        stmt = stmt.where(func.date(AccountPayable.due_date) <= due_date_to.date().isoformat())
+
+    if source_id or source_query or merchant:
+        from app.models.financial_bill_cycles import FinancialBillCycle, FinancialBillCycleRevision
+        from app.models.financial_imports import FinancialStatementItem, FinancialSource
+        cycles = select(FinancialBillCycle.payable_id)
+        if source_id:
+            cycles = cycles.where(FinancialBillCycle.source_id == source_id)
+        if source_query:
+            sources = select(FinancialSource.id).where(or_(
+                FinancialSource.name.icontains(source_query.strip(), autoescape=True),
+                FinancialSource.institution.icontains(source_query.strip(), autoescape=True)))
+            cycles = cycles.where(FinancialBillCycle.source_id.in_(sources))
+        if merchant:
+            matching = select(FinancialStatementItem.statement_id).where(
+                func.json_extract(FinancialStatementItem.normalized_data, '$.description').icontains(merchant.strip(), autoescape=True))
+            cycles = cycles.join(FinancialBillCycleRevision, and_(
+                FinancialBillCycleRevision.cycle_id == FinancialBillCycle.id,
+                FinancialBillCycleRevision.revision == FinancialBillCycle.revision)).where(
+                    FinancialBillCycleRevision.statement_id.in_(matching))
+        stmt = stmt.where(AccountPayable.id.in_(cycles))
 
     if year:
         # SQLite strftime filter for year
@@ -738,6 +771,14 @@ def list_accounts_payable(
             AccountPayable.status.in_(["OPEN", "PARTIAL"]),
         )
 
+    if summary_only:
+        # The same predicates, before pagination; a matching item counts its bill once.
+        rows = db.execute(stmt.with_only_columns(AccountPayable.balance_cents, AccountPayable.paid_amount_cents,
+            AccountPayable.status, AccountPayable.due_date)).all()
+        today = business_today(utc_now())
+        return dict(count=len(rows), open_cents=sum(r.balance_cents for r in rows if r.status in {'OPEN','PARTIAL'}),
+            overdue_cents=sum(r.balance_cents for r in rows if r.status in {'OPEN','PARTIAL'} and r.due_date.date() < today),
+            paid_cents=sum(r.paid_amount_cents for r in rows), business_today=today.isoformat())
     stmt = stmt.order_by(AccountPayable.due_date.asc(), desc(AccountPayable.payable_number)).limit(limit).offset(offset)
     return list(db.execute(stmt).scalars().all())
 

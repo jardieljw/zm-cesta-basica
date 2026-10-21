@@ -535,6 +535,17 @@ def disassemble_production_batch(
             detail=f"Lote de producao '{batch_id}' nao encontrado.",
         )
 
+    # A direct-sale batch cannot borrow other ready stock to undo ingredients
+    # while its sale is still valid. cancel_sale marks the sale first, atomically.
+    from app.models.sales import Sale, SaleItem
+    active_sale = db.execute(select(Sale).join(SaleItem).where(
+        SaleItem.production_batch_id == batch.id, Sale.status != 'CANCELED').limit(1)).scalar_one_or_none()
+    if active_sale:
+        from app.services.catalog_dependencies import sale_entry
+        raise HTTPException(409, detail={'error_code': 'ASSEMBLY_HAS_ACTIVE_SALE',
+            'message': f'Cancele primeiro a venda nº {active_sale.sale_number}, de {active_sale.customer_name or "cliente não informado"}.',
+            'sale_id': active_sale.id, 'blockers': [sale_entry(active_sale)]})
+
     if batch.status != "CONFIRMED":
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -582,6 +593,29 @@ def disassemble_production_batch(
         )
 
     # Process triage per item
+    if not batch.is_custom and batch.recipe_version_id:
+        # Standard stock is aggregated by type. Another recipe's ready baskets
+        # must never allow returning this recipe's ingredients after its sale.
+        from app.services.catalog_dependencies import recipe_sale_rows, sale_entry
+        recipe = db.get(RecipeVersion, batch.recipe_version_id)
+        rows = recipe_sale_rows(db, recipe)
+        same_recipe = db.execute(select(ProductionBatch).where(
+            ProductionBatch.recipe_version_id == recipe.id, ProductionBatch.is_custom.is_(False))).scalars().all()
+        produced_remaining = sum(b.quantity_produced - get_batch_disassembled_quantity(db, b.id) for b in same_recipe)
+        sold = sum(item.quantity for sale, item in rows if sale.sale_mode == 'DIRECT_STORE')
+        # Unattributed losses/transfers cannot be supplied by an arbitrary recipe.
+        other_out = int(db.scalar(select(func.coalesce(func.sum(-InventoryMovement.quantity_delta), 0)).where(
+            InventoryMovement.basket_type_id == batch.basket_type_id,
+            InventoryMovement.location_type == 'STORE', InventoryMovement.quantity_delta < 0,
+            InventoryMovement.source_type.not_in(['SALE', 'PRODUCTION']))) or 0)
+        safe_quantity = max(0, produced_remaining - sold - other_out)
+        if qty_to_disassemble > safe_quantity:
+            raise HTTPException(409, detail={'error_code': 'ASSEMBLY_RECIPE_STOCK_UNCERTAIN',
+                'message': f'É possível confirmar somente {safe_quantity} cesta(s) disponíveis desta receita. '
+                    'Cestas de outra composição não podem devolver estes ingredientes. Confira as vendas e as saídas de estoque.',
+                'blockers': [sale_entry(sale) for sale in {sale.id: sale for sale, _ in rows}.values()],
+                'safe_quantity': safe_quantity})
+
     batch_product_ids = {it.product_id for it in batch.items}
     triage_map: Dict[str, Any] = {}
     if data.triage_items:

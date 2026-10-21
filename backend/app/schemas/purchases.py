@@ -17,7 +17,7 @@ class PurchaseItemCreate(BaseModel):
                 raise ValueError("product_id nao pode ser vazio.")
         return v
 
-class PurchaseCreate(BaseModel):
+class PurchaseFields(BaseModel):
     supplier_name: Optional[str] = Field(None, max_length=200, description="Nome ou razao social do fornecedor")
     purchase_date: Optional[datetime.datetime] = Field(None, description="Data da compra/recebimento")
     payment_mode: str = Field(default="CASH_IMMEDIATE", description="'CASH_IMMEDIATE' ou 'CREDIT_TERM'")
@@ -25,17 +25,7 @@ class PurchaseCreate(BaseModel):
     due_date: Optional[datetime.datetime] = Field(None, description="Data de vencimento se compra a prazo (CREDIT_TERM)")
     account_id: Optional[str] = Field(None, description="Conta financeira para pagamento se CASH_IMMEDIATE")
     notes: Optional[str] = Field(None, max_length=1000, description="Observacoes adicionais ou numero da NF-e")
-    status: str = Field(default="CONFIRMED", description="'CONFIRMED' ou 'DRAFT'")
     items: List[PurchaseItemCreate] = Field(..., min_length=1, description="Lista de itens da compra")
-
-    @field_validator("status", mode="before")
-    @classmethod
-    def validate_status(cls, v: Any) -> Any:
-        if isinstance(v, str):
-            v = v.strip().upper()
-            if v not in ("CONFIRMED", "DRAFT"):
-                raise ValueError("Status invalido. Valores aceitos: CONFIRMED, DRAFT.")
-        return v
 
     @field_validator("payment_mode", mode="before")
     @classmethod
@@ -64,6 +54,23 @@ class PurchaseCreate(BaseModel):
             if not v:
                 return None
         return v
+
+
+class PurchaseCreate(PurchaseFields):
+    status: str = Field(default="CONFIRMED", description="'CONFIRMED' ou 'DRAFT'")
+
+    @field_validator("status", mode="before")
+    @classmethod
+    def validate_status(cls, v: Any) -> Any:
+        if isinstance(v, str):
+            v = v.strip().upper()
+            if v not in ("CONFIRMED", "DRAFT"):
+                raise ValueError("Status invalido. Valores aceitos: CONFIRMED, DRAFT.")
+        return v
+
+
+class PurchaseDraftUpdate(PurchaseFields):
+    """Replacement of draft fields and items; it has no status transition."""
 
 class PurchaseItemResponse(BaseModel):
     id: str

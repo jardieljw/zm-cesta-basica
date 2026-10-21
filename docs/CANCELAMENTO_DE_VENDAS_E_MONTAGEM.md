@@ -1,6 +1,6 @@
 # Cancelamento de vendas e montagem
 
-Revisão: **14/10/2026**. [Índice](README.md).
+Revisão: **20/10/2026**. [Índice](README.md).
 
 ## Onde escolher na interface
 
@@ -9,6 +9,14 @@ e, para cada item identificado como montagem durante a venda, exige preencher
 **Situação da montagem**. Nenhuma opção é escolhida automaticamente na tela.
 A regra abaixo está implementada no código e depende de atualização do servidor
 e do cliente instalado para aparecer no aplicativo.
+
+O diálogo usa **Cancelar a venda nº ...?**, mostra cliente/data e diferencia
+cancelar venda de estornar recebimento. Valor recebido aparece em reais (por
+exemplo, R$ 150,00). **Ver recebimentos desta venda** abre diretamente o título
+daquela venda, com consulta e estorno explícito. Retornar atualiza a lista;
+nenhum recebimento ou venda é desfeito automaticamente. Durante gravação, edição
+e fechamento do diálogo ficam bloqueados. Impedimento financeiro aparece como
+mensagem da operação, sem marcar o motivo como se fosse um texto inválido.
 
 No cancelamento, cada item montado durante a venda exige informar sua situação física:
 

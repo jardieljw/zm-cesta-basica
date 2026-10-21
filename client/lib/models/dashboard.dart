@@ -285,13 +285,14 @@ class BusinessPaymentRecord {
   final String paymentMethod;
   final bool isReversal;
 
-  BusinessPaymentRecord(
-      {required this.id,
-      required this.description,
-      required this.amountCents,
-      required this.occurredAt,
-      required this.paymentMethod,
-      required this.isReversal});
+  BusinessPaymentRecord({
+    required this.id,
+    required this.description,
+    required this.amountCents,
+    required this.occurredAt,
+    required this.paymentMethod,
+    required this.isReversal,
+  });
 
   factory BusinessPaymentRecord.fromJson(Map<String, dynamic> json) =>
       BusinessPaymentRecord(
@@ -321,6 +322,7 @@ class DashboardFinancialSummary {
   final int operatingResultCents;
   final int stockPurchasesPaidCents;
   final int personalWithdrawalsPaidCents;
+  final int unclassifiedPaidCents;
   final int salesWithoutCostCount;
   final List<BusinessPaymentRecord> receivedRecords;
   final List<BusinessPaymentRecord> paidRecords;
@@ -348,6 +350,7 @@ class DashboardFinancialSummary {
     this.operatingResultCents = 0,
     this.stockPurchasesPaidCents = 0,
     this.personalWithdrawalsPaidCents = 0,
+    this.unclassifiedPaidCents = 0,
     this.salesWithoutCostCount = 0,
     this.receivedRecords = const [],
     this.paidRecords = const [],
@@ -355,63 +358,63 @@ class DashboardFinancialSummary {
     this.payablesRecords = const [],
   });
 
-  factory DashboardFinancialSummary.fromJson(Map<String, dynamic> json) =>
-      DashboardFinancialSummary(
-        treasuryBalanceCents: (json['available_balance_cents'] ??
+  factory DashboardFinancialSummary.fromJson(
+    Map<String, dynamic> json,
+  ) => DashboardFinancialSummary(
+    treasuryBalanceCents:
+        (json['available_balance_cents'] ??
                 json['treasury_balance_cents'] as num?)
             ?.toInt(),
-        accountsBalances: (json['accounts_balances'] as List<dynamic>? ?? [])
-            .map((e) => Map<String, dynamic>.from(e as Map))
-            .toList(),
-        effectiveReceivedCents:
-            (json['effective_received_cents'] as num?)?.toInt() ?? 0,
-        effectivePaidCents:
-            (json['effective_paid_cents'] as num?)?.toInt() ?? 0,
-        paymentDifferenceCents:
-            (json['payment_difference_cents'] as num?)?.toInt() ?? 0,
-        receivablesOpenCents:
-            (json['receivables_open_cents'] as num?)?.toInt() ?? 0,
-        receivablesOverdueCents:
-            (json['receivables_overdue_cents'] as num?)?.toInt() ?? 0,
-        payablesOpenCents: (json['payables_open_cents'] as num?)?.toInt() ?? 0,
-        payablesOverdueCents:
-            (json['payables_overdue_cents'] as num?)?.toInt() ?? 0,
-        receivablesDueInPeriodCents:
-            (json['receivables_due_in_period_cents'] as num?)?.toInt() ?? 0,
-        payablesDueInPeriodCents:
-            (json['payables_due_in_period_cents'] as num?)?.toInt() ?? 0,
-        salesRevenueCents: (json['sales_revenue_cents'] as num?)?.toInt() ?? 0,
-        soldBasketsCostCents:
-            (json['sold_baskets_cost_cents'] as num?)?.toInt() ?? 0,
-        grossProfitCents: (json['gross_profit_cents'] as num?)?.toInt() ?? 0,
-        operatingExpensesPaidCents:
-            (json['operating_expenses_paid_cents'] as num?)?.toInt() ?? 0,
-        operatingResultCents:
-            (json['operating_result_cents'] as num?)?.toInt() ?? 0,
-        stockPurchasesPaidCents:
-            (json['stock_purchases_paid_cents'] as num?)?.toInt() ?? 0,
-        personalWithdrawalsPaidCents:
-            (json['personal_withdrawals_paid_cents'] as num?)?.toInt() ?? 0,
-        salesWithoutCostCount:
-            (json['sales_without_cost_count'] as num?)?.toInt() ?? 0,
-        receivedRecords: (json['received_records'] as List<dynamic>? ?? [])
-            .map((e) =>
-                BusinessPaymentRecord.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        paidRecords: (json['paid_records'] as List<dynamic>? ?? [])
-            .map((e) =>
-                BusinessPaymentRecord.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        receivablesRecords: (json['receivables_records'] as List<dynamic>? ??
-                [])
-            .map((e) =>
-                DashboardReceivableRecord.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        payablesRecords: (json['payables_records'] as List<dynamic>? ?? [])
-            .map((e) =>
-                DashboardPayableRecord.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+    accountsBalances: (json['accounts_balances'] as List<dynamic>? ?? [])
+        .map((e) => Map<String, dynamic>.from(e as Map))
+        .toList(),
+    effectiveReceivedCents:
+        (json['effective_received_cents'] as num?)?.toInt() ?? 0,
+    effectivePaidCents: (json['effective_paid_cents'] as num?)?.toInt() ?? 0,
+    paymentDifferenceCents:
+        (json['payment_difference_cents'] as num?)?.toInt() ?? 0,
+    receivablesOpenCents:
+        (json['receivables_open_cents'] as num?)?.toInt() ?? 0,
+    receivablesOverdueCents:
+        (json['receivables_overdue_cents'] as num?)?.toInt() ?? 0,
+    payablesOpenCents: (json['payables_open_cents'] as num?)?.toInt() ?? 0,
+    payablesOverdueCents:
+        (json['payables_overdue_cents'] as num?)?.toInt() ?? 0,
+    receivablesDueInPeriodCents:
+        (json['receivables_due_in_period_cents'] as num?)?.toInt() ?? 0,
+    payablesDueInPeriodCents:
+        (json['payables_due_in_period_cents'] as num?)?.toInt() ?? 0,
+    salesRevenueCents: (json['sales_revenue_cents'] as num?)?.toInt() ?? 0,
+    soldBasketsCostCents:
+        (json['sold_baskets_cost_cents'] as num?)?.toInt() ?? 0,
+    grossProfitCents: (json['gross_profit_cents'] as num?)?.toInt() ?? 0,
+    operatingExpensesPaidCents:
+        (json['operating_expenses_paid_cents'] as num?)?.toInt() ?? 0,
+    operatingResultCents:
+        (json['operating_result_cents'] as num?)?.toInt() ?? 0,
+    stockPurchasesPaidCents:
+        (json['stock_purchases_paid_cents'] as num?)?.toInt() ?? 0,
+    unclassifiedPaidCents:
+        (json['unclassified_paid_cents'] as num?)?.toInt() ?? 0,
+    personalWithdrawalsPaidCents:
+        (json['personal_withdrawals_paid_cents'] as num?)?.toInt() ?? 0,
+    salesWithoutCostCount:
+        (json['sales_without_cost_count'] as num?)?.toInt() ?? 0,
+    receivedRecords: (json['received_records'] as List<dynamic>? ?? [])
+        .map((e) => BusinessPaymentRecord.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    paidRecords: (json['paid_records'] as List<dynamic>? ?? [])
+        .map((e) => BusinessPaymentRecord.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    receivablesRecords: (json['receivables_records'] as List<dynamic>? ?? [])
+        .map(
+          (e) => DashboardReceivableRecord.fromJson(e as Map<String, dynamic>),
+        )
+        .toList(),
+    payablesRecords: (json['payables_records'] as List<dynamic>? ?? [])
+        .map((e) => DashboardPayableRecord.fromJson(e as Map<String, dynamic>))
+        .toList(),
+  );
 }
 
 class DashboardSummary {
@@ -421,33 +424,41 @@ class DashboardSummary {
   final DashboardInventorySummary inventory;
   final DashboardFinancialSummary financial;
 
-  DashboardSummary(
-      {required this.filterInfo,
-      required this.sales,
-      required this.purchases,
-      required this.inventory,
-      required this.financial});
+  DashboardSummary({
+    required this.filterInfo,
+    required this.sales,
+    required this.purchases,
+    required this.inventory,
+    required this.financial,
+  });
 
   factory DashboardSummary.fromJson(Map<String, dynamic> json) =>
       DashboardSummary(
-        filterInfo:
-            FilterInfo.fromJson(json['filter_info'] as Map<String, dynamic>),
+        filterInfo: FilterInfo.fromJson(
+          json['filter_info'] as Map<String, dynamic>,
+        ),
         sales: DashboardSalesSummary.fromJson(
-            json['sales'] as Map<String, dynamic>),
+          json['sales'] as Map<String, dynamic>,
+        ),
         purchases: DashboardPurchasesSummary.fromJson(
-            json['purchases'] as Map<String, dynamic>? ?? {}),
+          json['purchases'] as Map<String, dynamic>? ?? {},
+        ),
         inventory: DashboardInventorySummary.fromJson(
-            json['inventory'] as Map<String, dynamic>),
+          json['inventory'] as Map<String, dynamic>,
+        ),
         financial: DashboardFinancialSummary.fromJson(
-            json['financial'] as Map<String, dynamic>),
+          json['financial'] as Map<String, dynamic>,
+        ),
       );
 }
 
 class DashboardPurchasesSummary {
   final int purchaseCount;
   final int totalAmountCents;
-  DashboardPurchasesSummary(
-      {required this.purchaseCount, required this.totalAmountCents});
+  DashboardPurchasesSummary({
+    required this.purchaseCount,
+    required this.totalAmountCents,
+  });
   factory DashboardPurchasesSummary.fromJson(Map<String, dynamic> json) =>
       DashboardPurchasesSummary(
         purchaseCount: (json['purchase_count'] as num?)?.toInt() ?? 0,

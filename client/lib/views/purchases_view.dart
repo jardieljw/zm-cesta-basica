@@ -4,6 +4,7 @@ import '../widgets/shared/responsive_filter_bar.dart';
 import '../utils/scroll_layout.dart';
 import 'package:flutter/material.dart';
 import '../models/purchase.dart';
+import '../services/product_service.dart';
 import '../services/purchase_service.dart';
 import '../l10n/l10n_extension.dart';
 import '../utils/formatters.dart';
@@ -12,7 +13,8 @@ import '../widgets/shared/approved_app_style.dart';
 
 class PurchasesView extends StatefulWidget {
   final ApiClient? apiClient;
-  const PurchasesView({super.key, this.apiClient});
+  final String? initialPurchaseId;
+  const PurchasesView({super.key, this.apiClient, this.initialPurchaseId});
 
   @override
   State<PurchasesView> createState() => _PurchasesViewState();
@@ -41,10 +43,12 @@ class _PurchasesViewState extends State<PurchasesView> {
     });
 
     try {
-      final items = await _purchaseService.getPurchases(
-        status: _statusFilter,
-        search: _searchQuery.isNotEmpty ? _searchQuery : null,
-      );
+      final items = widget.initialPurchaseId != null
+          ? [await _purchaseService.getPurchase(widget.initialPurchaseId!)]
+          : await _purchaseService.getPurchases(
+              status: _statusFilter,
+              search: _searchQuery.isNotEmpty ? _searchQuery : null,
+            );
       setState(() {
         _purchases = items;
         _isLoading = false;
@@ -235,6 +239,123 @@ class _PurchasesViewState extends State<PurchasesView> {
           },
         );
       },
+    );
+  }
+
+  Future<void> _showDeleteDraftDialog(
+    Purchase purchase,
+    BuildContext sheetContext,
+  ) async {
+    final l10n = context.l10n;
+    bool isDeleting = false;
+    String? deleteError;
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (dialogBuilderContext, setDialogState) => AlertDialog(
+          title: Text(l10n.purchaseDeleteDraftTitle(purchase.purchaseNumber)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(l10n.purchaseDeleteDraftWarning),
+              if (deleteError != null)
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  margin: const EdgeInsets.only(top: 12),
+                  decoration: BoxDecoration(
+                    color: adaptiveUiSurface(
+                      dialogBuilderContext,
+                      Colors.red.shade50,
+                    ),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: adaptiveUiSurface(
+                        dialogBuilderContext,
+                        Colors.red.shade200,
+                      ),
+                    ),
+                  ),
+                  child: Text(
+                    deleteError!,
+                    style: TextStyle(
+                      color: adaptiveUiText(
+                        dialogBuilderContext,
+                        Colors.red.shade800,
+                      ),
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: isDeleting
+                  ? null
+                  : () => Navigator.of(dialogBuilderContext).pop(),
+              child: Text(l10n.commonBack),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    Theme.of(dialogBuilderContext).colorScheme.error,
+                foregroundColor:
+                    Theme.of(dialogBuilderContext).colorScheme.onError,
+              ),
+              onPressed: isDeleting
+                  ? null
+                  : () async {
+                      setDialogState(() {
+                        isDeleting = true;
+                        deleteError = null;
+                      });
+                      try {
+                        await _purchaseService.deleteDraftPurchase(purchase.id);
+                        if (!mounted) return;
+                        if (dialogContext.mounted) {
+                          Navigator.of(dialogContext).pop();
+                        }
+                        if (sheetContext.mounted) {
+                          Navigator.of(sheetContext).pop();
+                        }
+                        if (widget.initialPurchaseId != null) {
+                          Navigator.of(context).pop(true);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(l10n.purchaseDeleteDraftSuccess),
+                            ),
+                          );
+                          _loadPurchases();
+                        }
+                      } catch (e) {
+                        if (!dialogContext.mounted) return;
+                        setDialogState(() {
+                          isDeleting = false;
+                          deleteError = e.toString().replaceAll(
+                            'Exception: ',
+                            '',
+                          );
+                        });
+                      }
+                    },
+              child: isDeleting
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(l10n.purchaseDeleteDraftButton),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -434,6 +555,47 @@ class _PurchasesViewState extends State<PurchasesView> {
                       ),
                     ],
                   ),
+                  if (purchase.status == 'DRAFT') ...[
+                    const SizedBox(height: 16),
+                    Wrap(
+                      alignment: WrapAlignment.end,
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        OutlinedButton.icon(
+                          onPressed: () async {
+                            Navigator.of(ctx).pop();
+                            final updated = await Navigator.push<bool>(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => PurchaseFormView(
+                                  productService: ProductService(
+                                    client: widget.apiClient,
+                                  ),
+                                  purchaseService: _purchaseService,
+                                  purchaseToEdit: purchase,
+                                ),
+                              ),
+                            );
+                            if (updated == true) _loadPurchases();
+                          },
+                          icon: const Icon(Icons.edit_outlined),
+                          label: Text(l10n.purchaseEditDraft),
+                        ),
+                        TextButton.icon(
+                          onPressed: () =>
+                              _showDeleteDraftDialog(purchase, ctx),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Theme.of(
+                              context,
+                            ).colorScheme.error,
+                          ),
+                          icon: const Icon(Icons.delete_outline),
+                          label: Text(l10n.purchaseDeleteDraftButton),
+                        ),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             );
@@ -614,8 +776,12 @@ class _PurchasesViewState extends State<PurchasesView> {
                                           width: 44,
                                           height: 44,
                                           decoration: BoxDecoration(
-                                            color: _getStatusColor(p.status).withValues(alpha: 0.12),
-                                            borderRadius: BorderRadius.circular(13),
+                                            color: _getStatusColor(
+                                              p.status,
+                                            ).withValues(alpha: 0.12),
+                                            borderRadius: BorderRadius.circular(
+                                              13,
+                                            ),
                                           ),
                                           child: Center(
                                             child: Text(
@@ -623,7 +789,9 @@ class _PurchasesViewState extends State<PurchasesView> {
                                               style: TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 13,
-                                                color: _getStatusColor(p.status),
+                                                color: _getStatusColor(
+                                                  p.status,
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -631,7 +799,8 @@ class _PurchasesViewState extends State<PurchasesView> {
                                         const SizedBox(width: 12),
                                         Expanded(
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                 p.supplierName ?? '-',
@@ -642,7 +811,9 @@ class _PurchasesViewState extends State<PurchasesView> {
                                               ),
                                               const SizedBox(height: 2),
                                               Text(
-                                                AppFormatters.formatDate(p.purchaseDate.toLocal()),
+                                                AppFormatters.formatDate(
+                                                  p.purchaseDate.toLocal(),
+                                                ),
                                                 style: TextStyle(
                                                   fontSize: 12,
                                                   color: pColors.sub,
@@ -652,10 +823,13 @@ class _PurchasesViewState extends State<PurchasesView> {
                                           ),
                                         ),
                                         Column(
-                                          crossAxisAlignment: CrossAxisAlignment.end,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
                                           children: [
                                             Text(
-                                              AppFormatters.formatCurrency(totalCents),
+                                              AppFormatters.formatCurrency(
+                                                totalCents,
+                                              ),
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.w800,
                                                 fontSize: 17,
@@ -664,17 +838,29 @@ class _PurchasesViewState extends State<PurchasesView> {
                                             ),
                                             const SizedBox(height: 4),
                                             Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 8,
+                                                    vertical: 3,
+                                                  ),
                                               decoration: BoxDecoration(
-                                                color: _getStatusColor(p.status).withValues(alpha: 0.12),
-                                                borderRadius: BorderRadius.circular(999),
+                                                color: _getStatusColor(
+                                                  p.status,
+                                                ).withValues(alpha: 0.12),
+                                                borderRadius:
+                                                    BorderRadius.circular(999),
                                               ),
                                               child: Text(
-                                                _formatStatus(context, p.status),
+                                                _formatStatus(
+                                                  context,
+                                                  p.status,
+                                                ),
                                                 style: TextStyle(
                                                   fontSize: 11,
                                                   fontWeight: FontWeight.w700,
-                                                  color: _getStatusColor(p.status),
+                                                  color: _getStatusColor(
+                                                    p.status,
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -684,7 +870,10 @@ class _PurchasesViewState extends State<PurchasesView> {
                                     ),
                                     const SizedBox(height: 12),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 12,
+                                        vertical: 8,
+                                      ),
                                       decoration: BoxDecoration(
                                         color: pColors.soft,
                                         borderRadius: BorderRadius.circular(14),
@@ -696,27 +885,37 @@ class _PurchasesViewState extends State<PurchasesView> {
                                                 ? Icons.schedule
                                                 : Icons.check_circle_outline,
                                             size: 15,
-                                            color: p.paymentMode == 'CREDIT_TERM'
+                                            color:
+                                                p.paymentMode == 'CREDIT_TERM'
                                                 ? Colors.orange.shade800
                                                 : Colors.green.shade800,
                                           ),
                                           const SizedBox(width: 6),
                                           Text(
                                             l10n.purchasePaymentDetailMethod(
-                                              _formatPaymentMethod(context, p.paymentMethod),
-                                              _formatPaymentMode(context, p.paymentMode),
+                                              _formatPaymentMethod(
+                                                context,
+                                                p.paymentMethod,
+                                              ),
+                                              _formatPaymentMode(
+                                                context,
+                                                p.paymentMode,
+                                              ),
                                             ),
                                             style: TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w600,
-                                              color: p.paymentMode == 'CREDIT_TERM'
+                                              color:
+                                                  p.paymentMode == 'CREDIT_TERM'
                                                   ? Colors.orange.shade900
                                                   : Colors.green.shade900,
                                             ),
                                           ),
                                           const Spacer(),
                                           Text(
-                                            l10n.purchaseDetailItems(p.items.length),
+                                            l10n.purchaseDetailItems(
+                                              p.items.length,
+                                            ),
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: pColors.sub,
@@ -726,26 +925,44 @@ class _PurchasesViewState extends State<PurchasesView> {
                                           if (p.status == 'CONFIRMED') ...[
                                             const SizedBox(width: 8),
                                             InkWell(
-                                              borderRadius: BorderRadius.circular(999),
+                                              borderRadius:
+                                                  BorderRadius.circular(999),
                                               onTap: () => _showCancelDialog(p),
                                               child: Container(
-                                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      horizontal: 8,
+                                                      vertical: 4,
+                                                    ),
                                                 decoration: BoxDecoration(
                                                   color: Colors.red.shade50,
-                                                  borderRadius: BorderRadius.circular(999),
-                                                  border: Border.all(color: Colors.red.shade200),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                        999,
+                                                      ),
+                                                  border: Border.all(
+                                                    color: Colors.red.shade200,
+                                                  ),
                                                 ),
                                                 child: Row(
-                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
-                                                    Icon(Icons.cancel_outlined, size: 14, color: Colors.red.shade700),
+                                                    Icon(
+                                                      Icons.cancel_outlined,
+                                                      size: 14,
+                                                      color:
+                                                          Colors.red.shade700,
+                                                    ),
                                                     const SizedBox(width: 4),
                                                     Text(
                                                       l10n.purchaseCancelButton,
                                                       style: TextStyle(
                                                         fontSize: 11,
-                                                        fontWeight: FontWeight.bold,
-                                                        color: Colors.red.shade700,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color:
+                                                            Colors.red.shade700,
                                                       ),
                                                     ),
                                                   ],

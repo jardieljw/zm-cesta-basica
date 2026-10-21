@@ -1,6 +1,6 @@
 import datetime
 from typing import Optional, List
-from sqlalchemy import String, Integer, DateTime, Text, ForeignKey, Boolean, event, DDL
+from sqlalchemy import String, Integer, DateTime, Text, ForeignKey, Boolean, CheckConstraint, event, DDL
 from sqlalchemy.orm import Mapped, mapped_column, relationship, Session
 from app.models.base import Base, utc_now
 
@@ -49,6 +49,8 @@ class CashFlowEntry(Base):
 
 class AccountPayable(Base):
     __tablename__ = "accounts_payable"
+    __table_args__ = (CheckConstraint("(superseded_by_id IS NULL AND status != 'SUBSTITUTED') OR (superseded_by_id IS NOT NULL AND superseded_by_id != id AND status = 'SUBSTITUTED')", name='ck_payable_substituted'),)
+    superseded_by_id: Mapped[Optional[str]] = mapped_column(ForeignKey('accounts_payable.id'), nullable=True)
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     payable_number: Mapped[int] = mapped_column(Integer, unique=True, nullable=False, index=True)
@@ -78,6 +80,12 @@ class AccountPayable(Base):
 
 class PayablePayment(Base):
     __tablename__ = "payable_payments"
+    __table_args__ = (CheckConstraint('(stock_cents IS NULL AND business_cents IS NULL AND personal_cents IS NULL AND unclassified_cents IS NULL AND bill_revision_id IS NULL) OR (bill_revision_id IS NOT NULL AND stock_cents IS NOT NULL AND business_cents IS NOT NULL AND personal_cents IS NOT NULL AND unclassified_cents IS NOT NULL AND stock_cents >= 0 AND business_cents >= 0 AND personal_cents >= 0 AND unclassified_cents >= 0 AND stock_cents + business_cents + personal_cents + unclassified_cents = amount_cents)', name='ck_payment_bill_composition'),)
+    bill_revision_id: Mapped[Optional[str]] = mapped_column(ForeignKey('financial_bill_cycle_revisions.id'), nullable=True)
+    stock_cents: Mapped[Optional[int]] = mapped_column(Integer)
+    business_cents: Mapped[Optional[int]] = mapped_column(Integer)
+    personal_cents: Mapped[Optional[int]] = mapped_column(Integer)
+    unclassified_cents: Mapped[Optional[int]] = mapped_column(Integer)
 
     id: Mapped[str] = mapped_column(String(36), primary_key=True)
     payable_id: Mapped[str] = mapped_column(String(36), ForeignKey("accounts_payable.id"), nullable=False, index=True)

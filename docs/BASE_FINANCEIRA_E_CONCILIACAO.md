@@ -1,5 +1,11 @@
 # Base de documentos e conciliação financeira
 
+**Entrega posterior — 19/10/2026:** a [primeira etapa de correção](CORRECAO_IMPORTACAO_FINANCEIRA_2026-10-19.md)
+implementa controles exatos, cabeçalho CSV declarado, revisão vigente e
+conciliação explícita, com bloqueio de alocações ainda não representadas.
+Consultar esse guia e a evidência antes de usar descrições históricas abaixo.
+Código/build não atualizam automaticamente o app ou servidor em execução.
+
 Revisão: **15/10/2026**. Situação: **base e prévias CSV multibanco implementadas no backend, com migrações preparadas; sem telas novas**. [Índice](README.md). [Plano de evolução](PLANO_IMPORTACAO_E_CONCILIACAO_FINANCEIRA.md). [Leitores CSV](IMPORTACAO_CSV_MULTIBANCO.md).
 
 ## Resultado e limites deste incremento

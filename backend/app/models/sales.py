@@ -1,6 +1,6 @@
 import datetime
 from typing import Optional, List
-from sqlalchemy import String, Integer, DateTime, Text, ForeignKey, Boolean
+from sqlalchemy import String, Integer, DateTime, Text, ForeignKey, Boolean, event, DDL
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import Base, utc_now
 
@@ -50,6 +50,21 @@ class SaleItem(Base):
     sale: Mapped["Sale"] = relationship(back_populates="items")
     basket_type: Mapped["app.models.products.BasketType"] = relationship("app.models.products.BasketType")
     production_batch: Mapped[Optional["app.models.production.ProductionBatch"]] = relationship("app.models.production.ProductionBatch")
+
+class SaleRecipeReference(Base):
+    """Frozen recipe candidates for standard ready-stock sales without lot attribution."""
+    __tablename__ = 'sale_recipe_references'
+    sale_item_id: Mapped[str] = mapped_column(String(36), ForeignKey('sale_items.id'), primary_key=True)
+    recipe_version_id: Mapped[str] = mapped_column(String(36), ForeignKey('recipe_versions.id'), primary_key=True)
+
+
+for _action in ('UPDATE', 'DELETE'):
+    event.listen(SaleRecipeReference.__table__, 'after_create', DDL(
+        f"CREATE TRIGGER IF NOT EXISTS trg_sale_recipe_references_{_action.lower()} "
+        f"BEFORE {_action} ON sale_recipe_references BEGIN "
+        "SELECT RAISE(ABORT, 'sale recipe references are immutable'); END;"
+    ).execute_if(dialect='sqlite'))
+
 
 class SalesReceivable(Base):
     __tablename__ = "sales_receivables"

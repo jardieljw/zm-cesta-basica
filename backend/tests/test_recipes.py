@@ -158,14 +158,13 @@ def test_versioning_and_immutability_on_composition_change(client, authenticated
     assert active_check.status_code == status.HTTP_200_OK
     assert active_check.json()["version_number"] == 2
 
-    # Tentativa de edicao direta via PUT na versao 1 ou 2 deve ser PROIBIDA (405)
+    # Missing body remains invalid. An unused recipe may now be removed.
     bad_put = client.put(f"/api/v1/basket-types/{bt_id}/recipes/1", headers=headers)
-    assert bad_put.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
-    assert "imutaveis" in bad_put.json()["detail"].lower()
+    assert bad_put.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
 
-    # Tentativa de exclusao via DELETE na versao 1 deve ser PROIBIDA (405)
+    # No sale or assembly depends on this recipe.
     bad_del = client.delete(f"/api/v1/basket-types/{bt_id}/recipes/1", headers=headers)
-    assert bad_del.status_code == status.HTTP_405_METHOD_NOT_ALLOWED
+    assert bad_del.status_code == status.HTTP_200_OK
 
 
 def test_reject_recipe_with_inactive_product(client, authenticated_device):

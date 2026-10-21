@@ -13,7 +13,7 @@ Para entender o comportamento atual de cada fluxo, consulte o
 [índice das mecânicas](docs/README.md). Os guias relacionam interface, serviços,
 endpoints, tabelas, exemplos e limitações; este documento define a governança técnica.
 **Versão:** 6.0 (Fases 1 a 9 Concluídas e Homologadas: Gestão Completa, Relatórios, Impressão, Backup Quente, Instalação Windows e Entrega de Produção)
-**Status do Projeto:** Fases 1 a 9 Concluídas e Homologadas (180 testes backend e 93 testes Flutter aprovados; compilações nativas Windows x64 e Android release APK geradas; análise estática 100% limpa)
+**Status do Projeto:** Fases 1 a 9 Concluídas e Homologadas (compilações nativas Windows x64 e Android release APK geradas; análise estática 100% limpa)
 **Topologia:** Monólito Modular em Rede Local Privada (Wi-Fi/Ethernet) sem dependência de nuvem  
 **Público-alvo:** Desenvolvedores, Engenheiros de Software e Agentes de Inteligência Artificial
 
@@ -40,12 +40,21 @@ sem migração nova. Tema/navegação globais e Receber não foram migrados ness
 > [client/_archive/DASHBOARD.md](client/_archive/DASHBOARD.md) antes de evoluir esses fluxos.
 
 > **Catálogo — exclusão autorizada de cadastros nunca utilizados (14/10/2026):**
-> produtos sem vínculos em receitas (qualquer versão), compras (qualquer status),
+> Regra original de 14/10, substituída pelo ciclo de catálogo de 20/10: produtos sem vínculos em receitas (qualquer versão), compras (qualquer status),
 > itens de produção e movimentações podem ser excluídos definitivamente por uma
 > ação explícita com confirmação e revalidação transacional. Embalagens nunca
 > utilizadas podem ser removidas junto com o cadastro. Produtos com vínculos ou
 > histórico continuam protegidos; a inativação mantém suas regras. Ver
 > [docs/PRODUTOS_E_FORMAS_DE_COMPRA.md](docs/PRODUTOS_E_FORMAS_DE_COMPRA.md).
+
+**20/10/2026 — ciclo de catálogo:** vendas não canceladas e operações/saldos ainda
+válidos protegem receitas, tipos e ingredientes. Operações canceladas/desfeitas
+não impedem permanentemente retirar o cadastro do catálogo. `removed_at` de
+produtos, status `REMOVED` de receitas e a retirada já existente dos tipos
+preservam referências históricas; cadastros nunca usados podem ser apagados.
+Preço sugerido por receita e `sale_recipe_references` são aditivos pela migração
+`f28f901a1048`. A referência congelada não inventa atribuição de lote onde o
+estoque padrão era agregado. Ver os guias de receitas e montagens.
 
 ---
 
@@ -161,7 +170,7 @@ a interface e o backend. Distinguir ocultar um campo de apagar sua informação;
 validar migrações sobre dados existentes e prever recuperação. Não interpretar
 uma preferência funcional como autorização para enfraquecer essas proteções.
 1. **Inspeção Prévia Obrigatória:** Antes de editar código, inspecionar arquivos afetados e identificar todos os pontos de consumo.
-2. **Avaliação de Impacto e Não-Regressão:** Executar a suíte completa de testes automatizados (`pytest backend/tests -v` e `flutter test`), mantendo 100% de aprovação verde (atualmente 180 testes de backend e 93 testes de front-end aprovados).
+2. **Avaliação de Impacto e Não-Regressão:** Executar a suíte completa de testes automatizados (`pytest backend/tests -v` e `flutter test`), mantendo 100% de aprovação verde.
    - **Isolamento de testes:** redirecionar também a engine usada no startup e
      fábricas internas de sessão para bancos temporários; substituir apenas
      get_db não protege contra SessionLocal ou lifespan. Restaurar settings ao
@@ -538,3 +547,17 @@ pagamentos ativos. Fase 8: relatórios reduzidos e financeiro simplificado.
 [FASE 9] Auditoria Final, Robustez, Backup Quente, Instalação e Entrega ------> [CONCLUÍDA & HOMOLOGADA]
 ══════════════════════════ PROJETO 100% CONCLUÍDO E ENTREGUE ══════════════════════════════
 ```
+
+
+### Retirada de importação financeira — decisão E5.7, 20/10/2026
+
+O usuário autorizou concluir a simplificação e o desfazimento de importações.
+A retirada é um estado auditado em `financial_import_removals`, sem apagar as
+leituras/revisões originais. Uma transação valida snapshot e dependências, retira
+as contas/previsões próprias e devolve contas de compras/saldos anteriores à sua
+situação individual, mantendo valores e pagamentos. A exceção na proteção SQL
+de conta substituída exige o registro desse desfazimento e preserva seus valores;
+uma reabertura arbitrária continua proibida. Reimportar recupera o documento e
+exige confirmação para restabelecer a conta existente, em nova revisão. Nenhum
+pagamento ou estoque é fabricado para compensar uma retirada. Procedimento e
+contratos no [guia de Pagar](docs/CONTAS_A_PAGAR.md#excluir-e-reimportar-uma-importação--e57).

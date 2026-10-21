@@ -6,6 +6,7 @@ import unicodedata
 from decimal import Decimal
 
 from app.schemas.financial_imports import FinancialStatementCreate, FinancialTransactionData
+from app.services.financial_normalization import normalize_card_data, control_kind
 
 MAX_PAGES = 40
 MAX_CHARS = 200000
@@ -75,7 +76,8 @@ def extract_pages(content, report, password=None):
                 if not words:
                     error(report, "PDF_OCR_OR_TEXT_REQUIRED", page.page_number)
                 pages.append({"page_number": page.page_number, "width": page.width, "height": page.height,
-                              "text": text, "lines": lines})
+                              "text": text, "lines": lines,
+                              "horizontal_edges": [{k:e[k] for k in ('x0','x1','top')} for e in page.horizontal_edges]})
                 page.close()
             return pages
     except PDFPasswordIncorrect:
@@ -87,8 +89,15 @@ def extract_pages(content, report, password=None):
 
 
 def record_header(report, field, value, page, raw):
-    old = report["extracted_header"].get(field)
-    if old is not None and old != value:
+    kind = 'TOTAL' if field == 'total_amount_cents' else 'MINIMUM' if field == 'minimum_payment_cents' else 'HEADER'
+    report.setdefault('controls', []).append({'field': field, 'value': value, 'kind': kind,
+        'page_number': page, 'raw_text': raw, 'origin': 'DOCUMENT'})
+    candidates = report.setdefault('header_candidates', {}).setdefault(field, [])
+    candidates.append({'value': value, 'page_number': page, 'raw_text': raw})
+    if len({c['value'] for c in candidates}) > 1:
+        report['extracted_header'].pop(field, None)
+        if field == 'due_on' and not any(e['code'] == 'FINANCIAL_DUE_DATE_CONFLICT' for e in report['errors']):
+            error(report, 'FINANCIAL_DUE_DATE_CONFLICT', page)
         error(report, "PDF_CONFLICTING_HEADER", page)
         return
     report["extracted_header"][field] = value
@@ -128,13 +137,15 @@ def add_item(report, page, line, date, amount, description, **extra):
     try:
         if report["rows_read"] > 2000:
             raise ValueError("limit")
-        data = FinancialTransactionData(transaction_date=date, amount_cents=amount, description=description,
-                                        **extra).model_dump(mode="json")
+        facts = dict(transaction_date=date, amount_cents=amount, description=description, **extra)
+        role = normalize_card_data(facts) if report.get('detected_source_type') == 'CREDIT_CARD' else 'UNKNOWN'
+        data = FinancialTransactionData.model_validate(facts).model_dump(mode="json")
     except (ValueError, OverflowError):
         error(report, "PDF_INVALID_TRANSACTION", page)
         return
     report["items"].append({"position": report["rows_read"], "page_number": page,
-                            "raw_text": line["text"], "bbox": line["bbox"], "data": data})
+                            "raw_text": line["text"], "bbox": line["bbox"], "data": data,
+                            'role': role, 'purpose': 'UNSPECIFIED'})
 
 
 def is_green(color):
@@ -191,10 +202,30 @@ def parse_card(pages, report, institution):
         else:
             anchor = due_date
     record_header(report, "due_on", due_date.isoformat(), due_page, due[0])
+    # Every explicitly labelled current due date matters, including the cover.
+    # Do not use the filename, offer dates, or dates of future cycles.
+    for page in pages:
+        for line in page['lines']:
+            n = normalized(line['text'])
+            patterns = (
+                r'(?:DATA DE VENCIMENTO\s*:?|^VENCIMENTO\s*:?|^FATURA)\s*(\d{2})\s+([A-Z]{3})\s+(\d{4})',
+                r'(?:DATA DE VENCIMENTO\s*:?|^VENCIMENTO\s*:?)\s*(\d{2})[/.-](\d{2})[/.-](\d{4})',
+            )
+            for pattern in patterns:
+                found = re.search(pattern, n)
+                if found:
+                    month = MONTHS[found[2]] if found[2].isalpha() else int(found[2])
+                    value = datetime.date(int(found[3]), month, int(found[1])).isoformat()
+                    record_header(report, 'due_on', value, page['page_number'], line['text'])
     report["warnings"].append({"code": "PDF_PARTIAL_DATE_YEAR_FROM_BILL_CONTEXT"})
     for page in pages:
         for index, line in enumerate(page["lines"]):
             n = normalized(line["text"])
+            kind = control_kind(n)
+            if kind in {'OFFER', 'SUBTOTAL'}:
+                for found in re.finditer(MONEY, n):
+                    report.setdefault('controls', []).append({'field': kind.lower(), 'value': cents(found[0]),
+                        'kind': kind, 'page_number': page['page_number'], 'raw_text': line['text']})
             minimum = re.fullmatch(r"PAGAMENTO MINIMO\s+(" + MONEY + r")", n)
             if institution == "NUBANK" and minimum:
                 record_header(report, "minimum_payment_cents", cents(minimum[1]), page["page_number"], line["text"])
@@ -206,6 +237,8 @@ def parse_card(pages, report, institution):
     # Header controls are read only from the summary section, never offers/CET.
     summary = {}
     def summary_value(field, value, page, raw):
+        report.setdefault('controls', []).append({'field': 'summary.' + field, 'value': value,
+            'kind': 'SUMMARY_COMPONENT', 'page_number': page, 'raw_text': raw, 'origin': 'DOCUMENT'})
         if field in summary and summary[field] != value:
             error(report, "PDF_CONFLICTING_HEADER", page)
         else:
@@ -248,7 +281,7 @@ def parse_card(pages, report, institution):
             return
         section = sections[-1]
         actual = sum(i["data"]["amount_cents"] for i in report["items"][section["first_position"] - 1:])
-        tol = 10 if section.get("kind") == "PAYMENTS_AND_FINANCING" else 0
+        tol = 0
         matches = abs(actual - section["reported_amount_cents"]) <= tol
         section.update(last_position=len(report["items"]), observed_amount_cents=actual,
                        matches=matches)
@@ -295,6 +328,8 @@ def parse_card(pages, report, institution):
                     sections.append({"kind": "PURCHASES" if purchase_heading else "PAYMENTS_AND_FINANCING",
                         "page_number": page["page_number"], "raw_text": line["text"],
                         "reported_amount_cents": cents(match[0]), "first_position": len(report["items"]) + 1})
+                    report.setdefault('controls', []).append({'field': 'section_total', 'value': cents(match[0]),
+                        'kind': 'SUBTOTAL', 'page_number': page['page_number'], 'raw_text': line['text']})
                     continue
             if not date or not right:
                 # Preserve note lines beneath the last transaction as evidence.
@@ -326,16 +361,13 @@ def parse_card(pages, report, institution):
                     continue
             month = MONTHS[date[2]] if institution == "NUBANK" else int(date[2])
             extra = {"card_last_four": card} if card else {}
-            installment = re.search(r"(?:PARCELA\s*|PARC\s*| -\s*)(\d{1,3})/(\d{1,3})\s*$", description, re.I)
-            if installment:
-                extra.update(installment_number=int(installment[1]), total_installments=int(installment[2]))
             add_item(report, page["page_number"], line, partial_date(date[1], month, anchor), amount, description, **extra)
     finish_section()
     report["section_controls"] = sections
     if len(summary) == 4 and "total_amount_cents" in header:
         net = sum(i["data"]["amount_cents"] for i in report["items"])
         expected_net = summary["payments"] + summary["purchases"] + summary["other"]
-        tol = 10 if sections and any(s.get("kind") == "PAYMENTS_AND_FINANCING" for s in sections) else 0
+        tol = 0
         report["checks"].append({"code": "PDF_REPORTED_BILL_EQUATION", "matches": summary["previous"] + expected_net == header["total_amount_cents"]})
         report["checks"].append({"code": "PDF_SUMMARY_DETAILS", "matches": abs(net - expected_net) <= tol})
         if not all(c["matches"] for c in report["checks"]):
@@ -427,40 +459,65 @@ def parse_tabular_statement(pages, report):
     is_card = "FATURA" in whole or "CARD" in whole
     st_type = "CARD_BILL" if is_card else "BANK_STATEMENT"
     inst = "NUBANK" if ("NUBANK" in whole or "NU PAGAMENTOS" in whole) else "OTHER"
-    report.update(detected_reader="tabular_statement_pdf_v1", detected_source_type=st_type, detected_institution=inst)
+    report.update(detected_reader="tabular_statement_pdf_v2",
+                  detected_source_type="CREDIT_CARD" if is_card else "BANK_ACCOUNT", detected_institution=inst)
     record_header(report, "statement_type", st_type, 1, "Layout tabular de extrato/fatura")
     for page in pages:
-        m_due = re.search(r"VENCIMENTO\s+(\d{2})/(\d{2})/(\d{4})", normalized(page["text"]))
-        if m_due:
+        for m_due in re.finditer(r"VENCIMENTO\s*:?\s*(\d{2})/(\d{2})/(\d{4})", normalized(page["text"])):
             d, m, y = m_due[1], m_due[2], m_due[3]
             record_header(report, "due_on", f"{y}-{m}-{d}", page["page_number"], m_due[0])
-            break
+    references = set()
+    in_table = False
+    reference_column = False
     for page in pages:
-        in_table = False
         for line in page["lines"]:
             n = normalized(line["text"])
+            declared = re.fullmatch(r"TOTAL (?:DA FATURA|A PAGAR)\s*:?\s*(" + MONEY + r")", n)
+            if declared and is_card:
+                record_header(report, "total_amount_cents", cents(declared[1]), page["page_number"], line["text"])
+                in_table = False
+                continue
             if any(h in n for h in ("DATE TITLE AMOUNT", "DATA TITULO VALOR", "DATA LANCAMENTO VALOR", "FATURA_REFERENCIA DATA_LANCAMENTO")):
                 in_table = True
+                reference_column = 'FATURA_REFERENCIA' in n
                 continue
             if not in_table:
+                if re.match(r"^\d{4}-\d{2}-\d{2}", line['text'].strip()):
+                    error(report, 'PDF_UNPARSED_DATED_ROW', page['page_number'])
                 continue
-            m = re.match(r"^(\d{4}-\d{2}-\d{2})\s+(.+?)\s+([+\-]?\s*\d+(?:\.\d{3})*,\d{2})$", line["text"].strip())
-            m2 = re.match(r"^\d{4}-\d{2}-\d{2}\s+(\d{4}-\d{2}-\d{2})\s+(.+?)\s+([+\-]?\s*\d+(?:\.\d{3})*,\d{2})(?:\s+.*)?$", line["text"].strip()) if not m else None
-            matched = m or m2
+            text = line["text"].strip()
+            if reference_column:
+                m = re.match(r"^(\d{4}-\d{2}-\d{2})\s+(\d{4}-\d{2}-\d{2})\s+(.+?)\s+(" + MONEY + r")$", text)
+                if m:
+                    references.add(m[1])
+                    matched = (m[0], m[2], m[3], m[4])
+                else:
+                    matched = None
+            else:
+                matched = re.match(r"^(\d{4}-\d{2}-\d{2})\s+(.+?)\s+(" + MONEY + r")$", text)
             if matched:
                 tx_date, desc, amt_str = matched[1], matched[2].strip(), matched[3].replace(" ", "").replace("−", "-")
                 amt = cents(amt_str)
                 add_item(report, page["page_number"], line, tx_date, amt, desc)
-    if report["items"]:
-        total = sum(i["data"]["amount_cents"] for i in report["items"])
-        if is_card and "total_amount_cents" not in report["extracted_header"]:
-            record_header(report, "total_amount_cents", total, 1, "Total calculado dos itens")
-        dates = [i["data"]["transaction_date"] for i in report["items"]]
-        if "period_start" not in report["extracted_header"] and dates:
-            record_header(report, "period_start", min(dates), 1, "Data inicial observada")
-            record_header(report, "period_end", max(dates), 1, "Data final observada")
-        if "due_on" not in report["extracted_header"] and dates and is_card:
-            record_header(report, "due_on", max(dates), 1, "Vencimento inferido da ultima data")
+            elif re.match(r"^\d{4}-\d{2}-\d{2}", text) or re.search(MONEY, text):
+                error(report, "PDF_UNPARSED_MONEY_ROW", page["page_number"])
+    if len(references) > 1:
+        error(report, "PDF_MULTIPLE_BILLING_CYCLES")
+    # These exports may mix summaries and transactions. Preserve their text and
+    # parsed facts, but never treat a compilation as an independently controlled bill.
+    if 'FATURA_REFERENCIA' in whole:
+        error(report, "PDF_COMPILED_DOCUMENT_REVIEW_REQUIRED")
+    header = report['extracted_header']
+    if is_card:
+        if 'due_on' not in header or 'total_amount_cents' not in header:
+            error(report, "PDF_BILL_HEADER_REQUIRED")
+        elif report['items']:
+            matches = sum(i['data']['amount_cents'] for i in report['items']) == header['total_amount_cents']
+            report['checks'].append({'code': 'PDF_SUMMARY_DETAILS', 'matches': matches})
+            if not matches:
+                error(report, "PDF_SUMMARY_DETAIL_MISMATCH")
+    else:
+        error(report, "PDF_BANK_CONTROLS_REQUIRED")
 
 
 def parse_local(content, password=None):
@@ -472,6 +529,19 @@ def parse_local(content, password=None):
     if not pages or report["errors"]:
         return report
     whole = normalized("\n".join(p["text"] for p in pages))
+    from app.services.financial_compilations import pdf_compilation
+    try:
+        compilation = pdf_compilation(pages)
+    except (ValueError, KeyError, OverflowError):
+        error(report, 'PDF_LAYOUT_AMBIGUOUS')
+        return report
+    if compilation is not None:
+        if compilation.get('rows_read', 0) > 2000 or len(compilation.get('segments', [])) > 2000:
+            error(report, 'PDF_CONTENT_LIMIT')
+            report['complete'] = False
+            return report
+        report.update(compilation)
+        return report
     try:
         if ("NU PAGAMENTOS" in whole or "NUBANK" in whole or "NU FINANCEIRA" in whole) and "MOVIMENTACOES" in whole and "SALDO INICIAL" in whole:
             report.update(detected_reader="nubank_account_pdf_v1", detected_source_type="BANK_ACCOUNT", detected_institution="NUBANK")
@@ -488,7 +558,7 @@ def parse_local(content, password=None):
         elif "SANTANDER" in whole and ("TOTAL DA SUA FATURA" in whole or "TOTAL DA FATURA" in whole or "FATURA" in whole) and any(k in whole for k in ("DEMONSTRATIVO", "TRANSACOES", "COMPRAS")):
             report.update(detected_reader="santander_card_pdf_v1", detected_source_type="CREDIT_CARD", detected_institution="SANTANDER")
             parse_card(pages, report, "SANTANDER")
-        elif ("INTER" in whole or "BANCO INTER" in whole) and ("TOTAL DA FATURA" in whole or "FATURA" in whole) and any(k in whole for k in ("TRANSACOES", "LANCAMENTOS", "EXTRATO")):
+        elif re.search(r"\b(?:BANCO\s+)?INTER\b", whole) and ("TOTAL DA FATURA" in whole or "FATURA" in whole) and any(k in whole for k in ("TRANSACOES", "LANCAMENTOS", "EXTRATO")):
             report.update(detected_reader="inter_card_pdf_v1", detected_source_type="CREDIT_CARD", detected_institution="INTER")
             parse_card(pages, report, "INTER")
         elif any(h in whole for h in ("DATE TITLE AMOUNT", "DATA TITULO VALOR", "DATA LANCAMENTO VALOR", "FATURA_REFERENCIA")):
@@ -511,4 +581,12 @@ def parse_local(content, password=None):
     dates = [i["data"]["transaction_date"] for i in report["items"]]
     report["observed_dates"] = {"first": min(dates), "last": max(dates)} if dates else None
     report["warnings"].append({"code": "PDF_VERIFY_SELECTED_SOURCE_AND_ORIGINAL"})
+    if 'FATURA_REFERENCIA' in whole:
+        report['content_type'] = 'MULTI_CYCLE_COMPILATION'
+    elif report.get('detected_source_type') == 'CREDIT_CARD':
+        report['content_type'] = 'DETAILED_CARD_BILL' if report['items'] else 'SUMMARY_ONLY'
+    elif report.get('detected_source_type') == 'BANK_ACCOUNT':
+        report['content_type'] = 'BANK_STATEMENT'
+    else:
+        report['content_type'] = 'UNKNOWN'
     return report

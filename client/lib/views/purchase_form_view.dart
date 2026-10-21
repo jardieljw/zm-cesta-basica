@@ -1,6 +1,7 @@
 import '../utils/adaptive_ui_color.dart';
 import 'package:flutter/material.dart';
 import '../models/product.dart';
+import '../models/purchase.dart';
 import '../services/product_service.dart';
 import '../services/purchase_service.dart';
 import '../l10n/l10n_extension.dart';
@@ -28,10 +29,12 @@ class _PurchaseItemDraft {
 class PurchaseFormView extends StatefulWidget {
   final ProductService? productService;
   final PurchaseService? purchaseService;
+  final Purchase? purchaseToEdit;
   const PurchaseFormView({
     super.key,
     this.productService,
     this.purchaseService,
+    this.purchaseToEdit,
   });
 
   @override
@@ -44,14 +47,14 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
   late final PurchaseService _purchaseService;
   final _supplierController = TextEditingController();
   final _notesController = TextEditingController();
-  final DateTime _purchaseDate = DateTime.now();
+  late DateTime _purchaseDate;
   String _status = 'CONFIRMED';
 
   // Condicoes de Pagamento
   String _paymentMode = 'CASH_IMMEDIATE'; // CASH_IMMEDIATE, CREDIT_TERM
   String _paymentMethod =
       'DINHEIRO'; // DINHEIRO, PIX, BOLETO, CARTAO_CREDITO, TRANSFERENCIA, CHEQUE, OUTRO
-  DateTime _dueDate = DateTime.now().add(const Duration(days: 30));
+  DateTime? _dueDate = DateTime.now().add(const Duration(days: 30));
 
   List<Product> _products = [];
   final List<_PurchaseItemDraft> _items = [];
@@ -64,6 +67,16 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
     super.initState();
     _productService = widget.productService ?? ProductService();
     _purchaseService = widget.purchaseService ?? PurchaseService();
+    final purchase = widget.purchaseToEdit;
+    _purchaseDate = purchase?.purchaseDate ?? DateTime.now();
+    if (purchase != null) {
+      _supplierController.text = purchase.supplierName ?? '';
+      _notesController.text = purchase.notes ?? '';
+      _status = purchase.status;
+      _paymentMode = purchase.paymentMode;
+      _paymentMethod = purchase.paymentMethod;
+      _dueDate = purchase.dueDate;
+    }
     _loadInitialData();
   }
 
@@ -77,10 +90,42 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
   Future<void> _loadInitialData() async {
     try {
       final prods = await _productService.getProducts(isActive: true);
+      final purchase = widget.purchaseToEdit;
+      if (purchase != null) {
+        final productsById = {for (final product in prods) product.id: product};
+        for (final item in purchase.items) {
+          if (!productsById.containsKey(item.productId)) {
+            final product = await _productService.getProduct(item.productId);
+            prods.add(product);
+            productsById[product.id] = product;
+          }
+        }
+        _items.addAll(
+          purchase.items.map((item) {
+            final product = productsById[item.productId];
+            ProductPackaging? packaging;
+            if (product != null && item.packagingId != null) {
+              for (final candidate in product.packagings) {
+                if (candidate.id == item.packagingId) {
+                  packaging = candidate;
+                  break;
+                }
+              }
+            }
+            return _PurchaseItemDraft()
+              ..productId = item.productId
+              ..product = product
+              ..packagingId = item.packagingId
+              ..packaging = packaging
+              ..packagesCount = item.packagesCount
+              ..unitPriceReais = item.unitPriceReais;
+          }),
+        );
+      }
       setState(() {
         _products = prods;
         _isLoadingInitial = false;
-        if (_items.isEmpty && _products.isNotEmpty) {
+        if (purchase == null && _items.isEmpty && _products.isNotEmpty) {
           _addItem();
         }
       });
@@ -126,7 +171,7 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
   Future<void> _pickDueDate() async {
     final picked = await showDatePicker(
       context: context,
-      initialDate: _dueDate,
+      initialDate: _dueDate ?? DateTime.now().add(const Duration(days: 30)),
       firstDate: DateTime.now().subtract(const Duration(days: 365)),
       lastDate: DateTime.now().add(const Duration(days: 365 * 5)),
     );
@@ -137,6 +182,7 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
 
   Future<void> _save() async {
     final l10n = context.l10n;
+    final isEditing = widget.purchaseToEdit != null;
     if (!_formKey.currentState!.validate()) return;
     if (_items.isEmpty) {
       setState(() => _errorMessage = l10n.purchaseFormAtLeastOneItem);
@@ -156,12 +202,13 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
       'payment_mode': _paymentMode,
       'payment_method': _paymentMethod,
       'due_date': _paymentMode == 'CREDIT_TERM'
-          ? _dueDate.toUtc().toIso8601String()
+          ? _dueDate?.toUtc().toIso8601String()
           : null,
       'notes': _notesController.text.trim().isNotEmpty
           ? _notesController.text.trim()
           : null,
       'status': _status,
+      'account_id': widget.purchaseToEdit?.accountId,
       'items': _items.map((it) {
         return {
           'product_id': it.productId,
@@ -173,11 +220,27 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
     };
 
     try {
-      await _purchaseService.createPurchase(payload);
+      if (isEditing) {
+        payload.remove('status');
+        await _purchaseService.updateDraftPurchase(
+          widget.purchaseToEdit!.id,
+          payload,
+        );
+      } else {
+        await _purchaseService.createPurchase(payload);
+      }
       if (mounted) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(SnackBar(content: Text(l10n.purchaseFormSuccess)));
+        ).showSnackBar(
+          SnackBar(
+            content: Text(
+              isEditing
+                  ? l10n.purchaseDraftUpdateSuccess
+                  : l10n.purchaseFormSuccess,
+            ),
+          ),
+        );
         Navigator.of(context).pop(true);
       }
     } catch (e) {
@@ -193,20 +256,29 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
   @override
   Widget build(BuildContext context) {
     final l10n = context.l10n;
+    final isEditing = widget.purchaseToEdit != null;
     if (_isLoadingInitial) {
       return Scaffold(
-        appBar: AppBar(title: Text(l10n.purchaseFormTitle)),
+        appBar: AppBar(
+          title: Text(
+            isEditing ? l10n.purchaseEditDraftTitle : l10n.purchaseFormTitle,
+          ),
+        ),
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.purchaseFormTitle),
+        title: Text(
+          isEditing ? l10n.purchaseEditDraftTitle : l10n.purchaseFormTitle,
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.check),
-            tooltip: l10n.purchaseFormSaveButton,
+            tooltip: isEditing
+                ? l10n.purchaseDraftUpdateButton
+                : l10n.purchaseFormSaveButton,
             onPressed: _isSaving ? null : _save,
           ),
         ],
@@ -264,36 +336,42 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: DropdownButtonFormField<String>(
-                              initialValue: _status,
-                              decoration: InputDecoration(
-                                labelText: '${l10n.commonStatus} *',
-                                border: const OutlineInputBorder(),
-                              ),
-                              items: [
-                                DropdownMenuItem(
-                                  value: 'CONFIRMED',
-                                  child: Text(
-                                    l10n.purchaseStatusConfirmedWithStock,
-                                  ),
-                                ),
-                                DropdownMenuItem(
-                                  value: 'DRAFT',
-                                  child: Text(
-                                    l10n.purchaseStatusDraftWithoutStock,
-                                  ),
-                                ),
-                              ],
-                              onChanged: (v) {
-                                if (v != null) setState(() => _status = v);
-                              },
-                            ),
+                      if (isEditing)
+                        InputDecorator(
+                          decoration: InputDecoration(
+                            labelText: l10n.commonStatus,
+                            border: const OutlineInputBorder(),
                           ),
-                        ],
-                      ),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(l10n.purchaseStatusDraft),
+                          ),
+                        )
+                      else
+                        DropdownButtonFormField<String>(
+                          initialValue: _status,
+                          decoration: InputDecoration(
+                            labelText: '${l10n.commonStatus} *',
+                            border: const OutlineInputBorder(),
+                          ),
+                          items: [
+                            DropdownMenuItem(
+                              value: 'CONFIRMED',
+                              child: Text(
+                                l10n.purchaseStatusConfirmedWithStock,
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: 'DRAFT',
+                              child: Text(
+                                l10n.purchaseStatusDraftWithoutStock,
+                              ),
+                            ),
+                          ],
+                          onChanged: (v) {
+                            if (v != null) setState(() => _status = v);
+                          },
+                        ),
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _notesController,
@@ -466,21 +544,25 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                             color: Colors.orange,
                           ),
                           title: Text(
-                            '${l10n.purchasePaymentDueDateLabel}: ${AppFormatters.formatDate(_dueDate)}',
+                            _dueDate == null
+                                ? '${l10n.purchasePaymentDueDateLabel}: ${l10n.purchaseDueDateNotProvided}'
+                                : '${l10n.purchasePaymentDueDateLabel}: ${AppFormatters.formatDate(_dueDate!)}',
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          subtitle: Text(
-                            l10n.purchasePaymentPendingNotice(
-                              AppFormatters.formatDate(_dueDate),
-                            ),
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: adaptiveUiText(
-                                context,
-                                Colors.orange.shade900,
-                              ),
-                            ),
-                          ),
+                          subtitle: _dueDate == null
+                              ? null
+                              : Text(
+                                  l10n.purchasePaymentPendingNotice(
+                                    AppFormatters.formatDate(_dueDate!),
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: adaptiveUiText(
+                                      context,
+                                      Colors.orange.shade900,
+                                    ),
+                                  ),
+                                ),
                           trailing: OutlinedButton(
                             onPressed: _pickDueDate,
                             child: Text(l10n.commonSelect),
@@ -529,7 +611,10 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                   final item = _items[index];
                   final availablePackagings =
                       item.product?.packagings
-                          .where((pkg) => pkg.isActive)
+                          .where(
+                            (pkg) =>
+                                pkg.isActive || pkg.id == item.packagingId,
+                          )
                           .toList() ??
                       <ProductPackaging>[];
 
@@ -595,6 +680,7 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                             items: _products.map((p) {
                               return DropdownMenuItem<String>(
                                 value: p.id,
+                                enabled: p.isActive || p.id == item.productId,
                                 child: Text('${p.name} (${p.baseUnit})'),
                               );
                             }).toList(),
@@ -637,6 +723,9 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                             items: [
                               DropdownMenuItem<String?>(
                                 value: null,
+                                enabled:
+                                    item.product?.isActive == true ||
+                                    item.packagingId == null,
                                 child: Text(
                                   l10n.purchaseFormBaseUnitPackaging(
                                     item.product?.baseUnit ?? 'UN',
@@ -646,6 +735,8 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                               ...availablePackagings.map((pkg) {
                                 return DropdownMenuItem<String?>(
                                   value: pkg.id,
+                                  enabled: item.product?.isActive == true ||
+                                      pkg.id == item.packagingId,
                                   child: Text(
                                     '${pkg.name} (${pkg.quantityInBaseUnits} ${item.product?.baseUnit})',
                                   ),
@@ -730,7 +821,8 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                               const SizedBox(width: 12),
                               Expanded(
                                 child: TextFormField(
-                                  initialValue: item.unitPriceReais > 0
+                                  initialValue: isEditing ||
+                                          item.unitPriceReais > 0
                                       ? '${item.unitPriceReais}'
                                       : '',
                                   decoration: InputDecoration(
@@ -876,7 +968,9 @@ class _PurchaseFormViewState extends State<PurchaseFormView> {
                         ),
                       )
                     : Text(
-                        l10n.purchaseFormSaveButton,
+                        isEditing
+                            ? l10n.purchaseDraftUpdateButton
+                            : l10n.purchaseFormSaveButton,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,

@@ -5,7 +5,7 @@ from sqlalchemy import select, func, desc
 from sqlalchemy.orm import Session, selectinload
 from fastapi import HTTPException, status
 
-from app.models.sales import Sale, SaleItem, SalesReceivable
+from app.models.sales import Sale, SaleItem, SalesReceivable, SaleRecipeReference
 from app.models.customers import Customer
 from app.models.products import BasketType, RecipeVersion
 from app.models.production import ProductionBatch
@@ -419,6 +419,21 @@ def create_sale(db: Session, data: SaleCreate) -> Sale:
             total_cost_cents=item_unit_cost * item.quantity,
         )
         sale_items.append(sale_item)
+        if not resolved_batch_id:
+            # The stock ledger aggregates standard baskets. Freeze the possible
+            # recipes now so a future alternative is not mistaken for this sale.
+            from app.services.inventory import get_batch_disassembled_quantity
+            candidates = db.execute(select(ProductionBatch).where(
+                ProductionBatch.basket_type_id == basket_type.id,
+                ProductionBatch.is_custom.is_(False), ProductionBatch.status == 'CONFIRMED',
+                ProductionBatch.recipe_version_id.is_not(None))).scalars().all()
+            recipe_ids = {batch.recipe_version_id for batch in candidates
+                if get_batch_disassembled_quantity(db, batch.id) < batch.quantity_produced}
+            if recipe_ids:
+                db.add(sale_item)
+                db.flush()
+                for recipe_id in recipe_ids:
+                    db.add(SaleRecipeReference(sale_item_id=sale_item.id, recipe_version_id=recipe_id))
 
     sale.items = sale_items
 
@@ -506,10 +521,15 @@ def cancel_sale(db: Session, sale_id: str, data: SaleCancelRequest) -> Sale:
         if sale.receivable.paid_amount_cents > 0:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=(
-                    f"Nao e possivel cancelar a venda #{sale.sale_number} porque ha pagamentos ja recebidos "
-                    f"no valor de {sale.receivable.paid_amount_cents} centavos. Estorne os pagamentos antes."
-                ),
+                detail={
+                    "error_code": "SALE_HAS_RECEIPTS",
+                    "message": f"A venda nº {sale.sale_number} tem R$ "
+                        + format(sale.receivable.paid_amount_cents // 100, ',').replace(',', '.')
+                        + f",{sale.receivable.paid_amount_cents % 100:02d} em recebimentos. "
+                        + "Confira e estorne esses recebimentos antes de cancelar a venda.",
+                    "receivable_id": sale.receivable.id,
+                    "paid_amount_cents": sale.receivable.paid_amount_cents,
+                },
             )
         sale.receivable.status = "CANCELED"
         sale.receivable.balance_cents = 0
@@ -542,6 +562,7 @@ def cancel_sale(db: Session, sale_id: str, data: SaleCancelRequest) -> Sale:
 
     # Undo only the explicitly selected on-demand assemblies, using their frozen
     # composition. Sale reversals above make the produced baskets available first.
+    sale.status = "CANCELED"
     db.flush()
     for batch in batches_to_undo:
         disassemble_production_batch(db, batch.id, DisassemblyRequest(

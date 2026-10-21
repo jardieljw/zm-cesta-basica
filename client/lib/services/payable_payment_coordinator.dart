@@ -53,10 +53,14 @@ class PayablePaymentAttempt implements ReviewedPaymentAttempt {
             'payment_method',
             'payment_business_date',
             'expected_balance_cents',
+            'expected_bill_revision',
             'notes',
           }.contains(k),
         ) ||
-        (payload['notes'] != null && payload['notes'] is! String)) {
+        (payload['notes'] != null && payload['notes'] is! String) ||
+        (payload['expected_bill_revision'] != null &&
+            (payload['expected_bill_revision'] is! int ||
+                (payload['expected_bill_revision'] as int) < 1))) {
       throw const FormatException('Invalid payment attempt');
     }
     BusinessDates.parse(payload['payment_business_date'] as String);
@@ -77,6 +81,12 @@ class PayablePaymentAttempt implements ReviewedPaymentAttempt {
       result.paymentMethod == payload['payment_method'] &&
       result.status == 'CONFIRMED' &&
       (result.notes ?? '') == (payload['notes'] ?? '') &&
+      (payload['expected_bill_revision'] == null ||
+          result.billRevisionId != null &&
+              result.composition != null &&
+              result.composition!.values.every((v) => v >= 0) &&
+              result.composition!.values.fold<int>(0, (a, b) => a + b) ==
+                  result.amountCents) &&
       BusinessDates.iso(BusinessDates.dayOf(result.paymentDate)) ==
           payload['payment_business_date'];
 
@@ -86,6 +96,7 @@ class PayablePaymentAttempt implements ReviewedPaymentAttempt {
     notes: payload['notes'] as String?,
     expectedBalanceCents: payload['expected_balance_cents'] as int,
     paymentBusinessDate: payload['payment_business_date'] as String,
+    expectedBillRevision: payload['expected_bill_revision'] as int?,
   );
 
   PayablePaymentAttempt confirmed(PayablePayment result) =>
@@ -102,7 +113,7 @@ class PayablePaymentAttempt implements ReviewedPaymentAttempt {
 
   @override
   Map<String, dynamic> toJson() => {
-    'version': 1,
+    'version': payload['expected_bill_revision'] == null ? 1 : 2,
     'origin': origin.toJson(),
     'payable_id': payableId,
     'key': key,
@@ -114,7 +125,7 @@ class PayablePaymentAttempt implements ReviewedPaymentAttempt {
   };
 
   factory PayablePaymentAttempt.fromJson(Map<String, dynamic> value) {
-    if (value['version'] != 1) {
+    if (value['version'] != 1 && value['version'] != 2) {
       throw const FormatException('Unsupported payment attempt');
     }
     return PayablePaymentAttempt(
@@ -174,6 +185,7 @@ class PayablePaymentCoordinator {
           'PAYABLE_AMOUNT_EXCEEDS_BALANCE',
           'PAYABLE_NOT_FOUND',
           'PAYABLE_PAYMENT_METHOD_INVALID',
+          'FINANCIAL_BILL_REVISION_CONFLICT',
         },
       );
 
@@ -201,7 +213,11 @@ class PayablePaymentCoordinator {
       beneficiary: title.beneficiary,
       description: title.description,
       payableNumber: title.payableNumber,
-      payload: command.toJson(),
+      payload: {
+        ...command.toJson(),
+        if (title.financialBill != null)
+          'expected_bill_revision': title.financialBill!['revision'],
+      },
     ),
   );
 

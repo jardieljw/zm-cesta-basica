@@ -1026,7 +1026,7 @@ def get_report_payables(
             "due_date": p.due_date,
             "beneficiary": p.beneficiary,
             "category": p.category,
-            "nature": "Operacional" if p.nature == "BUSINESS" else "Retirada Sócio",
+            "nature": "Operacional" if p.nature == "BUSINESS" else "Retirada Sócio" if p.nature == "PERSONAL_WITHDRAWAL" else "Finalidade não informada",
             "original_amount_cents": p.original_amount_cents,
             "paid_amount_cents": p.paid_amount_cents,
             "balance_cents": p.balance_cents,

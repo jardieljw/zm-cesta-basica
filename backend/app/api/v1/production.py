@@ -36,6 +36,26 @@ from app.services.inventory import (
 router = APIRouter()
 
 
+@router.post('/production/batches/{batch_id}/disassembly-preview')
+def preview_disassembly(batch_id: str, data: DisassemblyRequest,
+        db: Session = Depends(get_db), current_device: PairedDevice = Depends(get_current_device)):
+    # Exercise exactly the same stock/triage validations as confirmation, in a
+    # savepoint that is always rolled back. No movements or batch changes survive.
+    preview = None
+    savepoint = db.begin_nested()
+    try:
+        batch, intact, losses, qty = disassemble_production_batch(db, batch_id, data)
+        triage = {item.product_id: item for item in data.triage_items or []}
+        preview = dict(batch_id=batch.id, quantity=qty, items=[dict(
+            product_name=item.product.name, product_base_unit=item.product.base_unit,
+            quantity_returned_base_units=triage[item.product_id].intact_quantity if item.product_id in triage
+                else (item.quantity_consumed_base_units // batch.quantity_produced) * qty
+        ) for item in batch.items], intact_items_returned=intact, loss_items_recorded=losses)
+    finally:
+        savepoint.rollback()
+    return preview
+
+
 def serialize_batch(b: ProductionBatch, db: Session) -> ProductionBatchResponse:
     """Serializes a ProductionBatch ORM model into Pydantic schema with stock and names."""
     items = [

@@ -1,0 +1,20 @@
+{
+  "status": "PASS",
+  "transport": "HTTPS with disposable trusted certificate",
+  "isolated_database": true,
+  "pdf_worker": "separate process",
+  "cash_stock_and_existing_payments_unchanged": true,
+  "payables_created_in_disposable_database": 1,
+  "samples": [
+    {
+      "alias": "pdf_07",
+      "rows": 39,
+      "result": "BILL_WITH_DETAILS_PENDING",
+      "difference_cents": -6,
+      "net_balance_matches_declared_total": true,
+      "purpose": "UNSPECIFIED",
+      "replay_reused": true,
+      "open_balance_declaration": "isolated test scenario only; not a statement about real debt"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "status": "PASS",
+  "transport": "HTTPS with disposable trusted certificate",
+  "isolated_database": true,
+  "pdf_worker": "separate process",
+  "books_unchanged": true,
+  "payables_created": 0,
+  "samples": [
+    {
+      "alias": "pdf_06",
+      "rows": 28,
+      "status": "READY",
+      "replay_reused": true,
+      "contract_version": 1,
+      "header_status": "DOCUMENT_VALIDATED"
+    },
+    {
+      "alias": "pdf_07",
+      "rows": 39,
+      "status": "INVALID",
+      "replay_reused": true,
+      "contract_version": 1,
+      "header_status": "DOCUMENT_VALIDATED"
+    },
+    {
+      "alias": "pdf_08",
+      "rows": 22,
+      "status": "INVALID",
+      "replay_reused": true,
+      "contract_version": 1,
+      "header_status": "CONFLICTING"
+    },
+    {
+      "alias": "csv_04",
+      "rows": 0,
+      "status": "INVALID",
+      "replay_reused": true,
+      "contract_version": 1,
+      "header_status": "MISSING"
+    },
+    {
+      "alias": "csv_05",
+      "rows": 21,
+      "status": "READY",
+      "replay_reused": true,
+      "contract_version": 1,
+      "header_status": "MISSING"
+    },
+    {
+      "alias": "csv_06",
+      "rows": 13,
+      "status": "READY",
+      "replay_reused": true,
+      "contract_version": 1,
+      "header_status": "MISSING"
+    },
+    {
+      "alias": "csv_09",
+      "rows": 0,
+      "status": "INVALID",
+      "replay_reused": true,
+      "contract_version": 1,
+      "header_status": "MISSING"
+    }
+  ]
+}

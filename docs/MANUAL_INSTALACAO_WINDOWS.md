@@ -15,7 +15,11 @@
 - **Memória RAM:** Mínimo de 4 GB (recomendado 8 GB).
 - **Armazenamento:** 2 GB livres em SSD ou disco rígido.
 - **Rede:** Placa de rede conectada ao roteador Wi-Fi da loja/galpão.
-- **Python:** Python 3.11 ou superior instalado (adicionado ao `PATH` do sistema).
+- **Python (computador que hospeda a API):** Python 3.14 ou superior instalado e
+  disponível no `PATH`, necessário para criar o ambiente virtual do backend. A
+  instalação documentada executa a API com Python em `.venv`; o executável
+  Flutter para Windows contém o cliente, não o backend. Executar somente o
+  cliente Windows não exige Python instalado.
 
 ### 1.2. Rede Local da Empresa
 - **Roteador Wi-Fi:** Não é necessário acesso à internet para o funcionamento da aplicação. Todos os dados transitam na rede local fechada.

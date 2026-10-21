@@ -1,5 +1,223 @@
 # Memória da implementação financeira
 
+## Referência do estado financeiro mais recente documentado
+
+Retomar pela [retomada única da importação de faturas](RETOMADA_IMPORTACAO_FATURAS.md),
+atualizada em **20/10/2026**. Ela reúne o estado da ativação local, os resultados
+de testes, os limites de homologação e o próximo passo; esses registros não
+comprovam implantação em produção nem aceite nativo integral.
+
+Os registros datados abaixo são históricos e permanecem preservados com suas
+evidências e decisões. Expressões como “estado vigente”, “retomada vigente” e
+“próximo passo” nesses registros se referem à respectiva rodada; para continuar
+o trabalho, seguir a retomada mais recente, distinguindo os fluxos E1–E5 da
+aplicação das etapas 1–4 do plano corretivo.
+
+## E1 implementada — 19/10/2026
+
+Usuário autorizou E1.1/E1.2/E1.3 inteiras. Origem preservada, detecção pelo
+conteúdo, normalização compartilhada de parcelas/papéis, controles/procedência,
+conflito de vencimento e contrato versionado implementados. [Guia E1](IMPORTACAO_FATURAS_E1.md)
+e [retomada atual](RETOMADA_IMPORTACAO_FATURAS.md) registram alcance e evidência.
+D1–D8 preservadas; sem títulos novos, migração, build/ativação ou finalidade
+empresarial presumida. Complemento compatível existe na API; conferência guiada,
+cobrança líquida e agenda continuam nas próximas etapas. As seções antigas abaixo
+registram a evolução anterior e não substituem este estado. Próximo: E2, após
+relatar E1 ao usuário.
+
+
+## Plano solicitado após a auditoria — 19/10/2026
+
+**Estado vigente:** [plano único de implementação](PLANO_IMPLEMENTACAO_IMPORTACAO_FATURAS.md)
+e [roteiro curto de retomada](RETOMADA_IMPORTACAO_FATURAS.md) preparados por pedido
+do usuário. E1 entrada/controles → E2 integração da cobrança/pagamento → E3 formatos,
+conferência/filtros → E4 parcelas futuras → E5 homologação/ativação. Achados A01–A08
+mapeados, decisões D1–D8 e critérios T01–T16; matriz dos 19 arquivos sem confundir
+resumo com compras. Não repetir descoberta já documentada; conferir versões e
+reexecutar casos afetados ao implementar.
+
+Recomendação técnica: um título líquido por ciclo, todos os itens acessíveis,
+créditos no agrupamento, finalidade não informada sem despesa presumida e agenda
+de previsões substituída pela próxima fatura. Cobrança pelo total comprovado e
+detalhe pendente são distintos de detalhe reconciliado; manter diferença sem
+ajuste. Datas/saldos históricos ambíguos exigem decisões pontuais, não classificação
+manual de todas as linhas. Preservar vínculos com compras, caixa e pagamentos.
+
+Pesquisa dirigida em documentação primária de pdfplumber, SQLite, Alembic e
+calendário Python registrada no plano, com aplicação e limites. Não foi escolhida
+API de IA nem demonstrada sua necessidade. A economia esperada é menos redescoberta
+e retrabalho; não há promessa de quantidade exata ou economia total de tokens.
+
+**Nenhum código, migração, build, servidor ou dado financeiro alterado nesta rodada.**
+Próximo incremento ao autorizar execução: E1.1/E1.2 com T01/T02/T03, depois E1.3/E2.
+Esta seção supera a antiga orientação de apenas aguardar avaliação da auditoria:
+o usuário avançou para o planejamento, ainda sem pedir sua implementação imediata.
+
+## Auditoria solicitada antes de corrigir — 19/10/2026, arquivos reenviados
+
+**Resultado vigente:** ler [a auditoria das faturas fornecidas](AUDITORIA_FATURAS_FORNECIDAS_2026-10-19.md)
+e [a evidência sanitizada](validacoes_financeiras/arquivos-fornecidos-2026-10-19/resultado.json).
+O usuário pediu explicitamente testar primeiro e decidir correções depois.
+Nesta rodada não houve alteração de código do aplicativo, migração ou importação
+na base principal. Roteiros temporários ficaram em `tmp/`, sem novos recursos.
+
+19 arquivos submetidos em HTTPS isolado: 9 PDFs/10 CSVs, 18 conteúdos distintos.
+Resultado primário: 3 prévias aptas à conferência, 15 bloqueadas e 1 rejeição antes
+da prévia. Os CSVs detalhados Nubank leram exatamente 21/13 linhas, mas perderam
+os campos estruturados de parcela (9/3 identificáveis no texto). Exigem cabeçalho
+manual e classificação linha a linha. Sete CSVs e alguns PDFs são índices/resumos,
+sem compras individuais; não inferir detalhes inexistentes nem necessidade de IA.
+
+Dois PDFs bancários tiveram 39/22 linhas com valores/descrições iguais à referência
+independente; somas dos detalhes diferem do resumo em -6/+2 centavos. Vencimento
+de outubro: capa 26/10, cabeçalhos/boleto 24/10; prévia escolheu 24 sem alerta
+específico. Não atribuir esses casos apenas a falha na extração de valores.
+Nenhum ajuste de centavos ou total fabricado. Extrato PJ: 28 datas/valores com
+sinal iguais à referência, confirmado somente como evidência.
+
+Cinco percursos com widgets Flutter reais e API HTTPS real, arquivos do usuário:
+reproduzida troca da origem Santander pelo primeiro cartão Nubank ao escolher
+CSV; PDF bloqueado; cabeçalho CSV vazio; classificação não automática; lista
+Contas a Pagar vazia. Seletor nativo/janela Windows principal não pilotados;
+preferências simuladas apenas no executor. Capturas e índice privado em
+`tmp/audit-user-files-20261019/LEIA_ME.md`. As tentativas iniciais do roteiro
+precisaram de correções no próprio teste; a execução final completou 5 percursos
+em 46 s. Isso caracteriza as falhas, não aprova a importação.
+
+Banco isolado ao fim: 18 documentos, 20 prévias, 4 confirmações como evidência
+(incluindo ensaios com cabeçalho/classificação assistidos), **zero títulos,
+zero caixa e zero estoque**. Não se homologaram filtros por período com dívidas
+importadas, nem parcelas futuras. Originais e fontes preservados; hashes de
+136 arquivos Flutter iguais. Suítes gerais não repetidas sem mudança de código.
+Próxima ação na conclusão daquela rodada: avaliar a auditoria antes de corrigir.
+O pedido posterior de plano está registrado na seção vigente acima.
+
+## Prioridade corrigida pelo usuário — 19/10/2026, após a ativação
+
+**Ler primeiro [o escopo de importação de faturas](ESCOPO_IMPORTACAO_DE_FATURAS.md).**
+O usuário rejeitou expansão por completude. Quer importar seus PDFs/CSVs e obter
+automaticamente dívidas identificadas por banco/cartão, estabelecimento, valor,
+vencimento e parcela em Contas a Pagar, com visão diária/semanal/mensal e próximas
+parcelas. A entrega anterior ainda não satisfaz isso: seis PDFs bloqueados e
+parcelas futuras não geradas; endpoint diagnóstico/testes não equivalem à função.
+
+O roteiro abaixo de plano de alocação manual passa a ser referência técnica,
+não próxima etapa obrigatória. Reavaliar o modelo mínimo de fatura/itens/créditos
+antes de criar novas tabelas/telas; não exigir classificação contábil detalhada
+de cada linha como condição para a categorização solicitada. Primeiro conferir
+os originais bloqueados e terminar o fluxo dos bancos usados. OFX/Open Finance/
+Gmail e suporte genérico irrestrito saem do recorte atual. OCR/IA dependem de
+necessidade demonstrada. Usuário aceita API de IA para seus poucos documentos,
+mas não há conclusão de que seja necessária, provedor escolhido ou envio autorizado
+executado. Fontes primárias e limites no novo guia. Sem código/banco alterado
+nesta correção de escopo; validações anteriores mantidas sem repetição de suítes.
+
+## Retomada vigente — ativação e diagnóstico de alocações, 19/10/2026
+
+Continuação autorizada em outro chat. **Cliente e servidor correspondentes
+ativados**; não repetir a ativação como pendência. Conferidos 136 arquivos Flutter
+e hashes do backend registrados. Os 16 arquivos do Release foram copiados para
+`client/build/windows/x64/runner/Release/`, preservando o anterior em `tmp/`.
+Servidor reiniciado pelo Python do projeto, com TLS/certificado existente.
+A primeira consulta à porta não mostrou a árvore anterior; o conflito de bind
+posterior permitiu identificá-la e substituí-la. API nova conferida no novo
+processo. Tentativa de start sozinha não comprova ativação.
+
+Backup privado verificado em `backend/backups/`, integridade/FKs aprovadas.
+Schema já em **fe4b5c6d8714**, sem migração nova. Tabelas de negócio iguais ao
+backup; somente `paired_devices.last_seen_at` mudou com a conexão do cliente.
+Nenhuma exclusão, estorno, pagamento ou nova importação na base original. Não
+criar recuperação contábil dos lançamentos bancários de teste descartáveis.
+
+**Runtime comprovado:** Python/venv (`pip check` aprovado), processo PDF separado
+e HTTPS/certificado local em porta/banco descartáveis. Ferramenta nova
+`scripts/verify_financial_runtime.py`: sete PDFs autorizados, original byte a byte,
+replay, confirmação/bloqueio, revisão explícita, conciliação parcial, excesso,
+sentido incorreto e anulação de vínculo sem reverter dinheiro. Extrato manteve
+28 ocorrências. Seis outros PDFs bloqueados; um conserva também detecção de
+origem inadequada já cadastrada. Não houve transcrição independente adicional
+de todas as linhas, novo layout homologado ou certificação de backend congelado.
+
+**Avanço de alocações:** [guia e contrato](ALOCACOES_DE_FATURA.md). Novo GET protegido
+`/financial-imports/statements/{id}/allocation-requirements` informa requisitos
+por crédito, pagamento anterior, saldo anterior e compra/título; mostra parcelas
+sem criar as futuras. `expected_review_id` recusa revisão desatualizada. Consulta
+sem gravação, só backend; não é alocação persistida nem libera geração bloqueada.
+Oito regressões novas, **488 backend aprovados**, 14 avisos anteriores. Crédito
+sintético também conferido por HTTPS. Flutter não mudou: **367 testes/análise/build**
+anteriores reaproveitados após hashes, sem refazer escolhas visuais.
+
+Evidências: [runtime HTTPS](validacoes_financeiras/correcao-2026-10-19/runtime-https.json),
+[ativação](validacoes_financeiras/correcao-2026-10-19/ativacao.json) e
+[registro](validacoes_financeiras/correcao-2026-10-19/README.md). Aplicativo nativo
+iniciado; interação visual nativa ponta a ponta/aparelhos físicos não certificados.
+Sem commit/publicação.
+
+**Próxima ação concreta:** plano imutável de crédito da mesma fatura contra
+componente novo não gerado, com alocação exata, FKs/migração em cópia, revisão
+esperada e confirmação no fluxo aprovado, conforme guia novo. Não usar auditoria
+JSON/notas como tabela comercial. Depois pagamentos/ciclos anteriores, dívida
+anterior e títulos/parcelas existentes; não compensar valores para contornar
+falta de vínculo. Mapeamento assistido e corpus por layout continuam pendentes.
+OCR/OFX/Open Finance permanecem na pesquisa registrada, sem leitor/integração
+nova ou promessa universal. As seções abaixo são históricas; pedidos antigos de
+recuperar os testes estão superados pelo esclarecimento do usuário.
+
+**Esclarecimento do usuário — 19/10/2026, após a entrega:** os PDFs enviados e
+os dados bancários importados eram exclusivamente testes. Os lançamentos gerados
+não têm valor de histórico financeiro a recuperar. Usar os PDFs disponíveis como
+amostras para testar o aplicativo; não criar trabalho de preservação/recuperação
+contábil dessas importações. Os registros financeiros de teste são descartáveis.
+Isso não se estende a estoque, vendas, cadastros ou outros dados do aplicativo.
+Nenhuma exclusão foi executada nesta atualização documental.
+
+**Retomada após implementação autorizada — 19/10/2026:** ler primeiro a
+[correção da importação](CORRECAO_IMPORTACAO_FINANCEIRA_2026-10-19.md) e sua
+[evidência](validacoes_financeiras/correcao-2026-10-19/README.md). O usuário
+autorizou executar as etapas após questionar a certeza das afirmações. Foram
+implementados bloqueios para os casos demonstrados, revisão explícita no Flutter,
+controle exato de centavos e versões, sem reescrever documentos/títulos reais.
+Créditos, saldo anterior, pagamentos, parcelas ambíguas e compilações seguem
+bloqueados quando falta alocação; não anunciar essa contenção como motor completo.
+Build Windows em cópia isolada; 367 Flutter e análise sem pendências. Resultado
+final do backend/hashes no relatório. Sem migração ou atualização do servidor/app
+aberto. Os 89 vínculos/28 movimentos observados pertencem aos testes, conforme o
+esclarecimento acima. Próximo: preparar ativação correspondente e testar a
+importação corrigida com os PDFs disponíveis; depois completar alocação e
+homologação adicional. Não planejar recuperação contábil desses testes. Auditoria/diagnóstico abaixo descrevem a base anterior.
+
+**Auditoria com pesquisa e reprodução — 19/10/2026:** consultar também a
+[auditoria detalhada](AUDITORIA_IMPORTACAO_FINANCEIRA_2026-10-19.md), que
+complementa o diagnóstico de planejamento abaixo. Foram reproduzidas **14
+falhas** em bancos descartáveis, mesmo com **449 backend / 356 Flutter**
+aprovados na suíte existente. Base real somente em leitura: 7 PDFs, 10 prévias,
+89 vínculos de obrigações e 28 movimentos bancários; hashes/SQLite íntegros
+não comprovam interpretação correta. Há vencimento inferido em documento já
+convertido em obrigações e compilações com ciclos misturados. Pesquisa primária,
+limites multibanco, casos, plano de recuperação e evidência sanitizada estão no
+relatório. Nenhuma regra funcional, título, movimento ou instalação foi alterado
+por esta auditoria. Próximo: conter lançamentos em lote, corrigir os P0 e revisar
+o histórico em cópia antes de qualquer correção auditável da empresa.
+
+## Retomada reconciliada — 19/10/2026
+
+Ler primeiro o [diagnóstico atualizado](DIAGNOSTICO_IMPORTACAO_FINANCEIRA_2026-10-19.md).
+Rodada autorizada somente para inspeção e planejamento: **449 testes backend /
+356 Flutter aprovados**. Interface PDF/CSV, senha, adaptadores adicionais,
+revisão semântica e geração/vínculo de obrigações já existem. Os trechos de
+16/10 abaixo que os chamam de futuros são históricos. A consulta `mode=ro`
+encontrou o banco local em **fe4b5c6d8714, 48 tabelas**; nenhuma migração foi
+aplicada nesta rodada e isso não certifica outras instalações.
+
+Prioridade recomendada: corrigir tolerância/ajuste automático de até 10 centavos,
+controles inferidos pelo leitor tabular, lançamento direto de extrato no caixa
+e geração de títulos por classificação/versão inadequadas. O diagnóstico traz
+fontes, limites e critérios para impedir dupla contagem. Depois homologar
+layouts adicionais com originais e validar entrega/recuperação. Servidor
+congelado ainda rejeita PDF (`PDF_RUNTIME_UNAVAILABLE`); OCR e OFX continuam
+sem leitor. Não confundir suites aprovadas com homologação de todos os bancos.
+Nenhuma mudança funcional, visual, obrigação real ou distribuição nesta análise.
+
 Consolidação: **16/10/2026**. Decisões, evidências e pendências para retomar após
 compactação ou em outra sessão. Não substitui ler o código e verificar a instalação.
 
@@ -372,13 +590,13 @@ Concluída a ampliação para novos bancos brasileiros com amostras reais do usu
 2. **Leitores PDF Multibanco e Descriptografia em Memória:**
    - Nu Empresas Extrato PJ (`nu_empresas_account_pdf_v1`): leitura de 5 páginas reais com 28 itens, conferência de entradas/saídas e equação de fechamento equilibrada.
    - Faturas de Cartão Itaú, Santander e Banco Inter (`itau_card_pdf_v1`, `santander_card_pdf_v1`, `inter_card_pdf_v1`).
-   - **Alegação histórica de segurança:** a descriptografia foi descrita como
-     efêmera e sem armazenamento em banco ou impressão em logs, com referência
-     à OWASP. O código atual encaminha a senha ao worker por variável de ambiente;
-     o hash da prévia registra apenas se havia senha, e o teste existente verifica
-     que um erro simulado não a reproduz no relatório. Essas evidências não
-     equivalem a uma auditoria abrangente de armazenamento ou logs em todos os
-     componentes e não estabelecem uma garantia geral de ausência de registro.
+    - **Alegação histórica de segurança:** a descriptografia foi descrita como
+      efêmera e sem armazenamento em banco ou impressão em logs, com referência
+      à OWASP. O código atual encaminha a senha ao worker por variável de ambiente;
+      o hash da prévia registra apenas se havia senha, e o teste existente verifica
+      que um erro simulado não a reproduz no relatório. Essas evidências não
+      equivalem a uma auditoria abrangente de armazenamento ou logs em todos os
+      componentes e não estabelecem uma garantia geral de ausência de registro.
    - Prevenção de colisão de cache de prévias via inclusão de `has_password` no hash da requisição.
 3. **Integração Front-end (Flutter):**
    - `FinancialImportFile`: abstração unificada para arquivos PDF e CSV com validação de assinatura e tamanho.

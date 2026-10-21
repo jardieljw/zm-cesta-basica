@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "backup_filename": "estoque_backup_pre_e5_20261020_081729_20261020_081729_690184.db",
+  "backup_sha256": "ad1e0f76c7297e54a7df1a6c04d98e8c0560b6cc21f6499922302360618867c4",
+  "source_schema": "fe4b5c6d8714",
+  "copy_schema": "f06d7e8f0926",
+  "original_tables_preserved": 47,
+  "original_rows_preserved": true,
+  "restored_copy_verified": true,
+  "copy_migration_verified": true,
+  "principal_unchanged": true,
+  "integrity_and_foreign_keys": true
+}

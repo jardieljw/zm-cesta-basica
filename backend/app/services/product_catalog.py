@@ -7,6 +7,8 @@ from app.models.purchases import PurchaseItem
 from app.models.production import ProductionBatchItem
 from app.models.movements import InventoryMovement
 from app.schemas.products import ProductDeletionCheck, ProductDeletionResponse
+from app.services.catalog_dependencies import product_blockers
+from app.models.base import utc_now
 
 
 def _get_product(db: Session, product_id: str) -> Product:
@@ -33,24 +35,36 @@ def _usage_reasons(db: Session, product_id: str):
 
 def check_product_deletion(db: Session, product_id: str) -> ProductDeletionCheck:
     product = _get_product(db, product_id)
-    reasons = _usage_reasons(db, product.id)
-    return ProductDeletionCheck(id=product.id, name=product.name, can_delete=not reasons, reasons=reasons)
+    blockers = product_blockers(db, product.id) if product.removed_at is None else []
+    return ProductDeletionCheck(id=product.id, name=product.name, can_delete=not blockers,
+        reasons=list(dict.fromkeys(x['kind'] for x in blockers)), blockers=blockers)
 
 
 def delete_unused_product(db: Session, product_id: str) -> ProductDeletionResponse:
     # Recheck inside the same BEGIN IMMEDIATE transaction used for deletion.
     # A prior UI check is advisory; it cannot bypass new references or history.
     product = _get_product(db, product_id)
-    reasons = _usage_reasons(db, product.id)
-    if reasons:
+    if product.removed_at is not None:
+        return ProductDeletionResponse(id=product.id, name=product.name, deleted=True,
+            deletion_mode='CATALOG_ONLY', removed_packagings_count=0)
+    check = check_product_deletion(db, product.id)
+    if not check.can_delete:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail={
             "error_code": "PRODUCT_HAS_HISTORY",
-            "message": "Este produto possui vínculos ou histórico e não pode ser excluído definitivamente.",
-            "reasons": reasons,
+            "message": "Resolva os vínculos indicados antes de excluir este produto.",
+            "reasons": check.reasons, "blockers": check.blockers,
         })
     response = ProductDeletionResponse(id=product.id, name=product.name, deleted=True,
                                       removed_packagings_count=len(product.packagings))
     # Only unused dependent catalog packagings cascade; no transaction rows deleted.
-    db.delete(product)
+    if _usage_reasons(db, product.id):
+        product.is_active = False
+        product.removed_at = utc_now()
+        for packaging in product.packagings:
+            packaging.is_active = False
+        response.deletion_mode = 'CATALOG_ONLY'
+        response.removed_packagings_count = 0
+    else:
+        db.delete(product)
     db.flush()
     return response

@@ -1,0 +1,20 @@
+{
+  "status": "ACTIVATED_NATIVE_FLOW_FAILED",
+  "client_version": "1.0.2+3",
+  "backend_version": "0.1.0",
+  "migration": "f06d7e8f0926",
+  "migrations_applied": [
+    "ff5c6d7e9815",
+    "f06d7e8f0926"
+  ],
+  "original_table_data_preserved": true,
+  "backup_filename": "estoque_backup_pre_e5_ativacao_20261020_082956_773115.db",
+  "backup_sha256": "ad1e0f76c7297e54a7df1a6c04d98e8c0560b6cc21f6499922302360618867c4",
+  "https_health": true,
+  "financial_auth_required": true,
+  "installment_route_live": true,
+  "server_launcher_pid": 6348,
+  "native_ui_verified": false,
+  "native_feedback_received": true,
+  "native_feedback_date": "2026-10-20"
+}

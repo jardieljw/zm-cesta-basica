@@ -1,0 +1,12 @@
+{
+  "status": "PASS",
+  "source_schema": "f17e8f901037",
+  "target_schema": "f28f901a1048",
+  "backup_filename": "estoque_backup_pre_catalog_20261020_151523_20261020_151523_320982.db",
+  "backup_sha256": "9fc4ff2173dfbe699a2afba0a3610873a5a1ac6f941406ff379086f83bedaa70",
+  "existing_tables_preserved": 56,
+  "existing_rows_preserved": true,
+  "integrity_and_foreign_keys": true,
+  "principal_database_not_modified": true,
+  "reference_triggers_verified": true
+}

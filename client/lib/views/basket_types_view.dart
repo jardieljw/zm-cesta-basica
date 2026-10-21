@@ -11,6 +11,7 @@ import '../core/api_client.dart';
 import 'basket_assemblies_view.dart';
 import 'basket_assembly_form_view.dart';
 import '../widgets/shared/approved_app_style.dart';
+import '../widgets/shared/catalog_blockers.dart';
 import '../utils/api_error_mapper.dart';
 
 class BasketTypesView extends StatefulWidget {
@@ -155,7 +156,16 @@ class _BasketTypesViewState extends State<BasketTypesView> {
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text(l10n.basketDeleteBlockedTitle),
-            content: SingleChildScrollView(child: Text(reasons)),
+            content: SingleChildScrollView(
+              child: (check['blockers'] as List? ?? []).isNotEmpty
+                  ? CatalogBlockers(
+                      blockers: (check['blockers'] as List)
+                          .map((e) => Map<String, dynamic>.from(e as Map))
+                          .toList(),
+                      apiClient: widget.apiClient,
+                    )
+                  : Text(reasons),
+            ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(ctx),
@@ -320,8 +330,9 @@ class _BasketTypesViewState extends State<BasketTypesView> {
                       backgroundColor: pColors.surface,
                       labelStyle: TextStyle(
                         color: isSelected ? pColors.accent : pColors.ink,
-                        fontWeight:
-                            isSelected ? FontWeight.w600 : FontWeight.w400,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.w400,
                         fontSize: 13,
                       ),
                       shape: StadiumBorder(
@@ -447,7 +458,8 @@ class _BasketTypesViewState extends State<BasketTypesView> {
                 const SizedBox(height: 8),
                 ApprovedRow(
                   title: '2. Registrar montagem',
-                  subtitle: 'Produção padrão ou personalizada com baixa de estoque',
+                  subtitle:
+                      'Produção padrão ou personalizada com baixa de estoque',
                   icon: Icons.add_circle_outline,
                   onTap: () async {
                     Navigator.pop(dialogCtx);

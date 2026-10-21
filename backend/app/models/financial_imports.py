@@ -76,6 +76,100 @@ class FinancialImportPreview(Base):
     created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=utc_now, nullable=False)
 
 
+class FinancialImportEntry(Base):
+    """One visible import generation. A preview remains an immutable read cache."""
+    __tablename__ = "financial_import_entries"
+    __table_args__ = (
+        UniqueConstraint("document_id", "generation", name="uq_fin_import_generation"),
+        CheckConstraint("generation > 0", name="ck_fin_import_generation"),
+        CheckConstraint("state IN ('ACTIVE','REMOVED')", name="ck_fin_import_entry_state"),
+        Index("uq_fin_import_active_document", "document_id", unique=True,
+              sqlite_where=text("state = 'ACTIVE'")),
+    )
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    document_id: Mapped[str] = mapped_column(ForeignKey("financial_documents.id"), nullable=False, index=True)
+    generation: Mapped[int] = mapped_column(Integer, nullable=False)
+    state: Mapped[str] = mapped_column(String(10), nullable=False)
+    root_preview_id: Mapped[str] = mapped_column(ForeignKey("financial_import_previews.id"), nullable=False)
+    statement_id: Mapped[Optional[str]] = mapped_column(ForeignKey("financial_statements.id"))
+    bill_revision_id: Mapped[Optional[str]] = mapped_column(ForeignKey("financial_bill_cycle_revisions.id"))
+    # IDs explicitly created or assumed by this generation, never inferred from SHA.
+    effects: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
+    # Retentions survive visibility changes until an audited explicit release.
+    retained_effects: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
+    released_effects: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict)
+    legacy_removal_document_id: Mapped[Optional[str]] = mapped_column(ForeignKey("financial_import_removals.document_id"))
+    created_by: Mapped[str] = mapped_column(ForeignKey("paired_devices.id"), nullable=False)
+    created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=utc_now, nullable=False)
+    updated_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=utc_now, nullable=False)
+    removed_by: Mapped[Optional[str]] = mapped_column(ForeignKey("paired_devices.id"))
+    removed_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime)
+
+
+class FinancialImportEntrySegment(Base):
+    """A child read belonging to the same import generation as its root."""
+    __tablename__ = "financial_import_entry_segments"
+    __table_args__ = (
+        UniqueConstraint("import_id", "preview_id", name="uq_fin_import_segment_preview"),
+        CheckConstraint("length(segment_key) > 0", name="ck_fin_import_segment_key"),
+    )
+    import_id: Mapped[str] = mapped_column(ForeignKey("financial_import_entries.id"), primary_key=True)
+    segment_key: Mapped[str] = mapped_column(String(20), primary_key=True)
+    preview_id: Mapped[str] = mapped_column(ForeignKey("financial_import_previews.id"), nullable=False)
+    parent_preview_id: Mapped[str] = mapped_column(ForeignKey("financial_import_previews.id"), nullable=False)
+    statement_id: Mapped[Optional[str]] = mapped_column(ForeignKey("financial_statements.id"))
+    bill_revision_id: Mapped[Optional[str]] = mapped_column(ForeignKey("financial_bill_cycle_revisions.id"))
+
+
+event.listen(FinancialImportEntry.__table__, "after_create", DDL("""
+CREATE TRIGGER IF NOT EXISTS trg_fin_import_entry_root BEFORE INSERT ON financial_import_entries
+WHEN NOT EXISTS (SELECT 1 FROM financial_import_previews p
+                 WHERE p.id=NEW.root_preview_id AND p.document_id=NEW.document_id
+                   AND json_extract(p.result, '$.segment_provenance') IS NULL)
+BEGIN SELECT RAISE(ABORT, 'invalid import root'); END
+""").execute_if(dialect="sqlite"))
+event.listen(FinancialImportEntrySegment.__table__, "after_create", DDL("""
+CREATE TRIGGER IF NOT EXISTS trg_fin_import_segment_parent BEFORE INSERT ON financial_import_entry_segments
+WHEN NOT EXISTS (
+    SELECT 1 FROM financial_import_entries e JOIN financial_import_previews p
+      ON p.id=NEW.preview_id AND p.document_id=e.document_id
+    WHERE e.id=NEW.import_id AND NEW.preview_id!=e.root_preview_id
+      AND json_extract(p.result, '$.segment_provenance.segment_key')=NEW.segment_key
+      AND json_extract(p.result, '$.segment_provenance.parent_preview_id')=NEW.parent_preview_id
+      AND (NEW.parent_preview_id=e.root_preview_id OR EXISTS (
+        SELECT 1 FROM financial_import_entry_segments s
+        WHERE s.import_id=e.id AND s.preview_id=NEW.parent_preview_id))
+)
+BEGIN SELECT RAISE(ABORT, 'segment belongs to another import'); END
+""").execute_if(dialect="sqlite"))
+
+IMPORT_METADATA_GUARDS = (
+    (FinancialImportEntry.__table__, """CREATE TRIGGER IF NOT EXISTS trg_fin_import_entry_update
+BEFORE UPDATE ON financial_import_entries
+WHEN NEW.id!=OLD.id OR NEW.document_id!=OLD.document_id OR NEW.generation!=OLD.generation
+ OR NEW.created_by!=OLD.created_by OR NEW.created_at!=OLD.created_at
+ OR (OLD.state='REMOVED' AND (NEW.state!='REMOVED' OR NEW.root_preview_id!=OLD.root_preview_id))
+ OR NOT EXISTS(SELECT 1 FROM financial_import_previews p WHERE p.id=NEW.root_preview_id
+    AND p.document_id=NEW.document_id AND json_extract(p.result,'$.segment_provenance') IS NULL)
+ OR (NEW.statement_id IS NOT NULL AND NOT EXISTS(SELECT 1 FROM financial_statements s
+    WHERE s.id=NEW.statement_id AND s.preview_id=NEW.root_preview_id))
+ OR (NEW.bill_revision_id IS NOT NULL AND NOT EXISTS(SELECT 1 FROM financial_bill_cycle_revisions r
+    WHERE r.id=NEW.bill_revision_id AND r.preview_id=NEW.root_preview_id AND r.statement_id=NEW.statement_id))
+BEGIN SELECT RAISE(ABORT, 'invalid import metadata transition'); END"""),
+    (FinancialImportEntrySegment.__table__, """CREATE TRIGGER IF NOT EXISTS trg_fin_import_segment_update
+BEFORE UPDATE ON financial_import_entry_segments
+WHEN NEW.import_id!=OLD.import_id OR NEW.segment_key!=OLD.segment_key
+ OR NEW.preview_id!=OLD.preview_id OR NEW.parent_preview_id!=OLD.parent_preview_id
+ OR (NEW.statement_id IS NOT NULL AND NOT EXISTS(SELECT 1 FROM financial_statements s
+    WHERE s.id=NEW.statement_id AND s.preview_id=NEW.preview_id))
+ OR (NEW.bill_revision_id IS NOT NULL AND NOT EXISTS(SELECT 1 FROM financial_bill_cycle_revisions r
+    WHERE r.id=NEW.bill_revision_id AND r.preview_id=NEW.preview_id AND r.statement_id=NEW.statement_id))
+BEGIN SELECT RAISE(ABORT, 'invalid import segment transition'); END"""),
+)
+for _table, _sql in IMPORT_METADATA_GUARDS:
+    event.listen(_table, 'after_create', DDL(_sql).execute_if(dialect='sqlite'))
+
+
 class FinancialStatement(Base):
     __tablename__ = "financial_statements"
     __table_args__ = (
@@ -260,6 +354,10 @@ class FinancialImportAudit(Base):
 
 
 FINANCIAL_IMPORT_TABLE_NAMES = frozenset({
+    "financial_import_entries", "financial_import_entry_segments",
+    "financial_import_removals",
+    'financial_installment_series', 'financial_installment_occurrences', 'financial_installment_forecasts', 'financial_installment_decisions',
+    'financial_bill_cycles', 'financial_bill_cycle_revisions', 'financial_bill_cycle_items', 'financial_bill_payable_links',
     "financial_bill_assessments", "financial_bill_evidence", "financial_bill_assessment_links",
     "financial_bill_semantic_reviews", "financial_bill_semantic_items", "financial_bill_obligations",
     "financial_sources", "financial_documents", "financial_statements", "financial_statement_items",

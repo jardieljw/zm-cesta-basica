@@ -115,11 +115,20 @@ class Product {
 class ProductDeletionCheck {
   final bool canDelete;
   final List<String> reasons;
-  ProductDeletionCheck({required this.canDelete, required this.reasons});
+  final List<Map<String, dynamic>> blockers;
+  ProductDeletionCheck({
+    required this.canDelete,
+    required this.reasons,
+    this.blockers = const [],
+  });
   factory ProductDeletionCheck.fromJson(Map<String, dynamic> json) =>
       ProductDeletionCheck(
         canDelete: json['can_delete'] as bool,
-        reasons:
-            (json['reasons'] as List<dynamic>).map((r) => r as String).toList(),
+        blockers: (json['blockers'] as List? ?? [])
+            .map((e) => Map<String, dynamic>.from(e as Map))
+            .toList(),
+        reasons: (json['reasons'] as List<dynamic>)
+            .map((r) => r as String)
+            .toList(),
       );
 }

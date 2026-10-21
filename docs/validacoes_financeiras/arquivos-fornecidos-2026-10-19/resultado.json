@@ -1,0 +1,472 @@
+{
+  "date": "2026-10-19",
+  "scope": "Audit only, before application changes",
+  "input_files": 19,
+  "distinct_contents": 18,
+  "pdf_files": 9,
+  "csv_files": 10,
+  "encrypted_pdfs": 0,
+  "pdfs_with_extractable_text": 9,
+  "primary_results": {
+    "ready_previews": 3,
+    "invalid_previews": 15,
+    "rejected_before_preview": 1
+  },
+  "samples": [
+    {
+      "alias": "pdf_01",
+      "source": "Consolidado",
+      "reader": "pdf_auto",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "INVALID",
+      "items": 0,
+      "errors": [
+        "PDF_BILL_HEADER_REQUIRED"
+      ],
+      "adapter": "itau_card_pdf_v1",
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 0,
+      "automatic_confirm_status": 409,
+      "automatic_confirm_code": "FINANCIAL_PREVIEW_INVALID"
+    },
+    {
+      "alias": "pdf_02",
+      "source": "Nubank",
+      "reader": "pdf_auto",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "INVALID",
+      "items": 34,
+      "errors": [
+        "PDF_BILL_HEADER_REQUIRED",
+        "PDF_CONFLICTING_HEADER"
+      ],
+      "adapter": "tabular_statement_pdf_v2",
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 0,
+      "automatic_confirm_status": 409,
+      "automatic_confirm_code": "FINANCIAL_PREVIEW_INVALID"
+    },
+    {
+      "alias": "pdf_03",
+      "source": "Nubank",
+      "reader": "pdf_auto",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "INVALID",
+      "items": 5,
+      "errors": [
+        "PDF_BILL_HEADER_REQUIRED",
+        "PDF_COMPILED_DOCUMENT_REVIEW_REQUIRED",
+        "PDF_MULTIPLE_BILLING_CYCLES",
+        "PDF_UNPARSED_MONEY_ROW"
+      ],
+      "adapter": "tabular_statement_pdf_v2",
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 0,
+      "automatic_confirm_status": 409,
+      "automatic_confirm_code": "FINANCIAL_PREVIEW_INVALID"
+    },
+    {
+      "alias": "pdf_04",
+      "source": "Consolidado",
+      "reader": "pdf_auto",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "INVALID",
+      "items": 0,
+      "errors": [
+        "PDF_LAYOUT_UNSUPPORTED"
+      ],
+      "adapter": null,
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 0,
+      "automatic_confirm_status": 409,
+      "automatic_confirm_code": "FINANCIAL_PREVIEW_INVALID"
+    },
+    {
+      "alias": "pdf_05",
+      "source": "Nu Empresas",
+      "reader": "pdf_auto",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "INVALID",
+      "items": 0,
+      "errors": [
+        "PDF_LAYOUT_UNSUPPORTED"
+      ],
+      "adapter": null,
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 0,
+      "automatic_confirm_status": 409,
+      "automatic_confirm_code": "FINANCIAL_PREVIEW_INVALID"
+    },
+    {
+      "alias": "pdf_06",
+      "source": "Nu Empresas",
+      "reader": "pdf_auto",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "READY",
+      "items": 28,
+      "errors": [],
+      "adapter": "nubank_account_pdf_v1",
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 0,
+      "automatic_confirm_status": 201
+    },
+    {
+      "alias": "pdf_07",
+      "source": "Nubank",
+      "reader": "pdf_auto",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "INVALID",
+      "items": 39,
+      "errors": [
+        "PDF_SUMMARY_DETAIL_MISMATCH"
+      ],
+      "adapter": "nubank_card_pdf_v1",
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 3,
+      "automatic_confirm_status": 409,
+      "automatic_confirm_code": "FINANCIAL_PREVIEW_INVALID"
+    },
+    {
+      "alias": "pdf_08",
+      "source": "Nubank",
+      "reader": "pdf_auto",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "INVALID",
+      "items": 22,
+      "errors": [
+        "PDF_SUMMARY_DETAIL_MISMATCH"
+      ],
+      "adapter": "nubank_card_pdf_v1",
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 2,
+      "automatic_confirm_status": 409,
+      "automatic_confirm_code": "FINANCIAL_PREVIEW_INVALID"
+    },
+    {
+      "alias": "pdf_09",
+      "source": "Nubank",
+      "reader": "pdf_auto",
+      "http_status": 200,
+      "duplicate_of": "pdf_08",
+      "status": "INVALID",
+      "items": 22,
+      "errors": [
+        "PDF_SUMMARY_DETAIL_MISMATCH"
+      ],
+      "adapter": "nubank_card_pdf_v1",
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 2,
+      "automatic_confirm_status": 409,
+      "automatic_confirm_code": "FINANCIAL_PREVIEW_INVALID"
+    },
+    {
+      "alias": "csv_01",
+      "source": "Inter",
+      "reader": "inter_card_csv",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "INVALID",
+      "items": 0,
+      "errors": [
+        "CSV_HEADER"
+      ],
+      "adapter": null,
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 0,
+      "automatic_confirm_status": 409,
+      "automatic_confirm_code": "FINANCIAL_PREVIEW_INVALID"
+    },
+    {
+      "alias": "csv_02",
+      "source": "Consolidado",
+      "reader": "nubank_card_csv",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "INVALID",
+      "items": 0,
+      "errors": [
+        "CSV_LAYOUT_MISMATCH"
+      ],
+      "adapter": null,
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 0,
+      "automatic_confirm_status": 409,
+      "automatic_confirm_code": "FINANCIAL_PREVIEW_INVALID"
+    },
+    {
+      "alias": "csv_03",
+      "source": "Itaú",
+      "reader": "itau_card_csv",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "INVALID",
+      "items": 0,
+      "errors": [
+        "CSV_HEADER"
+      ],
+      "adapter": null,
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 0,
+      "automatic_confirm_status": 409,
+      "automatic_confirm_code": "FINANCIAL_PREVIEW_INVALID"
+    },
+    {
+      "alias": "csv_04",
+      "source": "Mercado Pago",
+      "reader": "mercadopago_csv",
+      "http_status": 409,
+      "duplicate_of": null,
+      "original_preserved": true,
+      "error_code": "FINANCIAL_IMPORT_SIGN_MISMATCH"
+    },
+    {
+      "alias": "csv_05",
+      "source": "Nubank",
+      "reader": "nubank_card_csv",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "READY",
+      "items": 21,
+      "errors": [],
+      "adapter": null,
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 0,
+      "independent_csv_fields_match": true,
+      "installments_in_description": 9,
+      "automatic_confirm_status": 422,
+      "automatic_confirm_code": "FINANCIAL_IMPORT_HEADER_INVALID",
+      "assisted_header_status": 201,
+      "assisted_header_origin": "USER_SUPPLIED_CONSOLIDATED_SUMMARY",
+      "assisted_classification_status": 201,
+      "assisted_classification_is_test_scenario": true,
+      "review_balanced": false,
+      "generation_status": 409,
+      "generation_code": "BILL_REVIEW_NOT_BALANCED",
+      "payables_generated": 0
+    },
+    {
+      "alias": "csv_06",
+      "source": "Nubank",
+      "reader": "nubank_card_csv",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "READY",
+      "items": 13,
+      "errors": [],
+      "adapter": null,
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 0,
+      "independent_csv_fields_match": true,
+      "installments_in_description": 3,
+      "automatic_confirm_status": 422,
+      "automatic_confirm_code": "FINANCIAL_IMPORT_HEADER_INVALID",
+      "assisted_header_status": 201,
+      "assisted_header_origin": "USER_SUPPLIED_CONSOLIDATED_SUMMARY",
+      "assisted_classification_status": 201,
+      "assisted_classification_is_test_scenario": true,
+      "review_balanced": false,
+      "generation_status": 409,
+      "generation_code": "BILL_REVIEW_NOT_BALANCED",
+      "payables_generated": 0
+    },
+    {
+      "alias": "csv_07",
+      "source": "Nubank",
+      "reader": "nubank_card_csv",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "INVALID",
+      "items": 0,
+      "errors": [
+        "CSV_LAYOUT_MISMATCH"
+      ],
+      "adapter": null,
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 0,
+      "automatic_confirm_status": 409,
+      "automatic_confirm_code": "FINANCIAL_PREVIEW_INVALID"
+    },
+    {
+      "alias": "csv_08",
+      "source": "Nu Empresas",
+      "reader": "nu_empresas_account_csv",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "INVALID",
+      "items": 0,
+      "errors": [
+        "CSV_LAYOUT_MISMATCH"
+      ],
+      "adapter": null,
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 0,
+      "automatic_confirm_status": 409,
+      "automatic_confirm_code": "FINANCIAL_PREVIEW_INVALID"
+    },
+    {
+      "alias": "csv_09",
+      "source": "PicPay",
+      "reader": "nubank_card_csv",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "INVALID",
+      "items": 0,
+      "errors": [
+        "CSV_LAYOUT_MISMATCH"
+      ],
+      "adapter": null,
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 0,
+      "automatic_confirm_status": 409,
+      "automatic_confirm_code": "FINANCIAL_PREVIEW_INVALID"
+    },
+    {
+      "alias": "csv_10",
+      "source": "Santander",
+      "reader": "santander_card_csv",
+      "http_status": 201,
+      "duplicate_of": null,
+      "status": "INVALID",
+      "items": 0,
+      "errors": [
+        "CSV_HEADER"
+      ],
+      "adapter": null,
+      "original_preserved": true,
+      "replay_same_preview": true,
+      "installment_fields": 0,
+      "automatic_confirm_status": 409,
+      "automatic_confirm_code": "FINANCIAL_PREVIEW_INVALID"
+    },
+    {
+      "alias": "csv_07",
+      "mode": "DIAGNOSTIC_EXPLICIT_MAPPING_NOT_UI_DEFAULT",
+      "http_status": 201,
+      "status": "READY",
+      "items": 12,
+      "errors_count": 0
+    }
+  ],
+  "independent_comparisons": {
+    "pdf_07": {
+      "reference_rows": 39,
+      "app_rows": 39,
+      "signed_values_match_in_order": true,
+      "summary_equation_difference_cents": 0,
+      "details_vs_summary_difference_cents": -6
+    },
+    "pdf_08": {
+      "reference_rows": 22,
+      "app_rows": 22,
+      "signed_values_match_in_order": true,
+      "summary_equation_difference_cents": 0,
+      "details_vs_summary_difference_cents": 2
+    },
+    "csv_05": {
+      "compiled_pdf_rows": 21,
+      "csv_rows": 21,
+      "exact_date_description_amount_match": true,
+      "signed_amount_multiset_match": true,
+      "only_in_pdf_count": 0,
+      "only_in_csv_count": 0
+    },
+    "csv_06": {
+      "compiled_pdf_rows": 13,
+      "csv_rows": 13,
+      "exact_date_description_amount_match": true,
+      "signed_amount_multiset_match": true,
+      "only_in_pdf_count": 0,
+      "only_in_csv_count": 0
+    },
+    "csv_summary_counts": {},
+    "pdf_06": {
+      "reference_rows": 28,
+      "app_rows": 28,
+      "date_signed_amounts_match": true
+    }
+  },
+  "ui_observations": [
+    {
+      "case": "source_before_file",
+      "selected_santander_preserved": false,
+      "selected_source_is_first_nubank": true
+    },
+    {
+      "case": "october_pdf",
+      "blocked_message_visible": true,
+      "confirm_action_visible": false
+    },
+    {
+      "case": "csv_header",
+      "money_fields_empty": true,
+      "header_form_required": true
+    },
+    {
+      "case": "manual_semantics",
+      "loaded_dropdowns": 3,
+      "unclassified": 3
+    },
+    {
+      "case": "payables_after_samples",
+      "rendered": true
+    }
+  ],
+  "ui_execution": "5 characterization paths completed; real unchanged Flutter widgets and real isolated HTTPS",
+  "checks": {
+    "client_source_files_unchanged": 136,
+    "backend_recorded_files_unchanged": 4,
+    "input_files_unchanged": 19,
+    "counts": {
+      "financial_documents": 18,
+      "financial_import_previews": 20,
+      "financial_statements": 4,
+      "accounts_payable": 0,
+      "cash_flow_entries": 0,
+      "inventory_movements": 0
+    },
+    "integrity": true,
+    "foreign_keys": true,
+    "application_changed": false,
+    "native_file_picker_exercised": false,
+    "flutter_real_widgets_and_real_https": true,
+    "isolated_server_stopped": true,
+    "integrity_after_server_stop": true
+  },
+  "api_step_original_database_unchanged": true,
+  "fixes_implemented": false,
+  "source_code_sha256": {
+    "backend/app/services/financial_pdf_readers.py": "a3a0d5b1919a9d5a21a27feeaa2f7ab03b0729c51822aea62bf6acaa4db36e87",
+    "backend/app/services/financial_readers.py": "db20634cf81f1de224ff99e21c67e37f8c427ded14d9024f9899397b0d2a4dd7",
+    "backend/app/services/financial_previews.py": "cde4dea88cca7cff949ff09862b4061991cb724af7cacd13608a208ab7aa3988",
+    "backend/app/services/financial_bill_semantics.py": "2540a600166bede16b6137707933ed9fd7c0271f6d3901403a733de41622566d",
+    "client/lib/views/financial_imports_view.dart": "1ca39f354aefdefb05d652edeb7bb561240ee8af90ef2f9fd74b66b369faf618",
+    "client/lib/views/financial_bill_review_view.dart": "7e3f6b9b9d09d6614739fef73af1f2abc655c9789aa088e8366afef8844b1d5b",
+    "client/lib/views/financial_header_review_view.dart": "2c0df1d21132410d34ce15ec3542b9bbd5705473eb2fcfefa8e32288bd6ae03c",
+    "client/lib/views/payables_view.dart": "92401ea2f8a635b111447b48579e1e50d5dfc5b8680485820cda0bffed6ee714"
+  }
+}

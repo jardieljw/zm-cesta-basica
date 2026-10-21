@@ -94,6 +94,270 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[Locale('pt')];
 
+  /// No description provided for @billIntegrationTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferir fatura'**
+  String get billIntegrationTitle;
+
+  /// No description provided for @billDetailDifference.
+  ///
+  /// In pt, this message translates to:
+  /// **'Diferença entre detalhes e total conferido'**
+  String get billDetailDifference;
+
+  /// No description provided for @billIntegrationHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você pode guardar a fatura ou adicioná-la a Contas a Pagar. Suas compras ficam disponíveis para consulta. O pagamento só é registrado quando você usar Registrar pagamento; gastos pessoais não viram despesas da empresa automaticamente.'**
+  String get billIntegrationHelp;
+
+  /// No description provided for @billIntegrationHeader.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferir total e vencimento'**
+  String get billIntegrationHeader;
+
+  /// No description provided for @billIntegrationDestination.
+  ///
+  /// In pt, this message translates to:
+  /// **'O que você quer fazer com esta fatura?'**
+  String get billIntegrationDestination;
+
+  /// No description provided for @billIntegrationPending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Guardar por enquanto; decidir depois'**
+  String get billIntegrationPending;
+
+  /// No description provided for @billIntegrationHistory.
+  ///
+  /// In pt, this message translates to:
+  /// **'Guardar sem adicionar a Contas a Pagar'**
+  String get billIntegrationHistory;
+
+  /// No description provided for @billIntegrationOpen.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar a Contas a Pagar: esta fatura ainda precisa ser paga'**
+  String get billIntegrationOpen;
+
+  /// No description provided for @billIntegrationDetailAck.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usar o total conferido e guardar a diferença para revisar depois.'**
+  String get billIntegrationDetailAck;
+
+  /// No description provided for @billIntegrationControlsAck.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferi o cartão, o total, o vencimento e o que será feito com esta fatura.'**
+  String get billIntegrationControlsAck;
+
+  /// No description provided for @billIntegrationReason.
+  ///
+  /// In pt, this message translates to:
+  /// **'Origem, controles e situação da fatura conferidos pelo operador.'**
+  String get billIntegrationReason;
+
+  /// No description provided for @billIntegrationConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Salvar fatura'**
+  String get billIntegrationConfirm;
+
+  /// No description provided for @billIntegrationRetry.
+  ///
+  /// In pt, this message translates to:
+  /// **'Retomar confirmação'**
+  String get billIntegrationRetry;
+
+  /// No description provided for @billIntegrationSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fatura adicionada a Contas a Pagar. Você pode consultar os itens e registrar o pagamento na conta abaixo.'**
+  String get billIntegrationSuccess;
+
+  /// No description provided for @billIntegrationEvidenceSaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta fatura está guardada para consulta. Ela não foi adicionada a Contas a Pagar.'**
+  String get billIntegrationEvidenceSaved;
+
+  /// No description provided for @billIntegrationOpenPayable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver conta e pagamentos'**
+  String get billIntegrationOpenPayable;
+
+  /// No description provided for @billIntegrationConflict.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta fatura precisa de uma conferência de ciclo, saldo anterior ou título já existente. Atualize os dados e confira o vínculo indicado.'**
+  String get billIntegrationConflict;
+
+  /// No description provided for @billIntegrationRequiredStep.
+  ///
+  /// In pt, this message translates to:
+  /// **'Para salvar, conclua esta etapa:'**
+  String get billIntegrationRequiredStep;
+
+  /// No description provided for @billIntegrationGoToMarkedArea.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver área destacada'**
+  String get billIntegrationGoToMarkedArea;
+
+  /// No description provided for @billIntegrationGoToRequiredStep.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ir para esta etapa'**
+  String get billIntegrationGoToRequiredStep;
+
+  /// No description provided for @billIntegrationReturnToDocuments.
+  ///
+  /// In pt, this message translates to:
+  /// **'Voltar aos documentos'**
+  String get billIntegrationReturnToDocuments;
+
+  /// No description provided for @billIntegrationErrorDetails.
+  ///
+  /// In pt, this message translates to:
+  /// **'O total e os itens da fatura ainda não conferem. Marque a opção abaixo se aceita guardar essa diferença para revisar depois.'**
+  String get billIntegrationErrorDetails;
+
+  /// No description provided for @billIntegrationErrorContent.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta fatura difere de uma conferência anterior. Compare os itens listados e marque a opção para aceitar esta revisão.'**
+  String get billIntegrationErrorContent;
+
+  /// No description provided for @billIntegrationErrorObligations.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível confirmar o vínculo com uma conta existente. Abra “Já existe alguma destas contas?” e selecione o título que representa o saldo anterior ou a compra. Se a seção não aparecer, volte a Contas a Pagar e confira se esse título existe.'**
+  String get billIntegrationErrorObligations;
+
+  /// No description provided for @billIntegrationErrorDestination.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta fatura já tem uma cobrança vinculada. Selecione “Adicionar a Contas a Pagar” para manter o vínculo.'**
+  String get billIntegrationErrorDestination;
+
+  /// No description provided for @billIntegrationErrorHeader.
+  ///
+  /// In pt, this message translates to:
+  /// **'O ciclo desta fatura não foi identificado. Confira o total e o vencimento em “Conferir total e vencimento”.'**
+  String get billIntegrationErrorHeader;
+
+  /// No description provided for @billIntegrationErrorPreviousBalance.
+  ///
+  /// In pt, this message translates to:
+  /// **'O saldo anterior do resumo não bate com o saldo detalhado. Abra o documento original e confira esses valores antes de salvar.'**
+  String get billIntegrationErrorPreviousBalance;
+
+  /// No description provided for @billIntegrationErrorRevision.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta fatura mudou desde que você abriu a revisão. Confira os dados atualizados e marque novamente a confirmação final para salvar.'**
+  String get billIntegrationErrorRevision;
+
+  /// No description provided for @billIntegrationErrorCycle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este documento já está associado a outro ciclo ou cartão. Volte aos documentos, confira o ciclo e a origem selecionados e abra a fatura correta.'**
+  String get billIntegrationErrorCycle;
+
+  /// No description provided for @billIntegrationErrorSingleCycle.
+  ///
+  /// In pt, this message translates to:
+  /// **'O arquivo reúne mais de uma fatura. Volte aos documentos e selecione um ciclo por vez antes de continuar.'**
+  String get billIntegrationErrorSingleCycle;
+
+  /// No description provided for @billIntegrationErrorRole.
+  ///
+  /// In pt, this message translates to:
+  /// **'O tipo de lançamento e o sinal do valor não correspondem. Confira esse item no documento original; esta tela não permite alterar essa classificação.'**
+  String get billIntegrationErrorRole;
+
+  /// No description provided for @billIntegrationErrorPaid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta revisão alteraria valores já pagos. Confira a fatura e os pagamentos registrados antes de tentar novamente.'**
+  String get billIntegrationErrorPaid;
+
+  /// No description provided for @billPurposeUnknown.
+  ///
+  /// In pt, this message translates to:
+  /// **'Finalidade não informada'**
+  String get billPurposeUnknown;
+
+  /// No description provided for @billStatusSubstituted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Substituído pela fatura'**
+  String get billStatusSubstituted;
+
+  /// No description provided for @billDetailsPending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Detalhes pendentes de conferência'**
+  String get billDetailsPending;
+
+  /// No description provided for @billUnclassifiedPaid.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pagamentos sem finalidade informada'**
+  String get billUnclassifiedPaid;
+
+  /// No description provided for @billCompositionStock.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estoque'**
+  String get billCompositionStock;
+
+  /// No description provided for @billCompositionBusiness.
+  ///
+  /// In pt, this message translates to:
+  /// **'Despesas do negócio'**
+  String get billCompositionBusiness;
+
+  /// No description provided for @billCompositionPersonal.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pessoal'**
+  String get billCompositionPersonal;
+
+  /// No description provided for @billItemsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Itens da fatura'**
+  String get billItemsTitle;
+
+  /// No description provided for @financialImportAutoReaderHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'O formato será reconhecido pelo conteúdo. A conta ou o cartão escolhido será mantido.'**
+  String get financialImportAutoReaderHelp;
+
+  /// No description provided for @financialImportSummaryOnly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este arquivo é uma relação de faturas, sem as compras individuais. Ele precisa de conferência por ciclo.'**
+  String get financialImportSummaryOnly;
+
+  /// No description provided for @financialImportReaderAmbiguous.
+  ///
+  /// In pt, this message translates to:
+  /// **'O conteúdo admite mais de uma leitura. Confira se a origem escolhida é uma conta ou um cartão e selecione o documento detalhado.'**
+  String get financialImportReaderAmbiguous;
+
+  /// No description provided for @financialImportDueConflict.
+  ///
+  /// In pt, this message translates to:
+  /// **'O documento informa vencimentos diferentes. Confira as datas e sua origem antes de cadastrar a cobrança.'**
+  String get financialImportDueConflict;
+
   /// No description provided for @appTitle.
   ///
   /// In pt, this message translates to:
@@ -1369,7 +1633,7 @@ abstract class AppLocalizations {
   /// No description provided for @recipeImmutabilityBanner.
   ///
   /// In pt, this message translates to:
-  /// **'Versionamento Imutável: As receitas gravadas nunca são sobrescritas. Para alterar componentes, clique em \"Nova Versão\". Montagens antigas mantêm fidelidade exata à composição da época.'**
+  /// **'Você pode mudar a composição e o preço sem criar outro tipo de cesta. Vendas não canceladas e montagens ainda existentes protegem a receita utilizada. Crie outra receita neste mesmo tipo para as próximas operações.'**
   String get recipeImmutabilityBanner;
 
   /// No description provided for @recipeVersionDisplayed.
@@ -1417,7 +1681,7 @@ abstract class AppLocalizations {
   /// No description provided for @recipeDialogSubtitle.
   ///
   /// In pt, this message translates to:
-  /// **'Ao salvar, a composição atual será arquivada permanentemente e uma nova versão ativa será criada.'**
+  /// **'Defina a composição e o preço desta receita. Vendas anteriores mantêm os valores registrados.'**
   String get recipeDialogSubtitle;
 
   /// No description provided for @recipeDialogNotesLabel.
@@ -1582,6 +1846,36 @@ abstract class AppLocalizations {
   /// **'Compra cancelada e estoque estornado com sucesso!'**
   String get purchaseCancelSuccess;
 
+  /// No description provided for @purchaseEditDraft.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar rascunho'**
+  String get purchaseEditDraft;
+
+  /// No description provided for @purchaseDeleteDraftButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir rascunho'**
+  String get purchaseDeleteDraftButton;
+
+  /// No description provided for @purchaseDeleteDraftTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir compra #{number}?'**
+  String purchaseDeleteDraftTitle(int number);
+
+  /// No description provided for @purchaseDeleteDraftWarning.
+  ///
+  /// In pt, this message translates to:
+  /// **'O rascunho e seus itens serão removidos permanentemente. Isso não movimenta o estoque e não pode ser desfeito.'**
+  String get purchaseDeleteDraftWarning;
+
+  /// No description provided for @purchaseDeleteDraftSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rascunho excluído.'**
+  String get purchaseDeleteDraftSuccess;
+
   /// No description provided for @purchaseCancelError.
   ///
   /// In pt, this message translates to:
@@ -1653,6 +1947,18 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Nova Entrada de Compras'**
   String get purchaseFormTitle;
+
+  /// No description provided for @purchaseEditDraftTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar rascunho de compra'**
+  String get purchaseEditDraftTitle;
+
+  /// No description provided for @purchaseDraftUpdateButton.
+  ///
+  /// In pt, this message translates to:
+  /// **'Salvar alterações'**
+  String get purchaseDraftUpdateButton;
 
   /// No description provided for @purchaseFormSupplierLabel.
   ///
@@ -1779,6 +2085,12 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Compra registrada com sucesso!'**
   String get purchaseFormSuccess;
+
+  /// No description provided for @purchaseDraftUpdateSuccess.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rascunho atualizado.'**
+  String get purchaseDraftUpdateSuccess;
 
   /// No description provided for @purchaseFormSaveError.
   ///
@@ -2863,7 +3175,7 @@ abstract class AppLocalizations {
   /// No description provided for @saleCancelConfirm.
   ///
   /// In pt, this message translates to:
-  /// **'Deseja realmente estornar a venda #{number}?'**
+  /// **'Cancelar a venda nº {number}?'**
   String saleCancelConfirm(int number);
 
   /// No description provided for @saleCancelReason.
@@ -4630,6 +4942,12 @@ abstract class AppLocalizations {
   /// **'Data de Vencimento'**
   String get purchasePaymentDueDateLabel;
 
+  /// No description provided for @purchaseDueDateNotProvided.
+  ///
+  /// In pt, this message translates to:
+  /// **'não informada'**
+  String get purchaseDueDateNotProvided;
+
   /// No description provided for @purchasePaymentDueDateRequired.
   ///
   /// In pt, this message translates to:
@@ -4981,31 +5299,31 @@ abstract class AppLocalizations {
   /// No description provided for @productDeleteButton.
   ///
   /// In pt, this message translates to:
-  /// **'Excluir definitivamente'**
+  /// **'Excluir produto'**
   String get productDeleteButton;
 
   /// No description provided for @productDeleteTitle.
   ///
   /// In pt, this message translates to:
-  /// **'Excluir produto nunca utilizado?'**
+  /// **'Excluir produto do catálogo'**
   String get productDeleteTitle;
 
   /// No description provided for @productDeleteConfirm.
   ///
   /// In pt, this message translates to:
-  /// **'Excluir definitivamente \"{name}\"? O cadastro e suas embalagens nunca usadas serão removidos. Essa ação não pode ser desfeita.'**
+  /// **'Excluir “{name}” do catálogo? Registros de operações anteriores serão preservados.'**
   String productDeleteConfirm(String name);
 
   /// No description provided for @productDeletedSuccess.
   ///
   /// In pt, this message translates to:
-  /// **'Produto nunca utilizado excluído definitivamente.'**
+  /// **'Produto excluído do catálogo.'**
   String get productDeletedSuccess;
 
   /// No description provided for @productDeleteBlockedTitle.
   ///
   /// In pt, this message translates to:
-  /// **'Este produto tem vínculos ou histórico'**
+  /// **'Resolva estes vínculos antes de excluir'**
   String get productDeleteBlockedTitle;
 
   /// No description provided for @productDeleteBlocked.
@@ -5017,7 +5335,7 @@ abstract class AppLocalizations {
   /// No description provided for @productDeleteHistoryError.
   ///
   /// In pt, this message translates to:
-  /// **'O produto possui vínculos ou histórico. A exclusão definitiva foi bloqueada para preservar esses registros.'**
+  /// **'Resolva os vínculos indicados antes de excluir este produto.'**
   String get productDeleteHistoryError;
 
   /// No description provided for @productUsageRecipes.
@@ -7405,13 +7723,13 @@ abstract class AppLocalizations {
   /// No description provided for @pdfImportHelp.
   ///
   /// In pt, this message translates to:
-  /// **'Envie um PDF com texto, de até 10 MiB. Layouts testados: faturas Nubank/PicPay e extratos Nubank PF/PJ. PDFs escaneados, protegidos por senha ou de outros formatos podem não ser lidos.'**
+  /// **'Selecione um PDF ou CSV de até 10 MiB. O aplicativo lê os dados disponíveis e avisa se precisar de alguma informação. PDFs que são fotos ou imagens ainda não podem ser lidos automaticamente.'**
   String get pdfImportHelp;
 
   /// No description provided for @pdfImportEffect.
   ///
   /// In pt, this message translates to:
-  /// **'A importação guarda o documento e os lançamentos pendentes de revisão. Não cria contas a pagar, pagamentos ou conciliação automática.'**
+  /// **'O arquivo fica disponível para consulta. Para uma fatura aparecer no financeiro, escolha Adicionar a Contas a Pagar e salve. O pagamento é registrado separadamente.'**
   String get pdfImportEffect;
 
   /// No description provided for @pdfImportSource.
@@ -7423,7 +7741,7 @@ abstract class AppLocalizations {
   /// No description provided for @pdfImportSourceCheck.
   ///
   /// In pt, this message translates to:
-  /// **'Confira a conta/cartão e a titularidade. O leitor não verifica se o documento pertence à origem escolhida.'**
+  /// **'Escolha a conta ou cartão de onde saiu o documento. Confira essa escolha antes de salvar a fatura.'**
   String get pdfImportSourceCheck;
 
   /// No description provided for @pdfImportNewSource.
@@ -7597,7 +7915,7 @@ abstract class AppLocalizations {
   /// No description provided for @pdfImportWarnings.
   ///
   /// In pt, this message translates to:
-  /// **'Avisos e impedimentos'**
+  /// **'O que precisa de atenção'**
   String get pdfImportWarnings;
 
   /// No description provided for @pdfImportControls.
@@ -7801,7 +8119,7 @@ abstract class AppLocalizations {
   /// No description provided for @pdfImportPassword.
   ///
   /// In pt, this message translates to:
-  /// **'Este PDF exige senha. A leitura de arquivos protegidos ainda não está disponível.'**
+  /// **'Informe ou confira a senha do PDF e tente novamente. A senha é usada somente durante a leitura.'**
   String get pdfImportPassword;
 
   /// No description provided for @pdfImportOcr.
@@ -7899,6 +8217,1272 @@ abstract class AppLocalizations {
   /// In pt, this message translates to:
   /// **'Preencha de 2 a 100 caracteres.'**
   String get pdfImportRequired;
+
+  /// No description provided for @importReviewBank.
+  ///
+  /// In pt, this message translates to:
+  /// **'Comparar com registros do aplicativo'**
+  String get importReviewBank;
+
+  /// No description provided for @importReviewBill.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revisar fatura'**
+  String get importReviewBill;
+
+  /// No description provided for @importHeaderTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferir dados do documento'**
+  String get importHeaderTitle;
+
+  /// No description provided for @importHeaderHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confira os controles disponíveis e complete somente o que faltar, usando o documento ou banco. Valores calculados das linhas não substituem saldos e total declarados.'**
+  String get importHeaderHelp;
+
+  /// No description provided for @importHeaderSignedMoney.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe o valor em reais, com vírgula para centavos. Use sinal negativo somente para crédito a seu favor.'**
+  String get importHeaderSignedMoney;
+
+  /// No description provided for @importHeaderDateRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecione a data declarada no documento.'**
+  String get importHeaderDateRequired;
+
+  /// No description provided for @importHeaderMoneyRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe um valor válido em reais.'**
+  String get importHeaderMoneyRequired;
+
+  /// No description provided for @importHeaderPeriodInvalid.
+  ///
+  /// In pt, this message translates to:
+  /// **'O fim do período deve ser igual ou posterior ao início.'**
+  String get importHeaderPeriodInvalid;
+
+  /// No description provided for @importHeaderAck.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferi estes dados na fonte; não foram inferidos das transações.'**
+  String get importHeaderAck;
+
+  /// No description provided for @importHeaderContinue.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usar dados conferidos'**
+  String get importHeaderContinue;
+
+  /// No description provided for @importOptional.
+  ///
+  /// In pt, this message translates to:
+  /// **'Opcional · deixe vazio se não informado'**
+  String get importOptional;
+
+  /// No description provided for @importUnclassified.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecionar classificação'**
+  String get importUnclassified;
+
+  /// No description provided for @importClassifyHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Classifique cada linha conforme sua finalidade real. Descrição e sinal não determinam se um gasto pertence à empresa ou ao sócio.'**
+  String get importClassifyHelp;
+
+  /// No description provided for @importClassifyRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Classifique todas as linhas antes de salvar ou gerar títulos.'**
+  String get importClassifyRequired;
+
+  /// No description provided for @importExactRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'A equação precisa fechar exatamente, sem ajuste de centavos.'**
+  String get importExactRequired;
+
+  /// No description provided for @importAllocationRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Créditos, pagamentos ou saldo anterior ainda precisam ser alocados às obrigações. Nenhum título novo foi criado.'**
+  String get importAllocationRequired;
+
+  /// No description provided for @importReimportRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'O leitor foi atualizado. Reimporte o original para conferir a nova interpretação; o histórico anterior será preservado.'**
+  String get importReimportRequired;
+
+  /// No description provided for @importCycleRepresented.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este ciclo já possui obrigações em outro documento. Confira os vínculos antes de criar títulos.'**
+  String get importCycleRepresented;
+
+  /// No description provided for @importPurchaseAllocation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confira o título e o saldo da compra vinculada. Compras pagas, canceladas ou com parcelas ambíguas exigem alocação específica.'**
+  String get importPurchaseAllocation;
+
+  /// No description provided for @importCashReviewRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'A criação automática de movimentos pelo extrato foi suspensa. Revise e vincule a movimentos existentes, sem duplicar pagamentos ou recebimentos.'**
+  String get importCashReviewRequired;
+
+  /// No description provided for @importCsvDirection.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este CSV contém colunas de crédito/débito ou moeda que precisam de mapeamento explícito. A leitura foi bloqueada para não inverter valores.'**
+  String get importCsvDirection;
+
+  /// No description provided for @importPdfCompilation.
+  ///
+  /// In pt, this message translates to:
+  /// **'O PDF reúne referências, resumos ou ciclos diferentes. Separe os documentos originais para evitar misturar compras e faturas.'**
+  String get importPdfCompilation;
+
+  /// No description provided for @importBankHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Aqui você pode verificar se um movimento deste extrato corresponde a algo já registrado no aplicativo, evitando repetições. Essa comparação não registra pagamentos nem cria contas. É opcional para consultar o arquivo.'**
+  String get importBankHelp;
+
+  /// No description provided for @importBankItem.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver movimento do extrato'**
+  String get importBankItem;
+
+  /// No description provided for @importReason.
+  ///
+  /// In pt, this message translates to:
+  /// **'Motivo da decisão ou correspondência'**
+  String get importReason;
+
+  /// No description provided for @importReasonRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Explique a conferência em pelo menos 3 caracteres.'**
+  String get importReasonRequired;
+
+  /// No description provided for @importIgnore.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não usar este movimento'**
+  String get importIgnore;
+
+  /// No description provided for @importNewEvidence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Guardar como movimento diferente'**
+  String get importNewEvidence;
+
+  /// No description provided for @importNewEvidenceAck.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferi os registros e este movimento não é uma repetição.'**
+  String get importNewEvidenceAck;
+
+  /// No description provided for @importCandidates.
+  ///
+  /// In pt, this message translates to:
+  /// **'Possíveis correspondências com outras importações'**
+  String get importCandidates;
+
+  /// No description provided for @importLinkEvidence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usar um movimento já registrado'**
+  String get importLinkEvidence;
+
+  /// No description provided for @importChooseCash.
+  ///
+  /// In pt, this message translates to:
+  /// **'Movimento financeiro já registrado'**
+  String get importChooseCash;
+
+  /// No description provided for @importReconcile.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vincular evidência ao movimento'**
+  String get importReconcile;
+
+  /// No description provided for @importReconciled.
+  ///
+  /// In pt, this message translates to:
+  /// **'Correspondência registrada. Nenhum dinheiro foi movimentado.'**
+  String get importReconciled;
+
+  /// No description provided for @importIgnored.
+  ///
+  /// In pt, this message translates to:
+  /// **'Movimento não utilizado'**
+  String get importIgnored;
+
+  /// No description provided for @importEvidenceReviewed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Identidade revisada'**
+  String get importEvidenceReviewed;
+
+  /// No description provided for @importEvidencePending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Identidade pendente de revisão'**
+  String get importEvidencePending;
+
+  /// No description provided for @importNoCash.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não há registros correspondentes nesta conta do aplicativo. Se precisar registrar um pagamento ou recebimento, use a função correspondente no Financeiro.'**
+  String get importNoCash;
+
+  /// No description provided for @importRemaining.
+  ///
+  /// In pt, this message translates to:
+  /// **'Valor ainda não conciliado'**
+  String get importRemaining;
+
+  /// No description provided for @importBankPartialHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe somente a parcela correspondente a este movimento. O servidor verifica os saldos e a conta antes de salvar.'**
+  String get importBankPartialHelp;
+
+  /// No description provided for @importDecisionSaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Decisão registrada no histórico.'**
+  String get importDecisionSaved;
+
+  /// No description provided for @importInvalidSign.
+  ///
+  /// In pt, this message translates to:
+  /// **'A classificação não corresponde ao sinal do valor no documento. Confira pagamento, crédito, compra e encargo.'**
+  String get importInvalidSign;
+
+  /// No description provided for @importReviewLatest.
+  ///
+  /// In pt, this message translates to:
+  /// **'A revisão foi alterada. Atualize e confira a versão vigente.'**
+  String get importReviewLatest;
+
+  /// No description provided for @importEvidenceInvalid.
+  ///
+  /// In pt, this message translates to:
+  /// **'O documento exige conferência ou nova interpretação antes de gerar efeitos financeiros.'**
+  String get importEvidenceInvalid;
+
+  /// No description provided for @importPasswordTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ler PDF protegido'**
+  String get importPasswordTitle;
+
+  /// No description provided for @importPasswordLabel.
+  ///
+  /// In pt, this message translates to:
+  /// **'Senha do documento'**
+  String get importPasswordLabel;
+
+  /// No description provided for @importControlMismatch.
+  ///
+  /// In pt, this message translates to:
+  /// **'Os controles informados não correspondem aos lançamentos. Confira o documento; nenhum ajuste automático será feito.'**
+  String get importControlMismatch;
+
+  /// No description provided for @importPreviousBalanceConflict.
+  ///
+  /// In pt, this message translates to:
+  /// **'O saldo anterior classificado diverge do resumo do documento. Confira sua origem antes de aprovar.'**
+  String get importPreviousBalanceConflict;
+
+  /// No description provided for @importClassification.
+  ///
+  /// In pt, this message translates to:
+  /// **'Finalidade do lançamento'**
+  String get importClassification;
+
+  /// No description provided for @importReadyReview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Leitura pronta para conferência'**
+  String get importReadyReview;
+
+  /// No description provided for @importBillConfirmedReview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Documento já guardado; veja a situação da fatura'**
+  String get importBillConfirmedReview;
+
+  /// No description provided for @importBankConfirmedReview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmado · revisão e conciliação pendentes'**
+  String get importBankConfirmedReview;
+
+  /// No description provided for @importBankIdentitiesReviewed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Há identidades revisadas · confira a conciliação'**
+  String get importBankIdentitiesReviewed;
+
+  /// No description provided for @importBankIdentityNote.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferir o movimento do documento não registra pagamento. A comparação abaixo só relaciona registros que já existem no aplicativo.'**
+  String get importBankIdentityNote;
+
+  /// No description provided for @importConfirmReview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar documento e revisar'**
+  String get importConfirmReview;
+
+  /// No description provided for @importReassignCard.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecione o cartão correspondente ao documento para conferir a nova leitura.'**
+  String get importReassignCard;
+
+  /// No description provided for @importReassignBank.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecione a conta bancária correspondente ao documento para conferir a nova leitura.'**
+  String get importReassignBank;
+
+  /// No description provided for @financialDocumentDueReview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Documento lido · confira o vencimento para continuar'**
+  String get financialDocumentDueReview;
+
+  /// No description provided for @financialDocumentPending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Documento lido · confira as pendências para continuar'**
+  String get financialDocumentPending;
+
+  /// No description provided for @financialSegmentsTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferir ciclos do documento'**
+  String get financialSegmentsTitle;
+
+  /// No description provided for @financialSegmentsHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'O documento reúne vários períodos ou tipos. Confira somente os ciclos que deseja usar. Nenhum saldo histórico será considerado aberto automaticamente.'**
+  String get financialSegmentsHelp;
+
+  /// No description provided for @financialSegmentReview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferir este ciclo'**
+  String get financialSegmentReview;
+
+  /// No description provided for @financialSegmentSaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Evidência deste ciclo guardada. A cobrança depende da confirmação do saldo em aberto.'**
+  String get financialSegmentSaved;
+
+  /// No description provided for @financialStatementIndexHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Relação de extratos: conserva as referências dos documentos, sem movimentos ou contas a pagar.'**
+  String get financialStatementIndexHelp;
+
+  /// No description provided for @financialRenegotiationHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Documento de renegociação: guardado como evidência. Uma oferta não cria dívida ou parcelas automaticamente.'**
+  String get financialRenegotiationHelp;
+
+  /// No description provided for @financialSummaryOnlyHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resumo sem compras individuais. Você pode conferir o total e a situação do saldo; os detalhes continuam pendentes.'**
+  String get financialSummaryOnlyHelp;
+
+  /// No description provided for @financialCompiledControlsHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Controles de uma compilação fornecida. Confira no documento original; este resumo não comprova todas as compras.'**
+  String get financialCompiledControlsHelp;
+
+  /// No description provided for @financialContentConflict.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este documento diverge da conferência anterior. Compare os itens abaixo com os novos itens, inclusive repetições, total e vencimento.'**
+  String get financialContentConflict;
+
+  /// No description provided for @financialContentChangeAck.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferi as diferenças e autorizo esta revisão, preservando a versão anterior.'**
+  String get financialContentChangeAck;
+
+  /// No description provided for @financialControlChoose.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usar controles de um documento já lido deste cartão. Escolha o ciclo correspondente:'**
+  String get financialControlChoose;
+
+  /// No description provided for @financialCreditSaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta fatura informa crédito no cartão. Ela foi guardada para consulta e não criou uma conta a pagar.'**
+  String get financialCreditSaved;
+
+  /// No description provided for @payableBankCardFilter.
+  ///
+  /// In pt, this message translates to:
+  /// **'Banco ou cartão'**
+  String get payableBankCardFilter;
+
+  /// No description provided for @payableMerchantFilter.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estabelecimento da fatura'**
+  String get payableMerchantFilter;
+
+  /// No description provided for @payableToday.
+  ///
+  /// In pt, this message translates to:
+  /// **'Hoje'**
+  String get payableToday;
+
+  /// No description provided for @payableThisWeek.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta semana'**
+  String get payableThisWeek;
+
+  /// No description provided for @payableThisMonth.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este mês'**
+  String get payableThisMonth;
+
+  /// No description provided for @payableNextMonth.
+  ///
+  /// In pt, this message translates to:
+  /// **'Próximo mês'**
+  String get payableNextMonth;
+
+  /// No description provided for @payableFilteredSummary.
+  ///
+  /// In pt, this message translates to:
+  /// **'Total de todo o filtro'**
+  String get payableFilteredSummary;
+
+  /// No description provided for @payableSummaryUnavailable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resumo completo indisponível · valores dos registros carregados'**
+  String get payableSummaryUnavailable;
+
+  /// No description provided for @financialImportSourceRequiredEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastre uma conta ou cartão para vincular este documento.'**
+  String get financialImportSourceRequiredEmpty;
+
+  /// No description provided for @financialImportSourceRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Selecione a conta ou cartão deste documento para continuar.'**
+  String get financialImportSourceRequired;
+
+  /// No description provided for @financialDueResolutionHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Escolha o vencimento conferido no original. As duas datas e suas páginas permanecerão no histórico.'**
+  String get financialDueResolutionHelp;
+
+  /// No description provided for @financialContentConflictError.
+  ///
+  /// In pt, this message translates to:
+  /// **'O documento diverge da revisão anterior. Compare os detalhes e confirme a revisão para continuar.'**
+  String get financialContentConflictError;
+
+  /// No description provided for @financialReplacementReason.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vínculo com obrigação existente conferido na importação'**
+  String get financialReplacementReason;
+
+  /// No description provided for @financialExistingObligations.
+  ///
+  /// In pt, this message translates to:
+  /// **'Já existe alguma destas contas?'**
+  String get financialExistingObligations;
+
+  /// No description provided for @financialExistingObligationsHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Se uma destas contas já representa uma compra desta fatura, selecione-a para evitar cobrar o mesmo gasto duas vezes. Registros e pagamentos anteriores serão preservados.'**
+  String get financialExistingObligationsHelp;
+
+  /// No description provided for @financialPreviousObligation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Saldo ou título anterior'**
+  String get financialPreviousObligation;
+
+  /// No description provided for @financialPurchaseObligation.
+  ///
+  /// In pt, this message translates to:
+  /// **'Compra já cadastrada'**
+  String get financialPurchaseObligation;
+
+  /// No description provided for @financialPurposeOptional.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informar finalidade (opcional)'**
+  String get financialPurposeOptional;
+
+  /// No description provided for @financialDocumentReviewAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferir documento'**
+  String get financialDocumentReviewAction;
+
+  /// No description provided for @financialEvidenceOnlySaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Evidência guardada para consulta. Nenhuma conta a pagar foi gerada.'**
+  String get financialEvidenceOnlySaved;
+
+  /// No description provided for @installmentAgendaTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Parcelas dos próximos meses'**
+  String get installmentAgendaTitle;
+
+  /// No description provided for @installmentEstimated.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estimativas livres'**
+  String get installmentEstimated;
+
+  /// No description provided for @installmentPending.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estimativas aguardando vínculo'**
+  String get installmentPending;
+
+  /// No description provided for @installmentEstimateHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Previsões separadas das cobranças confirmadas. Não permitem pagamento; valores e dias podem mudar na próxima fatura.'**
+  String get installmentEstimateHelp;
+
+  /// No description provided for @installmentOpenAgenda.
+  ///
+  /// In pt, this message translates to:
+  /// **'Consultar agenda e vínculos'**
+  String get installmentOpenAgenda;
+
+  /// No description provided for @installmentMonthOnly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Dia desconhecido · somente mês previsto'**
+  String get installmentMonthOnly;
+
+  /// No description provided for @installmentEstimatedState.
+  ///
+  /// In pt, this message translates to:
+  /// **'Prevista'**
+  String get installmentEstimatedState;
+
+  /// No description provided for @installmentPendingState.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pendente de vínculo'**
+  String get installmentPendingState;
+
+  /// No description provided for @installmentReplacedState.
+  ///
+  /// In pt, this message translates to:
+  /// **'Substituída pela cobrança real'**
+  String get installmentReplacedState;
+
+  /// No description provided for @installmentCanceledState.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cancelada com evidência'**
+  String get installmentCanceledState;
+
+  /// No description provided for @installmentLinkHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confira a compra de origem, o valor e o vencimento. Semelhança não comprova que seja a mesma série. As séries candidatas ficam fora da soma livre até a decisão.'**
+  String get installmentLinkHelp;
+
+  /// No description provided for @installmentLink.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vincular à série'**
+  String get installmentLink;
+
+  /// No description provided for @installmentDistinct.
+  ///
+  /// In pt, this message translates to:
+  /// **'É outra compra'**
+  String get installmentDistinct;
+
+  /// No description provided for @installmentReason.
+  ///
+  /// In pt, this message translates to:
+  /// **'Motivo e evidência da decisão'**
+  String get installmentReason;
+
+  /// No description provided for @installmentConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmar decisão'**
+  String get installmentConfirm;
+
+  /// No description provided for @installmentCancelSeries.
+  ///
+  /// In pt, this message translates to:
+  /// **'Registrar cancelamento comprovado'**
+  String get installmentCancelSeries;
+
+  /// No description provided for @installmentCancelHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Use apenas se o documento comprovar quais parcelas foram canceladas. A ausência na fatura não comprova cancelamento. A cobrança atual e os pagamentos permanecem.'**
+  String get installmentCancelHelp;
+
+  /// No description provided for @installmentCancelFrom.
+  ///
+  /// In pt, this message translates to:
+  /// **'Primeira parcela futura cancelada'**
+  String get installmentCancelFrom;
+
+  /// No description provided for @installmentCancelEvidence.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estorno que comprova o cancelamento'**
+  String get installmentCancelEvidence;
+
+  /// No description provided for @installmentRetry.
+  ///
+  /// In pt, this message translates to:
+  /// **'Reenviar a mesma decisão'**
+  String get installmentRetry;
+
+  /// No description provided for @installmentDecisionUncertain.
+  ///
+  /// In pt, this message translates to:
+  /// **'A decisão não foi confirmada nesta tela. Reenvie a mesma tentativa ou atualize para consultar o estado.'**
+  String get installmentDecisionUncertain;
+
+  /// No description provided for @installmentEmpty.
+  ///
+  /// In pt, this message translates to:
+  /// **'Nenhuma previsão neste filtro.'**
+  String get installmentEmpty;
+
+  /// No description provided for @installmentConfirmed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Decisão registrada. Agenda atualizada.'**
+  String get installmentConfirmed;
+
+  /// No description provided for @installmentOrigin.
+  ///
+  /// In pt, this message translates to:
+  /// **'Item de origem'**
+  String get installmentOrigin;
+
+  /// No description provided for @installmentUseDay.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estimar os próximos vencimentos pelo dia desta fatura'**
+  String get installmentUseDay;
+
+  /// No description provided for @installmentUseDayHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'O dia será limitado ao fim de cada mês, sem presumir feriados. Desmarque para manter somente o mês previsto.'**
+  String get installmentUseDayHelp;
+
+  /// No description provided for @financialPayablesToolsHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Pesquisar banco ou cartão, consultar outros períodos e próximas parcelas.'**
+  String get financialPayablesToolsHelp;
+
+  /// No description provided for @financialReceivablesToolsHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Consultar registros e outros períodos de recebimento.'**
+  String get financialReceivablesToolsHelp;
+
+  /// No description provided for @financialReadingDetails.
+  ///
+  /// In pt, this message translates to:
+  /// **'Consultar leitura original'**
+  String get financialReadingDetails;
+
+  /// No description provided for @financialReadSummary.
+  ///
+  /// In pt, this message translates to:
+  /// **'O que foi lido'**
+  String get financialReadSummary;
+
+  /// No description provided for @financialReviewQuestions.
+  ///
+  /// In pt, this message translates to:
+  /// **'O que falta conferir'**
+  String get financialReviewQuestions;
+
+  /// No description provided for @financialDueQuestion.
+  ///
+  /// In pt, this message translates to:
+  /// **'Qual é o vencimento correto?'**
+  String get financialDueQuestion;
+
+  /// No description provided for @financialDueQuestionHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'O próprio documento informa datas diferentes. Confira o PDF original e selecione a data correta abaixo. Ler todas as compras não resolve essa dúvida.'**
+  String get financialDueQuestionHelp;
+
+  /// No description provided for @financialDifferenceHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Os lançamentos foram lidos, mas a soma deles difere do total da fatura. Você pode guardar os detalhes como pendentes e usar o total conferido para registrar a cobrança. A diferença continuará visível.'**
+  String get financialDifferenceHelp;
+
+  /// No description provided for @financialDestinationHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar a Contas a Pagar cria uma conta pelo total da fatura. Guardar deixa o documento só para consulta. Nenhuma dessas ações marca a conta como paga.'**
+  String get financialDestinationHelp;
+
+  /// No description provided for @financialHeaderMissingHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Falta o total ou o vencimento. Informe os dados do original no botão abaixo ou escolha um documento complementar deste mesmo cartão e mês.'**
+  String get financialHeaderMissingHelp;
+
+  /// No description provided for @financialConfirmHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Para confirmar, confira total e vencimento, resolva as perguntas abaixo e marque a conferência final.'**
+  String get financialConfirmHelp;
+
+  /// No description provided for @financialSavedReview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta conferência já está salva. A situação registrada aparece abaixo.'**
+  String get financialSavedReview;
+
+  /// No description provided for @financialEditSavedReview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Alterar conferência salva'**
+  String get financialEditSavedReview;
+
+  /// No description provided for @financialReadSnapshotHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta é a leitura original, preservada para consulta. As decisões atuais ficam em Conferir fatura.'**
+  String get financialReadSnapshotHelp;
+
+  /// No description provided for @financialItemsHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'As compras, parcelas e créditos abaixo são detalhes de uma única fatura. Não geram uma conta a pagar por linha. A classificação é opcional.'**
+  String get financialItemsHelp;
+
+  /// No description provided for @financialPages.
+  ///
+  /// In pt, this message translates to:
+  /// **'Páginas'**
+  String get financialPages;
+
+  /// No description provided for @financialRecordedResult.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resultado registrado'**
+  String get financialRecordedResult;
+
+  /// No description provided for @financialDueChosen.
+  ///
+  /// In pt, this message translates to:
+  /// **'Vencimento escolhido'**
+  String get financialDueChosen;
+
+  /// No description provided for @financialDueChosenHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'A escolha está feita. Para corrigir, selecione outra data abaixo. As datas e suas páginas serão conservadas no histórico.'**
+  String get financialDueChosenHelp;
+
+  /// No description provided for @financialDetailsDecisionHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Se quiser continuar com o total conferido, marque abaixo a opção de manter os detalhes pendentes.'**
+  String get financialDetailsDecisionHelp;
+
+  /// No description provided for @financialFinalDecisionHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confira a situação desta fatura e marque a conferência final abaixo para confirmar.'**
+  String get financialFinalDecisionHelp;
+
+  /// No description provided for @financialReadCount.
+  ///
+  /// In pt, this message translates to:
+  /// **'{count} lançamentos lidos.'**
+  String financialReadCount(int count);
+
+  /// No description provided for @financialImportHowItWorks.
+  ///
+  /// In pt, this message translates to:
+  /// **'Como funciona a importação'**
+  String get financialImportHowItWorks;
+
+  /// No description provided for @financialAddSavedBill.
+  ///
+  /// In pt, this message translates to:
+  /// **'Adicionar esta fatura a Contas a Pagar'**
+  String get financialAddSavedBill;
+
+  /// No description provided for @financialPendingSaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Documento guardado. Você ainda não escolheu adicioná-lo a Contas a Pagar.'**
+  String get financialPendingSaved;
+
+  /// No description provided for @financialRestoredReview.
+  ///
+  /// In pt, this message translates to:
+  /// **'Você importou este arquivo novamente. Confira os dados e salve para incluí-lo no financeiro outra vez.'**
+  String get financialRestoredReview;
+
+  /// No description provided for @financialOpenDocument.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver documento'**
+  String get financialOpenDocument;
+
+  /// No description provided for @financialOtherDocumentOptions.
+  ///
+  /// In pt, this message translates to:
+  /// **'Outras opções deste documento'**
+  String get financialOtherDocumentOptions;
+
+  /// No description provided for @financialLegacyOptionsHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estes acessos conservam registros feitos no fluxo anterior. Para consultar ou importar uma fatura, use Ver documento.'**
+  String get financialLegacyOptionsHelp;
+
+  /// No description provided for @financialBankDocumentHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este arquivo é um extrato de conta bancária, com entradas e saídas. Ele não é uma fatura de cartão e não cria uma conta a pagar. A comparação com registros existentes abaixo é opcional.'**
+  String get financialBankDocumentHelp;
+
+  /// No description provided for @financialImportSourceMismatch.
+  ///
+  /// In pt, this message translates to:
+  /// **'Origem incompatível ({documentType} vs {sourceType})'**
+  String financialImportSourceMismatch(String documentType, String sourceType);
+
+  /// No description provided for @financialImportOpenPayables.
+  ///
+  /// In pt, this message translates to:
+  /// **'Abrir Contas a Pagar'**
+  String get financialImportOpenPayables;
+
+  /// No description provided for @importRemovalTitle.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir importação'**
+  String get importRemovalTitle;
+
+  /// No description provided for @importRemovalHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta importação sairá da lista. As contas a pagar e previsões criadas por ela serão retiradas. Compras, pagamentos e registros independentes serão preservados.'**
+  String get importRemovalHelp;
+
+  /// No description provided for @importRemovalConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir esta importação'**
+  String get importRemovalConfirm;
+
+  /// No description provided for @importRemovalRetry.
+  ///
+  /// In pt, this message translates to:
+  /// **'Retomar exclusão'**
+  String get importRemovalRetry;
+
+  /// No description provided for @importRemovalNoBills.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este documento não criou contas a pagar.'**
+  String get importRemovalNoBills;
+
+  /// No description provided for @importRemovalBills.
+  ///
+  /// In pt, this message translates to:
+  /// **'Contas a pagar que serão retiradas'**
+  String get importRemovalBills;
+
+  /// No description provided for @importRemovalForecasts.
+  ///
+  /// In pt, this message translates to:
+  /// **'As próximas parcelas desta importação também sairão da agenda.'**
+  String get importRemovalForecasts;
+
+  /// No description provided for @importRemovalBlocked.
+  ///
+  /// In pt, this message translates to:
+  /// **'Resolva o item indicado antes de excluir'**
+  String get importRemovalBlocked;
+
+  /// No description provided for @importRemovalOpenPayable.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver conta e pagamentos'**
+  String get importRemovalOpenPayable;
+
+  /// No description provided for @importRemovalOtherDocument.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver importação relacionada'**
+  String get importRemovalOtherDocument;
+
+  /// No description provided for @importRemovalDone.
+  ///
+  /// In pt, this message translates to:
+  /// **'Importação excluída.'**
+  String get importRemovalDone;
+
+  /// No description provided for @importRemovalChanged.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta importação mudou. Atualize a conferência da exclusão antes de continuar.'**
+  String get importRemovalChanged;
+
+  /// No description provided for @importRemovalRemoved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta importação foi excluída. Se quiser usá-la novamente, selecione o arquivo e importe outra vez.'**
+  String get importRemovalRemoved;
+
+  /// No description provided for @importRemovalBlockedError.
+  ///
+  /// In pt, this message translates to:
+  /// **'A importação ainda tem pagamento ou vínculo com outro registro. Abra Excluir importação para ver o motivo e a ação disponível.'**
+  String get importRemovalBlockedError;
+
+  /// No description provided for @financialRegisteredBill.
+  ///
+  /// In pt, this message translates to:
+  /// **'Fatura em Contas a Pagar'**
+  String get financialRegisteredBill;
+
+  /// No description provided for @financialBillOpenObligations.
+  ///
+  /// In pt, this message translates to:
+  /// **'Obrigações abertas: {count}'**
+  String financialBillOpenObligations(int count);
+
+  /// No description provided for @financialSavedOnly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Guardado para consulta; ainda não está em Contas a Pagar'**
+  String get financialSavedOnly;
+
+  /// No description provided for @financialStatementSaved.
+  ///
+  /// In pt, this message translates to:
+  /// **'Extrato guardado para consulta'**
+  String get financialStatementSaved;
+
+  /// No description provided for @financialReadProblem.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível concluir a leitura deste arquivo'**
+  String get financialReadProblem;
+
+  /// No description provided for @financialReadProblemHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Veja o motivo abaixo. Você pode voltar à lista e excluir esta importação se escolheu o arquivo errado.'**
+  String get financialReadProblemHelp;
+
+  /// No description provided for @importRemovalRestoreBills.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estas contas voltam a aparecer separadamente, com seus pagamentos preservados'**
+  String get importRemovalRestoreBills;
+
+  /// No description provided for @catalogResolveLinks.
+  ///
+  /// In pt, this message translates to:
+  /// **'Estes registros impedem a operação. Toque para conferir e resolver.'**
+  String get catalogResolveLinks;
+
+  /// No description provided for @catalogViewReceipts.
+  ///
+  /// In pt, this message translates to:
+  /// **'Ver recebimentos desta venda'**
+  String get catalogViewReceipts;
+
+  /// No description provided for @catalogReceiptHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Há recebimentos nesta venda. Confira e estorne os recebimentos antes de cancelar.'**
+  String get catalogReceiptHelp;
+
+  /// No description provided for @catalogDelete.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir do catálogo'**
+  String get catalogDelete;
+
+  /// No description provided for @catalogDeleteConfirm.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir este cadastro? Ele sairá do catálogo; operações anteriores continuarão disponíveis no histórico.'**
+  String get catalogDeleteConfirm;
+
+  /// No description provided for @catalogDeleted.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cadastro excluído do catálogo.'**
+  String get catalogDeleted;
+
+  /// No description provided for @catalogRecipePrice.
+  ///
+  /// In pt, this message translates to:
+  /// **'Preço sugerido (R\$)'**
+  String get catalogRecipePrice;
+
+  /// No description provided for @catalogRecipePriceHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Opcional. Sem valor, usa o preço padrão do tipo de cesta. Na venda você pode negociar outro preço.'**
+  String get catalogRecipePriceHelp;
+
+  /// No description provided for @catalogEditRecipe.
+  ///
+  /// In pt, this message translates to:
+  /// **'Editar receita'**
+  String get catalogEditRecipe;
+
+  /// No description provided for @catalogDeleteRecipe.
+  ///
+  /// In pt, this message translates to:
+  /// **'Excluir receita'**
+  String get catalogDeleteRecipe;
+
+  /// No description provided for @catalogActivateRecipe.
+  ///
+  /// In pt, this message translates to:
+  /// **'Usar esta receita nas próximas montagens'**
+  String get catalogActivateRecipe;
+
+  /// No description provided for @catalogDeactivateRecipe.
+  ///
+  /// In pt, this message translates to:
+  /// **'Inativar receita'**
+  String get catalogDeactivateRecipe;
+
+  /// No description provided for @catalogRecipeProtected.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta receita está ligada aos registros abaixo. Para mudar a composição agora, crie outra receita no mesmo tipo de cesta.'**
+  String get catalogRecipeProtected;
+
+  /// No description provided for @catalogDisassemble.
+  ///
+  /// In pt, this message translates to:
+  /// **'Desmontar cestas'**
+  String get catalogDisassemble;
+
+  /// No description provided for @catalogDisassemblyHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe quantas cestas serão desmontadas. Os produtos da composição original voltarão ao estoque e as cestas prontas serão retiradas do saldo.'**
+  String get catalogDisassemblyHelp;
+
+  /// No description provided for @catalogDisassemblyQuantity.
+  ///
+  /// In pt, this message translates to:
+  /// **'Quantidade de cestas a desmontar'**
+  String get catalogDisassemblyQuantity;
+
+  /// No description provided for @catalogDisassemblyIntact.
+  ///
+  /// In pt, this message translates to:
+  /// **'Confirmei que todos os produtos estão intactos e voltarão ao estoque.'**
+  String get catalogDisassemblyIntact;
+
+  /// No description provided for @catalogDisassemblyReason.
+  ///
+  /// In pt, this message translates to:
+  /// **'Motivo da desmontagem'**
+  String get catalogDisassemblyReason;
+
+  /// No description provided for @catalogDisassemblyDone.
+  ///
+  /// In pt, this message translates to:
+  /// **'Cestas desmontadas. Produtos devolvidos ao estoque.'**
+  String get catalogDisassemblyDone;
+
+  /// No description provided for @catalogRetryAction.
+  ///
+  /// In pt, this message translates to:
+  /// **'Retomar confirmação pendente'**
+  String get catalogRetryAction;
+
+  /// No description provided for @catalogInvalidQuantity.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe uma quantidade válida e confirme a devolução dos produtos intactos.'**
+  String get catalogInvalidQuantity;
+
+  /// No description provided for @catalogReviewDisassembly.
+  ///
+  /// In pt, this message translates to:
+  /// **'Revisar desmontagem'**
+  String get catalogReviewDisassembly;
+
+  /// No description provided for @catalogDisassemblyReturns.
+  ///
+  /// In pt, this message translates to:
+  /// **'Produtos que voltarão ao estoque'**
+  String get catalogDisassemblyReturns;
+
+  /// No description provided for @catalogReasonRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe um motivo com pelo menos 3 caracteres.'**
+  String get catalogReasonRequired;
+
+  /// No description provided for @catalogInvalidPrice.
+  ///
+  /// In pt, this message translates to:
+  /// **'Informe um preço válido, igual ou maior que zero.'**
+  String get catalogInvalidPrice;
+
+  /// No description provided for @catalogRestoreRecipeDraft.
+  ///
+  /// In pt, this message translates to:
+  /// **'Rever dados da receita'**
+  String get catalogRestoreRecipeDraft;
+
+  /// No description provided for @catalogInactiveIngredient.
+  ///
+  /// In pt, this message translates to:
+  /// **'Produto inativo'**
+  String get catalogInactiveIngredient;
+
+  /// No description provided for @catalogInactiveRecipeHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Substitua ou remova os produtos inativos indicados antes de salvar. Nenhum ingrediente foi removido automaticamente.'**
+  String get catalogInactiveRecipeHelp;
+
+  /// No description provided for @financialImportReadersQueryFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível consultar os formatos de leitura. A seleção anterior foi mantida.'**
+  String get financialImportReadersQueryFailed;
+
+  /// No description provided for @financialImportStatementsQueryFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível atualizar os documentos confirmados. Os dados da consulta anterior foram mantidos.'**
+  String get financialImportStatementsQueryFailed;
+
+  /// No description provided for @financialImportObligationsQueryFailed.
+  ///
+  /// In pt, this message translates to:
+  /// **'Não foi possível atualizar as contas de um documento. Isso não significa que ele esteja sem contas ou pago.'**
+  String get financialImportObligationsQueryFailed;
+
+  /// No description provided for @financialImportRefreshQuery.
+  ///
+  /// In pt, this message translates to:
+  /// **'Atualizar consulta'**
+  String get financialImportRefreshQuery;
+
+  /// No description provided for @financialImportUpdateRead.
+  ///
+  /// In pt, this message translates to:
+  /// **'Atualizar leitura'**
+  String get financialImportUpdateRead;
+
+  /// No description provided for @financialImportLegacyReadHelp.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este documento usa uma leitura anterior. Você pode abri-lo para consultar o que já foi guardado. Para usar a conferência atual, escolha Atualizar leitura. A atualização precisa preservar as informações já confirmadas.'**
+  String get financialImportLegacyReadHelp;
+
+  /// No description provided for @financialImportPendingNoAccount.
+  ///
+  /// In pt, this message translates to:
+  /// **'Conferência pendente. A leitura deste arquivo foi guardada; nenhuma conta foi criada nesta importação. Abra o documento para conferir e escolher como salvar.'**
+  String get financialImportPendingNoAccount;
+
+  /// No description provided for @financialImportPartialStatus.
+  ///
+  /// In pt, this message translates to:
+  /// **'A situação das contas precisa de nova consulta. Use Atualizar consulta antes de concluir que não há valores em aberto.'**
+  String get financialImportPartialStatus;
+
+  /// No description provided for @financialImportGenerationConflict.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta conferência pertence a uma importação que foi retirada ou alterada. Volte à lista de documentos e use Atualizar para abrir a entrada atual. Esta tentativa não gravou novas alterações.'**
+  String get financialImportGenerationConflict;
+
+  /// No description provided for @financialImportAlreadyActive.
+  ///
+  /// In pt, this message translates to:
+  /// **'Este arquivo já tem uma importação em andamento. Volte à lista, atualize os documentos e abra a entrada existente para continuar a conferência.'**
+  String get financialImportAlreadyActive;
+
+  /// No description provided for @financialImportConfirmedRead.
+  ///
+  /// In pt, this message translates to:
+  /// **'Esta importação já tem informações confirmadas. Abra o documento existente para conferir o que foi salvo; trocar a leitura não pode substituir essas informações automaticamente.'**
+  String get financialImportConfirmedRead;
+
+  /// No description provided for @financialImportLegacyReviewRequired.
+  ///
+  /// In pt, this message translates to:
+  /// **'Há registros antigos cuja relação com esta importação precisa ser conferida. A alteração foi bloqueada para preservar contas e pagamentos. A correção precisa de revisão dos registros pelo suporte.'**
+  String get financialImportLegacyReviewRequired;
+
+  /// No description provided for @financialImportReinstatementConflict.
+  ///
+  /// In pt, this message translates to:
+  /// **'Uma conta ou vínculo mudou desde a retirada desta importação. A restauração foi bloqueada para preservar essa mudança. Atualize a conferência e consulte os registros indicados antes de tentar novamente.'**
+  String get financialImportReinstatementConflict;
 }
 
 class _AppLocalizationsDelegate

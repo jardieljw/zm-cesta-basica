@@ -1,5 +1,24 @@
 # ZM Cesta Básica — Cliente Multiplataforma (Flutter para Windows e Android)
 
+Estado vigente da importação: [retomada única](../docs/RETOMADA_IMPORTACAO_FATURAS.md).
+As notas de ativação/correção de 19/10 abaixo são históricas e anteriores à E5.
+
+**Correção Etapa 1 — 20/10/2026:** Release Windows **1.0.5+10** compilado em `build/windows/x64/runner/Release/`, pacote completo com 16 arquivos. Backend/migração correspondentes ativos no serviço local. O antigo `kernel_blob.bin` JIT não faz parte do pacote AOT. Release `1.0.5+9` preservado em `tmp/release-backup-before-e1-283de47721524f7b8947c4fdeacb6866/Release`.
+
+**Ativação de 19/10/2026:** Release correspondente copiado e iniciado na pasta
+`client/build/windows/x64/runner/Release/`, com os 16 arquivos conferidos e fontes
+idênticas às 136 já validadas. Servidor Python atualizado, com backup verificado.
+Sem nova alteração Flutter; diagnóstico de alocações existe somente na API.
+Interação visual nativa ponta a ponta não certificada. As notas de não ativação
+abaixo são históricas; ver a evidência da continuação no guia da correção.
+
+**Importação financeira — 19/10/2026:** a
+[correção de integridade e revisão](../docs/CORRECAO_IMPORTACAO_FINANCEIRA_2026-10-19.md)
+registra a implementação atual, contratos versionados e evidência. O cliente
+permite revisão explícita e conciliação; importação em lote no caixa foi suspensa.
+Alocação de créditos/saldo anterior/parcelas e homologação adicional continuam
+pendentes. Código/Release não substituem o servidor e o aplicativo abertos.
+
 **FE-055 — 17/10/2026:** a entrada real usa Início, Financeiro, Negócio, Estoque e
 Mais, com serviços existentes e aparência compartilhada. [Guia](../docs/INTEGRACAO_INTERFACE_APROVADA.md)
 e [evidência](../docs/validacoes_frontend/fe-055-integracao-2026-10-17/README.md):
@@ -81,9 +100,10 @@ client/
 │       ├── packagings_dialog.dart # Gerenciamento de embalagens comerciais
 │       ├── basket_types_view.dart # Tipos de cestas e receitas ativas
 │       ├── recipe_view.dart    # Compositor de receitas com histórico
-│       ├── purchases_view.dart # Listagem e cancelamento seguro de compras
+│       ├── purchases_view.dart # Listagem, edição/exclusão de rascunhos e cancelamento de compras
 │       ├── purchase_form_view.dart # Lançamento de notas de compras com conversão
-│       ├── stock_ledger_view.dart # Extrato contábil detalhado e alerta de estoque mínimo
+│       ├── inventory_summary_view.dart # Saldos de estoque, busca e filtro abaixo do mínimo
+│       ├── inventory_movements_view.dart # Extrato do razão contábil e histórico de movimentos
 │       └── stock_adjustment_dialog.dart # Ajuste rápido de balanço/quebra com motivo
 ├── test/                       # Testes de modelos e componentes
 ├── pubspec.yaml                # Declaração de dependências
@@ -116,3 +136,10 @@ do servidor e os limites de instalação. O restante deste README conserva a
 estrutura do cliente. A limitação histórica de navegação/tema global foi
 superada pela entrega FE-055 descrita no início deste README.
 
+
+
+**Importação — E5.7, 20/10/2026:** Documentos enviados usa **Ver documento** e
+**Excluir importação**. A exclusão apresenta os efeitos antes da confirmação e
+permite recuperar a mesma fatura sem duplicá-la. Exige servidor com
+`import_removal_version=1`; novo guia em [Contas a Pagar](../docs/CONTAS_A_PAGAR.md#excluir-e-reimportar-uma-importação--e57).
+Tema/páginas de pagamento não foram redesenhados neste recorte.

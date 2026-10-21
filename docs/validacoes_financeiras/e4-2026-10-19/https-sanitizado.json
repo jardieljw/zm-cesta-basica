@@ -1,0 +1,102 @@
+{
+  "status": "PASS",
+  "transport": "HTTPS with disposable trusted certificate",
+  "isolated_database": true,
+  "pdf_worker": "separate process",
+  "cash_stock_and_existing_payments_unchanged": true,
+  "payables_created_in_disposable_database": 3,
+  "real_installment_checks": [
+    {
+      "alias": "pdf_08",
+      "installment_rows": 2,
+      "independent_description_amount_sequence_match": true
+    },
+    {
+      "alias": "csv_05",
+      "installment_rows": 9,
+      "independent_description_amount_sequence_match": true
+    },
+    {
+      "alias": "csv_06",
+      "installment_rows": 3,
+      "independent_description_amount_sequence_match": true
+    },
+    {
+      "alias": "pdf_07",
+      "installment_rows": 3,
+      "independent_description_amount_sequence_match": true
+    }
+  ],
+  "every_series_remaining_sequence_and_cents_verified": true,
+  "https_flutter_ui": true,
+  "samples": [
+    {
+      "alias": "pdf_02",
+      "segments": 2,
+      "rows": 34,
+      "items": 0,
+      "replay_reused": true
+    },
+    {
+      "alias": "pdf_07",
+      "segments": 0,
+      "rows": 39,
+      "items": 39,
+      "replay_reused": true
+    },
+    {
+      "alias": "pdf_08",
+      "segments": 0,
+      "rows": 22,
+      "items": 22,
+      "replay_reused": true
+    },
+    {
+      "alias": "pdf_09",
+      "segments": 0,
+      "rows": 22,
+      "items": 22,
+      "replay_reused": true
+    },
+    {
+      "alias": "csv_02",
+      "segments": 47,
+      "rows": 47,
+      "items": 0,
+      "replay_reused": true
+    },
+    {
+      "alias": "csv_05",
+      "segments": 0,
+      "rows": 21,
+      "items": 21,
+      "replay_reused": true
+    },
+    {
+      "alias": "csv_06",
+      "segments": 0,
+      "rows": 13,
+      "items": 13,
+      "replay_reused": true
+    }
+  ],
+  "enrichments": [
+    {
+      "alias": "csv_05",
+      "items": 21,
+      "same_cycle": true,
+      "summary_keeps_item_provenance": true,
+      "forecast_count_unchanged": true
+    },
+    {
+      "alias": "csv_06",
+      "items": 13,
+      "same_cycle": true,
+      "summary_keeps_item_provenance": true,
+      "forecast_count_unchanged": true
+    }
+  ],
+  "conflict_choice_preserved": true,
+  "merchant_and_source_filters_verified": true,
+  "original_debt_status_not_asserted": true
+}

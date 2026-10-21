@@ -1,0 +1,73 @@
+{
+  "purpose": "Local references requested by user; read the short project guide first",
+  "retrieved_on_local_date": "2026-10-20",
+  "timezone": "America/Sao_Paulo",
+  "scope": "Official API documentation snapshots; not proof of Codex app billing, current account limits, or unchanged future product behavior",
+  "pages": [
+    {
+      "id": "gpt-6.1-sol",
+      "title": "GPT-6.1 Sol model",
+      "source_url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol",
+      "download_url": "https://developers.openai.com/api/docs/models/gpt-6.1-sol.md",
+      "file": "gpt-6.1-sol.md",
+      "retrieved_at_utc": "2026-10-20T12:08:53.233074+00:00",
+      "content_type": "text/markdown; charset=utf-8",
+      "etag": null,
+      "last_modified": null,
+      "bytes": 4436,
+      "sha256": "acfe91d19882aaf7bb52877898684614035a947de02f2955c9de905a7efb1362"
+    },
+    {
+      "id": "reasoning",
+      "title": "Reasoning models",
+      "source_url": "https://developers.openai.com/api/docs/guides/reasoning",
+      "download_url": "https://developers.openai.com/api/docs/guides/reasoning.md",
+      "file": "reasoning.md",
+      "retrieved_at_utc": "2026-10-20T12:08:53.380879+00:00",
+      "content_type": "text/markdown; charset=utf-8",
+      "etag": "\"cc5492b34b026cc95a4366e647c742fb\"",
+      "last_modified": "Tue, 20 Oct 2026 07:05:35 GMT",
+      "bytes": 70779,
+      "sha256": "a561487dd41db8828b5b9920d77275bdced3c3c07ba1fb9f3c3230c5aaeb925b"
+    },
+    {
+      "id": "deployment-checklist",
+      "title": "API deployment checklist",
+      "source_url": "https://developers.openai.com/api/docs/guides/deployment-checklist",
+      "download_url": "https://developers.openai.com/api/docs/guides/deployment-checklist.md",
+      "file": "deployment-checklist.md",
+      "retrieved_at_utc": "2026-10-20T12:08:53.127025+00:00",
+      "content_type": "text/markdown; charset=utf-8",
+      "etag": "\"5f36a569d4f7760017a1ba16e16a1b5a\"",
+      "last_modified": "Tue, 20 Oct 2026 10:18:30 GMT",
+      "bytes": 71353,
+      "sha256": "c57d29bcaa6235449f50138ca057dea8401d235026ffeba331b0be3ea049fa8e"
+    },
+    {
+      "id": "latency-optimization",
+      "title": "Latency optimization",
+      "source_url": "https://developers.openai.com/api/docs/guides/latency-optimization",
+      "download_url": "https://developers.openai.com/api/docs/guides/latency-optimization.md",
+      "file": "latency-optimization.md",
+      "retrieved_at_utc": "2026-10-20T12:08:53.136331+00:00",
+      "content_type": "text/markdown; charset=utf-8",
+      "etag": "\"47efbd63b1b121e418ee04133c649ae6\"",
+      "last_modified": "Tue, 20 Oct 2026 10:18:30 GMT",
+      "bytes": 24037,
+      "sha256": "1a57f7b85e4d6c43dc7f621a0a8e387cb7b452636cda2087f6e1f12a87c196e8"
+    },
+    {
+      "id": "prompt-caching",
+      "title": "Prompt caching",
+      "source_url": "https://developers.openai.com/api/docs/guides/prompt-caching",
+      "download_url": "https://developers.openai.com/api/docs/guides/prompt-caching.md",
+      "file": "prompt-caching.md",
+      "retrieved_at_utc": "2026-10-20T12:08:53.631218+00:00",
+      "content_type": "text/markdown; charset=utf-8",
+      "etag": "\"09b40f4d8be7d628a220eacf4a6f8685\"",
+      "last_modified": "Tue, 20 Oct 2026 12:05:14 GMT",
+      "bytes": 48169,
+      "sha256": "74dc45350d5de0e7eef80b0b09d67b733a73170275f1bacb0760e066a4254480"
+    }
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "stage": "E4.1-E4.3",
+  "status": "PASS",
+  "decisions": "D1-D8 preserved",
+  "migration": "f06d7e8f0926",
+  "suites": {
+    "backend": 563,
+    "backend_prior_warnings": 14,
+    "flutter": 395,
+    "flutter_optional_skipped_in_general_suite": 1,
+    "https_flutter_separately_passed": 1,
+    "flutter_analyze": "No issues found"
+  },
+  "acceptance": {
+    "T12": [
+      "3/10 -> 7; 10/10 -> 0; unchanged installment cents",
+      "31 Jan -> February end -> 31 March; leap year; year limit rollback",
+      "month-only date and partial month filters",
+      "separate totals, nonpayable forecasts, paid debt unchanged"
+    ],
+    "T13": [
+      "PDF/CSV both orders; PDF renamed; summary enrichment; safe replay",
+      "equal purchases and multiplicity; candidates require explicit link",
+      "amount/day divergence; out of order; distinct purchase; proved cancellation",
+      "stale snapshot/two clients; no reactivation after payment/enrichment"
+    ],
+    "T16": [
+      "real HTTPS PDF selection through injected picker, preview, confirmation, payable detail and agenda",
+      "real month-filtered agenda with positive amounts",
+      "320/390/1200 widget captures; 320 at text scale 1.7; controls, failure, retry, cancellation"
+    ]
+  },
+  "https": "https-sanitizado.json",
+  "visual_captures": [
+    "e4-agenda-1200.png",
+    "e4-agenda-320.png",
+    "e4-agenda-390.png",
+    "e4-decision-1200.png",
+    "e4-decision-320.png",
+    "e4-decision-390.png"
+  ],
+  "limits": [
+    "No company database migration or import",
+    "No build or activation",
+    "Native Windows picker/window and physical Android/iPhone remain for E5",
+    "HTTPS widget harness uses real ApiClient with per-call sockets to isolate FakeAsync timers",
+    "Original open debt and banking calendars are not asserted; forecasts remain estimates"
+  ],
+  "prior_work_preserved": true,
+  "isolated_servers_stopped": true,
+  "source_sha256": {
+    "backend/app/models/financial_installments.py": "cad5e508331c4359713a08af3241b88faf98014519f96351c33d32f20c5a5709",
+    "backend/app/schemas/financial_installments.py": "5d0137b9e407742cc841c4cb65a228da1e6d98cc0cafa59bf045583d714bf535",
+    "backend/app/services/financial_installments.py": "e7f1986b8f0960825cb69dd364c88b506973b0657fe265d165163f23ab1f442f",
+    "backend/alembic/versions/f06d7e8f0926_imported_installment_agenda.py": "a39faa803f2a526c149bb2825976e9dd365d04d9601c544f3525e7d88172492e",
+    "backend/app/services/financial_bill_cycles.py": "5a4a00843b63dbf70bdac3286b2fa4dca9e94ecc871ceaee798609894b203ef5",
+    "backend/app/api/v1/financial_imports.py": "87ff77cc9a782947339162980c16ce2a3cf8d78bfddb5693c735be73e005e032",
+    "backend/app/api/v1/payables.py": "8677a2f9686905d212242731e1510b07aafa6fb8bc59f756e39156bb8e7ab4cf",
+    "client/lib/views/financial_installment_agenda_view.dart": "9d3107ced2ad0dfb60546074c00957ededd915f7d63d219296c46ba9227482a9",
+    "client/lib/views/financial_bill_integration_view.dart": "3fd4c4a4244beaf2c7c3d77fe686fa0d6e4b5266c6cd3342834d9ae746f9d3ec",
+    "client/lib/views/payables_view.dart": "afc9eec9feb64525512612ef751afa4ce0022a924157ef8386272dc23fd8ecca",
+    "client/lib/services/payable_service.dart": "a43b46cf8302bc9ba94fc9a354660964bc12c19f79e6fd7f55785d4b3808d668",
+    "client/lib/services/financial_import_service.dart": "deeefd186ce16bf1019ca222261b2e19888dd42d8b88d0b88a503548c061ae0c",
+    "client/lib/l10n/app_pt.arb": "f90899666d8d053b48e6d6dceba2fd35dd0292b3a3257372323c4dc449c3f90f",
+    "backend/tests/test_financial_installments.py": "88170348ac59286bcaf59b5b9dc65062683a17c67458b297a9d64f607f8dd1f6",
+    "backend/tests/test_financial_installment_migration.py": "11143691105e33ea0023cf059f9337a107b15e191489d9cccf4c2dddb849c4a3",
+    "client/test/financial_installment_agenda_test.dart": "447c997e5fae56f0521ca2500e792e36ce36e2b5b42548d97ec35626ba241897",
+    "client/test/financial_installment_https_test.dart": "915f073cb140e232f896f7ac7e23f22425c2a282f06dfae44851d0fdb8edc9a9"
+  }
+}

@@ -27,6 +27,7 @@ from app.models.financial_imports import (
     FinancialSource, FinancialDocument, FinancialStatement, FinancialStatementItem,
     FinancialTransaction, FinancialTransactionIdentity, FinancialReconciliation, FinancialImportAudit,
     FinancialImportPreview,
+    FinancialImportEntry, FinancialImportEntrySegment,
     FinancialReviewCorrection, FinancialIdentityChange,
 )
 from app.models.financial_bill_assessments import (
@@ -35,6 +36,8 @@ from app.models.financial_bill_assessments import (
 from app.models.financial_bill_semantics import (
     FinancialBillSemanticReview, FinancialBillSemanticItem, FinancialBillObligation,
 )
+from app.models.financial_bill_cycles import FinancialBillCycle, FinancialBillCycleRevision, FinancialBillCycleItem, FinancialBillPayableLink
+from app.models.financial_installments import InstallmentSeries, InstallmentOccurrence, InstallmentForecast, InstallmentDecision
 
 __all__ = [
     "Base",
@@ -70,3 +73,5 @@ __all__ = [
     "AccountPayable",
     "PayablePayment",
 ]
+
+from app.models.financial_import_removals import FinancialImportRemoval

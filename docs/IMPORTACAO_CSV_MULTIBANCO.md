@@ -1,8 +1,49 @@
 # Importação CSV de bancos e cartões
 
-Revisão: **16/10/2026**. Implementado no backend para validação pela API, sem
-tela nova. Estado da instalação deve ser conferido por revisão Alembic;
-a nova migração fd3 não foi aplicada nesta rodada. [Índice](README.md).
+**E3 — 19/10/2026:** `csv_auto` v2 separa metadados por instituição/tipo/ciclo e
+lançamentos com `fatura_referencia`, sem incluir controles como compras.
+Conferência, complementos, enriquecimento e filtros: [guia vigente](CONTAS_A_PAGAR.md#conferência-guiada-e-consultas--e3).
+Não altera `generic_csv` v4/adaptadores v3 nem os resultados históricos abaixo.
+
+**E1 — 19/10/2026:** [guia vigente](IMPORTACAO_FATURAS_E1.md): `csv_auto` v1,
+`generic_csv` v4 e adaptadores conhecidos v3; parcelas/papéis compartilhados com
+PDF, sem finalidade presumida. Índices/compilações não viram compras. Retomada e
+limites no guia; tabelas históricas de versões abaixo não descrevem esta E1.
+
+**Registro atual no código — 21/10/2026** ([`READERS`](../backend/app/services/financial_readers.py)):
+
+| Leitores registrados | Versão |
+| --- | ---: |
+| `csv_auto` | 2 |
+| `generic_csv` | 4 |
+| `nubank_account_csv`, `nubank_card_csv`, `nu_empresas_account_csv` | 3 |
+| `itau_account_csv`, `itau_card_csv` | 3 |
+| `santander_account_csv`, `santander_card_csv` | 3 |
+| `inter_account_csv`, `inter_card_csv` | 3 |
+| `mercadopago_csv`, `bb_account_csv`, `bradesco_account_csv`, `caixa_account_csv` | 3 |
+
+Esses números são as versões declaradas no registro de leitores do código; não
+comprovam homologação de cada instituição/layout nem atualização do aplicativo
+ou servidor em execução.
+
+
+**Entrega posterior — 19/10/2026:** a [primeira etapa de correção](CORRECAO_IMPORTACAO_FINANCEIRA_2026-10-19.md)
+implementa controles exatos, cabeçalho CSV declarado, revisão vigente e
+conciliação explícita, com bloqueio de alocações ainda não representadas.
+Consultar esse guia e a evidência antes de usar descrições históricas abaixo.
+Código/build não atualizam automaticamente o app ou servidor em execução.
+
+**Auditoria de 19/10/2026:** consultar o
+[diagnóstico com reproduções](AUDITORIA_IMPORTACAO_FINANCEIRA_2026-10-19.md)
+antes de lançamentos financeiros. Foram identificados risco de inversão D/C em
+layout semelhante ao esperado, cabeçalhos fabricados pelo Flutter, duplicidade
+entre arquivos e problemas na geração de obrigações. Ter adaptador registrado
+ou prévia READY não comprova homologação do layout nem lançamento seguro.
+
+**Registro histórico de 16/10/2026:** a implementação estava no backend para
+validação pela API, sem tela nova. Naquela rodada, o estado da instalação deveria
+ser conferido por revisão Alembic; a migração fd3 não havia sido aplicada. A
+matriz de versões abaixo preserva esse registro histórico. [Índice](README.md).
 
 ## Fluxo implementado
 

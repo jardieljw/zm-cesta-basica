@@ -1,5 +1,39 @@
 # Importação automática de PDFs financeiros
 
+**Percurso E5.7 — 20/10/2026:** Documentos enviados oferece **Ver documento**
+e **Excluir importação**. Faturas reconhecidas abrem Conferir fatura; documentos
+antigos compatíveis têm a leitura atualizada, e caminhos anteriores ficam em
+Outras opções. A tela distingue documento guardado de conta efetivamente adicionada
+a Pagar. Reimportação deliberada e desfazimento preservam pagamentos/compras
+independentes. Contratos, instruções e limites no [guia vigente](CONTAS_A_PAGAR.md)
+e situação de ativação/aceitação na [retomada](RETOMADA_IMPORTACAO_FATURAS.md).
+As entregas abaixo são históricas.
+
+**E3 — 19/10/2026:** `pdf_auto` v4 separa ciclos e índices dos formatos fornecidos;
+recompõe células quebradas por coordenadas e linhas partidas entre páginas.
+Conserva resumos adicionais, controles e observações, sem inventar compras.
+Decisão de vencimento/conferência: [guia vigente](CONTAS_A_PAGAR.md#conferência-guiada-e-consultas--e3).
+Sem nova migração, build ou ativação; as versões abaixo são históricas.
+
+**E1 — 19/10/2026:** `pdf_auto` v3, [normalização e controles versionados](IMPORTACAO_FATURAS_E1.md).
+Parcelas compartilhadas com CSV, candidatos de vencimento com procedência e
+conflito explícito; diferenças de centavos preservadas. Código sem ativação.
+
+
+**Entrega posterior — 19/10/2026:** a [primeira etapa de correção](CORRECAO_IMPORTACAO_FINANCEIRA_2026-10-19.md)
+implementa controles exatos, cabeçalho CSV declarado, revisão vigente e
+conciliação explícita, com bloqueio de alocações ainda não representadas.
+Consultar esse guia e a evidência antes de usar descrições históricas abaixo.
+Código/build não atualizam automaticamente o app ou servidor em execução.
+
+**Prioridade de retomada — 19/10/2026:** a
+[auditoria da importação atual](AUDITORIA_IMPORTACAO_FINANCEIRA_2026-10-19.md)
+reproduziu 14 falhas após ampliações de 17–18/10, incluindo datas/ciclos,
+controles artificiais e efeitos em obrigações/Tesouraria. A implementação atual
+não está homologada para qualquer banco; suspender operacionalmente lançamentos
+em lote até as correções. Os resultados de 16/10 abaixo são históricos e não
+certificam as novas rotas. Nenhum lançamento real foi alterado pela auditoria.
+
 Revisão: **16/10/2026**. Implementada no backend para validação pela API;
 sem tela Flutter, distribuição ou migração do banco da empresa nesta rodada.
 [Índice](README.md). [Memória de continuidade](MEMORIA_IMPLEMENTACAO_FINANCEIRA.md).
@@ -18,7 +52,33 @@ disponíveis; não exige escolher Nubank na requisição.
 | Extrato Nubank PF/PJ | `nubank_account_pdf_v1` | 5 e 97 lançamentos; continuações em outras páginas |
 | Outro layout com texto | Sem adaptador confirmado | Texto por página preservado; `PDF_LAYOUT_UNSUPPORTED` bloqueia confirmação |
 | Página sem texto, incluindo digitalização | OCR pendente | `PDF_OCR_OR_TEXT_REQUIRED`; não informa sucesso parcial |
-| PDF protegido por senha | Fluxo de senha pendente | `PDF_PASSWORD_REQUIRED`; não solicita nem guarda senha |
+| PDF protegido por senha | Solicitação e nova tentativa implementadas | `PDF_PASSWORD_REQUIRED` permite solicitar senha e tentar novamente; cobertura simulada e limites descritos abaixo |
+
+**Atualização do fluxo de senha — implementação, testes e homologação:**
+
+- **Implementado:** o cliente solicita a senha após `PDF_PASSWORD_REQUIRED` e
+  permite reenviar a importação ou o reprocessamento. O backend recebe a senha
+  e a encaminha pelo runtime/worker ao parâmetro `password` de `pdfplumber.open`.
+  Referências: [cliente](../client/lib/views/financial_imports_view.dart),
+  [prévias](../backend/app/services/financial_previews.py),
+  [runtime](../backend/app/services/financial_pdf_runtime.py),
+  [worker](../backend/app/services/financial_pdf_worker.py) e
+  [extrator](../backend/app/services/financial_pdf_readers.py).
+- **Cobertura automatizada existente:**
+  [test_multibank_readers.py](../backend/tests/test_multibank_readers.py)
+  simula senha ausente, incorreta e aceita substituindo `pdfplumber.open`;
+  [test_financial_import_safety.py](../backend/tests/test_financial_import_safety.py)
+  simula o extrator para verificar nova tentativa após senha incorreta;
+  [test_financial_pdf.py](../backend/tests/test_financial_pdf.py) verifica que
+  o erro simulado não reproduz a senha no relatório; e
+  [multibank_and_password_import_test.dart](../client/test/multibank_and_password_import_test.dart)
+  verifica o diálogo e o reenvio no Flutter com API simulada.
+- **Limite de homologação:** os testes citados usam dados sintéticos e
+  substituições das dependências; não comprovam a descriptografia de um PDF
+  bancário realmente criptografado. Homologação exige evidência com amostras
+  reais autorizadas por formato/layout, incluindo leitura e conferência dos
+  dados. O fluxo implementado não representa suporte universal a PDFs
+  protegidos nem garante que o layout do documento seja reconhecido.
 
 Portanto, **“qualquer PDF, todas as informações” ainda não está entregue**.
 PDF é uma apresentação visual, sem contrato universal de transações. A base
@@ -55,7 +115,9 @@ São conferidos total de entradas/saídas e equação de saldo nos extratos. Nas
 faturas, saldo anterior + movimentos líquidos deve fechar o total declarado,
 e os detalhes devem corresponder ao resumo. Essas verificações não substituem
 conferência de autenticidade, titularidade ou significado comercial. Uma
-diferença bloqueia a confirmação inteira; não há ajuste artificial de centavos.
+diferença bloqueia a confirmação legada inteira; na integração atual da fatura,
+é possível aceitar detalhes pendentes pelo total conferido, conservando a
+diferença explícita. Não há ajuste artificial de centavos.
 Linhas monetárias desconhecidas na tabela também bloqueiam: débitos/créditos
 omitidos poderiam se compensar no total. Subtotais por titular e seção do novo
 layout Nubank são guardados e conferidos separadamente em `section_controls`;
@@ -175,7 +237,7 @@ que sobrescreva uma entrada. Exemplo, a partir da raiz:
 
 Casos permanentes em `test_financial_pdf.py` e
 `test_financial_pdf_homologation_tool.py` usam PDFs sintéticos, incluindo cor,
-colunas, continuação de página, limites, senha, formato desconhecido,
+colunas, continuação de página, limites, erro de senha simulado, formato desconhecido,
 divergências, revogação, recuperação e ausência de gravação financeira.
 O cabeçalho/itens extraídos passam também pelas validações estruturais antes
 de READY; mínimo negativo/acima do total bloqueia a prévia. Localizadores de

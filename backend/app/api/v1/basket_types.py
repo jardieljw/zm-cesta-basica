@@ -46,7 +46,11 @@ def _format_recipe_version_response(recipe: RecipeVersion) -> RecipeVersionRespo
                 is_required=item.is_required,
             )
         )
+    from sqlalchemy.orm import object_session
+    from app.services.recipe_lifecycle import check_recipe
+    check = check_recipe(object_session(recipe), recipe)
     return RecipeVersionResponse(
+        **check,
         id=recipe.id,
         basket_type_id=recipe.basket_type_id,
         version_number=recipe.version_number,
@@ -54,6 +58,7 @@ def _format_recipe_version_response(recipe: RecipeVersion) -> RecipeVersionRespo
         created_at=recipe.created_at,
         notes=recipe.notes,
         items=item_responses,
+        suggested_price_cents=recipe.suggested_price_cents,
     )
 
 
@@ -345,7 +350,7 @@ def list_recipe_versions(
         .options(
             selectinload(RecipeVersion.items).selectinload(RecipeItem.product)
         )
-        .where(RecipeVersion.basket_type_id == basket_type_id)
+        .where(RecipeVersion.basket_type_id == basket_type_id, RecipeVersion.status != "REMOVED")
         .order_by(RecipeVersion.version_number.desc())
     ).scalars().all()
 
@@ -419,11 +424,18 @@ def get_recipe_version_by_number(
 
 @router.post("/basket-types/{basket_type_id}/recipes", response_model=RecipeVersionResponse, status_code=status.HTTP_201_CREATED)
 def create_recipe_version(
-    basket_type_id: str,
-    data: RecipeVersionCreate,
-    db: Session = Depends(get_db),
-    current_device: PairedDevice = Depends(get_current_device),
+    basket_type_id: str, data: RecipeVersionCreate,
+    db: Session = Depends(get_db), current_device: PairedDevice = Depends(get_current_device),
+    idempotency_key: Optional[str] = Depends(get_idempotency_key),
 ):
+    def callback(session):
+        recipe = _create_recipe_version(basket_type_id, data, session)
+        return 201, recipe.model_dump(mode='json')
+    result = process_transactional_idempotency(db, idempotency_key, 'RECIPE_CREATE',
+        dict(basket_type_id=basket_type_id, **data.model_dump(mode='json')), callback)
+    return JSONResponse(status_code=result.status_code, content=result.to_json_dict())
+
+def _create_recipe_version(basket_type_id, data, db):
     """
     Cria uma nova versao de receita para o tipo de cesta.
     Regras estritas de integridade:
@@ -484,7 +496,7 @@ def create_recipe_version(
                 detail=f"Produto/Insumo com ID '{pid}' nao foi encontrado no sistema.",
             )
         p = products[pid]
-        if not p.is_active:
+        if not p.is_active or p.removed_at is not None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"O insumo '{p.name}' (ID: {p.id}) esta INATIVO no sistema e nao pode ser utilizado em novas receitas.",
@@ -518,6 +530,7 @@ def create_recipe_version(
         status="ACTIVE",
         created_at=utc_now(),
         notes=data.notes,
+        suggested_price_cents=data.suggested_price_cents,
     )
     db.add(new_version)
     db.flush()
@@ -534,7 +547,7 @@ def create_recipe_version(
         )
         db.add(recipe_item)
 
-    db.commit()
+    db.flush()
 
     # Recarregar receita com os relacionamentos completos
     loaded_recipe = db.execute(
@@ -548,21 +561,44 @@ def create_recipe_version(
     return _format_recipe_version_response(loaded_recipe)
 
 
-# --- REGRAS DE IMUTABILIDADE EXPLICITA ---
 
-@router.put("/basket-types/{basket_type_id}/recipes/{version_number}")
-def reject_recipe_version_update(basket_type_id: str, version_number: int):
-    """Versoes de receita sao estritamente imutaveis."""
-    raise HTTPException(
-        status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
-        detail="Versoes de receita sao estritamente imutaveis para preservar a fidelidade historica das montagens. Para modificar a composicao, crie uma nova versao de receita via POST.",
-    )
+# Recipe actions revalidate dependencies inside the same write transaction.
+from app.services.recipe_lifecycle import get_recipe, check_recipe, mutate_recipe
 
+@router.get('/basket-types/{basket_type_id}/recipes/{version_number}/deletion-check')
+def recipe_deletion_check(basket_type_id: str, version_number: int,
+        db: Session = Depends(get_db), current_device: PairedDevice = Depends(get_current_device)):
+    return check_recipe(db, get_recipe(db, basket_type_id, version_number))
 
-@router.delete("/basket-types/{basket_type_id}/recipes/{version_number}")
-def reject_recipe_version_deletion(basket_type_id: str, version_number: int):
-    """Versoes de receita nao podem ser excluidas."""
-    raise HTTPException(
-        status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
-        detail="A exclusao de versoes de receita e estritamente proibida para preservar a integridade historica do estoque e montagens.",
-    )
+def _recipe_action(db, key, basket_id, number, action, data=None):
+    def callback(session):
+        value = mutate_recipe(session, basket_id, number, action, data)
+        result = value if isinstance(value, dict) else _format_recipe_version_response(value).model_dump(mode='json')
+        return 200, result
+    result = process_transactional_idempotency(db, key, 'RECIPE_' + action.upper(),
+        dict(basket_id=basket_id, number=number, data=data.model_dump(mode='json') if data else None), callback)
+    return JSONResponse(status_code=result.status_code, content=result.to_json_dict())
+
+@router.put('/basket-types/{basket_type_id}/recipes/{version_number}')
+def update_recipe(basket_type_id: str, version_number: int, data: RecipeVersionCreate,
+        db: Session = Depends(get_db), current_device: PairedDevice = Depends(get_current_device),
+        idempotency_key: Optional[str] = Depends(get_idempotency_key)):
+    return _recipe_action(db, idempotency_key, basket_type_id, version_number, 'edit', data)
+
+@router.delete('/basket-types/{basket_type_id}/recipes/{version_number}')
+def delete_recipe(basket_type_id: str, version_number: int,
+        db: Session = Depends(get_db), current_device: PairedDevice = Depends(get_current_device),
+        idempotency_key: Optional[str] = Depends(get_idempotency_key)):
+    return _recipe_action(db, idempotency_key, basket_type_id, version_number, 'remove')
+
+@router.post('/basket-types/{basket_type_id}/recipes/{version_number}/activate')
+def activate_recipe(basket_type_id: str, version_number: int,
+        db: Session = Depends(get_db), current_device: PairedDevice = Depends(get_current_device),
+        idempotency_key: Optional[str] = Depends(get_idempotency_key)):
+    return _recipe_action(db, idempotency_key, basket_type_id, version_number, 'activate')
+
+@router.post('/basket-types/{basket_type_id}/recipes/{version_number}/deactivate')
+def deactivate_recipe(basket_type_id: str, version_number: int,
+        db: Session = Depends(get_db), current_device: PairedDevice = Depends(get_current_device),
+        idempotency_key: Optional[str] = Depends(get_idempotency_key)):
+    return _recipe_action(db, idempotency_key, basket_type_id, version_number, 'deactivate')

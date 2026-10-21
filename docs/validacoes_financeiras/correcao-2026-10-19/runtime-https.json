@@ -1,0 +1,93 @@
+{
+  "status": "PASS",
+  "transport": "HTTPS, trusted local certificate",
+  "runtime": "Python with separate PDF worker (not frozen)",
+  "samples": [
+    {
+      "alias": "pdf_1",
+      "items": 28,
+      "adapter": "nubank_account_pdf_v1",
+      "errors": [],
+      "confirmation": "EVIDENCE_REVIEW_PARTIAL_RECONCILIATION_VOID_NO_CASH",
+      "original_and_preview_replay": true
+    },
+    {
+      "alias": "pdf_2",
+      "items": 22,
+      "adapter": "nubank_card_pdf_v1",
+      "errors": [
+        "PDF_SOURCE_TYPE_MISMATCH",
+        "PDF_SUMMARY_DETAIL_MISMATCH"
+      ],
+      "confirmation": "BLOCKED",
+      "original_and_preview_replay": true
+    },
+    {
+      "alias": "pdf_3",
+      "items": 0,
+      "adapter": null,
+      "errors": [
+        "PDF_LAYOUT_UNSUPPORTED"
+      ],
+      "confirmation": "BLOCKED",
+      "original_and_preview_replay": true
+    },
+    {
+      "alias": "pdf_4",
+      "items": 5,
+      "adapter": "tabular_statement_pdf_v2",
+      "errors": [
+        "PDF_BILL_HEADER_REQUIRED",
+        "PDF_COMPILED_DOCUMENT_REVIEW_REQUIRED",
+        "PDF_MULTIPLE_BILLING_CYCLES",
+        "PDF_UNPARSED_MONEY_ROW"
+      ],
+      "confirmation": "BLOCKED",
+      "original_and_preview_replay": true
+    },
+    {
+      "alias": "pdf_5",
+      "items": 34,
+      "adapter": "tabular_statement_pdf_v2",
+      "errors": [
+        "PDF_BILL_HEADER_REQUIRED",
+        "PDF_CONFLICTING_HEADER"
+      ],
+      "confirmation": "BLOCKED",
+      "original_and_preview_replay": true
+    },
+    {
+      "alias": "pdf_6",
+      "items": 39,
+      "adapter": "nubank_card_pdf_v1",
+      "errors": [
+        "PDF_SUMMARY_DETAIL_MISMATCH"
+      ],
+      "confirmation": "BLOCKED",
+      "original_and_preview_replay": true
+    },
+    {
+      "alias": "pdf_7",
+      "items": 0,
+      "adapter": null,
+      "errors": [
+        "PDF_LAYOUT_UNSUPPORTED"
+      ],
+      "confirmation": "BLOCKED",
+      "original_and_preview_replay": true
+    }
+  ],
+  "checks": {
+    "books_unchanged": true,
+    "explicit_review_replay": true,
+    "partial_reconciliation_replay": true,
+    "excess_and_wrong_direction_blocked": true,
+    "reconciliation_void_without_cash_reversal": true,
+    "invalid_confirmation_blocked": true,
+    "allocation_requirements_https": true,
+    "unallocated_credit_generation_blocked": true,
+    "reader_version": "2",
+    "startup_isolated": true,
+    "source_file_unchanged": true
+  }
+}

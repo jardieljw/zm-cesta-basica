@@ -64,7 +64,7 @@ def list_products(
     current_device: PairedDevice = Depends(get_current_device),
 ):
     """Lista todos os produtos e insumos cadastrados com filtros opcionais."""
-    stmt = select(Product).options(selectinload(Product.packagings)).order_by(Product.name.asc())
+    stmt = select(Product).options(selectinload(Product.packagings)).where(Product.removed_at.is_(None)).order_by(Product.name.asc())
 
     if category:
         stmt = stmt.where(Product.category == category.strip().upper())
@@ -173,6 +173,8 @@ def update_product(
             detail=f"Produto '{product_id}' nao encontrado.",
         )
 
+    if product.removed_at is not None:
+        raise HTTPException(409, detail={"error_code": "PRODUCT_REMOVED", "message": "Este produto foi excluído do catálogo."})
     fields_set = data.model_fields_set
 
     # Validar e atualizar SKU (permite limpar com null/vazio)

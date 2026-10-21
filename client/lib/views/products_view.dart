@@ -3,6 +3,7 @@ import '../utils/scroll_layout.dart';
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../services/product_service.dart';
+import '../core/api_client.dart';
 import '../l10n/l10n_extension.dart';
 import '../utils/formatters.dart';
 import '../utils/api_error_mapper.dart';
@@ -11,15 +12,18 @@ import '../services/inventory_service.dart';
 import '../widgets/shared/approved_app_style.dart';
 import 'stock_adjustment_dialog.dart';
 import 'product_form_view.dart';
+import '../widgets/shared/catalog_blockers.dart';
 import 'packagings_dialog.dart';
 
 class ProductsView extends StatefulWidget {
   final ProductService? service;
+  final ApiClient? apiClient;
   final InventoryService? inventoryService;
   final bool initialLowStockOnly;
   const ProductsView({
     super.key,
     this.service,
+    this.apiClient,
     this.inventoryService,
     this.initialLowStockOnly = false,
   });
@@ -53,7 +57,7 @@ class _ProductsViewState extends State<ProductsView> {
   @override
   void initState() {
     super.initState();
-    _service = widget.service ?? ProductService();
+    _service = widget.service ?? ProductService(client: widget.apiClient);
     _inventoryService =
         widget.inventoryService ?? InventoryService(client: _service.client);
     _lowStockOnly = widget.initialLowStockOnly;
@@ -76,9 +80,9 @@ class _ProductsViewState extends State<ProductsView> {
             ? _searchCtrl.text.trim()
             : null,
       );
-      final summaryFuture = _inventoryService
-          .getSummary()
-          .catchError((_) => <ProductStockSummary>[]);
+      final summaryFuture = _inventoryService.getSummary().catchError(
+        (_) => <ProductStockSummary>[],
+      );
 
       final results = await Future.wait([productsFuture, summaryFuture]);
       final list = results[0] as List<Product>;
@@ -187,7 +191,12 @@ class _ProductsViewState extends State<ProductsView> {
           builder: (ctx) => AlertDialog(
             title: Text(l10n.productDeleteBlockedTitle),
             content: SingleChildScrollView(
-              child: Text(l10n.productDeleteBlocked(product.name, labels)),
+              child: check.blockers.isNotEmpty
+                  ? CatalogBlockers(
+                      blockers: check.blockers,
+                      apiClient: _service.client,
+                    )
+                  : Text(l10n.productDeleteBlocked(product.name, labels)),
             ),
             actions: [
               TextButton(
@@ -357,8 +366,9 @@ class _ProductsViewState extends State<ProductsView> {
                       backgroundColor: pColors.surface,
                       labelStyle: TextStyle(
                         color: isSelected ? pColors.accent : pColors.ink,
-                        fontWeight:
-                            isSelected ? FontWeight.w600 : FontWeight.w400,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.w400,
                         fontSize: 13,
                       ),
                       shape: StadiumBorder(
@@ -400,10 +410,7 @@ class _ProductsViewState extends State<ProductsView> {
                                 ? 'Nenhum produto abaixo do estoque mínimo'
                                 : l10n.productEmpty,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: pColors.sub,
-                              fontSize: 15,
-                            ),
+                            style: TextStyle(color: pColors.sub, fontSize: 15),
                           ),
                         ],
                       ),
@@ -427,8 +434,10 @@ class _ProductsViewState extends State<ProductsView> {
                             ),
                           );
                         }
-                        final p = _displayedProducts[
-                            _lowStockOnly ? index - 1 : index];
+                        final p =
+                            _displayedProducts[_lowStockOnly
+                                ? index - 1
+                                : index];
                         return _buildProductCard(theme, p);
                       },
                     ),
@@ -444,7 +453,8 @@ class _ProductsViewState extends State<ProductsView> {
     final pColors = AppPalette.of(context);
     final stock = _stockMap[p.id];
     final currentQty = stock?.currentStock;
-    final isLow = stock?.isBelowMinimum == true ||
+    final isLow =
+        stock?.isBelowMinimum == true ||
         (currentQty != null && currentQty < p.minimumStock);
 
     return Card(
@@ -548,20 +558,14 @@ class _ProductsViewState extends State<ProductsView> {
                   if (p.sku != null)
                     Text(
                       l10n.productSkuLabel(p.sku!),
-                      style: TextStyle(
-                        color: pColors.sub,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: pColors.sub, fontSize: 12),
                     ),
                   if (p.sku != null && p.barcode != null)
                     const SizedBox(width: 12),
                   if (p.barcode != null)
                     Text(
                       l10n.productBarcodeLabel(p.barcode!),
-                      style: TextStyle(
-                        color: pColors.sub,
-                        fontSize: 12,
-                      ),
+                      style: TextStyle(color: pColors.sub, fontSize: 12),
                     ),
                 ],
               ),
@@ -575,10 +579,7 @@ class _ProductsViewState extends State<ProductsView> {
                   children: [
                     Text(
                       'Estoque atual',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: pColors.sub,
-                      ),
+                      style: TextStyle(fontSize: 12, color: pColors.sub),
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -597,10 +598,7 @@ class _ProductsViewState extends State<ProductsView> {
                   children: [
                     Text(
                       l10n.productMinStock,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: pColors.sub,
-                      ),
+                      style: TextStyle(fontSize: 12, color: pColors.sub),
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -617,10 +615,7 @@ class _ProductsViewState extends State<ProductsView> {
                   children: [
                     Text(
                       l10n.productCostPriceRef,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: pColors.sub,
-                      ),
+                      style: TextStyle(fontSize: 12, color: pColors.sub),
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -637,10 +632,7 @@ class _ProductsViewState extends State<ProductsView> {
                   children: [
                     Text(
                       l10n.productSalePriceRef,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: pColors.sub,
-                      ),
+                      style: TextStyle(fontSize: 12, color: pColors.sub),
                     ),
                     const SizedBox(height: 2),
                     Text(

@@ -207,24 +207,11 @@ def test_real_nubank_2026_03_sample_balancing_and_zero_duplicate_obligations(api
     assert review["purchases_business_cents"] == 5091 + 40000
     assert review["purchases_personal_cents"] == 49538
 
-    # Generate obligations
-    obligations = api.post(f"/statements/{st['id']}/generate-obligations", {})
-    if isinstance(obligations, dict) and "obligations" in obligations:
-        obligations = obligations["obligations"]
-
-    # Invariants verification:
-    # 1. PREVIOUS_BALANCE must generate ZERO accounts payable titles!
-    assert not any(o["component_type"] == "PREVIOUS_BALANCE" for o in obligations)
-
-    # 2. Financial charges, business purchases and personal purchases must be registered
-    types = [o["component_type"] for o in obligations]
-    assert "PURCHASE_BUSINESS" in types
-    assert "PURCHASE_PERSONAL" in types
-    assert "FINANCIAL_CHARGES" in types
-
-    # Sum of new payables equals charges + purchases (previous balance is already tracked from prior cycle)
-    total_new_payables = sum(o["amount_cents"] for o in obligations)
-    assert total_new_payables == (50775 + 5464 + 5091 + 40000 + 49538)
+    # There is no linked obligation representing the previous balance in this
+    # fixture. A balanced bill alone cannot authorize incomplete new debt.
+    response = api.post(f"/statements/{st['id']}/generate-obligations", {}, expected=(409,))
+    assert response['detail']['error_code'] == 'FINANCIAL_BILL_ALLOCATION_REQUIRED'
+    assert api.get(f"/statements/{st['id']}/obligations") == []
 
 
 def test_existing_purchase_link_preserves_cmpm_and_prevents_duplicate_payable(api, test_session):

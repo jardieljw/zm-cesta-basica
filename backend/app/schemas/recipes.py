@@ -39,10 +39,14 @@ class RecipeItemResponse(RecipeItemBase):
     model_config = ConfigDict(from_attributes=True)
 
 class RecipeVersionCreate(BaseModel):
+    suggested_price_cents: Optional[int] = Field(None, ge=0)
     notes: Optional[str] = Field(None, description="Observacoes sobre a revisao da receita")
     items: List[RecipeItemCreate] = Field(..., min_length=1, description="Lista de insumos componentes (minimo 1 item)")
 
 class RecipeVersionResponse(BaseModel):
+    suggested_price_cents: Optional[int] = None
+    can_modify: bool = True
+    blockers: List[dict] = []
     id: str
     basket_type_id: str
     version_number: int
@@ -147,6 +151,7 @@ class BasketTypeInactivationResponse(BaseModel):
 class BasketDeletionCheck(BaseModel):
     id: str
     name: str
+    blockers: List[dict] = []
     can_delete: bool
     deletion_mode: str
     reasons: List[str] = []

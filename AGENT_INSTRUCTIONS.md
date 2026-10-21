@@ -1,4 +1,110 @@
 # Instruções Mandatórias para Agentes de Desenvolvimento (AI / Pair Programming)
+
+**Catálogo, receitas e desmontagem — 20/10/2026:** retomar pelo
+[registro único deste trabalho](docs/PLANO_CANCELAMENTO_MONTAGENS_E_EXCLUSAO.md)
+e pelos guias funcionais de receitas, produtos e montagens. Venda não cancelada
+e operação/saldo ainda válido bloqueiam; histórico já desfeito não é bloqueio
+permanente. Esse trabalho é separado do aceite nativo da importação/E5.
+
+**Importação de faturas — estado vigente:** Etapa 1 do plano corretivo foi implementada, verificada e ativada localmente. Retomar pelo [registro curto](docs/RETOMADA_IMPORTACAO_FATURAS.md); migração `f39a012b2159`, backend HTTPS local e Release Windows **1.0.5+10**. Etapas corretivas 2–4 continuam pendentes; não inferir que os fluxos E2–E4 da aplicação sejam essas etapas.
+T15 ainda tem pendência visual; não declarar aceite nativo integral. A reforma visual global permanece separada.
+
+## Registro enxuto e economia de contexto
+
+**Direção do usuário — 19/10/2026:** manter continuidade sem produzir históricos
+extensos a cada etapa. Esta regra prevalece sobre orientações anteriores de
+registro contínuo quando elas levarem a duplicar a mesma informação.
+
+- Usar um único arquivo de andamento por trabalho; atualizar seu estado atual,
+  sem acrescentar um diário a cada ação. Na importação de faturas, o arquivo é
+  [RETOMADA_IMPORTACAO_FATURAS.md](docs/RETOMADA_IMPORTACAO_FATURAS.md).
+- Registrar ao concluir um incremento relevante, transferir o trabalho ou parar
+  com pendência. Não registrar separadamente cada edição, comando ou teste.
+- Normalmente bastam 5–10 linhas: resultado/decisão, arquivos ou contratos
+  relevantes, testes e limites, pendência e próximo passo. Não narrar pensamentos,
+  tentativas rotineiras, logs completos ou informações já presentes no plano.
+- Atualizar o guia funcional somente se o comportamento documentado mudou;
+  arquitetura somente se houve decisão estrutural. Fazer alteração localizada,
+  sem copiar o registro para memória, índice e vários outros documentos.
+- Índices e memórias existentes conservam apontadores; só editá-los quando o
+  destino ou uma informação vigente ficar incorreto. Não criar outro arquivo de
+  memória, relatório ou pesquisa para repetir um resultado já registrado.
+- Ao retomar, consultar o estado curto e as seções pertinentes. Cumprir a ordem
+  canônica abaixo sem reler integralmente todo o histórico a cada subetapa;
+  ampliar a leitura quando houver dúvida, conflito ou mudança de contexto.
+- Preservar fundamentações, decisões e evidências necessárias já existentes.
+  Economia de contexto não autoriza apagar histórico, omitir falhas/limites ou
+  pular validação. Detalhe adicional deve resolver uma necessidade concreta.
+
+## Escolha de esforço e referências locais
+
+**Pedido explícito do usuário — 20/10/2026:** ao apresentar um plano ou nova etapa
+relevante, recomendar o esforço do modelo escolhido em uma frase, com motivo
+ligado ao escopo. Para recomendações habituais, consultar primeiro apenas a seção
+**Consulta rápida** do [guia local](docs/ESFORCO_DOS_AGENTES.md); abrir somente o trecho necessário
+das páginas oficiais salvas que ele referencia. Evitar pesquisas repetidas quando
+o resumo e o contexto já forem suficientes. Verificar online fatos atuais ou
+provavelmente alterados, modelos novos, divergências e exigências superiores.
+Não reler o acervo inteiro, repetir o aviso em toda resposta, pedir mudança de
+esforço a cada correção nem alterar configurações automaticamente. Não converter
+segundos em tokens ou prometer economia sem medição. Esta orientação vale para
+os agentes deste projeto; não muda a configuração global do Codex.
+
+## Direção financeira e continuidade
+
+### Clareza didática, erros e consistência de interface — direção de 20/10/2026
+
+O usuário exige uma experiência que uma criança ou uma pessoa sem familiaridade
+com o sistema consiga entender e usar. **Didática não significa apenas encurtar
+o texto.** Explicar o necessário, com palavras familiares, sequência concreta e
+tom respeitoso: o que aconteceu, qual informação falta ou diverge, onde está,
+como corrigir e o que já foi ou ainda não foi gravado. Não exigir que a pessoa
+conheça termos do banco, da API ou do código para concluir sua tarefa.
+
+- Em erros de preenchimento, destacar o campo, a escolha, a linha ou a confirmação
+  exata com a aparência de erro do tema **e texto explicativo junto ao controle**.
+  Abrir a seção recolhida quando necessário, levar rolagem/foco à primeira
+  pendência e preservar o que já foi preenchido corretamente. Um aviso geral,
+  uma cor isolada ou um aviso temporário não substituem essa orientação.
+- A ação ensinada precisa existir e ser executável naquele estado. Não mandar
+  selecionar uma conta quando não há contas disponíveis, preencher um campo
+  oculto ou corrigir uma falha interna do servidor. Distinguir informação faltante,
+  decisão necessária, conflito real e falha técnica; indicar a recuperação
+  comprovadamente disponível e explicar quando o resultado da gravação é incerto.
+- Antes de criar/alterar página, botão, título, mensagem, campo, seletor ou diálogo,
+  consultar a arquitetura do front-end, o apontador da referência atual e os
+  componentes/tema existentes. Reutilizar o dono canônico; não inventar aparência
+  por página nem copiar um desvio só porque existe numa tela antiga.
+- Planos de implementação devem ensinar o agente explicitamente: arquivos e
+  símbolos, condições e ramificações, comportamento de cada tela, exemplos de
+  mensagem, ações válidas, critérios e casos de verificação. Não trocar precisão
+  por brevidade nem omitir decisões para aparentar economia de tokens. Preferir
+  **duas etapas; usar no máximo quatro** quando a dimensão justificar, com tarefas
+  internas pequenas e verificáveis, sem transformar cada tarefa em nova fase.
+- Não tratar hipótese como causa confirmada. Reproduzir o defeito de estado em
+  ambiente isolado antes da correção; não agrupar/ocultar registros para encobrir
+  um problema de identidade, exclusão ou gravação. Testes não podem semear a base
+  usada pelo aplicativo. A revisão específica atual está no
+  [plano de correção e usabilidade do PDF](docs/PLANO_CORRECAO_E_USABILIDADE_IMPORTACAO_PDF.md).
+
+**Direção financeira vigente — esclarecimento do usuário em 19/10/2026:** ler
+[o escopo de importação de faturas](docs/ESCOPO_IMPORTACAO_DE_FATURAS.md) antes de
+seguir roteiros técnicos antigos. A prioridade é concluir os PDFs/CSVs dos bancos
+usados até Contas a Pagar, com banco/cartão, estabelecimento, valores, vencimentos
+e parcelas atuais/futuras. Não ampliar por completude nem tratar o diagnóstico
+de alocações como entrega dessa função. Reavaliar o modelo mínimo antes de
+implementar todo o plano de alocações manuais; OFX/Open Finance/Gmail ficam fora
+do recorte atual. O usuário aceita avaliar uma API de IA se necessária para seus
+documentos; isso não implica integração escolhida ou envio já executado.
+
+**Continuidade financeira — plano de 19/10/2026:** após a auditoria dos arquivos,
+o usuário solicitou planejamento antes de implementar. Consultar o
+[plano por etapas](docs/PLANO_IMPLEMENTACAO_IMPORTACAO_FATURAS.md) e a
+[retomada curta](docs/RETOMADA_IMPORTACAO_FATURAS.md). E1–E4 implementadas conforme os guias vigentes;
+a retomada conserva o estado de homologação/ativação da E5.
+Retomar pela etapa e critérios indicados, sem repetir a auditoria inteira
+ou construir o antigo plano de alocações manuais por completude.
+
 ## ZM Cesta Básica — Sistema de Gestão de Estoque, Produção, Vendas e Financeiro
 
 Este documento estabelece as **diretrizes e o protocolo operacional obrigatório** para qualquer agente de inteligência artificial ou desenvolvedor automatizado que venha a atuar neste projeto em sessões futuras.
@@ -168,7 +274,7 @@ e registrar divergências; não declarar fidelidade a partir de testes funcionai
 O pedido de Sites foi revogado antes de criação/publicação. Ler
 [integração da interface aprovada](docs/INTEGRACAO_INTERFACE_APROVADA.md).
 O bloqueio anterior por limite de uso foi superado após nova retomada: fechamento
-FE-055 com **334 Flutter / 436 backend**, análise sem pendências e **Windows
+FE-055 fechado em 17/10/2026 com **334 Flutter / 436 backend**, análise sem pendências e **Windows
 Release compilado**. Ver a evidência no guia. A aceitação visual integral e os
 dispositivos físicos não foram certificados. Não apresentar o executável
 FE-054 como esta integração; usar o Release atual com sua pasta completa.
@@ -239,8 +345,8 @@ da aplicação em produção. Documentação não substitui validações no cód
 Antes de produzir código ou aplicar qualquer alteração em arquivos existentes:
 
 1. **Checagem de Saúde do Projeto:**
-   - Execute a suíte de testes do backend com `& ".\backend\.venv\Scripts\python.exe" -m pytest backend/tests -q`. O projeto deve estar com **100% dos testes aprovados** (atualmente 180 testes).
-   - Execute a suíte de testes do Flutter com `flutter test` (ou `& "C:\dev\flutter\bin\flutter.bat" test` caso o Flutter não esteja no PATH global) (atualmente 93 testes).
+   - Execute a suíte de testes do backend com `& ".\backend\.venv\Scripts\python.exe" -m pytest backend/tests -q`. O projeto deve estar com **100% dos testes aprovados**.
+   - Execute a suíte de testes do Flutter com `flutter test` (ou `& "C:\dev\flutter\bin\flutter.bat" test` caso o Flutter não esteja no PATH global).
    - Verifique o status do Git com `git status` para garantir que o ambiente está consistente.
    - **Isolamento obrigatório:** testes não podem usar o banco da empresa. A fixture
      deve redirecionar dependências HTTP, engine do startup e SessionLocal para

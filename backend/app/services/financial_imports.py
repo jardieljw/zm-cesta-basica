@@ -38,6 +38,12 @@ def require(db, model, object_id):
     obj = db.get(model, object_id)
     if obj is None:
         fail("FINANCIAL_RESOURCE_NOT_FOUND", "Registro financeiro nao encontrado.", 404)
+    if model is FinancialStatement:
+        from app.services.financial_import_lifecycle import current_statement
+        current_statement(db, obj.id)
+    elif model is FinancialStatementItem:
+        from app.services.financial_import_lifecycle import current_statement
+        current_statement(db, obj.statement_id)
     return obj
 
 
@@ -96,6 +102,8 @@ def store_document(db: Session, content: bytes, filename: str, media_type: str, 
 
 def statement_summary(db, statement):
     result = as_dict(statement)
+    from app.services.financial_import_lifecycle import statement_context
+    result.update(statement_context(db, statement.id))
     result["items_count"] = db.scalar(select(func.count()).select_from(FinancialStatementItem).where(
         FinancialStatementItem.statement_id == statement.id))
     result["pending_count"] = db.scalar(select(func.count()).select_from(FinancialStatementItem).where(
@@ -224,6 +232,8 @@ def _compatible(transaction, source_id, data):
 
 
 def review_item(db: Session, item_id, review: FinancialItemReview, actor_id):
+    from app.services.financial_import_lifecycle import guard_item
+    guard_item(db, item_id, review)
     item = require(db, FinancialStatementItem, item_id)
     if item.review_status != "PENDING":
         fail("FINANCIAL_ITEM_ALREADY_REVIEWED", "Esta linha ja foi conferida. Consulte o historico.")
@@ -295,6 +305,8 @@ def transaction_summaries(db, transactions):
 
 
 def create_reconciliation(db: Session, data: FinancialReconciliationCreate, actor_id):
+    from app.services.financial_import_lifecycle import guard_transaction
+    owner = guard_transaction(db, data.transaction_id, data)
     transaction = require(db, FinancialTransaction, data.transaction_id)
     if not active_evidence(db, transaction.id):
         fail("FINANCIAL_TRANSACTION_INACTIVE", "Esta operacao nao possui evidencia confirmada ativa.")
@@ -314,15 +326,20 @@ def create_reconciliation(db: Session, data: FinancialReconciliationCreate, acto
     entry_remaining = entry.amount_cents - _allocated(db, FinancialReconciliation.cash_flow_entry_id, entry.id)
     if data.amount_cents > min(tx_remaining, entry_remaining):
         fail("FINANCIAL_RECONCILIATION_EXCEEDS_BALANCE", "Valor excede o saldo ainda nao conciliado.")
-    reconciliation = FinancialReconciliation(id=str(uuid.uuid4()), created_by=actor_id, **data.model_dump())
+    reconciliation = FinancialReconciliation(id=str(uuid.uuid4()), created_by=actor_id,
+        **data.model_dump(exclude={'import_id', 'expected_generation'}))
     db.add(reconciliation)
     db.flush()
     audit(db, actor_id, "RECONCILIATION_CREATED", reconciliation)
+    from app.services.financial_import_lifecycle import record_ids
+    record_ids(db, owner, 'reconciliation_ids', [reconciliation.id])
     return {"reconciliation": as_dict(reconciliation), "affects_ledger": False}
 
 
-def void_reconciliation(db, reconciliation_id, reason, actor_id):
+def void_reconciliation(db, reconciliation_id, reason, actor_id, command=None):
     reconciliation = require(db, FinancialReconciliation, reconciliation_id)
+    from app.services.financial_import_lifecycle import guard_transaction
+    guard_transaction(db, reconciliation.transaction_id, command)
     if reconciliation.voided_at is not None:
         fail("FINANCIAL_RECONCILIATION_ALREADY_VOID", "Esta conciliacao ja foi desfeita.")
     reconciliation.voided_at, reconciliation.voided_by, reconciliation.void_reason = utc_now(), actor_id, reason
@@ -332,121 +349,34 @@ def void_reconciliation(db, reconciliation_id, reason, actor_id):
 
 
 def post_statement_to_treasury(db: Session, statement_id: str, actor_id: str):
+    """Compatibility route: validate existing reconciliation, never post blindly.
+
+    Cash creation requires classification and matching contracts this old bulk
+    endpoint did not provide. Keep the endpoint and history; fail closed for
+    outstanding evidence and direct clients to the explicit reconciliation API.
+    """
     statement = require(db, FinancialStatement, statement_id)
     if statement.statement_type != "BANK_STATEMENT":
-        fail("FINANCIAL_BANK_STATEMENT_REQUIRED", "Apenas extratos de conta bancaria podem ser lancados diretamente na tesouraria.")
-
+        fail("FINANCIAL_BANK_STATEMENT_REQUIRED", "Apenas extratos de conta bancaria podem ser conciliados.")
     source = require(db, FinancialSource, statement.source_id)
-    if not source.financial_account_id:
-        fail("FINANCIAL_ACCOUNT_NOT_LINKED", "Esta origem bancaria nao possui uma conta financeira vinculada para lancamentos de caixa.")
-
-    account = db.get(FinancialAccount, source.financial_account_id)
-    if not account or not account.is_active:
-        fail("FINANCIAL_ACCOUNT_INACTIVE", "A conta financeira vinculada esta inativa ou nao foi encontrada.")
-
-    from app.services.financial import record_cash_flow_entry
-
-    st_items = db.scalars(
-        select(FinancialStatementItem)
-        .where(FinancialStatementItem.statement_id == statement_id)
-        .order_by(FinancialStatementItem.position)
-    ).all()
-    if not st_items:
-        fail("FINANCIAL_STATEMENT_EMPTY", "Este extrato nao possui lancamentos para inclusao.")
-
-    posted_entries = []
-    total_credits = 0
-    total_debits = 0
-    now = utc_now()
-
-    for item in st_items:
-        data = FinancialTransactionData.model_validate(item.normalized_data)
-        amount_cents = data.amount_cents
-        if amount_cents == 0:
+    account = require(db, FinancialAccount, source.financial_account_id) if source.financial_account_id else None
+    if account is None or not account.is_active:
+        fail("FINANCIAL_ACCOUNT_INACTIVE", "Confira a conta bancaria vinculada.")
+    view = effective_items()
+    items = db.execute(select(view).where(view.c.statement_id == statement_id)).mappings().all()
+    if not items:
+        fail("FINANCIAL_STATEMENT_EMPTY", "Este extrato nao possui lancamentos.")
+    for item in items:
+        if item['review_status'] == 'IGNORED':
             continue
-
-        # Get or create canonical transaction
-        if item.transaction_id:
-            transaction = db.get(FinancialTransaction, item.transaction_id)
-        else:
-            transaction = canonical_for_new(db, source.id, data, actor_id)
-
-        # Check if already reconciled to avoid duplicate ledger entry
-        existing_reconciliation = db.scalar(
-            select(FinancialReconciliation).where(
-                FinancialReconciliation.transaction_id == transaction.id,
-                FinancialReconciliation.voided_at.is_(None),
-            )
-        )
-        if existing_reconciliation:
+        amount = abs(item['normalized_data']['amount_cents'])
+        if amount == 0:
             continue
-
-        desc = (data.description or "Lancamento Extrato Bancario").strip()
-        date_time = datetime.datetime.combine(data.transaction_date, datetime.time(12, 0)) if data.transaction_date else now
-
-        if amount_cents > 0:
-            entry_type = "CREDIT"
-            category = "RECEITA"
-            nature = "BUSINESS"
-            val = amount_cents
-            total_credits += val
-        else:
-            entry_type = "DEBIT"
-            category = "DESPESA"
-            nature = "BUSINESS"
-            val = abs(amount_cents)
-            total_debits += val
-
-        desc_lower = desc.lower()
-        pay_method = "PIX" if "pix" in desc_lower else ("TRANSFERENCIA_BANCARIA" if "transf" in desc_lower else "OTHER")
-
-        entry = record_cash_flow_entry(
-            db=db,
-            account_id=account.id,
-            entry_type=entry_type,
-            amount_cents=val,
-            category=category,
-            nature=nature,
-            description=f"Extrato {source.name}: {desc}"[:200],
-            source_type="BANK_IMPORT",
-            source_id=item.id,
-            payment_method=pay_method,
-            occurred_at=date_time,
-            allow_duplicate_source=True,
-        )
-
-        recon = FinancialReconciliation(
-            id=str(uuid.uuid4()),
-            transaction_id=transaction.id,
-            cash_flow_entry_id=entry.id,
-            amount_cents=val,
-            reason="Lançamento direto de extrato bancário na tesouraria",
-            created_by=actor_id,
-            created_at=now,
-        )
-        db.add(recon)
-        if item.review_status == "PENDING":
-            item.review_status = "LINKED"
-            item.transaction_id = transaction.id
-            item.reviewed_by = actor_id
-            item.reviewed_at = now
-        posted_entries.append(entry.id)
-
-    db.flush()
-    audit(db, actor_id, "STATEMENT_POSTED_TO_TREASURY", statement, {
-        "account_id": account.id,
-        "entries_count": len(posted_entries),
-        "total_credits_cents": total_credits,
-        "total_debits_cents": total_debits,
-    })
-
-    return {
-        "statement_id": statement_id,
-        "account_id": account.id,
-        "account_name": account.name,
-        "entries_posted": len(posted_entries),
-        "total_credits_cents": total_credits,
-        "total_debits_cents": total_debits,
-        "new_balance_cents": account.current_balance_cents,
-    }
-
+        transaction_id = item['transaction_id']
+        allocated = _allocated(db, FinancialReconciliation.transaction_id, transaction_id) if transaction_id else 0
+        if allocated != amount:
+            fail("FINANCIAL_CASH_REVIEW_REQUIRED", "Revise e concilie cada ocorrencia com movimentos existentes antes de concluir o extrato.")
+    return {"statement_id": statement_id, "account_id": account.id,
+            "account_name": account.name, "entries_posted": 0,
+            "total_credits_cents": 0, "total_debits_cents": 0,
+            "new_balance_cents": account.current_balance_cents}

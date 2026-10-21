@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "scope": "E3 affected compilation layouts; independent references retained; no database writes",
+  "readers": {
+    "pdf_auto": "4",
+    "csv_auto": "2"
+  },
+  "results": [
+    {
+      "alias": "pdf_01",
+      "rows": 47,
+      "matches_csv_metadata": true,
+      "only_pdf": 0,
+      "only_csv": 0
+    },
+    {
+      "alias": "pdf_05",
+      "rows": 7,
+      "matches_csv_metadata": true,
+      "only_pdf": 0,
+      "only_csv": 0
+    },
+    {
+      "alias": "pdf_04",
+      "rows": 28,
+      "all_rows_in_combined_csv": true,
+      "only_pdf": 0
+    },
+    {
+      "alias": "pdf_03",
+      "tabular_rows": 12,
+      "details": 8,
+      "controls": 4,
+      "extra_summary_segments": 2,
+      "exact_reference_csv_items": true,
+      "exact_reference_csv_controls": true
+    },
+    {
+      "alias": "pdf_02_csv_05",
+      "rows": 21,
+      "installments": 9,
+      "exact_independent_reference": true,
+      "independent_pdf_and_csv_match": true
+    },
+    {
+      "alias": "pdf_02_csv_06",
+      "rows": 13,
+      "installments": 3,
+      "exact_independent_reference": true,
+      "independent_pdf_and_csv_match": true
+    }
+  ]
+}

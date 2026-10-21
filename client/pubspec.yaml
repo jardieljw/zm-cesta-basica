@@ -1,7 +1,7 @@
 name: zm_cesta_basica_client
 description: "Aplicativo Cliente Multiplataforma (Windows e Android) para Gestao de Estoque de Cestas ZM"
 publish_to: "none"
-version: 1.0.1+2
+version: 1.0.5+10
 
 environment:
   sdk: ">=3.12.0 <4.0.0"

@@ -11,10 +11,11 @@ class FinancialImportFile {
   final Uint8List bytes;
   final String mediaType;
   FinancialImportFile(this.name, this.bytes, {String? mediaType})
-      : mediaType = mediaType ??
-            (name.toLowerCase().endsWith('.csv')
-                ? 'text/csv'
-                : 'application/pdf');
+    : mediaType =
+          mediaType ??
+          (name.toLowerCase().endsWith('.csv')
+              ? 'text/csv'
+              : 'application/pdf');
 
   bool get isPdf =>
       mediaType == 'application/pdf' || name.toLowerCase().endsWith('.pdf');
@@ -51,10 +52,7 @@ class FinancialImportFile {
         errorCode: 'FINANCIAL_DOCUMENT_SIZE',
       );
     }
-    final result = FinancialImportFile(
-      file.name,
-      await file.readAsBytes(),
-    );
+    final result = FinancialImportFile(file.name, await file.readAsBytes());
     result.validate();
     return result;
   }
@@ -111,11 +109,23 @@ class FinancialImportService {
   }
 
   void close() => _bound?.close();
+  Future<ApiClient> forkConnection() async {
+    await _client();
+    return api.bindOrigin(_origin!);
+  }
 
   String _key(String path, Object body) =>
       'fin-ui-v1:${sha256.convert(utf8.encode('${_origin!.storageId}\n$path\n${jsonEncode(body)}'))}';
 
   Future<FinancialJson> _post(String path, FinancialJson body) async {
+    if (path.startsWith('$root/previews/') ||
+        path.startsWith('$root/statements/') ||
+        path.startsWith('$root/items/') ||
+        path == '$root/reconciliations' ||
+        (path.startsWith('$root/documents/') &&
+            (path.endsWith('/previews') || path.endsWith('/remove')))) {
+      await requireLifecycle();
+    }
     final client = await _client();
     return Map<String, dynamic>.from(
       await client.post(path, body: body, idempotencyKey: _key(path, body))
@@ -132,6 +142,87 @@ class FinancialImportService {
 
   Future<FinancialJson> get(String path) async =>
       Map<String, dynamic>.from(await (await _client()).get(path) as Map);
+
+  Future<List<FinancialJson>> allRows(String path) async {
+    final uri = Uri.parse(path);
+    final result = <FinancialJson>[];
+    for (var offset = 0; ; offset += 500) {
+      final page = await rows(
+        uri
+            .replace(
+              queryParameters: {
+                ...uri.queryParameters,
+                'limit': '500',
+                'offset': '$offset',
+              },
+            )
+            .toString(),
+      );
+      result.addAll(page);
+      if (page.length < 500) return result;
+    }
+  }
+
+  Future<FinancialJson> _versioned(FinancialJson payload) async {
+    final readers = await rows('$root/readers');
+    final reader = readers
+        .where((r) => r['id'] == payload['reader_id'])
+        .firstOrNull;
+    if (reader == null) {
+      throw ApiException(
+        statusCode: 409,
+        message: 'Reader unavailable',
+        errorCode: 'FINANCIAL_REIMPORT_REQUIRED',
+      );
+    }
+    return {...payload, 'expected_reader_version': reader['version']};
+  }
+
+  /// Identity comes from the data being reviewed, never from a retry lookup.
+  static FinancialJson lifecycleContext(FinancialJson value) => {
+    if (value['import_id'] != null) 'import_id': value['import_id'],
+    if (value['generation'] != null) 'expected_generation': value['generation'],
+  };
+
+  Future<void> requireLifecycle() async {
+    final capability = await get('$root/capabilities');
+    if (capability['import_lifecycle_version'] != 1) {
+      throw ApiException(
+        statusCode: 503,
+        message:
+            'Atualize o serviço de importação para consultar e salvar estes documentos.',
+        errorCode: 'FINANCIAL_SCHEMA_NOT_READY',
+      );
+    }
+  }
+
+  Future<FinancialJson> importState(String documentId) async {
+    await requireLifecycle();
+    final state = await get('$root/documents/$documentId/import-state');
+    final active = state['active_import'];
+    if (state['lifecycle_version'] != 1 ||
+        state['current_generation'] is! int ||
+        (state['current_generation'] as int) < 0 ||
+        (active != null &&
+            (active is! Map ||
+                active['id'] is! String ||
+                active['generation'] != state['current_generation'] ||
+                active['state'] != 'ACTIVE' ||
+                state['root_preview_id'] is! String))) {
+      throw ApiException(
+        statusCode: 503,
+        message: 'Estado de importação incompatível',
+        errorCode: 'FINANCIAL_SCHEMA_NOT_READY',
+      );
+    }
+    return state;
+  }
+
+  FinancialJson _previewResult(FinancialJson response) => {
+    ...Map<String, dynamic>.from(response['preview'] as Map),
+    if (response['import_id'] != null) 'import_id': response['import_id'],
+    if (response['generation'] != null) 'generation': response['generation'],
+  };
 
   Future<List<FinancialJson>> sources() async {
     final result = <FinancialJson>[];
@@ -180,6 +271,8 @@ class FinancialImportService {
     String? readerId,
     String? password,
     Map<String, dynamic>? options,
+    String? controlPreviewId,
+    String? cycleDueOn,
   }) async {
     file.validate();
     final client = await _client();
@@ -194,22 +287,138 @@ class FinancialImportService {
           )
           as Map,
     );
-    final chosenReader = readerId ?? (file.isPdf ? 'pdf_auto' : 'generic_csv');
+    final chosenReader = readerId ?? (file.isPdf ? 'pdf_auto' : 'csv_auto');
     final payload = <String, dynamic>{
       'source_id': sourceId,
       'currency': 'BRL',
       'reader_id': chosenReader,
       if (password != null && password.isNotEmpty) 'password': password,
       if (options != null) 'options': options,
+      if (controlPreviewId != null) 'control_preview_id': controlPreviewId,
+      if (cycleDueOn != null) 'cycle_due_on': cycleDueOn,
     };
-    final docId = doc['id'] as String? ??
+    final docId =
+        doc['id'] as String? ??
         (doc['document'] as Map?)?['id'] as String? ??
-        (throw ApiException(statusCode: 500, message: 'ID do documento ausente'));
-    final result = await _post('$root/documents/$docId/previews', payload);
-    return Map<String, dynamic>.from(result['preview'] as Map);
+        (throw ApiException(
+          statusCode: 500,
+          message: 'ID do documento ausente',
+        ));
+    // Upload responses may be idempotent replays; always read current state.
+    final state = await importState(docId);
+    if (state['active_import'] != null) {
+      return get('$root/previews/${state['root_preview_id']}');
+    }
+    final result = await _post(
+      '$root/documents/$docId/previews',
+      await _versioned({
+        ...payload,
+        'expected_generation': state['current_generation'],
+      }),
+    );
+    return _previewResult(result);
   }
 
-  Future<FinancialJson> post(String path, FinancialJson body) => _post(path, body);
+  Future<FinancialJson> post(String path, FinancialJson body) =>
+      _post(path, body);
+
+  Future<FinancialJson> removalPlan(
+    String documentId, {
+    FinancialJson? context,
+  }) async {
+    final capabilities = await get('$root/capabilities');
+    if (capabilities['import_removal_version'] != 1) {
+      throw ApiException(
+        statusCode: 503,
+        message: 'Update required',
+        errorCode: 'FINANCIAL_SCHEMA_NOT_READY',
+      );
+    }
+    context ??= {};
+    if (context.isEmpty) {
+      final state = await importState(documentId);
+      final active = state['active_import'] as Map?;
+      if (active == null) {
+        throw ApiException(
+          statusCode: 409,
+          message: 'Importação já retirada. Atualize a lista.',
+          errorCode: 'FINANCIAL_IMPORT_GENERATION_CONFLICT',
+        );
+      }
+      context = {
+        'import_id': active['id'],
+        'expected_generation': active['generation'],
+      };
+    }
+    return get(
+      Uri(
+        path: '$root/documents/$documentId/removal',
+        queryParameters: context.map((key, value) => MapEntry(key, '$value')),
+      ).toString(),
+    );
+  }
+
+  Future<FinancialJson> removeImport(
+    String documentId,
+    String snapshot, {
+    FinancialJson? context,
+  }) => _post('$root/documents/$documentId/remove', {
+    ...?context,
+    'expected_snapshot': snapshot,
+  });
+
+  Future<FinancialJson> billIntegrationDraft(
+    String previewId, {
+    String? reference,
+    FinancialJson? context,
+  }) async {
+    final capabilities = await get('$root/capabilities');
+    if (capabilities['bill_cycle_version'] != 1 ||
+        capabilities['bill_review_version'] != 2 ||
+        capabilities['installment_agenda_version'] != 1) {
+      throw ApiException(
+        statusCode: 409,
+        message: 'Update required',
+        errorCode: 'FINANCIAL_REIMPORT_REQUIRED',
+      );
+    }
+    await requireLifecycle();
+    final query = Uri(
+      queryParameters: {
+        if (reference != null) 'reference': reference,
+        ...?context?.map((key, value) => MapEntry(key, '$value')),
+      },
+    ).query;
+    return get('$root/previews/$previewId/bill-integration?$query');
+  }
+
+  Future<FinancialJson> integrateBill(
+    String previewId,
+    FinancialJson command,
+  ) => _post('$root/previews/$previewId/integrate-bill', command);
+
+  Future<FinancialJson> selectSegment(
+    FinancialJson preview,
+    String key,
+    String sourceId,
+  ) async {
+    final capability = await get('$root/capabilities');
+    if (capability['segments_version'] != 1) {
+      throw ApiException(
+        statusCode: 409,
+        message: 'Update required',
+        errorCode: 'FINANCIAL_REIMPORT_REQUIRED',
+      );
+    }
+    final result =
+        await _post('$root/previews/${preview['id']}/select-segment', {
+          ...lifecycleContext(preview),
+          'expected_result_sha256': preview['result_sha256'],
+          'segment_key': key,
+          'source_id': sourceId,
+        });
+    return _previewResult(result);
+  }
 
   Future<FinancialJson> createPreview(
     String documentId, {
@@ -217,16 +426,24 @@ class FinancialImportService {
     String? readerId,
     String? password,
     Map<String, dynamic>? options,
+    required FinancialJson context,
+    required String expectedRootPreviewId,
   }) async {
     final payload = <String, dynamic>{
+      ...context,
+      'explicit_reprocess': true,
+      'expected_root_preview_id': expectedRootPreviewId,
       'source_id': sourceId,
       'currency': 'BRL',
       'reader_id': readerId ?? 'pdf_auto',
       if (password != null && password.isNotEmpty) 'password': password,
       if (options != null) 'options': options,
     };
-    final result = await _post('$root/documents/$documentId/previews', payload);
-    return Map<String, dynamic>.from(result['preview'] as Map);
+    final result = await _post(
+      '$root/documents/$documentId/previews',
+      await _versioned(payload),
+    );
+    return _previewResult(result);
   }
 
   Future<FinancialJson> importPdf(
@@ -234,13 +451,12 @@ class FinancialImportService {
     String sourceId, {
     String? password,
     String? readerId,
-  }) =>
-      importDocument(
-        file,
-        sourceId,
-        readerId: readerId ?? 'pdf_auto',
-        password: password,
-      );
+  }) => importDocument(
+    file,
+    sourceId,
+    readerId: readerId ?? 'pdf_auto',
+    password: password,
+  );
 
   Future<FinancialJson> confirm(
     FinancialJson preview, {
@@ -256,11 +472,13 @@ class FinancialImportService {
     final header = Map<String, dynamic>.from(
       preview['extracted_header'] as Map? ?? {},
     );
-    final statementType = header['statement_type'] ??
+    final statementType =
+        header['statement_type'] ??
         (preview['reader_id'].toString().contains('card')
             ? 'CARD_BILL'
             : 'BANK_STATEMENT');
     final result = await _post('$root/previews/${preview['id']}/confirm', {
+      ...lifecycleContext(preview),
       'expected_source_id': preview['source_id'],
       'expected_result_sha256': preview['result_sha256'],
       'statement_type': statementType,
@@ -275,7 +493,9 @@ class FinancialImportService {
 
   Future<FinancialJson?> getSemanticReview(String statementId) async {
     try {
-      final res = await get('$root/statements/$statementId/semantic-reviews/current');
+      final res = await get(
+        '$root/statements/$statementId/semantic-reviews/current',
+      );
       return res;
     } on ApiException catch (e) {
       if (e.statusCode == 404) return null;
@@ -285,11 +505,13 @@ class FinancialImportService {
 
   Future<FinancialJson> saveSemanticReview(
     String statementId, {
+    FinancialJson? context,
     required int expectedRevision,
     required List<FinancialJson> items,
     String? notes,
   }) async {
     return _post('$root/statements/$statementId/semantic-reviews', {
+      ...?context,
       'expected_revision': expectedRevision,
       'items': items,
       if (notes != null && notes.isNotEmpty) 'notes': notes,
@@ -298,13 +520,16 @@ class FinancialImportService {
 
   Future<List<FinancialJson>> generateObligations(
     String statementId, {
+    FinancialJson? context,
     String? reviewId,
     String? notes,
   }) async {
-    final res = await _post('$root/statements/$statementId/generate-obligations', {
-      if (reviewId != null) 'review_id': reviewId,
-      if (notes != null && notes.isNotEmpty) 'notes': notes,
-    });
+    final res =
+        await _post('$root/statements/$statementId/generate-obligations', {
+          ...?context,
+          if (reviewId != null) 'review_id': reviewId,
+          if (notes != null && notes.isNotEmpty) 'notes': notes,
+        });
     return (res['obligations'] as List? ?? [])
         .map((v) => Map<String, dynamic>.from(v as Map))
         .toList();
@@ -315,13 +540,20 @@ class FinancialImportService {
     return res;
   }
 
-  Future<FinancialJson> postStatementToTreasury(String statementId) async {
-    return _post('$root/statements/$statementId/post-to-treasury', {});
+  Future<FinancialJson> postStatementToTreasury(
+    String statementId, {
+    FinancialJson? context,
+  }) async {
+    return _post('$root/statements/$statementId/post-to-treasury', {
+      ...?context,
+    });
   }
 
   Future<List<FinancialJson>> getStatements({String? sourceId}) async {
-    final path = sourceId != null ? '$root/statements?source_id=$sourceId' : '$root/statements';
-    return rows(path);
+    final path = sourceId != null
+        ? '$root/statements?source_id=$sourceId'
+        : '$root/statements';
+    return allRows(path);
   }
 
   Future<FinancialJson> getStatement(String statementId) async {

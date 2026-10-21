@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zm_cesta_basica_client/core/api_client.dart';
 import 'package:zm_cesta_basica_client/l10n/app_localizations.dart';
@@ -28,6 +28,8 @@ class ImportApi extends ApiClient {
       failSourceOnce = false;
   String? loadError;
   int itemCount = 1, errorCount = 1;
+  String readerVersion = '1';
+  bool dueConflict = false;
   Completer<void>? uploadGate;
   ApiOrigin origin = ApiOrigin(
     url: 'https://financial-test.invalid',
@@ -43,6 +45,11 @@ class ImportApi extends ApiClient {
   };
   FinancialJson get preview => {
     'id': 'p1',
+    'import_id': 'p1',
+    'generation': 1,
+    'filename': 'Fatura teste.pdf',
+    'financial_status': confirmed ? 'CONFIRMED' : 'PENDING',
+    if (confirmed) 'statement_id': 'st1',
     'source_id': 's1',
     'document_id': 'd1',
     'reader_id': 'pdf_auto',
@@ -55,13 +62,20 @@ class ImportApi extends ApiClient {
     'detected_institution': 'PICPAY',
     'extracted_header': {
       'statement_type': 'CARD_BILL',
-      'due_on': '2026-10-20',
+      if (!dueConflict) 'due_on': '2026-10-20',
       'total_amount_cents': 12034,
       'minimum_payment_cents': 1200,
     },
     'field_sources': {
       'due_on': {'page_number': 2},
     },
+    if (dueConflict)
+      'header_candidates': {
+        'due_on': [
+          {'value': '2026-10-24', 'page_number': 2},
+          {'value': '2026-10-26', 'page_number': 1},
+        ],
+      },
     'warnings': [
       {'code': 'PDF_PARTIAL_DATE_YEAR_FROM_BILL_CONTEXT'},
     ],
@@ -84,10 +98,23 @@ class ImportApi extends ApiClient {
     final uri = Uri.parse(path),
         offset = int.parse(Uri.parse(path).queryParameters['offset'] ?? '0');
     final limit = int.parse(uri.queryParameters['limit'] ?? '100');
+    if (uri.path == '$root/capabilities')
+      return {'import_lifecycle_version': 1};
+    if (uri.path.endsWith('/import-state'))
+      return {
+        'lifecycle_version': 1,
+        'current_generation': 0,
+        'active_import': null,
+        'root_preview_id': null,
+      };
     if (uri.path == '$root/sources') return [source];
     if (uri.path == '$root/readers') {
       return [
-        {'id': 'pdf_auto', 'version': '1', 'media_type': 'application/pdf'},
+        {
+          'id': 'pdf_auto',
+          'version': readerVersion,
+          'media_type': 'application/pdf',
+        },
         {'id': 'nubank_card_csv', 'version': '1', 'media_type': 'text/csv'},
       ];
     }
@@ -99,7 +126,8 @@ class ImportApi extends ApiClient {
     }
     if (uri.path == '$root/statements') {
       return [
-        if (confirmed) {'id': 'st1', 'preview_id': 'p1'},
+        if (confirmed)
+          {'id': 'st1', 'preview_id': 'p1', 'import_id': 'p1', 'generation': 1},
       ];
     }
     if (uri.path == '$root/previews/p1/items') {
@@ -185,6 +213,21 @@ class ImportApi extends ApiClient {
   }
 }
 
+Future<void> loadImportFonts() async {
+  if (!const bool.fromEnvironment('PDF_IMPORT_CAPTURE')) return;
+  for (final entry in {
+    'Segoe UI': 'C:/Windows/Fonts/segoeui.ttf',
+    'Segoe UI Semibold': 'C:/Windows/Fonts/seguisb.ttf',
+    'MaterialIcons':
+        'C:/dev/flutter/bin/cache/artifacts/material_fonts/materialicons-regular.otf',
+  }.entries) {
+    final font = File(entry.value);
+    final loader = FontLoader(entry.key)
+      ..addFont(font.readAsBytes().then(ByteData.sublistView));
+    await loader.load();
+  }
+}
+
 Future<void> mount(
   WidgetTester tester,
   Widget child, {
@@ -260,7 +303,35 @@ Future<void> capture(WidgetTester tester, String name) async {
 }
 
 void main() {
-  setUpAll(AppFormatters.initialize);
+  setUpAll(() async {
+    await AppFormatters.initialize();
+    await loadImportFonts();
+  });
+  testWidgets(
+    'T07 both due dates and source pages remain visible with confirmation blocked',
+    (tester) async {
+      final api = ImportApi()
+        ..dueConflict = true
+        ..invalid = true;
+      await mount(
+        tester,
+        FinancialPdfPreviewView(
+          service: FinancialImportService(apiClient: api),
+          previewId: 'p1',
+        ),
+        size: const Size(390, 844),
+      );
+      expect(
+        find.textContaining('O documento informa vencimentos diferentes'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('24/10/2026'), findsOneWidget);
+      expect(find.textContaining('26/10/2026'), findsOneWidget);
+      expect(find.byKey(const ValueKey('pdf-confirm')), findsNothing);
+      expect(api.writes, isEmpty);
+      await capture(tester, 'e1-due-conflict');
+    },
+  );
   test(
     'upload is binary, PDF auto uses selected origin and confirmation sends exact preconditions',
     () async {
@@ -277,8 +348,12 @@ void main() {
         'source_id': 's1',
         'currency': 'BRL',
         'reader_id': 'pdf_auto',
+        'expected_generation': 0,
+        'expected_reader_version': '1',
       });
       expect(api.writes.last.body, {
+        'import_id': 'p1',
+        'expected_generation': 1,
         'expected_source_id': 's1',
         'expected_result_sha256': 'a' * 64,
         'statement_type': 'CARD_BILL',
@@ -329,6 +404,34 @@ void main() {
       throwsA(isA<ApiException>()),
     );
     expect(api.writes, isEmpty);
+  });
+  test(
+    'reader upgrade creates a new interpretation command for the same original',
+    () async {
+      final api = ImportApi();
+      final service = FinancialImportService(apiClient: api);
+      await service.importPdf(sampleFile(), 's1');
+      final originalKey = api.writes.last.key;
+      api.readerVersion = '2';
+      await service.importPdf(sampleFile(), 's1');
+      expect(api.writes[0].key, api.writes[2].key);
+      expect(api.writes.last.key, isNot(originalKey));
+      expect((api.writes.last.body as Map)['expected_reader_version'], '2');
+    },
+  );
+  test('all evidence pages are loaded with query filters preserved', () async {
+    final api = ImportApi()..itemCount = 1001;
+    final rows = await FinancialImportService(
+      apiClient: api,
+    ).allRows('$root/previews/p1/items?source_id=s1');
+    expect(rows.length, 1001);
+    expect(rows.last['position'], 1001);
+    expect(api.gets.length, 3);
+    expect(
+      api.gets.every((p) => Uri.parse(p).queryParameters['source_id'] == 's1'),
+      isTrue,
+    );
+    expect(Uri.parse(api.gets.last).queryParameters['offset'], '1000');
   });
   test(
     'bank source retry recovers account command without ledger writes',
@@ -420,10 +523,7 @@ void main() {
         -300,
         scrollable: find.byType(Scrollable).first,
       );
-      expect(
-        find.text(AppFormatters.formatCurrency(-1234)),
-        findsOneWidget,
-      );
+      expect(find.text(AppFormatters.formatCurrency(-1234)), findsOneWidget);
       await click(tester, find.text('Carregar mais').last);
       expect(api.gets.any((p) => p.contains('/pages?offset=5')), isTrue);
       expect(api.writes, isEmpty);

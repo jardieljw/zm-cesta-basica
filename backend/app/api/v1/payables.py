@@ -33,7 +33,7 @@ from app.services.financial import (
 router = APIRouter()
 
 
-def serialize_payable(p: AccountPayable) -> AccountPayableResponse:
+def serialize_payable(p: AccountPayable, db: Session = None, *, details=False) -> AccountPayableResponse:
     now = utc_now()
     due = p.due_date
     if due.tzinfo is None and now.tzinfo is not None:
@@ -47,7 +47,20 @@ def serialize_payable(p: AccountPayable) -> AccountPayableResponse:
     if u_at.tzinfo is None and now.tzinfo is not None:
         u_at = u_at.replace(tzinfo=datetime.timezone.utc)
 
+    bill = None
+    if db is not None:
+        from sqlalchemy import select
+        from app.models.financial_bill_cycles import FinancialBillCycle
+        from app.services.financial_bill_cycles import describe
+        cycle = db.scalar(select(FinancialBillCycle).where(FinancialBillCycle.payable_id == p.id))
+        if cycle:
+            bill = describe(db, cycle)
+            bill['items_count'] = len(bill['items'])
+            if not details:
+                bill.pop('items')
     return AccountPayableResponse(
+        financial_bill=bill,
+        superseded_by_id=p.superseded_by_id,
         id=p.id,
         payable_number=p.payable_number,
         description=p.description,
@@ -74,10 +87,13 @@ def serialize_payable(p: AccountPayable) -> AccountPayableResponse:
     )
 
 
-def serialize_payable_detail(p: AccountPayable) -> AccountPayableDetailResponse:
-    base = serialize_payable(p)
+def serialize_payable_detail(p: AccountPayable, db: Session = None) -> AccountPayableDetailResponse:
+    base = serialize_payable(p, db, details=True)
     payments = [
         PayablePaymentResponse(
+            bill_revision_id=pay.bill_revision_id,
+            stock_cents=pay.stock_cents, business_cents=pay.business_cents,
+            personal_cents=pay.personal_cents, unclassified_cents=pay.unclassified_cents,
             id=pay.id,
             payable_id=pay.payable_id,
             account_id=pay.account_id,
@@ -96,11 +112,12 @@ def serialize_payable_detail(p: AccountPayable) -> AccountPayableDetailResponse:
     return AccountPayableDetailResponse(
         **base.model_dump(),
         payments=payments,
+        payment_review_version=2 if base.financial_bill else 1,
     )
 
 
-@router.get("/payables", response_model=List[AccountPayableResponse])
-def get_payables(
+@router.get("/payables/summary")
+def get_payables_summary(
     due_date_from: Optional[datetime.datetime] = Query(None, description="Vencimento inicial"),
     due_date_to: Optional[datetime.datetime] = Query(None, description="Vencimento final"),
     month: Optional[int] = Query(None, ge=1, le=12, description="Mes do vencimento (1 a 12)"),
@@ -110,6 +127,9 @@ def get_payables(
     status: Optional[str] = Query(None, description="OPEN, PARTIAL, PAID, CANCELED"),
     nature: Optional[str] = Query(None, description="BUSINESS ou PERSONAL_WITHDRAWAL"),
     overdue_only: bool = Query(False, description="Apenas titulos vencidos"),
+    source_id: Optional[str] = Query(None, max_length=36),
+    source_query: Optional[str] = Query(None, max_length=200),
+    merchant: Optional[str] = Query(None, max_length=200),
     limit: int = Query(100, ge=1, le=500),
     offset: int = Query(0, ge=0),
     db: Session = Depends(get_db),
@@ -127,10 +147,60 @@ def get_payables(
         status_filter=status,
         nature=nature,
         overdue_only=overdue_only,
+        source_id=source_id,
+        source_query=source_query,
+        merchant=merchant,
+        summary_only=True,
+        offset=offset,
+    )
+    from sqlalchemy import inspect
+    from app.services.financial_installments import agenda
+    # Older servers/databases retain the original payable query; no estimated debt fallback.
+    if 'financial_installment_forecasts' in inspect(db.connection()).get_table_names():
+        payables['installments'] = agenda(db, source_id=source_id, source_query=source_query, merchant=merchant,
+            due_date_from=due_date_from, due_date_to=due_date_to, month=month, year=year, status=status,
+            category=category, beneficiary=beneficiary, nature=nature, overdue_only=overdue_only, limit=1)
+    return payables
+
+
+@router.get("/payables", response_model=List[AccountPayableResponse])
+def get_payables(
+    due_date_from: Optional[datetime.datetime] = Query(None, description="Vencimento inicial"),
+    due_date_to: Optional[datetime.datetime] = Query(None, description="Vencimento final"),
+    month: Optional[int] = Query(None, ge=1, le=12, description="Mes do vencimento (1 a 12)"),
+    year: Optional[int] = Query(None, ge=2000, le=2100, description="Ano do vencimento"),
+    category: Optional[str] = Query(None, description="Categoria"),
+    beneficiary: Optional[str] = Query(None, description="Nome do favorecido/fornecedor"),
+    status: Optional[str] = Query(None, description="OPEN, PARTIAL, PAID, CANCELED"),
+    nature: Optional[str] = Query(None, description="BUSINESS ou PERSONAL_WITHDRAWAL"),
+    overdue_only: bool = Query(False, description="Apenas titulos vencidos"),
+    source_id: Optional[str] = Query(None, max_length=36),
+    source_query: Optional[str] = Query(None, max_length=200),
+    merchant: Optional[str] = Query(None, max_length=200),
+    limit: int = Query(100, ge=1, le=500),
+    offset: int = Query(0, ge=0),
+    db: Session = Depends(get_db),
+    device: PairedDevice = Depends(get_current_device),
+):
+    """Consulta contas a pagar com filtros por periodo, mes, ano, categoria, favorecido e situacao."""
+    payables = list_accounts_payable(
+        db=db,
+        due_date_from=due_date_from,
+        due_date_to=due_date_to,
+        month=month,
+        year=year,
+        category=category,
+        beneficiary=beneficiary,
+        status_filter=status,
+        nature=nature,
+        overdue_only=overdue_only,
+        source_id=source_id,
+        source_query=source_query,
+        merchant=merchant,
         limit=limit,
         offset=offset,
     )
-    return [serialize_payable(p) for p in payables]
+    return [serialize_payable(p, db) for p in payables]
 
 
 @router.post("/payables", response_model=List[AccountPayableResponse], status_code=status.HTTP_201_CREATED)
@@ -146,7 +216,7 @@ def post_payable(
     """
     def callback(session: Session):
         created_list = create_account_payable(session, data)
-        resp = [serialize_payable(p).model_dump(mode="json") for p in created_list]
+        resp = [serialize_payable(p, session).model_dump(mode="json") for p in created_list]
         return status.HTTP_201_CREATED, resp
 
     result = process_transactional_idempotency(
@@ -167,7 +237,7 @@ def get_payable_by_id(
 ):
     """Consulta detalhes de uma conta a pagar com historico de pagamentos."""
     payable = get_account_payable(db, payable_id)
-    return serialize_payable_detail(payable)
+    return serialize_payable_detail(payable, db)
 
 
 @router.post("/payables/{payable_id}/payments", response_model=PayablePaymentResponse, status_code=status.HTTP_201_CREATED)
@@ -184,6 +254,9 @@ def post_payable_payment(
     def callback(session: Session):
         payment = record_payable_payment(session, payable_id, data)
         resp = PayablePaymentResponse(
+            bill_revision_id=payment.bill_revision_id,
+            stock_cents=payment.stock_cents, business_cents=payment.business_cents,
+            personal_cents=payment.personal_cents, unclassified_cents=payment.unclassified_cents,
             id=payment.id,
             payable_id=payment.payable_id,
             account_id=payment.account_id,
@@ -205,7 +278,7 @@ def post_payable_payment(
         operation_type="PAYABLE_PAYMENT_CREATE",
         # Keep legacy request hashes byte-equivalent when additive fields are absent.
         payload={"payable_id": payable_id, **data.model_dump(mode="json", exclude={
-            name for name in ("expected_balance_cents", "payment_business_date") if getattr(data, name) is None
+            name for name in ("expected_balance_cents", "payment_business_date", "expected_bill_revision") if getattr(data, name) is None
         })},
         business_callback=callback,
     )
@@ -223,7 +296,7 @@ def post_cancel_payable(
     """Cancela um titulo a pagar aberto sem pagamentos efetuados."""
     def callback(session: Session):
         payable = cancel_account_payable(session, payable_id, data)
-        resp = serialize_payable(payable).model_dump(mode="json")
+        resp = serialize_payable(payable, session).model_dump(mode="json")
         return status.HTTP_200_OK, resp
 
     result = process_transactional_idempotency(
@@ -248,6 +321,9 @@ def post_cancel_payment(
     def callback(session: Session):
         payment = cancel_payable_payment(session, payment_id, data)
         resp = PayablePaymentResponse(
+            bill_revision_id=payment.bill_revision_id,
+            stock_cents=payment.stock_cents, business_cents=payment.business_cents,
+            personal_cents=payment.personal_cents, unclassified_cents=payment.unclassified_cents,
             id=payment.id,
             payable_id=payment.payable_id,
             account_id=payment.account_id,
@@ -283,7 +359,7 @@ def post_next_recurrence(
     """Gera a proxima parcela / ciclo de uma despesa recorrente."""
     def callback(session: Session):
         payable = generate_next_recurrence_payable(session, payable_id)
-        resp = serialize_payable(payable).model_dump(mode="json")
+        resp = serialize_payable(payable, session).model_dump(mode="json")
         return status.HTTP_201_CREATED, resp
 
     result = process_transactional_idempotency(

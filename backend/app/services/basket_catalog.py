@@ -9,6 +9,7 @@ from app.models.movements import InventoryMovement
 from app.models.dispatches import StockDispatch, DispatchItem, DispatchReturn, DispatchLoss
 from app.models.base import utc_now
 from app.schemas.recipes import BasketDeletionCheck, BasketDeletionResponse
+from app.services.catalog_dependencies import basket_blockers
 
 
 def require_catalog_entry(basket: BasketType) -> None:
@@ -65,8 +66,11 @@ def check_basket_deletion(db: Session, basket_id: str) -> BasketDeletionCheck:
     reasons = _blocking_reasons(db, basket.id)
     if basket.removed_at is not None:
         reasons.append('REMOVED')
+    blockers = basket_blockers(db, basket_id)
+    reasons = list(dict.fromkeys(reasons + [b['kind'] for b in blockers]))
     return BasketDeletionCheck(id=basket.id, name=basket.name, can_delete=not reasons,
-        deletion_mode='CATALOG_ONLY' if history else 'PERMANENT', reasons=reasons, history_reasons=history)
+        deletion_mode='CATALOG_ONLY' if history else 'PERMANENT', reasons=reasons,
+        history_reasons=history, blockers=blockers)
 
 
 def delete_basket_from_catalog(db: Session, basket_id: str) -> BasketDeletionResponse:
@@ -79,6 +83,7 @@ def delete_basket_from_catalog(db: Session, basket_id: str) -> BasketDeletionRes
         raise HTTPException(status_code=409, detail={
             'error_code': 'BASKET_DELETE_BLOCKED', 'message': 'Resolva as vendas e o estoque antes de excluir a cesta.',
             'reasons': check.reasons,
+            'blockers': check.blockers,
         })
     response = BasketDeletionResponse(id=basket.id, name=basket.name, deleted=True, deletion_mode=check.deletion_mode)
     if check.deletion_mode == 'PERMANENT':
@@ -90,5 +95,7 @@ def delete_basket_from_catalog(db: Session, basket_id: str) -> BasketDeletionRes
     else:
         basket.is_active = False
         basket.removed_at = utc_now()
+        for recipe in basket.recipes:
+            recipe.status = 'REMOVED'
     db.flush()
     return response

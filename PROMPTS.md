@@ -31,7 +31,10 @@ Todos os comandos deste guia **devem ser executados na raiz do projeto** (`ZM CE
 
 Antes de rodar os comandos, confirme se o seu computador tem os programas necessários:
 
-1. **Python 3.11+ no PATH:** Verifique digitando `python --version`. Se não reconhecer, reinstale marcando a caixa *"Add python.exe to PATH"*.
+1. **Python 3.14+ no PATH para desenvolver/executar o backend:**
+   `backend/pyproject.toml` declara `requires-python = ">=3.14"`. Verifique
+   digitando `python --version`; se não reconhecer, instale uma versão
+   compatível e adicione-a ao `PATH`.
 2. **Flutter SDK no PATH:** Verifique digitando `flutter --version`. O comando deve responder normalmente.
 3. **Para compilar o Windows Desktop (`flutter build windows`):** Visual Studio 2022 Community instalado com a carga de trabalho *"Desenvolvimento para desktop com C++"*.
 4. **Para compilar o APK Android (`flutter build apk`):** Android Studio com Android SDK, JDK (Java) instalados e licenças aceitas via `flutter doctor --android-licenses`.

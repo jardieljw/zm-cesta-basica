@@ -8,11 +8,15 @@ import '../l10n/l10n_extension.dart';
 import '../utils/formatters.dart';
 import '../utils/api_error_mapper.dart';
 import 'sale_form_view.dart';
+import 'receivable_payment_view.dart';
+import '../services/receivable_payment_coordinator.dart';
+import '../services/receivable_service.dart';
 import '../widgets/shared/approved_app_style.dart';
 
 class SalesView extends StatefulWidget {
   final ApiClient? apiClient;
-  const SalesView({super.key, this.apiClient});
+  final String? initialSaleId;
+  const SalesView({super.key, this.apiClient, this.initialSaleId});
 
   @override
   State<SalesView> createState() => _SalesViewState();
@@ -41,10 +45,12 @@ class _SalesViewState extends State<SalesView> {
     });
 
     try {
-      final items = await _saleService.getSales(
-        status: _statusFilter,
-        paymentMode: _paymentModeFilter,
-      );
+      final items = widget.initialSaleId != null
+          ? [await _saleService.getSale(widget.initialSaleId!)]
+          : await _saleService.getSales(
+              status: _statusFilter,
+              paymentMode: _paymentModeFilter,
+            );
       setState(() {
         _sales = items;
         _isLoading = false;
@@ -57,10 +63,30 @@ class _SalesViewState extends State<SalesView> {
     }
   }
 
+  Future<void> _showReceipts(Sale sale) async {
+    final coordinator = ReceivablePaymentCoordinator(
+      service: ReceivableService(client: widget.apiClient),
+    );
+    try {
+      await Navigator.of(context).push(
+        MaterialPageRoute<void>(
+          builder: (_) => ReceivablePaymentView(
+            receivableId: sale.receivableId!,
+            coordinator: coordinator,
+          ),
+        ),
+      );
+    } finally {
+      coordinator.dispose();
+    }
+    if (mounted) await _loadSales();
+  }
+
   Future<void> _showCancelDialog(Sale sale) async {
     final l10n = context.l10n;
     final reasonController = TextEditingController();
     bool isCancelling = false;
+    bool receiptBlocked = false;
     String? cancelError;
     final assemblyChoices = <String, bool?>{
       for (final item in sale.items.where((it) => it.assembledOnDemand))
@@ -69,151 +95,192 @@ class _SalesViewState extends State<SalesView> {
 
     await showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (ctx) {
         return StatefulBuilder(
           builder: (context, setDialogState) {
-            return AlertDialog(
-              title: Text(l10n.saleCancelConfirm(sale.saleNumber)),
-              content: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (assemblyChoices.isNotEmpty) ...[
-                      Text(l10n.saleCancelAssemblyHelp),
+            return PopScope(
+              canPop: !isCancelling,
+              child: AlertDialog(
+                title: Text(l10n.saleCancelConfirm(sale.saleNumber)),
+                content: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        '${sale.customerName ?? l10n.saleCustomerAnonymous} · ${AppFormatters.formatDate(sale.saleDate)}',
+                      ),
                       const SizedBox(height: 12),
-                      for (final item in sale.items.where(
-                        (it) => assemblyChoices.containsKey(it.id),
-                      )) ...[
-                        Text(
-                          '${item.basketTypeName ?? item.basketTypeId} (${item.quantity})',
-                        ),
-                        const SizedBox(height: 8),
-                        DropdownButtonFormField<bool>(
-                          isExpanded: true,
-                          decoration: InputDecoration(
-                            labelText: l10n.saleCancelAssemblyQuestion,
-                          ),
-                          items: [
-                            DropdownMenuItem(
-                              value: false,
-                              child: Text(
-                                l10n.saleCancelKeepBaskets,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            DropdownMenuItem(
-                              value: true,
-                              child: Text(
-                                l10n.saleCancelReturnIngredients,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                          onChanged: isCancelling
+                      if (sale.receivableId != null &&
+                          (receiptBlocked ||
+                              [
+                                'PAID',
+                                'PARTIAL',
+                              ].contains(sale.receivableStatus))) ...[
+                        Text(l10n.catalogReceiptHelp),
+                        TextButton.icon(
+                          icon: const Icon(Icons.receipt_long),
+                          onPressed: isCancelling
                               ? null
-                              : (value) => setDialogState(
-                                  () => assemblyChoices[item.id] = value,
-                                ),
+                              : () async {
+                                  Navigator.pop(ctx);
+                                  await _showReceipts(sale);
+                                },
+                          label: Text(l10n.catalogViewReceipts),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 12),
                       ],
-                    ],
-                    Text(
-                      l10n.saleCancelReason,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: reasonController,
-                      maxLines: 2,
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        errorText: cancelError,
-                        errorMaxLines: 3,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: isCancelling ? null : () => Navigator.pop(ctx),
-                  child: Text(l10n.commonCancel),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-                  onPressed: isCancelling
-                      ? null
-                      : () async {
-                          final reason = reasonController.text.trim();
-                          if (assemblyChoices.values.any(
-                            (value) => value == null,
-                          )) {
-                            setDialogState(
-                              () =>
-                                  cancelError = l10n.saleCancelAssemblyRequired,
-                            );
-                            return;
-                          }
-                          if (reason.length < 3) {
-                            setDialogState(() {
-                              cancelError = l10n.commonRequired;
-                            });
-                            return;
-                          }
-
-                          setDialogState(() {
-                            isCancelling = true;
-                            cancelError = null;
-                          });
-
-                          try {
-                            await _saleService.cancelSale(
-                              sale.id,
-                              reason,
-                              unassembledItemIds: assemblyChoices.entries
-                                  .where((e) => e.value == true)
-                                  .map((e) => e.key)
-                                  .toList(),
-                            );
-                            if (mounted) {
-                              Navigator.pop(ctx);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(l10n.saleCanceledSuccess),
-                                ),
-                              );
-                              _loadSales();
-                            }
-                          } catch (e) {
-                            setDialogState(() {
-                              isCancelling = false;
-                              cancelError = ApiErrorMapper.toLocalizedMessage(
-                                e,
-                                l10n,
-                              );
-                            });
-                          }
-                        },
-                  child: isCancelling
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.white,
+                      if (assemblyChoices.isNotEmpty) ...[
+                        Text(l10n.saleCancelAssemblyHelp),
+                        const SizedBox(height: 12),
+                        for (final item in sale.items.where(
+                          (it) => assemblyChoices.containsKey(it.id),
+                        )) ...[
+                          Text(
+                            '${item.basketTypeName ?? item.basketTypeId} (${item.quantity})',
                           ),
-                        )
-                      : Text(
-                          l10n.saleCancel,
-                          style: const TextStyle(color: Colors.white),
+                          const SizedBox(height: 8),
+                          DropdownButtonFormField<bool>(
+                            isExpanded: true,
+                            decoration: InputDecoration(
+                              labelText: l10n.saleCancelAssemblyQuestion,
+                            ),
+                            items: [
+                              DropdownMenuItem(
+                                value: false,
+                                child: Text(
+                                  l10n.saleCancelKeepBaskets,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                              DropdownMenuItem(
+                                value: true,
+                                child: Text(
+                                  l10n.saleCancelReturnIngredients,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                            onChanged: isCancelling
+                                ? null
+                                : (value) => setDialogState(
+                                    () => assemblyChoices[item.id] = value,
+                                  ),
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+                      ],
+                      Text(
+                        l10n.saleCancelReason,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
                         ),
+                      ),
+                      const SizedBox(height: 8),
+                      TextField(
+                        enabled: !isCancelling,
+                        controller: reasonController,
+                        maxLines: 2,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                      if (cancelError != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: Text(
+                            cancelError!,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.error,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-              ],
+                actions: [
+                  TextButton(
+                    onPressed: isCancelling ? null : () => Navigator.pop(ctx),
+                    child: Text(l10n.commonCancel),
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                    ),
+                    onPressed: isCancelling
+                        ? null
+                        : () async {
+                            final reason = reasonController.text.trim();
+                            if (assemblyChoices.values.any(
+                              (value) => value == null,
+                            )) {
+                              setDialogState(
+                                () => cancelError =
+                                    l10n.saleCancelAssemblyRequired,
+                              );
+                              return;
+                            }
+                            if (reason.length < 3) {
+                              setDialogState(() {
+                                cancelError = l10n.commonRequired;
+                              });
+                              return;
+                            }
+
+                            setDialogState(() {
+                              isCancelling = true;
+                              cancelError = null;
+                            });
+
+                            try {
+                              await _saleService.cancelSale(
+                                sale.id,
+                                reason,
+                                unassembledItemIds: assemblyChoices.entries
+                                    .where((e) => e.value == true)
+                                    .map((e) => e.key)
+                                    .toList(),
+                              );
+                              if (mounted) {
+                                Navigator.pop(ctx);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(l10n.saleCanceledSuccess),
+                                  ),
+                                );
+                                _loadSales();
+                              }
+                            } catch (e) {
+                              setDialogState(() {
+                                isCancelling = false;
+                                receiptBlocked =
+                                    e is ApiException &&
+                                    e.errorCode == 'SALE_HAS_RECEIPTS';
+                                cancelError = ApiErrorMapper.toLocalizedMessage(
+                                  e,
+                                  l10n,
+                                );
+                              });
+                            }
+                          },
+                    child: isCancelling
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(
+                            l10n.saleCancel,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                  ),
+                ],
+              ),
             );
           },
         );
@@ -387,7 +454,10 @@ class _SalesViewState extends State<SalesView> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(24),
-                        borderSide: BorderSide(color: pColors.accent, width: 1.5),
+                        borderSide: BorderSide(
+                          color: pColors.accent,
+                          width: 1.5,
+                        ),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -433,7 +503,10 @@ class _SalesViewState extends State<SalesView> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(24),
-                        borderSide: BorderSide(color: pColors.accent, width: 1.5),
+                        borderSide: BorderSide(
+                          color: pColors.accent,
+                          width: 1.5,
+                        ),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -560,10 +633,7 @@ class _SalesViewState extends State<SalesView> {
                         ),
                         Text(
                           AppFormatters.formatDateTime(sale.saleDate),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: pColors.sub,
-                          ),
+                          style: TextStyle(fontSize: 12, color: pColors.sub),
                         ),
                       ],
                     ),
@@ -583,11 +653,7 @@ class _SalesViewState extends State<SalesView> {
             const SizedBox(height: 12),
             Row(
               children: [
-                Icon(
-                  Icons.person,
-                  size: 16,
-                  color: pColors.sub,
-                ),
+                Icon(Icons.person, size: 16, color: pColors.sub),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
@@ -607,7 +673,10 @@ class _SalesViewState extends State<SalesView> {
               runSpacing: 6,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: isCredit
                         ? Colors.orange.withValues(alpha: 0.12)
@@ -619,13 +688,18 @@ class _SalesViewState extends State<SalesView> {
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: isCredit ? Colors.orange.shade800 : Colors.blue.shade800,
+                      color: isCredit
+                          ? Colors.orange.shade800
+                          : Colors.blue.shade800,
                     ),
                   ),
                 ),
                 if (isConfirmed)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: sale.paymentStatus == 'PAID'
                           ? Colors.green.withValues(alpha: 0.12)
@@ -649,7 +723,10 @@ class _SalesViewState extends State<SalesView> {
                   ),
                 if (!isConfirmed)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.red.withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(999),

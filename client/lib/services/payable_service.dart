@@ -11,6 +11,48 @@ class PayableService {
   PayableService bindOrigin(ApiOrigin origin) =>
       PayableService(client: _client.bindOrigin(origin));
 
+  Future<Map<String, dynamic>> getInstallmentAgenda(
+    Map<String, String> filters, {
+    int offset = 0,
+  }) async {
+    final capability =
+        await _client.get('/api/v1/financial-imports/capabilities') as Map;
+    if (capability['installment_agenda_version'] != 1) {
+      throw ApiException(
+        statusCode: 409,
+        message: 'Update required',
+        errorCode: 'FINANCIAL_REIMPORT_REQUIRED',
+      );
+    }
+    final query = Uri(
+      queryParameters: {...filters, 'limit': '100', 'offset': '$offset'},
+    ).query;
+    return Map<String, dynamic>.from(
+      await _client.get('/api/v1/financial-imports/installments?$query') as Map,
+    );
+  }
+
+  Future<void> resolveInstallment(Map<String, dynamic> body, String key) async {
+    await _client.post(
+      '/api/v1/financial-imports/installments/decisions',
+      body: body,
+      idempotencyKey: key,
+    );
+  }
+
+  Future<void> _checkFilters(String? bankCard, String? merchant) async {
+    if ((bankCard?.isEmpty ?? true) && (merchant?.isEmpty ?? true)) return;
+    final capability =
+        await _client.get('/api/v1/financial-imports/capabilities') as Map;
+    if (capability['payable_filter_version'] != 1) {
+      throw ApiException(
+        statusCode: 409,
+        message: 'Update required',
+        errorCode: 'FINANCIAL_REIMPORT_REQUIRED',
+      );
+    }
+  }
+
   Future<List<AccountPayable>> getPayables({
     DateTime? dueDateFrom,
     DateTime? dueDateTo,
@@ -18,21 +60,24 @@ class PayableService {
     int? year,
     String? category,
     String? beneficiary,
+    String? bankCard,
+    String? merchant,
     String? status,
     String? nature,
     bool overdueOnly = false,
     int limit = 100,
     int offset = 0,
   }) async {
+    await _checkFilters(bankCard, merchant);
     final params = <String>['limit=$limit', 'offset=$offset'];
     if (dueDateFrom != null) {
       params.add(
-        'due_date_from=${Uri.encodeComponent(dueDateFrom.toIso8601String())}',
+        'due_date_from=${Uri.encodeComponent(dueDateFrom.toIso8601String().substring(0, 10))}',
       );
     }
     if (dueDateTo != null) {
       params.add(
-        'due_date_to=${Uri.encodeComponent(dueDateTo.toIso8601String())}',
+        'due_date_to=${Uri.encodeComponent(dueDateTo.toIso8601String().substring(0, 10))}',
       );
     }
     if (month != null) params.add('month=$month');
@@ -42,6 +87,12 @@ class PayableService {
     }
     if (beneficiary != null && beneficiary.isNotEmpty) {
       params.add('beneficiary=${Uri.encodeComponent(beneficiary)}');
+    }
+    if (bankCard != null && bankCard.isNotEmpty) {
+      params.add('source_query=${Uri.encodeComponent(bankCard)}');
+    }
+    if (merchant != null && merchant.isNotEmpty) {
+      params.add('merchant=${Uri.encodeComponent(merchant)}');
     }
     if (status != null && status.isNotEmpty) {
       params.add('status=${Uri.encodeComponent(status)}');
@@ -59,6 +110,62 @@ class PayableService {
     return list
         .map((j) => AccountPayable.fromJson(j as Map<String, dynamic>))
         .toList();
+  }
+
+  Future<Map<String, dynamic>> getPayableSummary({
+    DateTime? dueDateFrom,
+    DateTime? dueDateTo,
+    int? month,
+    int? year,
+    String? category,
+    String? beneficiary,
+    String? bankCard,
+    String? merchant,
+    String? status,
+    String? nature,
+    bool overdueOnly = false,
+    int limit = 100,
+    int offset = 0,
+  }) async {
+    await _checkFilters(bankCard, merchant);
+    final params = <String>['limit=$limit', 'offset=$offset'];
+    if (dueDateFrom != null) {
+      params.add(
+        'due_date_from=${Uri.encodeComponent(dueDateFrom.toIso8601String().substring(0, 10))}',
+      );
+    }
+    if (dueDateTo != null) {
+      params.add(
+        'due_date_to=${Uri.encodeComponent(dueDateTo.toIso8601String().substring(0, 10))}',
+      );
+    }
+    if (month != null) params.add('month=$month');
+    if (year != null) params.add('year=$year');
+    if (category != null && category.isNotEmpty) {
+      params.add('category=${Uri.encodeComponent(category)}');
+    }
+    if (beneficiary != null && beneficiary.isNotEmpty) {
+      params.add('beneficiary=${Uri.encodeComponent(beneficiary)}');
+    }
+    if (bankCard != null && bankCard.isNotEmpty) {
+      params.add('source_query=${Uri.encodeComponent(bankCard)}');
+    }
+    if (merchant != null && merchant.isNotEmpty) {
+      params.add('merchant=${Uri.encodeComponent(merchant)}');
+    }
+    if (status != null && status.isNotEmpty) {
+      params.add('status=${Uri.encodeComponent(status)}');
+    }
+    if (nature != null && nature.isNotEmpty) {
+      params.add('nature=${Uri.encodeComponent(nature)}');
+    }
+    if (overdueOnly) {
+      params.add('overdue_only=true');
+    }
+
+    final query = '?${params.join('&')}';
+    final response = await _client.get('/api/v1/payables/summary$query');
+    return Map<String, dynamic>.from(response as Map);
   }
 
   Future<AccountPayable> getPayable(String id) async {

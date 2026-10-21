@@ -1,5 +1,24 @@
 # Homologação da importação financeira
 
+**Plano posterior à auditoria — 19/10/2026:** a futura execução segue o
+[plano de importação de faturas](PLANO_IMPLEMENTACAO_IMPORTACAO_FATURAS.md),
+especialmente a matriz dos arquivos, T01–T16 e E5. [Retomada curta](RETOMADA_IMPORTACAO_FATURAS.md).
+E1–E5 ainda não implementadas; repetir a caracterização anterior não é homologar
+a integração financeira proposta. As rodadas abaixo conservam seus resultados originais.
+
+**Rodada de auditoria — 19/10/2026:** [19 arquivos reenviados pelo usuário](AUDITORIA_FATURAS_FORNECIDAS_2026-10-19.md)
+foram exercitados na aplicação atual em servidor HTTPS/banco isolados e em cinco
+percursos de widgets Flutter reais. Comparação independente de originais,
+capturas privadas e [resultado sanitizado](validacoes_financeiras/arquivos-fornecidos-2026-10-19/resultado.json).
+Nenhuma correção aplicada; não confundir execução da caracterização com
+homologação de criação automática de dívidas: nenhum título foi gerado.
+
+**Entrega posterior — 19/10/2026:** a [primeira etapa de correção](CORRECAO_IMPORTACAO_FINANCEIRA_2026-10-19.md)
+implementa controles exatos, cabeçalho CSV declarado, revisão vigente e
+conciliação explícita, com bloqueio de alocações ainda não representadas.
+Consultar esse guia e a evidência antes de usar descrições históricas abaixo.
+Código/build não atualizam automaticamente o app ou servidor em execução.
+
 Revisão: **16/10/2026**. Procedimento de desenvolvimento, sem tela nova e sem
 migração do banco da empresa. [Índice](README.md).
 
@@ -163,6 +182,29 @@ A [memória financeira](MEMORIA_IMPLEMENTACAO_FINANCEIRA.md) registra decisões,
 fontes, aprendizados e próxima ação. Depois da homologação de outro emissor,
 revisar acesso global/backup antes de uso operacional; ampliar leitores e integrar
 dívidas/interface de forma controlada. Gmail automático permanece futuro.
+
+## Matriz de faturas E5
+
+`scripts/verify_financial_bill_matrix.py` recebe `--manifest` (inventário privado
+com aliases `pdf_01`–`pdf_09`/`csv_01`–`csv_10`, caminhos, mídia e SHA-256),
+`--reference` (referências independentes preservadas pela auditoria) e
+`--output-dir` (diretório da evidência sanitizada). Executar com o Python do
+backend a partir da raiz. Não aceita banco da empresa como destino: cria bases
+temporárias migradas para cada arquivo e para os conjuntos normal/inverso.
+
+O comando compara campos/multiplicidade, nomes diferentes com bytes iguais,
+falha/reenvio de segmentos e reimportação. Metadados PDF são comparados aos CSVs
+originais; detalhes usam as referências privadas da auditoria. Há compartilhamento
+do tokenizador CSV e parte das datas contextualizadas com essa auditoria; isso
+não equivale a um segundo leitor bancário independente. Controles ausentes,
+diferenças e vínculos ambíguos permanecem listados por amostra. Antes de resolver
+a identidade de uma série, seu inventário previsto pode depender da primeira
+parcela observada; comparar os fatos dos ciclos e as estimativas livres, mantendo
+as candidatas retidas até decisão. Não interpretar `PASS_WITH_DOCUMENT_PENDENCIES`
+como conciliação integral ou como certificação de janela/seletor/dispositivos.
+
+O percurso HTTPS, pagamentos/estornos, build, backup e ativação têm evidências
+próprias referidas na [retomada vigente](RETOMADA_IMPORTACAO_FATURAS.md).
 
 ## Procedência implementada — continuação de 16/10
 

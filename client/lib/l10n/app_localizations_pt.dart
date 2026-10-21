@@ -9,6 +9,163 @@ class AppLocalizationsPt extends AppLocalizations {
   AppLocalizationsPt([String locale = 'pt']) : super(locale);
 
   @override
+  String get billIntegrationTitle => 'Conferir fatura';
+
+  @override
+  String get billDetailDifference =>
+      'Diferença entre detalhes e total conferido';
+
+  @override
+  String get billIntegrationHelp =>
+      'Você pode guardar a fatura ou adicioná-la a Contas a Pagar. Suas compras ficam disponíveis para consulta. O pagamento só é registrado quando você usar Registrar pagamento; gastos pessoais não viram despesas da empresa automaticamente.';
+
+  @override
+  String get billIntegrationHeader => 'Conferir total e vencimento';
+
+  @override
+  String get billIntegrationDestination =>
+      'O que você quer fazer com esta fatura?';
+
+  @override
+  String get billIntegrationPending => 'Guardar por enquanto; decidir depois';
+
+  @override
+  String get billIntegrationHistory => 'Guardar sem adicionar a Contas a Pagar';
+
+  @override
+  String get billIntegrationOpen =>
+      'Adicionar a Contas a Pagar: esta fatura ainda precisa ser paga';
+
+  @override
+  String get billIntegrationDetailAck =>
+      'Usar o total conferido e guardar a diferença para revisar depois.';
+
+  @override
+  String get billIntegrationControlsAck =>
+      'Conferi o cartão, o total, o vencimento e o que será feito com esta fatura.';
+
+  @override
+  String get billIntegrationReason =>
+      'Origem, controles e situação da fatura conferidos pelo operador.';
+
+  @override
+  String get billIntegrationConfirm => 'Salvar fatura';
+
+  @override
+  String get billIntegrationRetry => 'Retomar confirmação';
+
+  @override
+  String get billIntegrationSuccess =>
+      'Fatura adicionada a Contas a Pagar. Você pode consultar os itens e registrar o pagamento na conta abaixo.';
+
+  @override
+  String get billIntegrationEvidenceSaved =>
+      'Esta fatura está guardada para consulta. Ela não foi adicionada a Contas a Pagar.';
+
+  @override
+  String get billIntegrationOpenPayable => 'Ver conta e pagamentos';
+
+  @override
+  String get billIntegrationConflict =>
+      'Esta fatura precisa de uma conferência de ciclo, saldo anterior ou título já existente. Atualize os dados e confira o vínculo indicado.';
+
+  @override
+  String get billIntegrationRequiredStep => 'Para salvar, conclua esta etapa:';
+
+  @override
+  String get billIntegrationGoToMarkedArea => 'Ver área destacada';
+
+  @override
+  String get billIntegrationGoToRequiredStep => 'Ir para esta etapa';
+
+  @override
+  String get billIntegrationReturnToDocuments => 'Voltar aos documentos';
+
+  @override
+  String get billIntegrationErrorDetails =>
+      'O total e os itens da fatura ainda não conferem. Marque a opção abaixo se aceita guardar essa diferença para revisar depois.';
+
+  @override
+  String get billIntegrationErrorContent =>
+      'Esta fatura difere de uma conferência anterior. Compare os itens listados e marque a opção para aceitar esta revisão.';
+
+  @override
+  String get billIntegrationErrorObligations =>
+      'Não foi possível confirmar o vínculo com uma conta existente. Abra “Já existe alguma destas contas?” e selecione o título que representa o saldo anterior ou a compra. Se a seção não aparecer, volte a Contas a Pagar e confira se esse título existe.';
+
+  @override
+  String get billIntegrationErrorDestination =>
+      'Esta fatura já tem uma cobrança vinculada. Selecione “Adicionar a Contas a Pagar” para manter o vínculo.';
+
+  @override
+  String get billIntegrationErrorHeader =>
+      'O ciclo desta fatura não foi identificado. Confira o total e o vencimento em “Conferir total e vencimento”.';
+
+  @override
+  String get billIntegrationErrorPreviousBalance =>
+      'O saldo anterior do resumo não bate com o saldo detalhado. Abra o documento original e confira esses valores antes de salvar.';
+
+  @override
+  String get billIntegrationErrorRevision =>
+      'Esta fatura mudou desde que você abriu a revisão. Confira os dados atualizados e marque novamente a confirmação final para salvar.';
+
+  @override
+  String get billIntegrationErrorCycle =>
+      'Este documento já está associado a outro ciclo ou cartão. Volte aos documentos, confira o ciclo e a origem selecionados e abra a fatura correta.';
+
+  @override
+  String get billIntegrationErrorSingleCycle =>
+      'O arquivo reúne mais de uma fatura. Volte aos documentos e selecione um ciclo por vez antes de continuar.';
+
+  @override
+  String get billIntegrationErrorRole =>
+      'O tipo de lançamento e o sinal do valor não correspondem. Confira esse item no documento original; esta tela não permite alterar essa classificação.';
+
+  @override
+  String get billIntegrationErrorPaid =>
+      'Esta revisão alteraria valores já pagos. Confira a fatura e os pagamentos registrados antes de tentar novamente.';
+
+  @override
+  String get billPurposeUnknown => 'Finalidade não informada';
+
+  @override
+  String get billStatusSubstituted => 'Substituído pela fatura';
+
+  @override
+  String get billDetailsPending => 'Detalhes pendentes de conferência';
+
+  @override
+  String get billUnclassifiedPaid => 'Pagamentos sem finalidade informada';
+
+  @override
+  String get billCompositionStock => 'Estoque';
+
+  @override
+  String get billCompositionBusiness => 'Despesas do negócio';
+
+  @override
+  String get billCompositionPersonal => 'Pessoal';
+
+  @override
+  String get billItemsTitle => 'Itens da fatura';
+
+  @override
+  String get financialImportAutoReaderHelp =>
+      'O formato será reconhecido pelo conteúdo. A conta ou o cartão escolhido será mantido.';
+
+  @override
+  String get financialImportSummaryOnly =>
+      'Este arquivo é uma relação de faturas, sem as compras individuais. Ele precisa de conferência por ciclo.';
+
+  @override
+  String get financialImportReaderAmbiguous =>
+      'O conteúdo admite mais de uma leitura. Confira se a origem escolhida é uma conta ou um cartão e selecione o documento detalhado.';
+
+  @override
+  String get financialImportDueConflict =>
+      'O documento informa vencimentos diferentes. Confira as datas e sua origem antes de cadastrar a cobrança.';
+
+  @override
   String get appTitle => 'ZM Cesta Básica';
 
   @override
@@ -719,7 +876,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get recipeImmutabilityBanner =>
-      'Versionamento Imutável: As receitas gravadas nunca são sobrescritas. Para alterar componentes, clique em \"Nova Versão\". Montagens antigas mantêm fidelidade exata à composição da época.';
+      'Você pode mudar a composição e o preço sem criar outro tipo de cesta. Vendas não canceladas e montagens ainda existentes protegem a receita utilizada. Crie outra receita neste mesmo tipo para as próximas operações.';
 
   @override
   String get recipeVersionDisplayed => 'Versão em exibição: ';
@@ -750,7 +907,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get recipeDialogSubtitle =>
-      'Ao salvar, a composição atual será arquivada permanentemente e uma nova versão ativa será criada.';
+      'Defina a composição e o preço desta receita. Vendas anteriores mantêm os valores registrados.';
 
   @override
   String get recipeDialogNotesLabel => 'Motivo da revisão / Notas da versão';
@@ -858,6 +1015,24 @@ class AppLocalizationsPt extends AppLocalizations {
       'Compra cancelada e estoque estornado com sucesso!';
 
   @override
+  String get purchaseEditDraft => 'Editar rascunho';
+
+  @override
+  String get purchaseDeleteDraftButton => 'Excluir rascunho';
+
+  @override
+  String purchaseDeleteDraftTitle(int number) {
+    return 'Excluir compra #$number?';
+  }
+
+  @override
+  String get purchaseDeleteDraftWarning =>
+      'O rascunho e seus itens serão removidos permanentemente. Isso não movimenta o estoque e não pode ser desfeito.';
+
+  @override
+  String get purchaseDeleteDraftSuccess => 'Rascunho excluído.';
+
+  @override
   String purchaseCancelError(String error) {
     return 'Falha ao cancelar compra: $error';
   }
@@ -906,6 +1081,12 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get purchaseFormTitle => 'Nova Entrada de Compras';
+
+  @override
+  String get purchaseEditDraftTitle => 'Editar rascunho de compra';
+
+  @override
+  String get purchaseDraftUpdateButton => 'Salvar alterações';
 
   @override
   String get purchaseFormSupplierLabel => 'Fornecedor *';
@@ -976,6 +1157,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get purchaseFormSuccess => 'Compra registrada com sucesso!';
+
+  @override
+  String get purchaseDraftUpdateSuccess => 'Rascunho atualizado.';
 
   @override
   String purchaseFormSaveError(String error) {
@@ -1584,7 +1768,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String saleCancelConfirm(int number) {
-    return 'Deseja realmente estornar a venda #$number?';
+    return 'Cancelar a venda nº $number?';
   }
 
   @override
@@ -2593,6 +2777,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get purchasePaymentDueDateLabel => 'Data de Vencimento';
 
   @override
+  String get purchaseDueDateNotProvided => 'não informada';
+
+  @override
   String get purchasePaymentDueDateRequired =>
       'A data de vencimento é obrigatória para compras pendentes.';
 
@@ -2806,23 +2993,22 @@ class AppLocalizationsPt extends AppLocalizations {
       'Inclui compras pagas e a prazo. Os pagamentos confirmados aparecem separadamente no financeiro.';
 
   @override
-  String get productDeleteButton => 'Excluir definitivamente';
+  String get productDeleteButton => 'Excluir produto';
 
   @override
-  String get productDeleteTitle => 'Excluir produto nunca utilizado?';
+  String get productDeleteTitle => 'Excluir produto do catálogo';
 
   @override
   String productDeleteConfirm(String name) {
-    return 'Excluir definitivamente \"$name\"? O cadastro e suas embalagens nunca usadas serão removidos. Essa ação não pode ser desfeita.';
+    return 'Excluir “$name” do catálogo? Registros de operações anteriores serão preservados.';
   }
 
   @override
-  String get productDeletedSuccess =>
-      'Produto nunca utilizado excluído definitivamente.';
+  String get productDeletedSuccess => 'Produto excluído do catálogo.';
 
   @override
   String get productDeleteBlockedTitle =>
-      'Este produto tem vínculos ou histórico';
+      'Resolva estes vínculos antes de excluir';
 
   @override
   String productDeleteBlocked(String name, String reasons) {
@@ -2831,7 +3017,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get productDeleteHistoryError =>
-      'O produto possui vínculos ou histórico. A exclusão definitiva foi bloqueada para preservar esses registros.';
+      'Resolva os vínculos indicados antes de excluir este produto.';
 
   @override
   String get productUsageRecipes =>
@@ -4281,18 +4467,18 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get pdfImportHelp =>
-      'Envie um PDF com texto, de até 10 MiB. Layouts testados: faturas Nubank/PicPay e extratos Nubank PF/PJ. PDFs escaneados, protegidos por senha ou de outros formatos podem não ser lidos.';
+      'Selecione um PDF ou CSV de até 10 MiB. O aplicativo lê os dados disponíveis e avisa se precisar de alguma informação. PDFs que são fotos ou imagens ainda não podem ser lidos automaticamente.';
 
   @override
   String get pdfImportEffect =>
-      'A importação guarda o documento e os lançamentos pendentes de revisão. Não cria contas a pagar, pagamentos ou conciliação automática.';
+      'O arquivo fica disponível para consulta. Para uma fatura aparecer no financeiro, escolha Adicionar a Contas a Pagar e salve. O pagamento é registrado separadamente.';
 
   @override
   String get pdfImportSource => 'Conta ou cartão do documento';
 
   @override
   String get pdfImportSourceCheck =>
-      'Confira a conta/cartão e a titularidade. O leitor não verifica se o documento pertence à origem escolhida.';
+      'Escolha a conta ou cartão de onde saiu o documento. Confira essa escolha antes de salvar a fatura.';
 
   @override
   String get pdfImportNewSource => 'Cadastrar conta ou cartão';
@@ -4383,7 +4569,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get pdfImportOriginalTitle => 'Documento original';
 
   @override
-  String get pdfImportWarnings => 'Avisos e impedimentos';
+  String get pdfImportWarnings => 'O que precisa de atenção';
 
   @override
   String get pdfImportControls => 'Conferências de totais do documento';
@@ -4502,7 +4688,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get pdfImportPassword =>
-      'Este PDF exige senha. A leitura de arquivos protegidos ainda não está disponível.';
+      'Informe ou confira a senha do PDF e tente novamente. A senha é usada somente durante a leitura.';
 
   @override
   String get pdfImportOcr =>
@@ -4564,4 +4750,752 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get pdfImportRequired => 'Preencha de 2 a 100 caracteres.';
+
+  @override
+  String get importReviewBank => 'Comparar com registros do aplicativo';
+
+  @override
+  String get importReviewBill => 'Revisar fatura';
+
+  @override
+  String get importHeaderTitle => 'Conferir dados do documento';
+
+  @override
+  String get importHeaderHelp =>
+      'Confira os controles disponíveis e complete somente o que faltar, usando o documento ou banco. Valores calculados das linhas não substituem saldos e total declarados.';
+
+  @override
+  String get importHeaderSignedMoney =>
+      'Informe o valor em reais, com vírgula para centavos. Use sinal negativo somente para crédito a seu favor.';
+
+  @override
+  String get importHeaderDateRequired =>
+      'Selecione a data declarada no documento.';
+
+  @override
+  String get importHeaderMoneyRequired => 'Informe um valor válido em reais.';
+
+  @override
+  String get importHeaderPeriodInvalid =>
+      'O fim do período deve ser igual ou posterior ao início.';
+
+  @override
+  String get importHeaderAck =>
+      'Conferi estes dados na fonte; não foram inferidos das transações.';
+
+  @override
+  String get importHeaderContinue => 'Usar dados conferidos';
+
+  @override
+  String get importOptional => 'Opcional · deixe vazio se não informado';
+
+  @override
+  String get importUnclassified => 'Selecionar classificação';
+
+  @override
+  String get importClassifyHelp =>
+      'Classifique cada linha conforme sua finalidade real. Descrição e sinal não determinam se um gasto pertence à empresa ou ao sócio.';
+
+  @override
+  String get importClassifyRequired =>
+      'Classifique todas as linhas antes de salvar ou gerar títulos.';
+
+  @override
+  String get importExactRequired =>
+      'A equação precisa fechar exatamente, sem ajuste de centavos.';
+
+  @override
+  String get importAllocationRequired =>
+      'Créditos, pagamentos ou saldo anterior ainda precisam ser alocados às obrigações. Nenhum título novo foi criado.';
+
+  @override
+  String get importReimportRequired =>
+      'O leitor foi atualizado. Reimporte o original para conferir a nova interpretação; o histórico anterior será preservado.';
+
+  @override
+  String get importCycleRepresented =>
+      'Este ciclo já possui obrigações em outro documento. Confira os vínculos antes de criar títulos.';
+
+  @override
+  String get importPurchaseAllocation =>
+      'Confira o título e o saldo da compra vinculada. Compras pagas, canceladas ou com parcelas ambíguas exigem alocação específica.';
+
+  @override
+  String get importCashReviewRequired =>
+      'A criação automática de movimentos pelo extrato foi suspensa. Revise e vincule a movimentos existentes, sem duplicar pagamentos ou recebimentos.';
+
+  @override
+  String get importCsvDirection =>
+      'Este CSV contém colunas de crédito/débito ou moeda que precisam de mapeamento explícito. A leitura foi bloqueada para não inverter valores.';
+
+  @override
+  String get importPdfCompilation =>
+      'O PDF reúne referências, resumos ou ciclos diferentes. Separe os documentos originais para evitar misturar compras e faturas.';
+
+  @override
+  String get importBankHelp =>
+      'Aqui você pode verificar se um movimento deste extrato corresponde a algo já registrado no aplicativo, evitando repetições. Essa comparação não registra pagamentos nem cria contas. É opcional para consultar o arquivo.';
+
+  @override
+  String get importBankItem => 'Ver movimento do extrato';
+
+  @override
+  String get importReason => 'Motivo da decisão ou correspondência';
+
+  @override
+  String get importReasonRequired =>
+      'Explique a conferência em pelo menos 3 caracteres.';
+
+  @override
+  String get importIgnore => 'Não usar este movimento';
+
+  @override
+  String get importNewEvidence => 'Guardar como movimento diferente';
+
+  @override
+  String get importNewEvidenceAck =>
+      'Conferi os registros e este movimento não é uma repetição.';
+
+  @override
+  String get importCandidates =>
+      'Possíveis correspondências com outras importações';
+
+  @override
+  String get importLinkEvidence => 'Usar um movimento já registrado';
+
+  @override
+  String get importChooseCash => 'Movimento financeiro já registrado';
+
+  @override
+  String get importReconcile => 'Vincular evidência ao movimento';
+
+  @override
+  String get importReconciled =>
+      'Correspondência registrada. Nenhum dinheiro foi movimentado.';
+
+  @override
+  String get importIgnored => 'Movimento não utilizado';
+
+  @override
+  String get importEvidenceReviewed => 'Identidade revisada';
+
+  @override
+  String get importEvidencePending => 'Identidade pendente de revisão';
+
+  @override
+  String get importNoCash =>
+      'Não há registros correspondentes nesta conta do aplicativo. Se precisar registrar um pagamento ou recebimento, use a função correspondente no Financeiro.';
+
+  @override
+  String get importRemaining => 'Valor ainda não conciliado';
+
+  @override
+  String get importBankPartialHelp =>
+      'Informe somente a parcela correspondente a este movimento. O servidor verifica os saldos e a conta antes de salvar.';
+
+  @override
+  String get importDecisionSaved => 'Decisão registrada no histórico.';
+
+  @override
+  String get importInvalidSign =>
+      'A classificação não corresponde ao sinal do valor no documento. Confira pagamento, crédito, compra e encargo.';
+
+  @override
+  String get importReviewLatest =>
+      'A revisão foi alterada. Atualize e confira a versão vigente.';
+
+  @override
+  String get importEvidenceInvalid =>
+      'O documento exige conferência ou nova interpretação antes de gerar efeitos financeiros.';
+
+  @override
+  String get importPasswordTitle => 'Ler PDF protegido';
+
+  @override
+  String get importPasswordLabel => 'Senha do documento';
+
+  @override
+  String get importControlMismatch =>
+      'Os controles informados não correspondem aos lançamentos. Confira o documento; nenhum ajuste automático será feito.';
+
+  @override
+  String get importPreviousBalanceConflict =>
+      'O saldo anterior classificado diverge do resumo do documento. Confira sua origem antes de aprovar.';
+
+  @override
+  String get importClassification => 'Finalidade do lançamento';
+
+  @override
+  String get importReadyReview => 'Leitura pronta para conferência';
+
+  @override
+  String get importBillConfirmedReview =>
+      'Documento já guardado; veja a situação da fatura';
+
+  @override
+  String get importBankConfirmedReview =>
+      'Confirmado · revisão e conciliação pendentes';
+
+  @override
+  String get importBankIdentitiesReviewed =>
+      'Há identidades revisadas · confira a conciliação';
+
+  @override
+  String get importBankIdentityNote =>
+      'Conferir o movimento do documento não registra pagamento. A comparação abaixo só relaciona registros que já existem no aplicativo.';
+
+  @override
+  String get importConfirmReview => 'Confirmar documento e revisar';
+
+  @override
+  String get importReassignCard =>
+      'Selecione o cartão correspondente ao documento para conferir a nova leitura.';
+
+  @override
+  String get importReassignBank =>
+      'Selecione a conta bancária correspondente ao documento para conferir a nova leitura.';
+
+  @override
+  String get financialDocumentDueReview =>
+      'Documento lido · confira o vencimento para continuar';
+
+  @override
+  String get financialDocumentPending =>
+      'Documento lido · confira as pendências para continuar';
+
+  @override
+  String get financialSegmentsTitle => 'Conferir ciclos do documento';
+
+  @override
+  String get financialSegmentsHelp =>
+      'O documento reúne vários períodos ou tipos. Confira somente os ciclos que deseja usar. Nenhum saldo histórico será considerado aberto automaticamente.';
+
+  @override
+  String get financialSegmentReview => 'Conferir este ciclo';
+
+  @override
+  String get financialSegmentSaved =>
+      'Evidência deste ciclo guardada. A cobrança depende da confirmação do saldo em aberto.';
+
+  @override
+  String get financialStatementIndexHelp =>
+      'Relação de extratos: conserva as referências dos documentos, sem movimentos ou contas a pagar.';
+
+  @override
+  String get financialRenegotiationHelp =>
+      'Documento de renegociação: guardado como evidência. Uma oferta não cria dívida ou parcelas automaticamente.';
+
+  @override
+  String get financialSummaryOnlyHelp =>
+      'Resumo sem compras individuais. Você pode conferir o total e a situação do saldo; os detalhes continuam pendentes.';
+
+  @override
+  String get financialCompiledControlsHelp =>
+      'Controles de uma compilação fornecida. Confira no documento original; este resumo não comprova todas as compras.';
+
+  @override
+  String get financialContentConflict =>
+      'Este documento diverge da conferência anterior. Compare os itens abaixo com os novos itens, inclusive repetições, total e vencimento.';
+
+  @override
+  String get financialContentChangeAck =>
+      'Conferi as diferenças e autorizo esta revisão, preservando a versão anterior.';
+
+  @override
+  String get financialControlChoose =>
+      'Usar controles de um documento já lido deste cartão. Escolha o ciclo correspondente:';
+
+  @override
+  String get financialCreditSaved =>
+      'Esta fatura informa crédito no cartão. Ela foi guardada para consulta e não criou uma conta a pagar.';
+
+  @override
+  String get payableBankCardFilter => 'Banco ou cartão';
+
+  @override
+  String get payableMerchantFilter => 'Estabelecimento da fatura';
+
+  @override
+  String get payableToday => 'Hoje';
+
+  @override
+  String get payableThisWeek => 'Esta semana';
+
+  @override
+  String get payableThisMonth => 'Este mês';
+
+  @override
+  String get payableNextMonth => 'Próximo mês';
+
+  @override
+  String get payableFilteredSummary => 'Total de todo o filtro';
+
+  @override
+  String get payableSummaryUnavailable =>
+      'Resumo completo indisponível · valores dos registros carregados';
+
+  @override
+  String get financialImportSourceRequiredEmpty =>
+      'Cadastre uma conta ou cartão para vincular este documento.';
+
+  @override
+  String get financialImportSourceRequired =>
+      'Selecione a conta ou cartão deste documento para continuar.';
+
+  @override
+  String get financialDueResolutionHelp =>
+      'Escolha o vencimento conferido no original. As duas datas e suas páginas permanecerão no histórico.';
+
+  @override
+  String get financialContentConflictError =>
+      'O documento diverge da revisão anterior. Compare os detalhes e confirme a revisão para continuar.';
+
+  @override
+  String get financialReplacementReason =>
+      'Vínculo com obrigação existente conferido na importação';
+
+  @override
+  String get financialExistingObligations => 'Já existe alguma destas contas?';
+
+  @override
+  String get financialExistingObligationsHelp =>
+      'Se uma destas contas já representa uma compra desta fatura, selecione-a para evitar cobrar o mesmo gasto duas vezes. Registros e pagamentos anteriores serão preservados.';
+
+  @override
+  String get financialPreviousObligation => 'Saldo ou título anterior';
+
+  @override
+  String get financialPurchaseObligation => 'Compra já cadastrada';
+
+  @override
+  String get financialPurposeOptional => 'Informar finalidade (opcional)';
+
+  @override
+  String get financialDocumentReviewAction => 'Conferir documento';
+
+  @override
+  String get financialEvidenceOnlySaved =>
+      'Evidência guardada para consulta. Nenhuma conta a pagar foi gerada.';
+
+  @override
+  String get installmentAgendaTitle => 'Parcelas dos próximos meses';
+
+  @override
+  String get installmentEstimated => 'Estimativas livres';
+
+  @override
+  String get installmentPending => 'Estimativas aguardando vínculo';
+
+  @override
+  String get installmentEstimateHelp =>
+      'Previsões separadas das cobranças confirmadas. Não permitem pagamento; valores e dias podem mudar na próxima fatura.';
+
+  @override
+  String get installmentOpenAgenda => 'Consultar agenda e vínculos';
+
+  @override
+  String get installmentMonthOnly => 'Dia desconhecido · somente mês previsto';
+
+  @override
+  String get installmentEstimatedState => 'Prevista';
+
+  @override
+  String get installmentPendingState => 'Pendente de vínculo';
+
+  @override
+  String get installmentReplacedState => 'Substituída pela cobrança real';
+
+  @override
+  String get installmentCanceledState => 'Cancelada com evidência';
+
+  @override
+  String get installmentLinkHelp =>
+      'Confira a compra de origem, o valor e o vencimento. Semelhança não comprova que seja a mesma série. As séries candidatas ficam fora da soma livre até a decisão.';
+
+  @override
+  String get installmentLink => 'Vincular à série';
+
+  @override
+  String get installmentDistinct => 'É outra compra';
+
+  @override
+  String get installmentReason => 'Motivo e evidência da decisão';
+
+  @override
+  String get installmentConfirm => 'Confirmar decisão';
+
+  @override
+  String get installmentCancelSeries => 'Registrar cancelamento comprovado';
+
+  @override
+  String get installmentCancelHelp =>
+      'Use apenas se o documento comprovar quais parcelas foram canceladas. A ausência na fatura não comprova cancelamento. A cobrança atual e os pagamentos permanecem.';
+
+  @override
+  String get installmentCancelFrom => 'Primeira parcela futura cancelada';
+
+  @override
+  String get installmentCancelEvidence => 'Estorno que comprova o cancelamento';
+
+  @override
+  String get installmentRetry => 'Reenviar a mesma decisão';
+
+  @override
+  String get installmentDecisionUncertain =>
+      'A decisão não foi confirmada nesta tela. Reenvie a mesma tentativa ou atualize para consultar o estado.';
+
+  @override
+  String get installmentEmpty => 'Nenhuma previsão neste filtro.';
+
+  @override
+  String get installmentConfirmed => 'Decisão registrada. Agenda atualizada.';
+
+  @override
+  String get installmentOrigin => 'Item de origem';
+
+  @override
+  String get installmentUseDay =>
+      'Estimar os próximos vencimentos pelo dia desta fatura';
+
+  @override
+  String get installmentUseDayHelp =>
+      'O dia será limitado ao fim de cada mês, sem presumir feriados. Desmarque para manter somente o mês previsto.';
+
+  @override
+  String get financialPayablesToolsHelp =>
+      'Pesquisar banco ou cartão, consultar outros períodos e próximas parcelas.';
+
+  @override
+  String get financialReceivablesToolsHelp =>
+      'Consultar registros e outros períodos de recebimento.';
+
+  @override
+  String get financialReadingDetails => 'Consultar leitura original';
+
+  @override
+  String get financialReadSummary => 'O que foi lido';
+
+  @override
+  String get financialReviewQuestions => 'O que falta conferir';
+
+  @override
+  String get financialDueQuestion => 'Qual é o vencimento correto?';
+
+  @override
+  String get financialDueQuestionHelp =>
+      'O próprio documento informa datas diferentes. Confira o PDF original e selecione a data correta abaixo. Ler todas as compras não resolve essa dúvida.';
+
+  @override
+  String get financialDifferenceHelp =>
+      'Os lançamentos foram lidos, mas a soma deles difere do total da fatura. Você pode guardar os detalhes como pendentes e usar o total conferido para registrar a cobrança. A diferença continuará visível.';
+
+  @override
+  String get financialDestinationHelp =>
+      'Adicionar a Contas a Pagar cria uma conta pelo total da fatura. Guardar deixa o documento só para consulta. Nenhuma dessas ações marca a conta como paga.';
+
+  @override
+  String get financialHeaderMissingHelp =>
+      'Falta o total ou o vencimento. Informe os dados do original no botão abaixo ou escolha um documento complementar deste mesmo cartão e mês.';
+
+  @override
+  String get financialConfirmHelp =>
+      'Para confirmar, confira total e vencimento, resolva as perguntas abaixo e marque a conferência final.';
+
+  @override
+  String get financialSavedReview =>
+      'Esta conferência já está salva. A situação registrada aparece abaixo.';
+
+  @override
+  String get financialEditSavedReview => 'Alterar conferência salva';
+
+  @override
+  String get financialReadSnapshotHelp =>
+      'Esta é a leitura original, preservada para consulta. As decisões atuais ficam em Conferir fatura.';
+
+  @override
+  String get financialItemsHelp =>
+      'As compras, parcelas e créditos abaixo são detalhes de uma única fatura. Não geram uma conta a pagar por linha. A classificação é opcional.';
+
+  @override
+  String get financialPages => 'Páginas';
+
+  @override
+  String get financialRecordedResult => 'Resultado registrado';
+
+  @override
+  String get financialDueChosen => 'Vencimento escolhido';
+
+  @override
+  String get financialDueChosenHelp =>
+      'A escolha está feita. Para corrigir, selecione outra data abaixo. As datas e suas páginas serão conservadas no histórico.';
+
+  @override
+  String get financialDetailsDecisionHelp =>
+      'Se quiser continuar com o total conferido, marque abaixo a opção de manter os detalhes pendentes.';
+
+  @override
+  String get financialFinalDecisionHelp =>
+      'Confira a situação desta fatura e marque a conferência final abaixo para confirmar.';
+
+  @override
+  String financialReadCount(int count) {
+    return '$count lançamentos lidos.';
+  }
+
+  @override
+  String get financialImportHowItWorks => 'Como funciona a importação';
+
+  @override
+  String get financialAddSavedBill => 'Adicionar esta fatura a Contas a Pagar';
+
+  @override
+  String get financialPendingSaved =>
+      'Documento guardado. Você ainda não escolheu adicioná-lo a Contas a Pagar.';
+
+  @override
+  String get financialRestoredReview =>
+      'Você importou este arquivo novamente. Confira os dados e salve para incluí-lo no financeiro outra vez.';
+
+  @override
+  String get financialOpenDocument => 'Ver documento';
+
+  @override
+  String get financialOtherDocumentOptions => 'Outras opções deste documento';
+
+  @override
+  String get financialLegacyOptionsHelp =>
+      'Estes acessos conservam registros feitos no fluxo anterior. Para consultar ou importar uma fatura, use Ver documento.';
+
+  @override
+  String get financialBankDocumentHelp =>
+      'Este arquivo é um extrato de conta bancária, com entradas e saídas. Ele não é uma fatura de cartão e não cria uma conta a pagar. A comparação com registros existentes abaixo é opcional.';
+
+  @override
+  String financialImportSourceMismatch(String documentType, String sourceType) {
+    return 'Origem incompatível ($documentType vs $sourceType)';
+  }
+
+  @override
+  String get financialImportOpenPayables => 'Abrir Contas a Pagar';
+
+  @override
+  String get importRemovalTitle => 'Excluir importação';
+
+  @override
+  String get importRemovalHelp =>
+      'Esta importação sairá da lista. As contas a pagar e previsões criadas por ela serão retiradas. Compras, pagamentos e registros independentes serão preservados.';
+
+  @override
+  String get importRemovalConfirm => 'Excluir esta importação';
+
+  @override
+  String get importRemovalRetry => 'Retomar exclusão';
+
+  @override
+  String get importRemovalNoBills => 'Este documento não criou contas a pagar.';
+
+  @override
+  String get importRemovalBills => 'Contas a pagar que serão retiradas';
+
+  @override
+  String get importRemovalForecasts =>
+      'As próximas parcelas desta importação também sairão da agenda.';
+
+  @override
+  String get importRemovalBlocked => 'Resolva o item indicado antes de excluir';
+
+  @override
+  String get importRemovalOpenPayable => 'Ver conta e pagamentos';
+
+  @override
+  String get importRemovalOtherDocument => 'Ver importação relacionada';
+
+  @override
+  String get importRemovalDone => 'Importação excluída.';
+
+  @override
+  String get importRemovalChanged =>
+      'Esta importação mudou. Atualize a conferência da exclusão antes de continuar.';
+
+  @override
+  String get importRemovalRemoved =>
+      'Esta importação foi excluída. Se quiser usá-la novamente, selecione o arquivo e importe outra vez.';
+
+  @override
+  String get importRemovalBlockedError =>
+      'A importação ainda tem pagamento ou vínculo com outro registro. Abra Excluir importação para ver o motivo e a ação disponível.';
+
+  @override
+  String get financialRegisteredBill => 'Fatura em Contas a Pagar';
+
+  @override
+  String financialBillOpenObligations(int count) {
+    return 'Obrigações abertas: $count';
+  }
+
+  @override
+  String get financialSavedOnly =>
+      'Guardado para consulta; ainda não está em Contas a Pagar';
+
+  @override
+  String get financialStatementSaved => 'Extrato guardado para consulta';
+
+  @override
+  String get financialReadProblem =>
+      'Não foi possível concluir a leitura deste arquivo';
+
+  @override
+  String get financialReadProblemHelp =>
+      'Veja o motivo abaixo. Você pode voltar à lista e excluir esta importação se escolheu o arquivo errado.';
+
+  @override
+  String get importRemovalRestoreBills =>
+      'Estas contas voltam a aparecer separadamente, com seus pagamentos preservados';
+
+  @override
+  String get catalogResolveLinks =>
+      'Estes registros impedem a operação. Toque para conferir e resolver.';
+
+  @override
+  String get catalogViewReceipts => 'Ver recebimentos desta venda';
+
+  @override
+  String get catalogReceiptHelp =>
+      'Há recebimentos nesta venda. Confira e estorne os recebimentos antes de cancelar.';
+
+  @override
+  String get catalogDelete => 'Excluir do catálogo';
+
+  @override
+  String get catalogDeleteConfirm =>
+      'Excluir este cadastro? Ele sairá do catálogo; operações anteriores continuarão disponíveis no histórico.';
+
+  @override
+  String get catalogDeleted => 'Cadastro excluído do catálogo.';
+
+  @override
+  String get catalogRecipePrice => 'Preço sugerido (R\$)';
+
+  @override
+  String get catalogRecipePriceHelp =>
+      'Opcional. Sem valor, usa o preço padrão do tipo de cesta. Na venda você pode negociar outro preço.';
+
+  @override
+  String get catalogEditRecipe => 'Editar receita';
+
+  @override
+  String get catalogDeleteRecipe => 'Excluir receita';
+
+  @override
+  String get catalogActivateRecipe =>
+      'Usar esta receita nas próximas montagens';
+
+  @override
+  String get catalogDeactivateRecipe => 'Inativar receita';
+
+  @override
+  String get catalogRecipeProtected =>
+      'Esta receita está ligada aos registros abaixo. Para mudar a composição agora, crie outra receita no mesmo tipo de cesta.';
+
+  @override
+  String get catalogDisassemble => 'Desmontar cestas';
+
+  @override
+  String get catalogDisassemblyHelp =>
+      'Informe quantas cestas serão desmontadas. Os produtos da composição original voltarão ao estoque e as cestas prontas serão retiradas do saldo.';
+
+  @override
+  String get catalogDisassemblyQuantity => 'Quantidade de cestas a desmontar';
+
+  @override
+  String get catalogDisassemblyIntact =>
+      'Confirmei que todos os produtos estão intactos e voltarão ao estoque.';
+
+  @override
+  String get catalogDisassemblyReason => 'Motivo da desmontagem';
+
+  @override
+  String get catalogDisassemblyDone =>
+      'Cestas desmontadas. Produtos devolvidos ao estoque.';
+
+  @override
+  String get catalogRetryAction => 'Retomar confirmação pendente';
+
+  @override
+  String get catalogInvalidQuantity =>
+      'Informe uma quantidade válida e confirme a devolução dos produtos intactos.';
+
+  @override
+  String get catalogReviewDisassembly => 'Revisar desmontagem';
+
+  @override
+  String get catalogDisassemblyReturns => 'Produtos que voltarão ao estoque';
+
+  @override
+  String get catalogReasonRequired =>
+      'Informe um motivo com pelo menos 3 caracteres.';
+
+  @override
+  String get catalogInvalidPrice =>
+      'Informe um preço válido, igual ou maior que zero.';
+
+  @override
+  String get catalogRestoreRecipeDraft => 'Rever dados da receita';
+
+  @override
+  String get catalogInactiveIngredient => 'Produto inativo';
+
+  @override
+  String get catalogInactiveRecipeHelp =>
+      'Substitua ou remova os produtos inativos indicados antes de salvar. Nenhum ingrediente foi removido automaticamente.';
+
+  @override
+  String get financialImportReadersQueryFailed =>
+      'Não foi possível consultar os formatos de leitura. A seleção anterior foi mantida.';
+
+  @override
+  String get financialImportStatementsQueryFailed =>
+      'Não foi possível atualizar os documentos confirmados. Os dados da consulta anterior foram mantidos.';
+
+  @override
+  String get financialImportObligationsQueryFailed =>
+      'Não foi possível atualizar as contas de um documento. Isso não significa que ele esteja sem contas ou pago.';
+
+  @override
+  String get financialImportRefreshQuery => 'Atualizar consulta';
+
+  @override
+  String get financialImportUpdateRead => 'Atualizar leitura';
+
+  @override
+  String get financialImportLegacyReadHelp =>
+      'Este documento usa uma leitura anterior. Você pode abri-lo para consultar o que já foi guardado. Para usar a conferência atual, escolha Atualizar leitura. A atualização precisa preservar as informações já confirmadas.';
+
+  @override
+  String get financialImportPendingNoAccount =>
+      'Conferência pendente. A leitura deste arquivo foi guardada; nenhuma conta foi criada nesta importação. Abra o documento para conferir e escolher como salvar.';
+
+  @override
+  String get financialImportPartialStatus =>
+      'A situação das contas precisa de nova consulta. Use Atualizar consulta antes de concluir que não há valores em aberto.';
+
+  @override
+  String get financialImportGenerationConflict =>
+      'Esta conferência pertence a uma importação que foi retirada ou alterada. Volte à lista de documentos e use Atualizar para abrir a entrada atual. Esta tentativa não gravou novas alterações.';
+
+  @override
+  String get financialImportAlreadyActive =>
+      'Este arquivo já tem uma importação em andamento. Volte à lista, atualize os documentos e abra a entrada existente para continuar a conferência.';
+
+  @override
+  String get financialImportConfirmedRead =>
+      'Esta importação já tem informações confirmadas. Abra o documento existente para conferir o que foi salvo; trocar a leitura não pode substituir essas informações automaticamente.';
+
+  @override
+  String get financialImportLegacyReviewRequired =>
+      'Há registros antigos cuja relação com esta importação precisa ser conferida. A alteração foi bloqueada para preservar contas e pagamentos. A correção precisa de revisão dos registros pelo suporte.';
+
+  @override
+  String get financialImportReinstatementConflict =>
+      'Uma conta ou vínculo mudou desde a retirada desta importação. A restauração foi bloqueada para preservar essa mudança. Atualize a conferência e consulte os registros indicados antes de tentar novamente.';
 }

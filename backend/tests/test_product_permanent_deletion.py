@@ -80,6 +80,11 @@ def test_any_history_blocks_deletion_even_after_a_prior_unused_check(
                 source_type='ADJUSTMENT', source_id=f'adjustment-{index}'))
     test_session.commit()
     check = client.get(check_endpoint, headers=headers).json()
+    if reference in ('production', 'zero_stock'):
+        assert check['can_delete'] is True
+        response = client.delete(f'/api/v1/products/{product_id}/permanent', headers=headers)
+        assert response.status_code == 200 and response.json()['deletion_mode'] == 'CATALOG_ONLY'
+        return
     assert check['can_delete'] is False and reason in check['reasons']
     response = client.delete(f'/api/v1/products/{product_id}/permanent', headers=headers)
     assert response.status_code == 409, response.text

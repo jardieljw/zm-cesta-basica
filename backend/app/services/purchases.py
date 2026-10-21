@@ -10,8 +10,9 @@ from app.models.purchases import Purchase, PurchaseItem
 from app.models.products import Product, ProductPackaging
 from app.models.movements import InventoryMovement
 from app.models.financial import FinancialAccount, CashFlowEntry, AccountPayable, PayablePayment
+from app.models.financial_bill_semantics import FinancialBillObligation, FinancialBillSemanticItem
 from app.models.base import utc_now
-from app.schemas.purchases import PurchaseCreate
+from app.schemas.purchases import PurchaseCreate, PurchaseDraftUpdate, PurchaseItemCreate
 from app.services.inventory import (
     get_product_stock,
     validate_sufficient_product_stock,
@@ -169,6 +170,122 @@ def update_product_cost_price(
     product.updated_at = utc_now()
     db.add(product)
 
+
+def _build_purchase_items(
+    db: Session,
+    purchase_id: str,
+    items_data: List[PurchaseItemCreate],
+    reusable_inactive_pairs: Optional[set[Tuple[str, Optional[str]]]] = None,
+) -> Tuple[List[PurchaseItem], int]:
+    reusable_inactive_pairs = reusable_inactive_pairs or set()
+    items: List[PurchaseItem] = []
+    total_purchase_cents = 0
+
+    for item_data in items_data:
+        product = db.get(Product, item_data.product_id)
+        if not product:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Produto '{item_data.product_id}' nao encontrado.",
+            )
+
+        same_existing_reference = (product.id, item_data.packaging_id) in reusable_inactive_pairs
+        if not product.is_active and not same_existing_reference:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Produto '{product.name}' esta inativo e nao pode ser adquirido.",
+            )
+
+        packaging: Optional[ProductPackaging] = None
+        if item_data.packaging_id:
+            packaging = db.get(ProductPackaging, item_data.packaging_id)
+            if not packaging or packaging.product_id != product.id:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Embalagem '{item_data.packaging_id}' invalida para o produto '{product.name}'.",
+                )
+            if not packaging.is_active and not same_existing_reference:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Embalagem '{packaging.name}' esta inativa.",
+                )
+            quantity_in_base = int(round(item_data.packages_count * packaging.quantity_in_base_units))
+        else:
+            if product.base_unit.upper() in ("UNIT", "UN") and item_data.packages_count % 1 != 0:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Para produtos com unidade base UNIT/UN sem embalagem, a quantidade deve ser um numero inteiro (produto '{product.name}').",
+                )
+            quantity_in_base = int(round(item_data.packages_count))
+
+        if quantity_in_base <= 0:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Quantidade convertida para unidade base deve ser maior que zero (produto '{product.name}').",
+            )
+
+        item_total_cents = int(round(item_data.packages_count * item_data.unit_price_cents))
+        total_purchase_cents += item_total_cents
+        items.append(
+            PurchaseItem(
+                id=str(uuid.uuid4()),
+                purchase_id=purchase_id,
+                product_id=product.id,
+                packaging_id=packaging.id if packaging else None,
+                packages_count=item_data.packages_count,
+                quantity_in_base_units=quantity_in_base,
+                unit_price_cents=item_data.unit_price_cents,
+                total_price_cents=item_total_cents,
+            )
+        )
+
+    return items, total_purchase_cents
+
+
+def _ensure_draft_has_no_effects(db: Session, purchase_id: str) -> None:
+    has_movements = db.scalar(
+        select(InventoryMovement.id)
+        .where(
+            InventoryMovement.source_type == "PURCHASE",
+            InventoryMovement.source_id == purchase_id,
+        )
+        .limit(1)
+    )
+    has_payable = db.scalar(
+        select(AccountPayable.id)
+        .where(AccountPayable.purchase_id == purchase_id)
+        .limit(1)
+    )
+    has_cash_entry = db.scalar(
+        select(CashFlowEntry.id)
+        .where(
+            CashFlowEntry.source_type == "PURCHASE",
+            CashFlowEntry.source_id == purchase_id,
+        )
+        .limit(1)
+    )
+    has_bill_item = db.scalar(
+        select(FinancialBillSemanticItem.id)
+        .where(FinancialBillSemanticItem.purchase_id == purchase_id)
+        .limit(1)
+    )
+    has_bill_obligation = db.scalar(
+        select(FinancialBillObligation.id)
+        .where(FinancialBillObligation.purchase_id == purchase_id)
+        .limit(1)
+    )
+    if (
+        has_movements
+        or has_payable
+        or has_cash_entry
+        or has_bill_item
+        or has_bill_obligation
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Este rascunho possui efeitos ou evidencias financeiras e nao pode ser editado ou excluido.",
+        )
+
 def create_purchase_entity(db: Session, data: PurchaseCreate) -> Purchase:
     """
     Creates a new purchase record with packaging conversions and atomic ledger movements.
@@ -291,6 +408,67 @@ def create_purchase_entity(db: Session, data: PurchaseCreate) -> Purchase:
     db.flush()
     return purchase
 
+
+def update_purchase_draft_entity(
+    db: Session, purchase_id: str, data: PurchaseDraftUpdate
+) -> Purchase:
+    purchase = db.execute(
+        select(Purchase)
+        .options(selectinload(Purchase.items))
+        .where(Purchase.id == purchase_id)
+    ).scalar_one_or_none()
+    if not purchase:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Compra nao encontrada.")
+    if purchase.status != "DRAFT":
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Apenas compras em rascunho podem ser editadas.",
+        )
+
+    _ensure_draft_has_no_effects(db, purchase.id)
+    reusable_inactive_pairs = {(item.product_id, item.packaging_id) for item in purchase.items}
+    new_items, total_purchase_cents = _build_purchase_items(
+        db, purchase.id, data.items, reusable_inactive_pairs
+    )
+
+    provided = data.model_fields_set
+    for field in (
+        "supplier_name",
+        "purchase_date",
+        "payment_mode",
+        "payment_method",
+        "due_date",
+        "account_id",
+        "notes",
+    ):
+        if field in provided:
+            value = getattr(data, field)
+            if field == "purchase_date" and value is None:
+                continue
+            setattr(purchase, field, value)
+    purchase.items = new_items
+    purchase.total_amount_cents = total_purchase_cents
+    db.flush()
+    return purchase
+
+
+def delete_purchase_draft_entity(db: Session, purchase_id: str) -> int:
+    purchase = db.get(Purchase, purchase_id)
+    if not purchase:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Compra nao encontrada.")
+    if purchase.status != "DRAFT":
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Apenas compras em rascunho podem ser excluidas.",
+        )
+
+    _ensure_draft_has_no_effects(db, purchase.id)
+    purchase_number = purchase.purchase_number
+    db.delete(purchase)
+    db.flush()
+    return purchase_number
+
+
 def confirm_purchase_entity(db: Session, purchase_id: str) -> Purchase:
     """Confirms a draft purchase, posting movements to inventory ledger and updating cost prices."""
     purchase = db.execute(
@@ -378,6 +556,8 @@ def cancel_purchase_entity(
         )
 
     # For CONFIRMED purchases: verify stock sufficiency for each product
+    if db.scalar(select(AccountPayable.id).where(AccountPayable.purchase_id == purchase.id, AccountPayable.superseded_by_id.is_not(None))):
+        raise HTTPException(409, detail={'error_code': 'FINANCIAL_BILL_REPLACEMENT_CONFLICT', 'message': 'Esta compra possui saldo representado em fatura; confira o vinculo antes de cancelar.'})
     required_reversals: Dict[str, int] = {}
     for it in purchase.items:
         required_reversals[it.product_id] = required_reversals.get(it.product_id, 0) + it.quantity_in_base_units

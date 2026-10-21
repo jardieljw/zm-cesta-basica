@@ -11,6 +11,67 @@ class ApiErrorMapper {
       // 1. Check stable backend error codes
       if (error.errorCode != null) {
         switch (error.errorCode) {
+          case 'FINANCIAL_CLIENT_UPDATE_REQUIRED':
+            return l10n.pdfImportServerUpdate;
+          case 'FINANCIAL_IMPORT_GENERATION_CONFLICT':
+          case 'FINANCIAL_IMPORT_HISTORICAL_READ_ONLY':
+            return l10n.financialImportGenerationConflict;
+          case 'FINANCIAL_IMPORT_ACTIVE':
+            return l10n.financialImportAlreadyActive;
+          case 'FINANCIAL_IMPORT_CONFIRMED':
+            return l10n.financialImportConfirmedRead;
+          case 'FINANCIAL_IMPORT_LEGACY_REVIEW_REQUIRED':
+            return l10n.financialImportLegacyReviewRequired;
+          case 'FINANCIAL_IMPORT_REINSTATEMENT_CONFLICT':
+            return l10n.financialImportReinstatementConflict;
+          case 'ASSEMBLY_HAS_ACTIVE_SALE':
+          case 'ASSEMBLY_RECIPE_STOCK_UNCERTAIN':
+          case 'RECIPE_IN_USE':
+          case 'PRODUCT_REMOVED':
+            return error.message;
+          case 'FINANCIAL_IMPORT_REMOVAL_CHANGED':
+            return l10n.importRemovalChanged;
+          case 'FINANCIAL_IMPORT_REMOVED':
+            return l10n.importRemovalRemoved;
+          case 'FINANCIAL_IMPORT_REMOVAL_BLOCKED':
+            return l10n.importRemovalBlockedError;
+          case 'FINANCIAL_IMPORT_CONTROL_MISMATCH':
+            return l10n.importControlMismatch;
+          case 'FINANCIAL_BILL_PREVIOUS_BALANCE_CONFLICT':
+            return l10n.importPreviousBalanceConflict;
+          case 'FINANCIAL_CASH_REVIEW_REQUIRED':
+            return l10n.importCashReviewRequired;
+          case 'FINANCIAL_BILL_ALLOCATION_REQUIRED':
+            return l10n.importAllocationRequired;
+          case 'FINANCIAL_REIMPORT_REQUIRED':
+            return l10n.importReimportRequired;
+          case 'FINANCIAL_BILL_CYCLE_ALREADY_REPRESENTED':
+            return l10n.importCycleRepresented;
+          case 'FINANCIAL_PURCHASE_ALLOCATION_REQUIRED':
+          case 'FINANCIAL_PURCHASE_LINK_INVALID':
+            return l10n.importPurchaseAllocation;
+          case 'FINANCIAL_BILL_CATEGORY_SIGN':
+            return l10n.importInvalidSign;
+          case 'FINANCIAL_BILL_REVISION_CONFLICT':
+            return l10n.importReviewLatest;
+          case 'FINANCIAL_BILL_CONTENT_CONFLICT':
+            return l10n.financialContentConflictError;
+          case 'FINANCIAL_SEGMENT_NOT_FOUND':
+          case 'SEGMENT_SELECTION_REQUIRED':
+            return l10n.financialSegmentsHelp;
+          case 'FINANCIAL_SUMMARY_FIELD_INVALID':
+          case 'FINANCIAL_COMPILED_ROW_INVALID':
+            return l10n.pdfImportHeader;
+          case 'FINANCIAL_BILL_REVIEW_REQUIRED':
+            return l10n.importEvidenceInvalid;
+          case 'BILL_REVIEW_NOT_BALANCED':
+            return l10n.importExactRequired;
+          case 'CSV_DIRECTION_MAPPING_REQUIRED':
+          case 'CSV_AMBIGUOUS_COLUMNS':
+            return l10n.importCsvDirection;
+          case 'PDF_COMPILED_DOCUMENT_REVIEW_REQUIRED':
+          case 'PDF_MULTIPLE_BILLING_CYCLES':
+            return l10n.importPdfCompilation;
           case 'FINANCIAL_SCHEMA_NOT_READY':
             return l10n.pdfImportServerUpdate;
           case 'PDF_RUNTIME_UNAVAILABLE':
@@ -34,6 +95,14 @@ class ApiErrorMapper {
           case 'PDF_LAYOUT_UNSUPPORTED':
           case 'PDF_LAYOUT_AMBIGUOUS':
             return l10n.pdfImportUnsupported;
+          case 'FINANCIAL_SUMMARY_ONLY':
+          case 'FINANCIAL_COMPILED_DOCUMENT':
+            return l10n.financialImportSummaryOnly;
+          case 'FINANCIAL_READER_AMBIGUOUS':
+          case 'CSV_LAYOUT_MISMATCH':
+            return l10n.financialImportReaderAmbiguous;
+          case 'FINANCIAL_DUE_DATE_CONFLICT':
+            return l10n.financialDueResolutionHelp;
           case 'PDF_SUMMARY_DETAIL_MISMATCH':
           case 'PDF_BANK_TOTAL_MISMATCH':
             return l10n.pdfImportMismatch;
@@ -42,12 +111,15 @@ class ApiErrorMapper {
           case 'PDF_AMOUNT_SIGN_AMBIGUOUS':
             return l10n.pdfImportUnknownRow;
           case 'PDF_SOURCE_TYPE_MISMATCH':
+          case 'FINANCIAL_INSTITUTION_MISMATCH':
           case 'FINANCIAL_IMPORT_SOURCE_MISMATCH':
             return l10n.pdfImportWrongSource;
           case 'PDF_PAGE_LIMIT':
           case 'PDF_CONTENT_LIMIT':
             return l10n.pdfImportLimit;
           case 'PDF_CONFLICTING_HEADER':
+          case 'FINANCIAL_CONTROL_COMPLEMENT_INCOMPATIBLE':
+          case 'FINANCIAL_BILL_CONTROLS_REQUIRED':
           case 'PDF_BILL_HEADER_REQUIRED':
           case 'PDF_SUMMARY_CONTROLS_REQUIRED':
           case 'PDF_BANK_PERIOD_REQUIRED':
@@ -59,6 +131,22 @@ class ApiErrorMapper {
           case 'FINANCIAL_PDF_HEADER_CONFLICT':
           case 'FINANCIAL_IMPORT_HEADER_INVALID':
             return l10n.pdfImportHeader;
+          case 'FINANCIAL_BILL_DETAILS_PENDING':
+          case 'FINANCIAL_INSTALLMENT_REVISION_CONFLICT':
+          case 'FINANCIAL_INSTALLMENT_LINK_CONFLICT':
+          case 'FINANCIAL_INSTALLMENT_CANCELLATION_EVIDENCE':
+          case 'FINANCIAL_INSTALLMENT_DATE_LIMIT':
+          case 'FINANCIAL_BILL_LEGACY_REVIEW':
+          case 'FINANCIAL_BILL_PREVIOUS_BALANCE_LINK':
+          case 'FINANCIAL_BILL_REPLACEMENT_CONFLICT':
+          case 'FINANCIAL_BILL_PAID_COMPOSITION_CONFLICT':
+          case 'FINANCIAL_BILL_LEGACY_PAYMENT_REVIEW':
+          case 'FINANCIAL_BILL_ROLE_CONFLICT':
+          case 'FINANCIAL_BILL_ACTIVE_DESTINATION':
+          case 'FINANCIAL_BILL_CYCLE_CONFLICT':
+          case 'FINANCIAL_BILL_CYCLE_REQUIRED':
+          case 'FINANCIAL_BILL_SINGLE_CYCLE_REQUIRED':
+            return l10n.billIntegrationConflict;
           case 'FINANCIAL_PREVIEW_INVALID':
           case 'FINANCIAL_PREVIEW_CHANGED':
             return l10n.pdfImportBlockedHelp;

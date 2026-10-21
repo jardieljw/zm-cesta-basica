@@ -1,5 +1,22 @@
 # ZM Cesta Básica — Backend FastAPI e Banco de Dados SQLite
 
+Estado vigente da importação: [retomada única](../docs/RETOMADA_IMPORTACAO_FATURAS.md).
+**Ativação da Etapa 1 — 20/10/2026:** migração aditiva `f39a012b2159` aplicada após backup quente verificado; 57 tabelas anteriores preservadas, integridade `ok`, sem violações FK. Backend HTTPS local iniciado e health/API/banco verificados. Não avançar etapas corretivas 2–4 nesta versão.
+As notas de ativação/correção de 19/10 abaixo são históricas e anteriores à E5.
+
+**Ativação de 19/10/2026:** servidor Python/venv atualizado e HTTPS/PDF verificados
+em banco isolado com sete PDFs autorizados; schema fe4 já existente, sem migração.
+[Alocações](../docs/ALOCACOES_DE_FATURA.md): consulta protegida de requisitos por
+linha/ciclo/parcela, somente backend e sem efeitos financeiros. Persistência das
+alocações e geração líquida continuam futuras. Evidências no guia da correção.
+
+**Importação financeira — 19/10/2026:** a
+[correção de integridade e revisão](../docs/CORRECAO_IMPORTACAO_FINANCEIRA_2026-10-19.md)
+registra a implementação atual, contratos versionados e evidência. O cliente
+permite revisão explícita e conciliação; importação em lote no caixa foi suspensa.
+Alocação de créditos/saldo anterior/parcelas e homologação adicional continuam
+pendentes. Código/Release não substituem o servidor e o aplicativo abertos.
+
 **Receber revisado — 17/10/2026:** o [guia do incremento](../docs/PILOTO_RECEBER_REVISADO.md)
 descreve saldo/dia civil/capacidade, preservação da venda e recuperação comum
 com Pagar. Cliente e servidor correspondentes são necessários; sem migração
@@ -85,7 +102,7 @@ backend/
 ├── certs/                      # Certificados TLS dinâmicos autoassinados (ignorados no git)
 ├── data/                       # Arquivo do banco SQLite estoque.db (ignorado no git)
 ├── backups/                    # Arquivos de backup quente gerados (ignorados no git)
-├── tests/                      # Suíte de Testes Automatizados (101 testes)
+├── tests/                      # Suíte de Testes Automatizados
 ├── pyproject.toml              # Configurações de ferramentas (pytest, etc.)
 └── requirements-lock.txt       # Versões exatas travadas de dependências Python
 ```
@@ -137,3 +154,10 @@ pytest tests/test_concurrency_sqlite.py -v
 # Iniciar o servidor com TLS e single-worker
 python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --ssl-keyfile certs/server.key --ssl-certfile certs/server.crt --workers 1
 ```
+
+
+**Importação — E5.7, 20/10/2026:** retirada/reimportação auditada exige a migração
+`f17e8f901037`. Executar migrações em cópia verificada antes da ativação; não há
+criação implícita de tabelas no startup. A exclusão retira documentos/contas e
+previsões próprias e restaura contas previamente reunidas, preservando pagamentos
+e estoque. Contratos, bloqueios e instruções em [Contas a Pagar](../docs/CONTAS_A_PAGAR.md#excluir-e-reimportar-uma-importação--e57).

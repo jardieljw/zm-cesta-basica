@@ -1,0 +1,67 @@
+[
+  {
+    "alias": "pdf_1",
+    "items": 28,
+    "errors": [],
+    "adapter": "nubank_account_pdf_v1",
+    "can_confirm": true
+  },
+  {
+    "alias": "pdf_2",
+    "items": 22,
+    "errors": [
+      "PDF_SUMMARY_DETAIL_MISMATCH"
+    ],
+    "adapter": "nubank_card_pdf_v1",
+    "can_confirm": false
+  },
+  {
+    "alias": "pdf_3",
+    "items": 0,
+    "errors": [
+      "PDF_LAYOUT_UNSUPPORTED"
+    ],
+    "adapter": null,
+    "can_confirm": false
+  },
+  {
+    "alias": "pdf_4",
+    "items": 5,
+    "errors": [
+      "PDF_BILL_HEADER_REQUIRED",
+      "PDF_COMPILED_DOCUMENT_REVIEW_REQUIRED",
+      "PDF_MULTIPLE_BILLING_CYCLES",
+      "PDF_UNPARSED_MONEY_ROW"
+    ],
+    "adapter": "tabular_statement_pdf_v2",
+    "can_confirm": false
+  },
+  {
+    "alias": "pdf_5",
+    "items": 34,
+    "errors": [
+      "PDF_BILL_HEADER_REQUIRED",
+      "PDF_CONFLICTING_HEADER"
+    ],
+    "adapter": "tabular_statement_pdf_v2",
+    "can_confirm": false
+  },
+  {
+    "alias": "pdf_6",
+    "items": 39,
+    "errors": [
+      "PDF_SUMMARY_DETAIL_MISMATCH"
+    ],
+    "adapter": "nubank_card_pdf_v1",
+    "can_confirm": false
+  },
+  {
+    "alias": "pdf_7",
+    "items": 0,
+    "errors": [
+      "PDF_LAYOUT_UNSUPPORTED"
+    ],
+    "adapter": null,
+    "can_confirm": false
+  }
+]

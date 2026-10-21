@@ -132,6 +132,7 @@ class PayablePaymentCreate(BaseModel):
     notes: Optional[str] = Field(None, description="Comprovante / observacoes")
     expected_balance_cents: Optional[int] = Field(None, ge=0, description="Saldo conferido na revisão; precondição aditiva")
     payment_business_date: Optional[datetime.date] = Field(None, description="Dia civil do pagamento em UTC-03, sem horário informado")
+    expected_bill_revision: Optional[int] = Field(None, strict=True, ge=1)
 
     @model_validator(mode="after")
     def one_date_representation(self):
@@ -157,6 +158,11 @@ class PayablePaymentResponse(BaseModel):
     reversal_of_id: Optional[str] = None
     notes: Optional[str] = None
     created_at: datetime.datetime
+    bill_revision_id: Optional[str] = None
+    stock_cents: Optional[int] = None
+    business_cents: Optional[int] = None
+    personal_cents: Optional[int] = None
+    unclassified_cents: Optional[int] = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -185,6 +191,8 @@ class AccountPayableResponse(BaseModel):
     created_at: datetime.datetime
     updated_at: datetime.datetime
     payments_count: int = 0
+    superseded_by_id: Optional[str] = None
+    financial_bill: Optional[dict] = None
 
     model_config = ConfigDict(from_attributes=True)
 

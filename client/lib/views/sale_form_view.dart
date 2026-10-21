@@ -105,7 +105,7 @@ class _SaleFormViewState extends State<SaleFormView> {
     final row = _SaleItemRow();
     if (_basketTypes.isNotEmpty) {
       row.basketType = _basketTypes.first;
-      row.unitPriceCents = _basketTypes.first.defaultPriceCents;
+      row.unitPriceCents = (_basketTypes.first.activeRecipe?.suggestedPriceCents ?? _basketTypes.first.defaultPriceCents);
       row.assembleOnDemand = !_basketTypes.first.tracksFinishedStock;
       if (!row.assembleOnDemand) _fetchStockForRow(row);
     }
@@ -658,7 +658,7 @@ class _SaleFormViewState extends State<SaleFormView> {
                       if (val != null) {
                         setState(() {
                           row.basketType = val;
-                          row.unitPriceCents = val.defaultPriceCents;
+                          row.unitPriceCents = (val.activeRecipe?.suggestedPriceCents ?? val.defaultPriceCents);
                           row.assembleOnDemand = !val.tracksFinishedStock;
                         });
                         if (!row.assembleOnDemand) _fetchStockForRow(row);

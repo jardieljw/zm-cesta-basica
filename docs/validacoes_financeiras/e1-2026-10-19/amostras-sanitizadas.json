@@ -1,0 +1,93 @@
+{
+  "status": "PASS",
+  "scope": "E1 reading only; no database writes",
+  "samples": [
+    {
+      "alias": "pdf_06",
+      "hash_matches_audit": true,
+      "line_facts_match_reference": true,
+      "rows": 28,
+      "installments": 0,
+      "content_type": "BANK_STATEMENT",
+      "error_codes": [],
+      "header_status": "DOCUMENT_VALIDATED",
+      "difference_cents": null
+    },
+    {
+      "alias": "pdf_07",
+      "hash_matches_audit": true,
+      "line_facts_match_reference": true,
+      "rows": 39,
+      "installments": 3,
+      "content_type": "DETAILED_CARD_BILL",
+      "error_codes": [
+        "PDF_SUMMARY_DETAIL_MISMATCH"
+      ],
+      "header_status": "DOCUMENT_VALIDATED",
+      "difference_cents": -6
+    },
+    {
+      "alias": "pdf_08",
+      "hash_matches_audit": true,
+      "line_facts_match_reference": true,
+      "rows": 22,
+      "installments": 2,
+      "content_type": "DETAILED_CARD_BILL",
+      "error_codes": [
+        "FINANCIAL_DUE_DATE_CONFLICT",
+        "PDF_CONFLICTING_HEADER",
+        "PDF_SUMMARY_DETAIL_MISMATCH"
+      ],
+      "header_status": "CONFLICTING",
+      "difference_cents": 2
+    },
+    {
+      "alias": "csv_04",
+      "hash_matches_audit": true,
+      "line_facts_match_reference": false,
+      "rows": 0,
+      "installments": 0,
+      "content_type": "SUMMARY_INDEX",
+      "error_codes": [
+        "FINANCIAL_SUMMARY_ONLY"
+      ],
+      "header_status": "MISSING",
+      "difference_cents": null
+    },
+    {
+      "alias": "csv_05",
+      "hash_matches_audit": true,
+      "line_facts_match_reference": true,
+      "rows": 21,
+      "installments": 9,
+      "content_type": "DETAILED_CARD_BILL",
+      "error_codes": [],
+      "header_status": "MISSING",
+      "difference_cents": null
+    },
+    {
+      "alias": "csv_06",
+      "hash_matches_audit": true,
+      "line_facts_match_reference": true,
+      "rows": 13,
+      "installments": 3,
+      "content_type": "DETAILED_CARD_BILL",
+      "error_codes": [],
+      "header_status": "MISSING",
+      "difference_cents": null
+    },
+    {
+      "alias": "csv_09",
+      "hash_matches_audit": true,
+      "line_facts_match_reference": false,
+      "rows": 0,
+      "installments": 0,
+      "content_type": "SUMMARY_INDEX",
+      "error_codes": [
+        "FINANCIAL_SUMMARY_ONLY"
+      ],
+      "header_status": "MISSING",
+      "difference_cents": null
+    }
+  ]
+}

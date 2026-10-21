@@ -1,5 +1,33 @@
 # Faturas: significado dos dados, procedência e integração segura
 
+**Proposta posterior à auditoria dos arquivos — 19/10/2026:** o
+[plano de implementação](PLANO_IMPLEMENTACAO_IMPORTACAO_FATURAS.md) recomenda
+cobrança líquida por ciclo com itens vinculados, créditos no agrupamento,
+finalidade neutra e agenda prevista. Isso revisa a próxima solução proposta,
+não descreve o código atual nem elimina procedência, exatidão ou proteção dos
+relatórios. A implementação dependerá de adaptar os contratos e migrações indicados;
+as fundamentações e alternativas históricas abaixo permanecem preservadas.
+
+**Continuação de 19/10/2026:** [alocações de fatura](ALOCACOES_DE_FATURA.md)
+documenta a consulta implementada de requisitos por crédito, pagamento, saldo
+anterior e parcela, e o contrato ainda proposto para decisões persistidas.
+Diagnóstico não libera geração nem equivale ao motor de alocação. Servidor
+Python/cliente atualizados; evidências no guia da correção. As fundamentações
+e alternativas detalhadas abaixo permanecem preservadas.
+
+**Entrega posterior — 19/10/2026:** a [primeira etapa de correção](CORRECAO_IMPORTACAO_FINANCEIRA_2026-10-19.md)
+implementa controles exatos, cabeçalho CSV declarado, revisão vigente e
+conciliação explícita, com bloqueio de alocações ainda não representadas.
+Consultar esse guia e a evidência antes de usar descrições históricas abaixo.
+Código/build não atualizam automaticamente o app ou servidor em execução.
+
+**Alerta vigente — 19/10/2026:** revisão semântica e geração de obrigações já
+existem no código, mas a [auditoria atual](AUDITORIA_IMPORTACAO_FINANCEIRA_2026-10-19.md)
+demonstrou ajuste artificial de centavos, efeitos incompletos de créditos/saldo
+anterior e aceitação de revisão antiga. As descrições de capacidade futura abaixo
+são históricas nesses pontos; as invariantes FAT continuam exigidas. Não usar
+revisão balanceada como prova de dívida correta ou homologação do fluxo atual.
+
 Revisão: **16/10/2026**. Registro de decisões e planejamento do backend.
 Responsável pela continuidade: qualquer agente deve ler este documento junto da
 [memória financeira](MEMORIA_IMPLEMENTACAO_FINANCEIRA.md), do

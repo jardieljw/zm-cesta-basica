@@ -104,6 +104,7 @@ class ProductInactivationResponse(BaseModel):
 class ProductDeletionCheck(BaseModel):
     id: str
     name: str
+    blockers: List[dict] = []
     can_delete: bool
     reasons: List[str]
 
@@ -112,4 +113,5 @@ class ProductDeletionResponse(BaseModel):
     id: str
     name: str
     deleted: bool
+    deletion_mode: str = "PERMANENT"
     removed_packagings_count: int

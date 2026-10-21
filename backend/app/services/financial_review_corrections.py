@@ -18,6 +18,8 @@ from app.schemas.financial_imports import FinancialTransactionData
 
 def effective_items():
     """SQL projection shared by lists, evidence, ownership checks and counts."""
+    from app.services.financial_import_lifecycle import active_statement_ids
+    active_statements = active_statement_ids()
     item = FinancialStatementItem.__table__
     correction = FinancialReviewCorrection.__table__
     latest = select(correction.c.item_id, func.max(correction.c.revision).label("revision")).group_by(correction.c.item_id).subquery()
@@ -30,7 +32,7 @@ def effective_items():
                if c.name in overrides else c for c in item.c]
     return select(*columns, func.coalesce(last.c.revision, 0).label("review_revision"),
                   item.c.review_status.label("original_review_status"), item.c.transaction_id.label("original_transaction_id")
-                  ).select_from(item.outerjoin(last, last.c.item_id == item.c.id)).subquery("effective_financial_items")
+                  ).select_from(item.outerjoin(last, last.c.item_id == item.c.id)).where(item.c.statement_id.in_(active_statements)).subquery("effective_financial_items")
 
 
 def current_item(db, item_id):
@@ -39,7 +41,8 @@ def current_item(db, item_id):
     row = db.execute(select(view).where(view.c.id == item_id)).mappings().first()
     if row is None:
         service.fail("FINANCIAL_RESOURCE_NOT_FOUND", "Registro financeiro nao encontrado.", 404)
-    return dict(row)
+    from app.services.financial_import_lifecycle import statement_context
+    return {**dict(row), **statement_context(db, row['statement_id'])}
 
 
 def active_evidence(db, transaction_id):
@@ -167,6 +170,8 @@ def assert_identity_compatible(db, source_id, data, transaction_id, *, exclude_i
 
 def correct_review(db, item_id, request, actor_id):
     from app.services import financial_imports as service
+    from app.services.financial_import_lifecycle import guard_item
+    guard_item(db, item_id, request)
     item = current_item(db, item_id)
     if item["review_status"] == "PENDING":
         service.fail("FINANCIAL_REVIEW_NOT_COMPLETED", "Conclua a primeira conferencia antes de corrigi-la.")

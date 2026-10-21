@@ -73,7 +73,9 @@ def test_canceled_unassembled_sale_can_remove_catalog_without_deleting_history(c
     assert not client.get('/api/v1/basket-types?is_active=false', headers=headers).json()
     retained = client.get(f"/api/v1/basket-types/{basket['id']}", headers=headers).json()
     assert retained['removed_at'] is not None and retained['is_active'] is False
-    assert retained['active_recipe']['id'] == recipe['id']
+    assert retained['active_recipe'] is None
+    historical = client.get(f"/api/v1/basket-types/{basket['id']}/recipes/1", headers=headers).json()
+    assert historical['id'] == recipe['id'] and historical['status'] == 'REMOVED'
     assert client.get(f"/api/v1/sales/{sale['id']}", headers=headers).json()['status'] == 'CANCELED'
     assert test_session.execute(select(InventoryMovement.id, InventoryMovement.quantity_delta)).all() == movements_before
     assert test_session.execute(text('PRAGMA foreign_key_check')).all() == []

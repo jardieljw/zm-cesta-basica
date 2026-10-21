@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/api_client.dart';
+import '../utils/formatters.dart';
 import '../l10n/app_localizations.dart';
 import '../models/account_payable.dart';
 import '../services/payable_payment_coordinator.dart';
@@ -33,6 +34,51 @@ class _PayableAdapter
   final PayablePaymentCoordinator coordinator;
   _PayableAdapter(this.coordinator);
   @override
+  Widget? originAction(
+    BuildContext context,
+    AccountPayable title,
+    ApiOrigin origin,
+  ) {
+    final bill = title.financialBill;
+    if (bill == null) return null;
+    final l = AppLocalizations.of(context)!;
+    final source = bill['financial_source'] as Map;
+    return ExpansionTile(
+      title: Text(l.billItemsTitle),
+      children: [
+        Text(
+          '${source['institution']} · ${source['name']} · ${bill['reference']}',
+        ),
+        if (bill['details_status'] != 'RECONCILED') Text(l.billDetailsPending),
+        if (bill['difference_cents'] is int && bill['difference_cents'] != 0)
+          Text(
+            '${l.billDetailDifference}: ${AppFormatters.formatCurrency(bill['difference_cents'] as int)}',
+          ),
+        if (bill['composition'] == null ||
+            (bill['composition'] as Map)['unclassified_cents'] != 0)
+          Text(l.billPurposeUnknown),
+        for (final item in bill['items'] as List? ?? [])
+          ListTile(
+            title: Text(item['description'] as String),
+            subtitle: Text(
+              [
+                AppFormatters.formatCurrency(item['amount_cents'] as int),
+                AppFormatters.formatDate(
+                  DateTime.parse(item['transaction_date'] as String),
+                ),
+                if (item['installment_number'] != null)
+                  l.pdfImportInstallments(
+                    item['installment_number'] as int,
+                    item['total_installments'] as int,
+                  ),
+              ].join(' · '),
+            ),
+          ),
+      ],
+    );
+  }
+
+  @override
   Future<ApiOrigin> readOrigin() => coordinator.service.readOrigin();
   @override
   Future<PayablePaymentAttempt?> attemptFor(String id, ApiOrigin origin) =>
@@ -61,7 +107,17 @@ class _PayableAdapter
             amountCents: p.amountCents,
             method: p.paymentMethod,
             status: p.status,
-            notes: p.notes,
+            notes: [
+              if (p.notes != null) p.notes!,
+              if (p.composition != null)
+                for (final e in {
+                  l.billCompositionStock: p.composition!['stock_cents']!,
+                  l.billCompositionBusiness: p.composition!['business_cents']!,
+                  l.billCompositionPersonal: p.composition!['personal_cents']!,
+                  l.billPurposeUnknown: p.composition!['unclassified_cents']!,
+                }.entries)
+                  '${e.key}: ${AppFormatters.formatCurrency(e.value)}',
+            ].join(' · '),
           ),
         )
         .toList(),
@@ -119,6 +175,7 @@ class _PayableAdapter
     'OPEN' => l.payableStatusOpen,
     'PARTIAL' => l.payableStatusPartial,
     'PAID' => l.payableStatusPaid,
+    'SUBSTITUTED' => l.billStatusSubstituted,
     _ => l.payableStatusCanceled,
   };
   @override

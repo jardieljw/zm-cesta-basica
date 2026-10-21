@@ -10,7 +10,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.routing import APIRoute
-from sqlalchemy import select, inspect
+from sqlalchemy import select, inspect, func
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -21,6 +21,7 @@ from app.models.financial_imports import (
     FinancialSource, FinancialDocument, FinancialStatement, FinancialStatementItem,
     FinancialTransaction, FinancialReconciliation, FinancialImportAudit,
     FinancialImportPreview,
+    FinancialImportEntry,
     FINANCIAL_IMPORT_TABLE_NAMES,
 )
 from app.models.financial import FinancialAccount
@@ -29,12 +30,14 @@ from app.schemas.financial_imports import (
     FinancialStatementCreate, FinancialItemReview, FinancialReconciliationCreate,
     FinancialReconciliationVoid,
     FinancialReviewCorrectionCreate,
+    FinancialImportContext,
 )
 from app.services import financial_imports as service
 from app.services import financial_previews as previews
+from app.services import financial_import_lifecycle as lifecycle
 from app.services import financial_review_corrections as corrections
 from app.services.financial_readers import READERS
-from app.schemas.financial_readers import FinancialPreviewCreate, FinancialPreviewConfirm
+from app.schemas.financial_readers import FinancialPreviewCreate, FinancialPreviewConfirm, FinancialSegmentSelect
 from app.schemas.financial_bill_assessments import BillAssessmentCreate
 from app.models.financial_bill_assessments import FinancialBillAssessment, FinancialBillAssessmentLink
 from app.services import financial_bill_assessments as bills
@@ -83,7 +86,10 @@ def financial_actor(authorization: str | None = Header(None), db: Session = Depe
     installed_tables = set(schema.get_table_names())
     if (not FINANCIAL_IMPORT_TABLE_NAMES.issubset(installed_tables)
             or not {"purchase_date", "booking_date"}.issubset({c["name"] for c in schema.get_columns("financial_transactions")})
-            or "preview_id" not in {c["name"] for c in schema.get_columns("financial_statements")}):
+            or "preview_id" not in {c["name"] for c in schema.get_columns("financial_statements")}
+            or "superseded_by_id" not in {c["name"] for c in schema.get_columns("accounts_payable")}
+            or not {"bill_revision_id", "stock_cents", "business_cents", "personal_cents", "unclassified_cents"}.issubset(
+                {c["name"] for c in schema.get_columns("payable_payments")})):
         service.fail("FINANCIAL_SCHEMA_NOT_READY", "Base financeira aguardando migracao versionada do servidor.", 503)
     return actor_id
 
@@ -95,12 +101,33 @@ def required_key(key: str | None = Header(None, alias="X-Idempotency-Key")):
 
 
 def mutate(db, key, operation, payload, callback, status=201):
+    _guard_import_command(db, operation, payload)
     def execute(session):
         result = callback(session)
         is_dup = result.get("duplicate") if isinstance(result, dict) else False
         return (200 if is_dup else status), jsonable_encoder(result)
     result = process_transactional_idempotency(db, key, operation, payload, execute)
     return JSONResponse(status_code=result.status_code, content=result.to_json_dict())
+
+
+def _guard_import_command(db, operation, payload):
+    """Also validate successful replays against the currently active generation."""
+    from types import SimpleNamespace
+    command = SimpleNamespace(**payload)
+    if operation in {'FIN_SEGMENT_SELECT_V1', 'FIN_BILL_CYCLE_INTEGRATE_V1', 'FIN_IMPORT_CONFIRM', 'FIN_BILL_ASSESS'}:
+        lifecycle.require_preview(db, payload['preview_id'], payload.get('import_id'), payload.get('expected_generation'))
+    elif operation in {'FIN_ITEM_REVIEW', 'FIN_REVIEW_CORRECT'}:
+        lifecycle.guard_item(db, payload['item_id'], command)
+    elif operation in {'FIN_BILL_SEMANTIC_REVIEW', 'FIN_BILL_GENERATE_OBLIGATIONS', 'FIN_STATEMENT_POST_TREASURY'}:
+        lifecycle.guard_statement(db, payload['statement_id'], command)
+    elif operation == 'FIN_RECONCILE':
+        lifecycle.guard_transaction(db, payload['transaction_id'], command)
+    elif operation == 'FIN_RECONCILE_VOID':
+        reconciliation = service.require(db, FinancialReconciliation, payload['reconciliation_id'])
+        lifecycle.guard_transaction(db, reconciliation.transaction_id, command)
+    elif operation == 'FIN_INSTALLMENT_DECISION_V1':
+        from app.services.financial_installments import guard_decision
+        guard_decision(db, command)
 
 
 @router.post("/sources", response_model=FinancialSourceResponse, status_code=201)
@@ -147,6 +174,11 @@ async def store_document(request: Request, filename: str = Query(min_length=1, m
                   lambda session: service.store_document(session, content, filename, media_type, actor))
 
 
+@router.get("/documents/{document_id}/import-state")
+def document_import_state(document_id: str, actor=Depends(financial_actor), db: Session = Depends(get_db)):
+    return lifecycle.state(db, document_id)
+
+
 @router.get("/documents/{document_id}", response_model=FinancialDocumentResponse)
 def get_document(document_id: str, actor=Depends(financial_actor), db: Session = Depends(get_db)):
     return service.require(db, FinancialDocument, document_id)
@@ -174,51 +206,140 @@ def create_statement(data: FinancialStatementCreate, actor=Depends(financial_act
 def list_readers(actor=Depends(financial_actor)):
     return [{"id": r.id, "version": r.version, "media_type": r.media_type,
              "requires_mapping": r.id == "generic_csv",
-             "source_types": ["BANK_ACCOUNT", "CREDIT_CARD"] if r.options is None else ["BANK_ACCOUNT"]}
+             "source_types": ["BANK_ACCOUNT", "CREDIT_CARD"] if r.options is None else
+                 ["BANK_ACCOUNT"] if r.options.amount_convention == "CREDITS_POSITIVE" else ["CREDIT_CARD"]}
             for r in READERS.values()]
+
+
+@router.get('/capabilities')
+def financial_capabilities(actor=Depends(financial_actor)):
+    return {'bill_cycle_version': 1, 'bill_review_version': 2, 'segments_version': 1,
+        'payable_filter_version': 1, 'installment_agenda_version': 1,
+        'import_removal_version': 1, 'import_lifecycle_version': 1,
+        'bill_requirements_version': 0}  # Versioned financial requirements are delivered in step 2.
+
+
+@router.get('/installments')
+def get_installment_agenda(source_id: str | None = Query(None, max_length=36), source_query: str | None = Query(None, max_length=200),
+        merchant: str | None = Query(None, max_length=200), due_date_from: str | None = None, due_date_to: str | None = None,
+        month: int | None = Query(None, ge=1, le=12), year: int | None = Query(None, ge=1, le=9999),
+        status: str | None = None, category: str | None = None, beneficiary: str | None = None, nature: str | None = None,
+        overdue_only: bool = False, limit: int = Query(100, ge=1, le=500), offset: int = Query(0, ge=0),
+        actor=Depends(financial_actor), db: Session = Depends(get_db)):
+    import datetime
+    from app.services.financial_installments import agenda
+    try:
+        start = datetime.datetime.fromisoformat(due_date_from) if due_date_from else None
+        end = datetime.datetime.fromisoformat(due_date_to) if due_date_to else None
+    except ValueError:
+        service.fail('INVALID_FINANCIAL_DATA', 'Confira o intervalo da agenda.', 422)
+    return agenda(db, source_id=source_id, source_query=source_query, merchant=merchant, due_date_from=start,
+        due_date_to=end, month=month, year=year, status=status, category=category, beneficiary=beneficiary,
+        nature=nature, overdue_only=overdue_only, limit=limit, offset=offset)
+
+
+from app.schemas.financial_installments import InstallmentResolve
+
+
+@router.post('/installments/decisions')
+def resolve_installment(data: InstallmentResolve, actor=Depends(financial_actor), key=Depends(required_key), db: Session = Depends(get_db)):
+    from app.services.financial_installments import decide
+    return mutate(db, key, 'FIN_INSTALLMENT_DECISION_V1', data.model_dump(mode='json'), lambda session: decide(session, data, actor))
+
+
+@router.post('/previews/{preview_id}/select-segment')
+def select_segment(preview_id: str, data: FinancialSegmentSelect, actor=Depends(financial_actor), key=Depends(required_key), db: Session = Depends(get_db)):
+    return mutate(db, key, 'FIN_SEGMENT_SELECT_V1', {'preview_id': preview_id, **data.model_dump(mode='json')},
+        lambda session: previews.select_segment(session, preview_id, data, actor))
+
+
+@router.get('/previews/{preview_id}/bill-integration')
+def bill_integration_draft(preview_id: str, reference: str | None = Query(None, pattern=r'^\d{4}-(0[1-9]|1[0-2])$'),
+                           import_id: str | None = Query(None), expected_generation: int | None = Query(None, ge=1),
+                           actor=Depends(financial_actor), db: Session = Depends(get_db)):
+    from app.services.financial_bill_cycles import draft
+    entry, _ = lifecycle.require_preview(db, preview_id, import_id, expected_generation)
+    return {**draft(db, preview_id, reference), 'import_id': entry.id,
+            'generation': entry.generation}
+
+
+from app.schemas.financial_bill_cycles import BillCycleIntegrate
+
+
+@router.post('/previews/{preview_id}/integrate-bill')
+def integrate_bill(preview_id: str, data: BillCycleIntegrate, actor=Depends(financial_actor), key=Depends(required_key), db: Session = Depends(get_db)):
+    from app.services.financial_bill_cycles import integrate
+    return mutate(db, key, 'FIN_BILL_CYCLE_INTEGRATE_V1', {'preview_id': preview_id, **data.model_dump(mode='json')},
+        lambda session: integrate(session, preview_id, data, actor))
+
+
+@router.get('/bill-cycles/{cycle_id}')
+def get_bill_cycle(cycle_id: str, actor=Depends(financial_actor), db: Session = Depends(get_db)):
+    from app.services.financial_bill_cycles import describe, current, Cycle
+    from app.services.financial_import_removals import withdrawn_cycles
+    cycle = service.require(db, Cycle, cycle_id)
+    if cycle.id in withdrawn_cycles(db) or lifecycle.entry_for_preview(db, current(db, cycle).preview_id) is None:
+        service.fail('FINANCIAL_IMPORT_HISTORICAL_READ_ONLY', 'Abra a importação atual pela lista.')
+    return describe(db, cycle)
 
 
 @router.post("/documents/{document_id}/previews")
 def create_preview(document_id: str, data: FinancialPreviewCreate, actor=Depends(financial_actor),
                    key=Depends(required_key), db: Session = Depends(get_db)):
     prepared = previews.prepare_pdf_preview(db, document_id, data)
-    return mutate(db, key, "FIN_IMPORT_PREVIEW", {"document_id": document_id, **data.model_dump(mode="json")},
+    payload = data.model_dump(mode="json", exclude={'expected_reader_version'} if data.expected_reader_version is None else set())
+    return mutate(db, key, "FIN_IMPORT_PREVIEW", {"document_id": document_id, **payload},
                   lambda session: previews.create_preview(session, document_id, data, actor, prepared))
 
 
 @router.get("/previews/{preview_id}")
 def get_preview(preview_id: str, actor=Depends(financial_actor), db: Session = Depends(get_db)):
-    return previews.preview_summary(service.require(db, FinancialImportPreview, preview_id))
+    preview = service.require(db, FinancialImportPreview, preview_id)
+    entry = lifecycle.entry_for_preview(db, preview_id)
+    if entry is None:
+        service.fail('FINANCIAL_IMPORT_HISTORICAL_READ_ONLY',
+            'Esta leitura pertence ao histórico. Abra a importação atual pela lista.')
+    return lifecycle.preview_summary(db, entry, preview)
 
 
 @router.get("/previews")
-def list_previews(document_id: str | None = None, source_id: str | None = None,
+def list_previews(response: Response, document_id: str | None = None, source_id: str | None = None,
                   actor=Depends(financial_actor), db: Session = Depends(get_db),
                   limit: int = Query(100, ge=1, le=500), offset: int = Query(0, ge=0)):
-    query = select(FinancialImportPreview)
+    query = select(FinancialImportEntry, FinancialImportPreview).join(
+        FinancialImportPreview, FinancialImportPreview.id == FinancialImportEntry.root_preview_id).where(
+            FinancialImportEntry.state == 'ACTIVE')
     if document_id:
-        query = query.where(FinancialImportPreview.document_id == document_id)
+        query = query.where(FinancialImportEntry.document_id == document_id)
     if source_id:
         query = query.where(FinancialImportPreview.source_id == source_id)
-    return [previews.preview_summary(p) for p in db.scalars(query.order_by(
-        FinancialImportPreview.created_at, FinancialImportPreview.id).limit(limit).offset(offset))]
+    response.headers['X-Total-Count'] = str(db.scalar(select(func.count()).select_from(query.subquery())))
+    page = db.execute(query.order_by(FinancialImportEntry.created_at,
+                                     FinancialImportEntry.id).limit(limit).offset(offset)).all()
+    return [lifecycle.preview_summary(db, entry, preview) for entry, preview in page]
 
 
 @router.get("/previews/{preview_id}/items")
 def preview_items(preview_id: str, actor=Depends(financial_actor), db: Session = Depends(get_db),
                   limit: int = Query(100, ge=1, le=500), offset: int = Query(0, ge=0)):
+    if lifecycle.entry_for_preview(db, preview_id) is None:
+        service.fail('FINANCIAL_IMPORT_HISTORICAL_READ_ONLY', 'Abra a importação atual pela lista.')
     return previews.preview_items(db, service.require(db, FinancialImportPreview, preview_id), offset, limit)
 
 
 @router.get("/previews/{preview_id}/errors")
 def preview_errors(preview_id: str, actor=Depends(financial_actor), db: Session = Depends(get_db),
                    limit: int = Query(100, ge=1, le=500), offset: int = Query(0, ge=0)):
+    if lifecycle.entry_for_preview(db, preview_id) is None:
+        service.fail('FINANCIAL_IMPORT_HISTORICAL_READ_ONLY', 'Abra a importação atual pela lista.')
     return service.require(db, FinancialImportPreview, preview_id).result["errors"][offset:offset + limit]
 
 
 @router.get("/previews/{preview_id}/pages")
 def preview_pages(preview_id: str, actor=Depends(financial_actor), db: Session = Depends(get_db),
                   limit: int = Query(5, ge=1, le=40), offset: int = Query(0, ge=0)):
+    if lifecycle.entry_for_preview(db, preview_id) is None:
+        service.fail('FINANCIAL_IMPORT_HISTORICAL_READ_ONLY', 'Abra a importação atual pela lista.')
     return service.require(db, FinancialImportPreview, preview_id).result.get("pages", [])[offset:offset + limit]
 
 
@@ -232,13 +353,14 @@ def assess_bill(preview_id: str, data: BillAssessmentCreate, actor=Depends(finan
 @router.get("/previews/{preview_id}/bill-assessments")
 def assessment_history(preview_id: str, actor=Depends(financial_actor), db: Session = Depends(get_db),
                        limit: int = Query(100, ge=1, le=500), offset: int = Query(0, ge=0)):
-    service.require(db, FinancialImportPreview, preview_id)
+    get_preview(preview_id, actor, db)
     return [bills.summary(a) for a in db.scalars(select(FinancialBillAssessment).where(
         FinancialBillAssessment.preview_id == preview_id).order_by(FinancialBillAssessment.revision).limit(limit).offset(offset))]
 
 
 @router.get("/previews/{preview_id}/bill-assessment")
 def current_assessment(preview_id: str, actor=Depends(financial_actor), db: Session = Depends(get_db)):
+    get_preview(preview_id, actor, db)
     preview = service.require(db, FinancialImportPreview, preview_id)
     assessment = bills.latest(db, preview_id)
     if assessment is None:
@@ -250,6 +372,8 @@ def current_assessment(preview_id: str, actor=Depends(financial_actor), db: Sess
 @router.get("/bill-assessments/{assessment_id}/evidence")
 def assessment_evidence(assessment_id: str, actor=Depends(financial_actor), db: Session = Depends(get_db),
                         limit: int = Query(100, ge=1, le=500), offset: int = Query(0, ge=0)):
+    assessment = service.require(db, FinancialBillAssessment, assessment_id)
+    get_preview(assessment.preview_id, actor, db)
     return bills.evidence_rows(db, assessment_id, limit, offset)
 
 
@@ -274,7 +398,7 @@ def confirm_preview(preview_id: str, data: FinancialPreviewConfirm, actor=Depend
 @router.get("/statements")
 def list_statements(source_id: str | None = None, actor=Depends(financial_actor), db: Session = Depends(get_db),
                     limit: int = Query(100, ge=1, le=500), offset: int = Query(0, ge=0)):
-    query = select(FinancialStatement)
+    query = select(FinancialStatement).where(FinancialStatement.id.in_(lifecycle.active_statement_ids()))
     if source_id:
         query = query.where(FinancialStatement.source_id == source_id)
     return [service.statement_summary(db, s) for s in db.scalars(query.order_by(
@@ -291,7 +415,8 @@ def list_items(statement_id: str, actor=Depends(financial_actor), db: Session = 
                limit: int = Query(100, ge=1, le=500), offset: int = Query(0, ge=0)):
     service.require(db, FinancialStatement, statement_id)
     view = corrections.effective_items()
-    return [dict(row) for row in db.execute(select(view).where(
+    context = lifecycle.statement_context(db, statement_id)
+    return [{**dict(row), **context} for row in db.execute(select(view).where(
         view.c.statement_id == statement_id).order_by(view.c.position).limit(limit).offset(offset)).mappings()]
 
 
@@ -370,7 +495,7 @@ def reconciliations(transaction_id: str | None = None, actor=Depends(financial_a
 @router.post("/reconciliations/{reconciliation_id}/void")
 def void(reconciliation_id: str, data: FinancialReconciliationVoid, actor=Depends(financial_actor), key=Depends(required_key), db: Session = Depends(get_db)):
     return mutate(db, key, "FIN_RECONCILE_VOID", {"reconciliation_id": reconciliation_id, **data.model_dump(mode="json")},
-                  lambda session: service.void_reconciliation(session, reconciliation_id, data.reason, actor), status=200)
+                  lambda session: service.void_reconciliation(session, reconciliation_id, data.reason, actor, data), status=200)
 
 
 @router.get("/audit")
@@ -406,6 +531,15 @@ def generate_bill_obligations(
                   lambda session: {"obligations": semantics.generate_bill_obligations(session, statement_id, data, actor)})
 
 
+@router.get("/statements/{statement_id}/allocation-requirements")
+def bill_allocation_requirements(
+    statement_id: str, expected_review_id: str | None = Query(None, min_length=1, max_length=36),
+    actor=Depends(financial_actor), db: Session = Depends(get_db),
+):
+    from app.services.financial_bill_allocations import inspect_requirements
+    return inspect_requirements(db, statement_id, expected_review_id)
+
+
 @router.get("/statements/{statement_id}/obligations")
 def list_bill_obligations(statement_id: str, actor=Depends(financial_actor), db: Session = Depends(get_db)):
     return semantics.list_bill_obligations(db, statement_id)
@@ -414,14 +548,42 @@ def list_bill_obligations(statement_id: str, actor=Depends(financial_actor), db:
 @router.post("/statements/{statement_id}/post-to-treasury")
 def post_statement_to_treasury(
     statement_id: str,
+    data: FinancialImportContext,
     actor=Depends(financial_actor),
     key=Depends(required_key),
     db: Session = Depends(get_db),
 ):
     """Lança as transações de um extrato bancário confirmado na conta financeira de tesouraria vinculada."""
     return mutate(
-        db, key, "FIN_STATEMENT_POST_TREASURY", {"statement_id": statement_id},
-        lambda session: service.post_statement_to_treasury(session, statement_id, actor),
+        db, key, "FIN_STATEMENT_POST_TREASURY", {"statement_id": statement_id, **data.model_dump()},
+        lambda session: _post_current_statement(session, statement_id, data, actor),
         status=200,
     )
 
+
+def _post_current_statement(db, statement_id, data, actor):
+    lifecycle.guard_statement(db, statement_id, data)
+    return service.post_statement_to_treasury(db, statement_id, actor)
+
+
+
+from pydantic import BaseModel, Field
+
+class ImportRemovalRequest(BaseModel):
+    import_id: str | None = None
+    expected_generation: int | None = Field(None, ge=1)
+    expected_snapshot: str = Field(min_length=64, max_length=64)
+
+@router.get('/documents/{document_id}/removal')
+def import_removal_plan(document_id: str, import_id: str | None = Query(None),
+                        expected_generation: int | None = Query(None, ge=1),
+                        actor=Depends(financial_actor), db: Session = Depends(get_db)):
+    from app.services.financial_import_removals import plan
+    return plan(db, document_id, import_id, expected_generation)
+
+@router.post('/documents/{document_id}/remove')
+def remove_import(document_id: str, data: ImportRemovalRequest, actor=Depends(financial_actor), key=Depends(required_key), db: Session = Depends(get_db)):
+    from app.services.financial_import_removals import remove
+    return mutate(db,key,'FIN_IMPORT_REMOVE_V1',{'document_id':document_id,**data.model_dump()},
+        lambda session: remove(session,document_id,data.import_id,data.expected_generation,
+                               data.expected_snapshot,actor))

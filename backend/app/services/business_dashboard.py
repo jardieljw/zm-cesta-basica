@@ -127,7 +127,7 @@ def get_business_dashboard(db: Session, filter_type="today", date_str=None,
     payments = db.query(PayablePayment).options(selectinload(PayablePayment.payable))\
         .filter(PayablePayment.id.in_(payment_ids)).all() if payment_ids else []
     payment_map = {p.id: p for p in payments}
-    received = paid = stock_paid = expenses = withdrawals = 0
+    received = paid = stock_paid = expenses = withdrawals = unclassified_paid = 0
     received_records, paid_records = [], []
     for entry in entries:
         is_receipt = entry.source_type in ["SALE", "RECEIVABLE_PAYMENT"] or (
@@ -146,15 +146,12 @@ def get_business_dashboard(db: Session, filter_type="today", date_str=None,
             paid += amount
             paid_records.append(record)
             payment = payment_map.get(entry.source_id)
-            is_stock = entry.source_type == "PURCHASE" or entry.category == "COMPRA_INSUMOS" or (
-                payment and payment.payable and payment.payable.purchase_id is not None
-            )
-            if entry.nature == "PERSONAL_WITHDRAWAL":
-                withdrawals += amount
-            elif is_stock:
-                stock_paid += amount
-            else:
-                expenses += amount
+            from app.services.financial_payment_composition import entry_composition
+            composition = entry_composition(entry, payment)
+            withdrawals += composition['personal_cents']
+            stock_paid += composition['stock_cents']
+            expenses += composition['business_cents']
+            unclassified_paid += composition['unclassified_cents']
     active_accounts = db.query(FinancialAccount).filter(FinancialAccount.is_active.is_(True))\
         .order_by(FinancialAccount.is_default.desc(), FinancialAccount.name).all()
     available_balance = sum(a.current_balance_cents for a in active_accounts)
@@ -185,6 +182,7 @@ def get_business_dashboard(db: Session, filter_type="today", date_str=None,
         gross_profit_cents=revenue - cost, operating_expenses_paid_cents=expenses,
         operating_result_cents=revenue - cost - expenses,
         stock_purchases_paid_cents=stock_paid, personal_withdrawals_paid_cents=withdrawals,
+        unclassified_paid_cents=unclassified_paid,
         sales_without_cost_count=missing_cost, received_records=received_records, paid_records=paid_records,
         receivables_records=[DashboardReceivableRecord(
             id=r.id, sale_number=r.sale.sale_number if r.sale else 0,
@@ -221,6 +219,7 @@ def get_business_financial_report(db: Session, **filters) -> ReportResponse:
         ("Diferença entre recebido e pago", f.payment_difference_cents, "Comparação do período; não é saldo bancário nem lucro."),
         ("Compras de estoque pagas", f.stock_purchases_paid_cents, "Já estão nos pagamentos; o custo vendido é apurado separadamente."),
         ("Retiradas pessoais pagas", f.personal_withdrawals_paid_cents, "Já estão nos pagamentos; não reduzem o resultado das vendas."),
+        ("Pagamentos sem finalidade informada", f.unclassified_paid_cents, "Incluídos nos pagamentos; finalidade pendente, sem despesa operacional presumida."),
         ("Total pendente a receber", f.receivables_open_cents, "Pendências atuais, independentemente do período selecionado."),
         ("Total pendente a pagar", f.payables_open_cents, "Pendências atuais, independentemente do período selecionado."),
         ("A receber com vencimento no período", f.receivables_due_in_period_cents, "Somente valores ainda pendentes."),

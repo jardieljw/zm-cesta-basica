@@ -1,6 +1,6 @@
 # Montagens padrão, personalizadas e histórico de fabricação
 
-Revisão: **14/10/2026**. [Índice](README.md).
+Revisão: **20/10/2026**. [Índice](README.md).
 
 ## Onde aparece e como usar
 
@@ -21,8 +21,32 @@ consultar montagens feitas durante a venda.
 
 A interface tem rolagem, limite de largura no computador e FAB com espaço ao fim
 do conteúdo. A expansão do conteúdo de revisão usa animação curta de tamanho,
-respeitando redução de movimento. O formulário oferece personalização para tipos que permitem essa opção. Exclusão
-e ação de desmontagem não estão incluídas na página nova.
+respeitando redução de movimento. O formulário oferece personalização para tipos que permitem essa opção.
+
+## Desmontar e devolver os ingredientes
+
+Expandir uma montagem confirmada oferece **Desmontar cestas**. Informar a
+quantidade, motivo e confirmar que os produtos estão intactos. **Revisar
+desmontagem** mostra as quantidades exatas que voltarão ao estoque, usando a
+composição original. Depois **Desmontar cestas** grava retornos/baixa na mesma
+transação e atualiza o histórico/saldo. Produtos danificados não devem ser
+confirmados como intactos; a triagem de perdas existente no servidor não ganhou
+um editor nesta tela. Não foi restaurado o módulo antigo de produção.
+
+A revisão usa `POST /production/batches/{id}/disassembly-preview`: as mesmas
+validações da confirmação são executadas em savepoint sempre desfeito. Nenhum
+movimento de revisão permanece. A confirmação usa `/disassemble`, com corpo e
+chave persistidos para retomada após resposta incerta, inclusive ao reabrir a tela.
+Uma montagem já ligada a venda não cancelada não pode usar o saldo de outra
+montagem para devolver seus ingredientes. No estoque padrão agregado, o servidor
+limita a quantidade à composição comprovadamente disponível, descontando vendas
+e saídas sem atribuição. Cestas de receita diferente não suprem essa conferência.
+Os impedimentos identificam a venda e permitem consultá-la diretamente.
+
+Desmontagem parcial conserva o restante; desmontagem total recebe `DISASSEMBLED`.
+O registro original permanece no histórico. Depois de resolver vendas, montagens
+e demais saldos, o tipo de cesta/receita pode ser excluído do catálogo sem apagar
+os fatos anteriores. Retornar arroz ao estoque não o apaga nem registra perda.
 
 ## Personalizar somente esta montagem
 

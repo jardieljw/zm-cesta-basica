@@ -7,6 +7,7 @@ import '../models/account_payable.dart';
 import '../services/payable_service.dart';
 import '../services/payable_payment_coordinator.dart';
 import 'payable_payment_view.dart';
+import 'financial_installment_agenda_view.dart';
 import '../l10n/l10n_extension.dart';
 import '../utils/formatters.dart';
 import '../utils/api_error_mapper.dart';
@@ -27,7 +28,9 @@ class _PayablesViewState extends State<PayablesView> {
   List<PayablePaymentAttempt> _pendingPayments = [];
   bool _pendingReadFailed = false, _hasMore = false, _loadingMore = false;
   String? _moreError;
-  String? _beneficiaryFilter;
+  String? _beneficiaryFilter, _bankCardFilter, _merchantFilter;
+  Map<String, dynamic>? _summary;
+  bool _summaryFailed = false;
 
   List<AccountPayable> _payables = [];
   bool _isLoading = true;
@@ -71,10 +74,14 @@ class _PayablesViewState extends State<PayablesView> {
       _loadingMore = false;
       _moreError = null;
       _hasMore = false;
+      _summary = null;
+      _summaryFailed = false;
     });
 
     try {
+      final summaryRequest = _fetchSummary(requestVersion);
       final items = await _fetchPayables();
+      await summaryRequest;
       if (!mounted || requestVersion != _requestVersion) return;
       setState(() {
         _payables = items;
@@ -99,12 +106,39 @@ class _PayablesViewState extends State<PayablesView> {
         category: _categoryFilter,
         nature: _natureFilter,
         beneficiary: _beneficiaryFilter,
+        bankCard: _bankCardFilter,
+        merchant: _merchantFilter,
         overdueOnly: _overdueOnly,
         month: _monthFilter,
         year: _yearFilter,
         limit: 100,
         offset: offset,
       );
+
+  Future<void> _fetchSummary(int version) async {
+    try {
+      final value = await _payableService.getPayableSummary(
+        dueDateFrom: _dueDateFrom,
+        dueDateTo: _dueDateTo,
+        status: _statusFilter,
+        category: _categoryFilter,
+        nature: _natureFilter,
+        beneficiary: _beneficiaryFilter,
+        bankCard: _bankCardFilter,
+        merchant: _merchantFilter,
+        overdueOnly: _overdueOnly,
+        month: _monthFilter,
+        year: _yearFilter,
+      );
+      if (mounted && version == _requestVersion) {
+        setState(() => _summary = value);
+      }
+    } catch (_) {
+      if (mounted && version == _requestVersion) {
+        setState(() => _summaryFailed = true);
+      }
+    }
+  }
 
   Future<void> _loadPendingPayments() async {
     final version = ++_pendingVersion;
@@ -219,6 +253,8 @@ class _PayablesViewState extends State<PayablesView> {
       _overdueOnly = false;
       _beneficiaryController.clear();
       _beneficiaryFilter = null;
+      _bankCardFilter = null;
+      _merchantFilter = null;
       _monthFilter = null;
       _yearFilter = null;
       _dueDateFrom = null;
@@ -494,7 +530,9 @@ class _PayablesViewState extends State<PayablesView> {
                       const SizedBox(height: 12),
                       ListTile(
                         shape: RoundedRectangleBorder(
-                          side: BorderSide(color: Theme.of(context).colorScheme.outline),
+                          side: BorderSide(
+                            color: Theme.of(context).colorScheme.outline,
+                          ),
                           borderRadius: BorderRadius.circular(16),
                         ),
                         title: Text(
@@ -585,7 +623,9 @@ class _PayablesViewState extends State<PayablesView> {
                 ),
                 FilledButton(
                   style: FilledButton.styleFrom(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     minimumSize: const Size(0, 40),
                   ),
                   onPressed: isSaving
@@ -733,8 +773,12 @@ class _PayablesViewState extends State<PayablesView> {
                             return ListTile(
                               contentPadding: EdgeInsets.zero,
                               leading: Icon(
-                                isConfirmed ? Icons.check_circle_outline : Icons.cancel_outlined,
-                                color: isConfirmed ? AppPalette.of(context).accent : AppPalette.of(context).sub,
+                                isConfirmed
+                                    ? Icons.check_circle_outline
+                                    : Icons.cancel_outlined,
+                                color: isConfirmed
+                                    ? AppPalette.of(context).accent
+                                    : AppPalette.of(context).sub,
                               ),
                               title: Text(
                                 AppFormatters.formatCurrency(p.amountCents),
@@ -805,9 +849,20 @@ class _PayablesViewState extends State<PayablesView> {
                                               ),
                                               FilledButton(
                                                 style: FilledButton.styleFrom(
-                                                  backgroundColor: AppPalette.of(context).warn,
-                                                  foregroundColor: AppPalette.of(context).accentInk,
-                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                                  backgroundColor:
+                                                      AppPalette.of(
+                                                        context,
+                                                      ).warn,
+                                                  foregroundColor:
+                                                      AppPalette.of(
+                                                        context,
+                                                      ).accentInk,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          12,
+                                                        ),
+                                                  ),
                                                 ),
                                                 onPressed: () =>
                                                     Navigator.pop(dCtx, true),
@@ -902,12 +957,12 @@ class _PayablesViewState extends State<PayablesView> {
             style: FilledButton.styleFrom(
               backgroundColor: AppPalette.of(context).warn,
               foregroundColor: AppPalette.of(context).accentInk,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
             ),
             onPressed: () => Navigator.pop(ctx, true),
-            child: Text(
-              l10n.commonConfirm,
-            ),
+            child: Text(l10n.commonConfirm),
           ),
         ],
       ),
@@ -945,28 +1000,101 @@ class _PayablesViewState extends State<PayablesView> {
         radius: 24,
         child: Theme(
           data: Theme.of(context).copyWith(
-            cardTheme: Theme.of(context).cardTheme.copyWith(color: Colors.transparent),
+            cardTheme: Theme.of(
+              context,
+            ).cardTheme.copyWith(color: Colors.transparent),
           ),
           child: FinancialSummaryPanel(
-            caption: l.payableDisplayedSummary,
+            caption: _summaryFailed
+                ? l.payableSummaryUnavailable
+                : _summary == null
+                ? l.payableDisplayedSummary
+                : l.payableFilteredSummary,
             metrics: [
               FinancialSummaryMetric(
                 l.payableOpenShort,
-                _totalOpenCents,
+                _summary?['open_cents'] as int? ?? _totalOpenCents,
                 pal.ink,
               ),
               FinancialSummaryMetric(
                 l.payableOverdue,
-                _overdueCents,
+                _summary?['overdue_cents'] as int? ?? _overdueCents,
                 pal.warn,
               ),
               FinancialSummaryMetric(
                 l.payablePaidAmount,
-                _paidCents,
+                _summary?['paid_cents'] as int? ?? _paidCents,
                 pal.accent,
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _installmentSummary() {
+    final agenda = _summary?['installments'] as Map?;
+    if (agenda == null) return const SizedBox.shrink();
+    final l = context.l10n;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+      child: ApprovedSurface(
+        padding: const EdgeInsets.all(16),
+        radius: 24,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              l.installmentAgendaTitle,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            Text(
+              '${l.installmentEstimated}: ${AppFormatters.formatCurrency(agenda['estimated_cents'] as int)}',
+            ),
+            if ((agenda['pending_cents'] as int? ?? 0) > 0 ||
+                (agenda['pending_links'] as List? ?? []).isNotEmpty)
+              Text(
+                '${l.installmentPending}: ${AppFormatters.formatCurrency(agenda['pending_cents'] as int)}',
+              ),
+            Text(l.installmentEstimateHelp),
+            TextButton(
+              onPressed: () async {
+                final filters = <String, String>{
+                  if (_dueDateFrom != null)
+                    'due_date_from': _dueDateFrom!.toIso8601String().substring(
+                      0,
+                      10,
+                    ),
+                  if (_dueDateTo != null)
+                    'due_date_to': _dueDateTo!.toIso8601String().substring(
+                      0,
+                      10,
+                    ),
+                  if (_monthFilter != null) 'month': '$_monthFilter',
+                  if (_yearFilter != null) 'year': '$_yearFilter',
+                  if (_bankCardFilter != null) 'source_query': _bankCardFilter!,
+                  if (_merchantFilter != null) 'merchant': _merchantFilter!,
+                  if (_beneficiaryFilter != null)
+                    'beneficiary': _beneficiaryFilter!,
+                  if (_categoryFilter != null) 'category': _categoryFilter!,
+                  if (_statusFilter != null) 'status': _statusFilter!,
+                  if (_natureFilter != null) 'nature': _natureFilter!,
+                  if (_overdueOnly) 'overdue_only': 'true',
+                };
+                await Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (_) => FinancialInstallmentAgendaView(
+                      service: _payableService,
+                      filters: filters,
+                    ),
+                  ),
+                );
+                if (mounted) await _loadPayables();
+              },
+              child: Text(l.installmentOpenAgenda),
+            ),
+          ],
         ),
       ),
     );
@@ -977,6 +1105,8 @@ class _PayablesViewState extends State<PayablesView> {
       status: _statusFilter,
       category: _categoryFilter,
       nature: _natureFilter,
+      bankCard: _bankCardFilter,
+      merchant: _merchantFilter,
       month: _monthFilter,
       year: _yearFilter,
       from: _dueDateFrom,
@@ -991,7 +1121,12 @@ class _PayablesViewState extends State<PayablesView> {
         useSafeArea: true,
         builder: (_) => FractionallySizedBox(
           heightFactor: .9,
-          child: PayableFiltersPanel(initial: initial),
+          child: PayableFiltersPanel(
+            initial: initial,
+            businessToday: DateTime.tryParse(
+              _summary?['business_today'] as String? ?? '',
+            ),
+          ),
         ),
       );
     } else {
@@ -1000,7 +1135,12 @@ class _PayablesViewState extends State<PayablesView> {
         builder: (_) => Dialog(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 680, maxHeight: 650),
-            child: PayableFiltersPanel(initial: initial),
+            child: PayableFiltersPanel(
+              initial: initial,
+              businessToday: DateTime.tryParse(
+                _summary?['business_today'] as String? ?? '',
+              ),
+            ),
           ),
         ),
       );
@@ -1010,6 +1150,8 @@ class _PayablesViewState extends State<PayablesView> {
       _statusFilter = result!.status;
       _categoryFilter = result.category;
       _natureFilter = result.nature;
+      _bankCardFilter = result.bankCard;
+      _merchantFilter = result.merchant;
       _monthFilter = result.month;
       _yearFilter = result.year;
       _dueDateFrom = result.from;
@@ -1041,6 +1183,10 @@ class _PayablesViewState extends State<PayablesView> {
       },
     );
     final chips = <Widget>[
+      if (_bankCardFilter != null)
+        chip(_bankCardFilter!, () => _bankCardFilter = null),
+      if (_merchantFilter != null)
+        chip(_merchantFilter!, () => _merchantFilter = null),
       if (_beneficiaryFilter != null)
         chip(_beneficiaryFilter!, () {
           _beneficiaryFilter = null;
@@ -1084,7 +1230,9 @@ class _PayablesViewState extends State<PayablesView> {
             decoration: InputDecoration(
               labelText: l.payableBeneficiary,
               isDense: true,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
               suffixIcon: IconButton(
                 tooltip: l.payableSearch,
                 icon: const Icon(Icons.search),
@@ -1108,14 +1256,21 @@ class _PayablesViewState extends State<PayablesView> {
                 label: Text(l.payableFiltersTitle),
                 style: OutlinedButton.styleFrom(
                   minimumSize: const Size(0, 38),
-                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 14,
+                    vertical: 8,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
               FilterChip(
                 label: Text(l.payableOverdue),
                 selected: _overdueOnly,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 onSelected: (v) {
                   setState(() => _overdueOnly = v);
                   _loadPayables();
@@ -1143,6 +1298,7 @@ class _PayablesViewState extends State<PayablesView> {
       'PARTIAL' => l.payableStatusPartial,
       'PAID' => l.payableStatusPaid,
       'CANCELED' => l.payableStatusCanceled,
+      'SUBSTITUTED' => l.billStatusSubstituted,
       _ => value,
     };
   }
@@ -1232,9 +1388,12 @@ class _PayablesViewState extends State<PayablesView> {
           text = l10n.payableStatusPartial;
           break;
         case 'CANCELED':
+        case 'SUBSTITUTED':
           bg = pal.page;
           fg = pal.sub;
-          text = l10n.payableStatusCanceled;
+          text = p.status == 'SUBSTITUTED'
+              ? l10n.billStatusSubstituted
+              : l10n.payableStatusCanceled;
           break;
         default:
           bg = pal.soft;
@@ -1285,9 +1444,9 @@ class _PayablesViewState extends State<PayablesView> {
                     const SizedBox(height: 3),
                     Text(
                       '${l10n.payableBeneficiary}: ${p.beneficiary}',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: pal.sub,
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: pal.sub),
                     ),
                   ],
                 ),
@@ -1307,6 +1466,8 @@ class _PayablesViewState extends State<PayablesView> {
                   _paymentMethodLabel(p.paymentMethod),
                   icon: Icons.payment_outlined,
                 ),
+              if (p.nature == 'UNCLASSIFIED')
+                _payableTag(l10n.billPurposeUnknown, icon: Icons.help_outline),
               if (p.nature == 'PERSONAL_WITHDRAWAL')
                 _payableTag(
                   l10n.payableNaturePersonal,
@@ -1350,9 +1511,9 @@ class _PayablesViewState extends State<PayablesView> {
                   children: [
                     Text(
                       l10n.payableBalance,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: pal.sub,
-                      ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: pal.sub),
                     ),
                     const SizedBox(height: 2),
                     Text(
@@ -1380,7 +1541,9 @@ class _PayablesViewState extends State<PayablesView> {
                           '${l10n.payableDueDate}: ${AppFormatters.formatDate(p.dueDate)}',
                           style: TextStyle(
                             fontSize: 12,
-                            fontWeight: p.isOverdue ? FontWeight.bold : FontWeight.w500,
+                            fontWeight: p.isOverdue
+                                ? FontWeight.bold
+                                : FontWeight.w500,
                             color: p.isOverdue ? pal.warn : pal.ink,
                           ),
                         ),
@@ -1389,10 +1552,7 @@ class _PayablesViewState extends State<PayablesView> {
                     const SizedBox(height: 2),
                     Text(
                       '${l10n.payableOriginalAmount}: ${AppFormatters.formatCurrency(p.originalAmountCents)}',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: pal.sub,
-                      ),
+                      style: TextStyle(fontSize: 11, color: pal.sub),
                     ),
                     if (p.paidAmountCents > 0) ...[
                       const SizedBox(height: 1),
@@ -1429,11 +1589,18 @@ class _PayablesViewState extends State<PayablesView> {
               if (p.paymentsCount > 0)
                 OutlinedButton.icon(
                   icon: const Icon(Icons.history, size: 16),
-                  label: Text('${l10n.payableHistoryAction} (${p.paymentsCount})'),
+                  label: Text(
+                    '${l10n.payableHistoryAction} (${p.paymentsCount})',
+                  ),
                   style: OutlinedButton.styleFrom(
                     minimumSize: const Size(0, 36),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                   onPressed: () => _showHistoryDialog(p),
                 ),
@@ -1454,8 +1621,13 @@ class _PayablesViewState extends State<PayablesView> {
                     backgroundColor: pal.accent,
                     foregroundColor: pal.accentInk,
                     minimumSize: const Size(0, 38),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                   onPressed: () => _openPayment(p.id),
                 ),
@@ -1498,6 +1670,7 @@ class _PayablesViewState extends State<PayablesView> {
             SliverToBoxAdapter(child: _pendingSection()),
             SliverToBoxAdapter(child: _buildSummaryHeader()),
             SliverToBoxAdapter(child: _buildFilterBar()),
+            SliverToBoxAdapter(child: _installmentSummary()),
             if (_isLoading || _errorMessage != null || _payables.isEmpty)
               SliverFillRemaining(
                 hasScrollBody: false,

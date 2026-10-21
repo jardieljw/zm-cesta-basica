@@ -22,6 +22,8 @@ class PagedPayments extends FakePaymentService {
     int? year,
     String? category,
     String? beneficiary,
+    String? bankCard,
+    String? merchant,
     String? status,
     String? nature,
     bool overdueOnly = false,

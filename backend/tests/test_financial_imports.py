@@ -57,7 +57,8 @@ class FinancialAPI:
         return result["statement"], self.get("/statements/" + result["statement"]["id"] + "/items"), data
 
     def review(self, item, action="NEW", **fields):
-        return self.post("/items/" + item["id"] + "/review", {"action": action, "reason": "Conferido no documento", **fields})
+        context = {'import_id':item['import_id'],'expected_generation':item['generation']} if item.get('import_id') else {}
+        return self.post("/items/" + item["id"] + "/review", {**context,"action": action, "reason": "Conferido no documento", **fields})
 
     def entry(self, account_id, amount=5000, direction="DEBIT"):
         response = self.client.post("/api/v1/treasury/entries", json={

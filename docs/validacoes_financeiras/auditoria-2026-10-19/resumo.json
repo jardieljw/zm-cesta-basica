@@ -1,0 +1,90 @@
+{
+  "date": "2026-10-19",
+  "status": "REVIEW_REQUIRED",
+  "scope": "Research and audit; no functional fixes or company writes",
+  "baseline": {
+    "backend_passed": 449,
+    "backend_warnings": 14,
+    "flutter_passed": 356
+  },
+  "audit_characterizations": {
+    "defects_reproduced": 14,
+    "meaning": "Passing reproduces a defect; this is not acceptance"
+  },
+  "company_database_access": "mode=ro; PRAGMA query_only=ON",
+  "company_counts": {
+    "stored_pdfs": 7,
+    "previews": 10,
+    "confirmed_statements": 5,
+    "semantic_reviews": 4,
+    "obligation_links": 89,
+    "bank_import_entries": 28
+  },
+  "checks": {
+    "stored_report_hashes_valid": 10,
+    "bank_reconciliations_with_corresponding_amount_and_direction": 28,
+    "sqlite_integrity": "ok",
+    "foreign_key_violations": 0
+  },
+  "reparsed_files": [
+    {
+      "alias": "pdf_1",
+      "items": 28,
+      "stored_item_count_matches": true,
+      "recognized": true
+    },
+    {
+      "alias": "pdf_2",
+      "items": 22,
+      "stored_item_count_matches": true,
+      "recognized": true
+    },
+    {
+      "alias": "pdf_3",
+      "items": 0,
+      "stored_item_count_matches": true,
+      "recognized": false
+    },
+    {
+      "alias": "pdf_4",
+      "items": 10,
+      "stored_item_count_matches": true,
+      "recognized": true
+    },
+    {
+      "alias": "pdf_5",
+      "items": 34,
+      "stored_item_count_matches": true,
+      "recognized": true
+    },
+    {
+      "alias": "pdf_6",
+      "items": 39,
+      "stored_item_count_matches": true,
+      "recognized": true
+    },
+    {
+      "alias": "pdf_7",
+      "items": 0,
+      "stored_item_count_matches": true,
+      "recognized": false
+    }
+  ],
+  "limits": [
+    "No universal bank/layout approval",
+    "No complete independent transcription of all transactions",
+    "No company corrections or deployment",
+    "Private renderings excluded",
+    "Institution-specific new PDF tests include synthetic samples"
+  ],
+  "source_sha256": {
+    "backend/app/services/financial_pdf_readers.py": "1fc9da3406fffce52435adffd93a3c508c5acf856e9df9e646970abd0b6849cb",
+    "backend/app/services/financial_readers.py": "2d59af583fa47f2dac5d824ca1c9e9480d43f2813d5a819f3b92b064b71580ea",
+    "backend/app/services/financial_previews.py": "1f7f6fd74d03e77fe759829c5b39ac2f12f49b46e231abbb7bca705d7f0ca05d",
+    "backend/app/services/financial_imports.py": "2c517594f82982a1ab5a542ff8eaec6110ec0488c16945782a8b9a0e1d8cff62",
+    "backend/app/services/financial_bill_semantics.py": "dc7cb5fe8dd6d7d39286f8bd745e782d3cb3529929651181bb83109c0eba04cd",
+    "client/lib/views/financial_imports_view.dart": "8f5cbf484acca18392934162376fbca7ad74da587056426bc0db159ab7971161",
+    "client/lib/services/financial_import_service.dart": "40c58d0a2e5cb05d6595ce012af9b9c504bfdf31b6658be6ee0f233a15994bf2",
+    "docs/validacoes_financeiras/auditoria-2026-10-19/test_caracterizacao.py": "6ac5c9f7312e3f2727063824168a164237a63b1476fd5760d19f8037b0441206"
+  }
+}

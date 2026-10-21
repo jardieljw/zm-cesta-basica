@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/financial_import_service.dart';
 import '../core/api_client.dart';
 import '../services/connectivity_service.dart';
 import '../services/dashboard_service.dart';
@@ -37,12 +38,14 @@ class HomeView extends StatefulWidget {
   final DashboardService? dashboard;
   final ApiClient? apiClient;
   final AppOverviewController? controller;
+  final Future<FinancialImportFile?> Function()? pickFinancialDocument;
   const HomeView({
     super.key,
     this.connectivity,
     this.dashboard,
     this.apiClient,
     this.controller,
+    this.pickFinancialDocument,
   });
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -150,8 +153,9 @@ class _HomeViewState extends State<HomeView> {
         ? baseStyle?.copyWith(fontSize: 26, letterSpacing: 0)
         : baseStyle?.copyWith(letterSpacing: -.5);
     final child = Column(
-      crossAxisAlignment:
-          tile ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+      crossAxisAlignment: tile
+          ? CrossAxisAlignment.center
+          : CrossAxisAlignment.start,
       children: [
         Text(
           label,
@@ -212,10 +216,7 @@ class _HomeViewState extends State<HomeView> {
             gradient: LinearGradient(
               begin: const Alignment(-0.82, -0.57),
               end: const Alignment(0.82, 0.57),
-              colors: [
-                p.panel,
-                Color.lerp(p.surface, p.soft, 0.14)!,
-              ],
+              colors: [p.panel, Color.lerp(p.surface, p.soft, 0.14)!],
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -315,7 +316,8 @@ class _HomeViewState extends State<HomeView> {
             )
           : 'A receber hoje: ${AppFormatters.formatCurrency(receive)} · Sem atrasadas',
       icon: Icons.event_outlined,
-      onTap: () => _finance(1, scope: late > 0 ? DueScope.overdue : DueScope.today),
+      onTap: () =>
+          _finance(1, scope: late > 0 ? DueScope.overdue : DueScope.today),
     );
   }
 
@@ -392,7 +394,9 @@ class _HomeViewState extends State<HomeView> {
                 if (d.financial.salesWithoutCostCount > 0) ...[
                   _gap(),
                   ApprovedWarningBox(
-                    text: l.appIncompleteCost(d.financial.salesWithoutCostCount),
+                    text: l.appIncompleteCost(
+                      d.financial.salesWithoutCostCount,
+                    ),
                   ),
                 ],
                 _gap(),
@@ -553,6 +557,7 @@ class _HomeViewState extends State<HomeView> {
           child: switch (area) {
             0 => _home(),
             1 => AppFinanceView(
+              pickFinancialDocument: widget.pickFinancialDocument,
               controller: c,
               tab: _financeTab,
               onTab: (tab) => setState(() => _financeTab = tab),
@@ -754,6 +759,8 @@ class _ResultPage extends StatelessWidget {
       (l.appSoldCosts, f.soldBasketsCostCents),
       (l.appGrossProfit, f.grossProfitCents),
       (l.appPaidExpenses, f.operatingExpensesPaidCents),
+      if (f.unclassifiedPaidCents != 0)
+        (l.billUnclassifiedPaid, f.unclassifiedPaidCents),
       (l.appResult, f.operatingResultCents),
     ];
     return ApprovedPage(
@@ -810,4 +817,3 @@ class _ResultPage extends StatelessWidget {
     );
   }
 }
-

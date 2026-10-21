@@ -29,7 +29,7 @@ class CatalogApi extends fixtures.AssemblyApi {
   }
 
   @override
-  Future<dynamic> delete(String path, {bool isMutation = true}) async {
+  Future<dynamic> delete(String path, {bool isMutation = true, String? idempotencyKey}) async {
     deletions.add(path);
     if (path.endsWith('/catalog')) {
       exists = false;

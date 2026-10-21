@@ -155,7 +155,12 @@ class FinancialStatementCreate(FinancialInput):
         return self
 
 
-class FinancialItemReview(FinancialInput):
+class FinancialImportContext(FinancialInput):
+    import_id: EntityId | None = None
+    expected_generation: int | None = Field(None, strict=True, ge=1)
+
+
+class FinancialItemReview(FinancialImportContext):
     action: Literal["NEW", "LINK", "IGNORE"]
     transaction_id: Optional[EntityId] = None
     reason: str = Field(min_length=3, max_length=1000)
@@ -167,7 +172,7 @@ class FinancialItemReview(FinancialInput):
         return self
 
 
-class FinancialReconciliationCreate(FinancialInput):
+class FinancialReconciliationCreate(FinancialImportContext):
     transaction_id: EntityId
     cash_flow_entry_id: EntityId
     amount_cents: PositiveMoney
@@ -178,5 +183,5 @@ class FinancialReviewCorrectionCreate(FinancialItemReview):
     expected_revision: int = Field(strict=True, ge=0)
 
 
-class FinancialReconciliationVoid(FinancialInput):
+class FinancialReconciliationVoid(FinancialImportContext):
     reason: str = Field(min_length=3, max_length=1000)

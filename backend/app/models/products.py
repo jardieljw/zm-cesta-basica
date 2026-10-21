@@ -22,6 +22,8 @@ class Product(Base):
     created_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=utc_now, nullable=False)
     updated_at: Mapped[datetime.datetime] = mapped_column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)
 
+    removed_at: Mapped[Optional[datetime.datetime]] = mapped_column(DateTime, nullable=True)
+
     packagings: Mapped[List["ProductPackaging"]] = relationship(back_populates="product", cascade="all, delete-orphan")
 
 class ProductPackaging(Base):
@@ -66,6 +68,8 @@ class RecipeVersion(Base):
     notes: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     basket_type: Mapped["BasketType"] = relationship(back_populates="recipes")
+    suggested_price_cents: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+
     items: Mapped[List["RecipeItem"]] = relationship(back_populates="recipe_version", cascade="all, delete-orphan")
 
 class RecipeItem(Base):

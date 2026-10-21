@@ -57,7 +57,7 @@ class _CatalogApi extends ApiClient {
   }
 
   @override
-  Future<dynamic> delete(String path, {bool isMutation = true}) async {
+  Future<dynamic> delete(String path, {bool isMutation = true, String? idempotencyKey}) async {
     deletedPaths.add(path);
     deleted = true;
     return {'deleted': true};

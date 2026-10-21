@@ -1,5 +1,67 @@
 # Índice das mecânicas do app
 
+**Estado financeiro mais recente documentado — 20/10/2026:** consultar a
+[retomada única da importação de faturas](RETOMADA_IMPORTACAO_FATURAS.md).
+Ela registra a Etapa 1 do plano corretivo implementada, verificada e ativada
+para uso local; as etapas corretivas 2–4 continuam pendentes, assim como T15
+e a avaliação visual nativa integral.
+
+Os fluxos E1–E4 da aplicação constam como concluídos e ativados na base de
+testes; E5.7 consta como entregue e ativada, com uso nativo final ainda não
+observado. Esses identificadores não correspondem às etapas 1–4 do plano
+corretivo. Resultados de testes e ativação local não constituem homologação
+integral nem comprovação de implantação em produção. Evidências, limites e
+próximo passo devem ser consultados na retomada.
+
+**Registros financeiros históricos — 19/10/2026:** os blocos financeiros
+datados abaixo preservam o estado e as decisões de cada rodada. As afirmações
+de planejamento, pendência ou ausência de ativação nesses registros se referem
+àquela data e não substituem o estado mais recente apontado acima.
+
+**E1 implementada — 19/10/2026:** [entrada, parcelas e controles de faturas](IMPORTACAO_FATURAS_E1.md)
+e [estado de retomada](RETOMADA_IMPORTACAO_FATURAS.md). Origem preservada,
+detecção por conteúdo e pendências com procedência. E2–E4 também concluídas no código conforme [Pagar](CONTAS_A_PAGAR.md);
+E5 permanece pendente. Situação e evidências na retomada única; sem ativação.
+
+
+**Plano financeiro após a auditoria — 19/10/2026:**
+[implementação por etapas](PLANO_IMPLEMENTACAO_IMPORTACAO_FATURAS.md) e
+[retomada curta para execução](RETOMADA_IMPORTACAO_FATURAS.md). Entrada/controles,
+integração com Contas a Pagar/pagamentos, formatos/conferência/filtros, parcelas
+futuras e homologação. Planejado, ainda não implementado; decisões técnicas e
+critérios de aceitação não são capacidades já entregues.
+
+**Auditoria antes de correções — 19/10/2026:** [19 arquivos fornecidos e fluxo
+atual](AUDITORIA_FATURAS_FORNECIDAS_2026-10-19.md). Teste em HTTPS/banco isolado e
+telas reais Flutter: zero títulos gerados, limitações de entrada e falhas
+reproduzidas. Não houve correção de código naquela rodada; o pedido posterior
+de planejamento está registrado acima.
+
+**Prioridade financeira corrigida pelo usuário — 19/10/2026:**
+[importar suas faturas até Contas a Pagar](ESCOPO_IMPORTACAO_DE_FATURAS.md), com
+banco/cartão, estabelecimento, valor, vencimento e parcelas. O roteiro anterior
+de expansão/alocações deve ser reavaliado nesse escopo. A ativação/testes abaixo
+não significam que esse resultado já esteja entregue.
+
+**Continuação financeira — 19/10/2026:** servidor Python e cliente Windows
+atualizados, com backup e [runtime HTTPS verificado](validacoes_financeiras/correcao-2026-10-19/README.md).
+[Diagnóstico de alocações e próximo contrato](ALOCACOES_DE_FATURA.md): recurso
+somente da API, sem gravação/liberação dos casos ainda bloqueados. As notas de
+não ativação abaixo descrevem a entrega anterior.
+
+**Importação financeira — correção autorizada em 19/10/2026:**
+[comportamento implementado, integração Flutter e limites](CORRECAO_IMPORTACAO_FINANCEIRA_2026-10-19.md).
+Controles exatos, revisão explícita e conciliação com movimentos existentes;
+casos sem alocação continuam bloqueados. [Evidência](validacoes_financeiras/correcao-2026-10-19/README.md).
+A auditoria abaixo registra os defeitos da base anterior. Atualização instalada
+continua separada de código/testes/build; histórico da empresa preservado.
+
+**Importação financeira — auditoria de 19/10/2026:**
+[pesquisa, 14 falhas reproduzidas e plano de correção](AUDITORIA_IMPORTACAO_FINANCEIRA_2026-10-19.md).
+A integração PDF/CSV atual tem problemas de datas, controles, revisão e efeitos
+financeiros. Suites aprovadas não homologam qualquer banco. Consultar esse
+relatório antes de novos lançamentos em lote ou retomada dos guias históricos.
+
 **Prioridade FE-055 — 17/10/2026:** [integração da interface aprovada](INTEGRACAO_INTERFACE_APROVADA.md)
 descreve as cinco áreas ligadas aos serviços, aparência comum, responsabilidade
 de cada camada e a entrega Windows Release concluída: 334 testes Flutter,
@@ -95,7 +157,7 @@ Para entender uma função, abra o guia da tabela abaixo. Cada fluxo explica sua
 | Composição, quantidades e versões de receitas | [Receitas e composição](RECEITAS_E_COMPOSICAO.md) | Ativo |
 | Editar, inativar e excluir tipos de cesta | [Exclusão de tipos de cesta](EXCLUSAO_DE_TIPOS_DE_CESTA.md) | Ativo; histórico preservado |
 | Fabricação padrão/personalizada antecipada e histórico por tipo de cesta | [Montagens e histórico](MONTAGENS_E_HISTORICO.md) | Integrado ao módulo de cestas |
-| Compras, confirmação, conversão, custo e cancelamento | [Compras](COMPRAS.md) | Ativo |
+| Compras, edição/exclusão de rascunhos, confirmação, conversão, custo e cancelamento | [Compras](COMPRAS.md) | Ativo |
 | Saldo, movimentações, perdas e contagem física | [Estoque e ajustes](ESTOQUE_E_AJUSTES.md) | Ativo |
 | Cadastro, limite de crédito e extrato de clientes | [Clientes](CLIENTES.md) | Ativo |
 | Venda de cesta pronta e montagem durante a venda | [Vendas e montagem](VENDAS_E_MONTAGEM.md) | Ativo |

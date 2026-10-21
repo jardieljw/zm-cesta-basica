@@ -1,0 +1,17 @@
+{
+  "status": "ACTIVATED_E56_NATIVE_ACCEPTANCE_PENDING",
+  "client_version": "1.0.3+4",
+  "schema": "f06d7e8f0926",
+  "migrations_applied": [],
+  "database_tables_verified": 56,
+  "existing_data_preserved": true,
+  "auth_last_seen_may_change": true,
+  "backup_filename": "estoque_backup_pre_e56_20261020_123849_20261020_123849_575064.db",
+  "backup_sha256": "e1fcdb92b60e2d6140386ee6f3884eeb43500b1eea4082564b65f19895b149cf",
+  "https_health": true,
+  "auth_required": true,
+  "saved_conflicting_due_recovered_without_writes": true,
+  "client_exe_sha256": "898ec91d7541f2ff38b553782f04dc82215afe36d0b3ec340978e3e1a66d9ac8",
+  "server_launcher_pid": 14700,
+  "native_ui_verified": false
+}

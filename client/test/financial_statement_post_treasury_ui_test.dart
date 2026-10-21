@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zm_cesta_basica_client/core/api_client.dart';
-import 'package:zm_cesta_basica_client/l10n/app_localizations.dart';
 import 'package:zm_cesta_basica_client/services/financial_import_service.dart';
 import 'package:zm_cesta_basica_client/views/financial_imports_view.dart';
+import 'package:zm_cesta_basica_client/views/financial_bank_review_view.dart';
+import 'financial_pdf_import_test.dart' as harness;
 
 class MockTreasuryImportApi extends ApiClient {
   final gets = <String>[];
   final posts = <String>[];
 
-  bool posted = false;
+  bool posted = false, identityReviewed = false, reconciled = false;
+  Map<String, dynamic> get occurrence => {
+    'id': 'i1',
+    'statement_id': 'st-123',
+    'position': 1,
+    'review_status': identityReviewed ? 'NEW' : 'PENDING',
+    'transaction_id': identityReviewed ? 'tx1' : null,
+    'normalized_data': {
+      'transaction_date': '2026-10-01',
+      'amount_cents': 5000,
+      'description': 'Entrada de teste',
+    },
+  };
 
   final preview = {
     'id': 'prev-123',
@@ -72,14 +85,38 @@ class MockTreasuryImportApi extends ApiClient {
   @override
   Future<dynamic> get(String path) async {
     gets.add(path);
+    if (path.contains('/statements/st-123/items')) return [occurrence];
+    if (path.contains('/items/i1/candidates')) return [];
+    if (path.contains('/items/i1')) return occurrence;
+    if (path.contains('/treasury/entries')) {
+      return [
+        {
+          'id': 'e1',
+          'entry_type': 'CREDIT',
+          'amount_cents': 5000,
+          'description': 'Recebimento existente',
+        },
+      ];
+    }
+    if (path.contains('/transactions?')) {
+      return [
+        {'id': 'tx1', 'unreconciled_amount_cents': reconciled ? 0 : 5000},
+      ];
+    }
     if (path.contains('/previews/prev-123/items')) return [];
     if (path.contains('/previews/prev-123/errors')) return [];
     if (path.contains('/previews/prev-123/pages')) return [];
     if (path.contains('/previews/prev-123')) return preview;
-    if (path.contains('/documents/doc-123')) return {'id': 'doc-123', 'filename': 'extrato_nubank.pdf'};
+    if (path.contains('/documents/doc-123')) {
+      return {'id': 'doc-123', 'filename': 'extrato_nubank.pdf'};
+    }
     if (path.contains('/sources')) return [source];
-    if (path.contains('/statements/st-123')) return posted ? statementAfter : statementBefore;
-    if (path.contains('/statements')) return [posted ? statementAfter : statementBefore];
+    if (path.contains('/statements/st-123')) {
+      return posted ? statementAfter : statementBefore;
+    }
+    if (path.contains('/statements')) {
+      return [posted ? statementAfter : statementBefore];
+    }
     return {};
   }
 
@@ -91,6 +128,20 @@ class MockTreasuryImportApi extends ApiClient {
     bool isMutation = true,
   }) async {
     posts.add(path);
+    if (path.contains('/items/i1/review')) {
+      identityReviewed = true;
+      return {
+        'item': occurrence,
+        'transaction': {'id': 'tx1'},
+      };
+    }
+    if (path.endsWith('/reconciliations')) {
+      reconciled = true;
+      return {
+        'reconciliation': {'id': 'r1'},
+        'affects_ledger': false,
+      };
+    }
     if (path.contains('/statements/st-123/post-to-treasury')) {
       posted = true;
       return {
@@ -107,44 +158,79 @@ class MockTreasuryImportApi extends ApiClient {
 }
 
 void main() {
-  testWidgets('FinancialPdfPreviewView renders Post to Treasury button and executes post flow', (tester) async {
-    final mockApi = MockTreasuryImportApi();
-    final service = FinancialImportService(apiClient: mockApi);
-
-    await tester.pumpWidget(
-      MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        home: Scaffold(
-          body: FinancialPdfPreviewView(
-            service: service,
-            previewId: 'prev-123',
-          ),
-        ),
+  setUpAll(harness.loadImportFonts);
+  testWidgets('bank occurrence review fits narrow screen and enlarged text', (
+    tester,
+  ) async {
+    final api = MockTreasuryImportApi();
+    await harness.mount(
+      tester,
+      FinancialBankReviewView(
+        service: FinancialImportService(apiClient: api),
+        statementId: 'st-123',
+      ),
+      size: const Size(320, 780),
+      dark: true,
+      scale: 1.7,
+    );
+    await harness.click(tester, find.text('Entrada de teste'));
+    await harness.click(tester, find.byType(CheckboxListTile));
+    expect(tester.takeException(), isNull);
+    await harness.capture(tester, 'bank-occurrence-narrow-enlarged');
+    expect(api.posts, isEmpty);
+  });
+  testWidgets('preview opens explicit bank review without posting money', (
+    tester,
+  ) async {
+    final api = MockTreasuryImportApi();
+    await harness.mount(
+      tester,
+      FinancialPdfPreviewView(
+        service: FinancialImportService(apiClient: api),
+        previewId: 'prev-123',
       ),
     );
-
-    // Initial load
+    final action = find.byKey(const ValueKey('post-to-treasury-button'));
+    await harness.click(tester, action);
+    expect(find.text('Comparar com registros do aplicativo'), findsOneWidget);
+    expect(api.posts, isEmpty);
+    expect(find.text('Entrada de teste'), findsOneWidget);
+  });
+  testWidgets('operator reviews identity then reconciles existing money only', (
+    tester,
+  ) async {
+    final api = MockTreasuryImportApi();
+    await harness.mount(
+      tester,
+      FinancialBankReviewView(
+        service: FinancialImportService(apiClient: api),
+        statementId: 'st-123',
+      ),
+    );
+    await harness.capture(tester, 'bank-review-safe');
+    await harness.click(tester, find.text('Entrada de teste'));
+    await tester.enterText(
+      find.byType(TextField).first,
+      'Conferido no extrato e no registro existente',
+    );
+    await harness.click(tester, find.byType(CheckboxListTile));
+    await harness.click(tester, find.text('Guardar como movimento diferente'));
+    expect(api.identityReviewed, isTrue);
+    await harness.click(tester, find.byType(DropdownButtonFormField<String>));
+    await tester.tap(find.textContaining('Recebimento existente').last);
     await tester.pumpAndSettle();
-
-    // Verify "Lançar no Caixa / Tesouraria" button is visible
-    final postButton = find.byKey(const ValueKey('post-to-treasury-button'));
-    await tester.ensureVisible(postButton);
-    await tester.pumpAndSettle();
-    expect(postButton, findsOneWidget);
-    expect(find.text('Lançar no Caixa / Tesouraria'), findsOneWidget);
-
-    // Tap button to post
-    await tester.tap(postButton);
-    await tester.pumpAndSettle();
-
-    // Verify post endpoint was called
-    expect(mockApi.posts.any((p) => p.contains('/statements/st-123/post-to-treasury')), isTrue);
-
-    // Verify snackbar feedback
-    expect(find.textContaining('lançamentos lançados na Tesouraria'), findsOneWidget);
-
-    final linkedText = find.textContaining('2 de 2 movimentações já registradas');
-    expect(linkedText, findsOneWidget);
+    await tester.enterText(find.byType(TextField).last, '50,00');
+    await harness.capture(tester, 'bank-link-safe');
+    await harness.click(tester, find.text('Vincular evidência ao movimento'));
+    expect(api.reconciled, isTrue);
+    expect(api.posts.any((p) => p.endsWith('/reconciliations')), isTrue);
+    expect(
+      api.posts.any(
+        (p) =>
+            p.contains('/post-to-treasury') || p.endsWith('/treasury/entries'),
+      ),
+      isFalse,
+    );
+    expect(tester.takeException(), isNull);
   });
 }

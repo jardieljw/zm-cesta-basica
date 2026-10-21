@@ -509,8 +509,8 @@ void main() {
       expect(mockClient.lastGetPath, isNotNull);
       final path = mockClient.lastGetPath!;
       expect(path, startsWith('/api/v1/payables?'));
-      expect(path, contains('due_date_from=2026-10-01T00%3A00%3A00.000Z'));
-      expect(path, contains('due_date_to=2026-10-31T23%3A59%3A59.000Z'));
+      expect(path, contains('due_date_from=2026-10-01'));
+      expect(path, contains('due_date_to=2026-10-31'));
       expect(path, contains('month=10'));
       expect(path, contains('year=2026'));
       expect(path, contains('category=FORNECEDOR'));

@@ -4,7 +4,7 @@ from typing import Literal, Optional
 
 from pydantic import Field, model_validator
 
-from app.schemas.financial_imports import FinancialInput, EntityId, Money
+from app.schemas.financial_imports import FinancialInput, FinancialImportContext, EntityId, Money
 
 
 SemanticCategory = Literal[
@@ -25,7 +25,7 @@ class BillSemanticItemInput(FinancialInput):
     notes: Optional[str] = Field(None, max_length=1000)
 
 
-class BillSemanticReviewCreate(FinancialInput):
+class BillSemanticReviewCreate(FinancialImportContext):
     expected_revision: int = Field(strict=True, ge=0)
     notes: Optional[str] = Field(None, max_length=2000)
     items: list[BillSemanticItemInput] = Field(default_factory=list, max_length=5000)
@@ -70,7 +70,7 @@ class BillSemanticReviewResponse(FinancialInput):
     items: list[BillSemanticItemResponse] = Field(default_factory=list)
 
 
-class BillGenerateObligationsRequest(FinancialInput):
+class BillGenerateObligationsRequest(FinancialImportContext):
     review_id: Optional[EntityId] = None
     notes: Optional[str] = Field(None, max_length=1000)
 

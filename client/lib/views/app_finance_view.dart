@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/financial_import_service.dart';
 import '../l10n/l10n_extension.dart';
 import '../services/app_overview_controller.dart';
 import '../utils/formatters.dart';
@@ -12,6 +13,7 @@ import 'financial_sources_view.dart';
 
 class AppFinanceView extends StatefulWidget {
   final AppOverviewController controller;
+  final Future<FinancialImportFile?> Function()? pickFinancialDocument;
   final int tab;
   final ValueChanged<int> onTab;
   final ValueChanged<OverviewAccount> onAccount;
@@ -19,6 +21,7 @@ class AppFinanceView extends StatefulWidget {
   final VoidCallback onPayableTools, onReceivableTools;
   const AppFinanceView({
     super.key,
+    this.pickFinancialDocument,
     required this.controller,
     required this.tab,
     required this.onTab,
@@ -435,6 +438,20 @@ class _AppFinanceViewState extends State<AppFinanceView> {
         const SizedBox(height: 20),
         _tabs(),
         const SizedBox(height: 20),
+        if (widget.tab != 0) ...[
+          ApprovedRow(
+            key: const ValueKey('finance-history'),
+            title: l.appHistoryAndRecords,
+            subtitle: widget.tab == 1
+                ? l.financialPayablesToolsHelp
+                : l.financialReceivablesToolsHelp,
+            icon: Icons.manage_search,
+            onTap: widget.tab == 1
+                ? widget.onPayableTools
+                : widget.onReceivableTools,
+          ),
+          const SizedBox(height: 20),
+        ],
         if (widget.tab != 0) ..._pending(widget.tab == 1),
         if (c.loading)
           const Center(child: CircularProgressIndicator())
@@ -499,13 +516,16 @@ class _AppFinanceViewState extends State<AppFinanceView> {
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                     Text(
-                      AppFormatters.formatCurrency(summary.financial.treasuryBalanceCents ?? 0),
+                      AppFormatters.formatCurrency(
+                        summary.financial.treasuryBalanceCents ?? 0,
+                      ),
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: (summary.financial.treasuryBalanceCents ?? 0) >= 0
-                                ? Colors.green.shade800
-                                : Colors.red.shade800,
-                          ),
+                        fontWeight: FontWeight.bold,
+                        color:
+                            (summary.financial.treasuryBalanceCents ?? 0) >= 0
+                            ? Colors.green.shade800
+                            : Colors.red.shade800,
+                      ),
                     ),
                   ],
                 ),
@@ -539,11 +559,15 @@ class _AppFinanceViewState extends State<AppFinanceView> {
                           ),
                           Text(
                             AppFormatters.formatCurrency(
-                              (acc['current_balance_cents'] as num?)?.toInt() ?? 0,
+                              (acc['current_balance_cents'] as num?)?.toInt() ??
+                                  0,
                             ),
                             style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: ((acc['current_balance_cents'] as num?) ?? 0) >= 0
+                              color:
+                                  ((acc['current_balance_cents'] as num?) ??
+                                          0) >=
+                                      0
                                   ? null
                                   : Colors.red.shade700,
                             ),
@@ -579,7 +603,10 @@ class _AppFinanceViewState extends State<AppFinanceView> {
             onTap: () async {
               await Navigator.of(context).push(
                 MaterialPageRoute<void>(
-                  builder: (_) => FinancialImportsView(apiClient: c.api),
+                  builder: (_) => FinancialImportsView(
+                    apiClient: c.api,
+                    pickFile: widget.pickFinancialDocument,
+                  ),
                 ),
               );
               if (mounted) c.refresh();
@@ -613,15 +640,6 @@ class _AppFinanceViewState extends State<AppFinanceView> {
               ),
             ),
           ],
-        ],
-        if (widget.tab != 0 && c.error != null) ...[
-          const SizedBox(height: 20),
-          TextButton(
-            onPressed: widget.tab == 1
-                ? widget.onPayableTools
-                : widget.onReceivableTools,
-            child: Text(l.appHistoryAndRecords),
-          ),
         ],
       ],
     );

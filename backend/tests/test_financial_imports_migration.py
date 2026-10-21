@@ -41,7 +41,15 @@ def config(path):
 def snapshot(path, tables=None):
     with sqlite3.connect(path) as db:
         tables = tables or {r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")} - {"alembic_version"}
-        return {table: sorted(db.execute(f'SELECT * FROM "{table}"').fetchall(), key=repr) for table in tables}
+        # Compare the original columns; E2's migration tests separately verify
+        # that the new optional columns are NULL on every legacy row.
+        additions = {'accounts_payable': {'superseded_by_id'}, 'payable_payments': {'bill_revision_id','stock_cents','business_cents','personal_cents','unclassified_cents'}}
+        result = {}
+        for table in tables:
+            columns = [r[1] for r in db.execute(f'PRAGMA table_info("{table}")') if r[1] not in additions.get(table, set())]
+            projection = ','.join('"'+c+'"' for c in columns)
+            result[table] = sorted(db.execute(f'SELECT {projection} FROM "{table}"').fetchall(), key=repr)
+        return result
 
 
 def test_populated_migration_preserves_old_history_indexes_and_supports_evidence(tmp_path, test_engine):
@@ -53,13 +61,17 @@ def test_populated_migration_preserves_old_history_indexes_and_supports_evidence
         db.add(PairedDevice(id="migration-device", device_name="Teste", device_public_id="migration-test", token_hash="synthetic-hash"))
         db.add(FinancialAccount(id="migration-bank", name="Banco existente", account_type="BANK", initial_balance_cents=50000, current_balance_cents=50000))
         db.commit()
-        payable = create_account_payable(db, AccountPayableCreate(
-            description="Divida antiga", beneficiary="Fornecedor exemplo", category="OUTROS",
-            original_amount_cents=10000, due_date=datetime.datetime(2024, 6, 10),
-        ))[0]
-        payment = record_payable_payment(db, payable.id, PayablePaymentCreate(amount_cents=4000, account_id="migration-bank"))
+        # Populate the actual previous schema, independent of today's ORM columns.
+        payment_id = 'legacy-payment'
+        db.execute(text("""INSERT INTO accounts_payable
+          (id,payable_number,description,beneficiary,category,nature,original_amount_cents,paid_amount_cents,balance_cents,due_date,payment_method,status,installment_number,total_installments,is_recurrent,created_at,updated_at)
+          VALUES ('legacy-payable',1,'Divida antiga','Fornecedor exemplo','OUTROS','BUSINESS',10000,4000,6000,'2024-06-10','BOLETO','PARTIAL',1,1,0,'2024-06-01','2024-06-01')"""))
+        db.execute(text("""INSERT INTO payable_payments(id,payable_id,account_id,payment_date,amount_cents,payment_method,status,created_at)
+          VALUES ('legacy-payment','legacy-payable','migration-bank','2024-06-10',4000,'BOLETO','CONFIRMED','2024-06-10')"""))
+        db.execute(text("""INSERT INTO cash_flow_entries(id,account_id,entry_type,amount_cents,category,nature,description,source_type,source_id,payment_method,occurred_at,is_reversal,created_at)
+          VALUES ('legacy-cash','migration-bank','DEBIT',4000,'OUTROS','BUSINESS','Pagamento antigo','PAYABLE_PAYMENT','legacy-payment','BOLETO','2024-06-10',0,'2024-06-10')"""))
+        db.execute(text("UPDATE financial_accounts SET current_balance_cents=46000 WHERE id='migration-bank'"))
         db.commit()
-        payment_id = payment.id
     before = snapshot(path)
     with sqlite3.connect(path) as db:
         old_schema = db.execute("SELECT type,name,sql FROM sqlite_master WHERE type IN ('index','trigger') ORDER BY name").fetchall()

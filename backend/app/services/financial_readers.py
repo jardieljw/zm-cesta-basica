@@ -14,6 +14,7 @@ from pydantic import ValidationError
 
 from app.schemas.financial_imports import FinancialTransactionData
 from app.schemas.financial_readers import CSVOptions
+from app.services.financial_normalization import normalize_card_data, control_kind
 
 MAX_ROWS = 2000
 MAX_COLUMNS = 100
@@ -37,69 +38,70 @@ def normalized(text: str) -> str:
 
 
 READERS = {
-    "pdf_auto": CSVReader("pdf_auto", "1", media_type="application/pdf"),
-    "generic_csv": CSVReader("generic_csv", "2"),
-    "nubank_account_csv": CSVReader("nubank_account_csv", "1", CSVOptions(
+    "pdf_auto": CSVReader("pdf_auto", "4", media_type="application/pdf"),
+    "csv_auto": CSVReader("csv_auto", "2"),
+    "generic_csv": CSVReader("generic_csv", "4"),
+    "nubank_account_csv": CSVReader("nubank_account_csv", "3", CSVOptions(
         columns={"transaction_date": "Data", "amount": "Valor", "external_id": "Identificador", "description": "Descrição"},
         date_format="DD/MM/YYYY", decimal_separator=".", amount_convention="CREDITS_POSITIVE",
         external_id_namespace="nubank:account",
     )),
-    "nubank_card_csv": CSVReader("nubank_card_csv", "1", CSVOptions(
+    "nubank_card_csv": CSVReader("nubank_card_csv", "3", CSVOptions(
         columns={"transaction_date": "date", "description": "title", "amount": "amount"},
         date_format="YYYY-MM-DD", decimal_separator=",", thousands_separator=".", amount_convention="CHARGES_POSITIVE",
         amount_sign_spacing="OPTIONAL_SINGLE_SPACE", date_kind="PURCHASE",
     )),
-    "nu_empresas_account_csv": CSVReader("nu_empresas_account_csv", "1", CSVOptions(
+    "nu_empresas_account_csv": CSVReader("nu_empresas_account_csv", "3", CSVOptions(
         columns={"transaction_date": "Data", "amount": "Valor", "external_id": "Identificador", "description": "Descrição"},
         date_format="DD/MM/YYYY", decimal_separator=".", amount_convention="CREDITS_POSITIVE",
         external_id_namespace="nubank:pj_account",
     )),
-    "itau_account_csv": CSVReader("itau_account_csv", "1", CSVOptions(
+    "itau_account_csv": CSVReader("itau_account_csv", "3", CSVOptions(
         columns={"transaction_date": "Data", "description": "Lançamento", "amount": "Valor"},
         delimiter=";", date_format="DD/MM/YYYY", decimal_separator=",", thousands_separator=".",
         amount_convention="CREDITS_POSITIVE",
     )),
-    "itau_card_csv": CSVReader("itau_card_csv", "1", CSVOptions(
+    "itau_card_csv": CSVReader("itau_card_csv", "3", CSVOptions(
         columns={"transaction_date": "Data", "description": "Lançamento", "amount": "Valor"},
         delimiter=";", date_format="DD/MM/YYYY", decimal_separator=",", thousands_separator=".",
         amount_convention="CHARGES_POSITIVE", date_kind="PURCHASE",
     )),
-    "santander_account_csv": CSVReader("santander_account_csv", "1", CSVOptions(
+    "santander_account_csv": CSVReader("santander_account_csv", "3", CSVOptions(
         columns={"transaction_date": "Data", "description": "Histórico", "amount": "Valor", "external_id": "Documento"},
         delimiter=";", date_format="DD/MM/YYYY", decimal_separator=",", thousands_separator=".",
         amount_convention="CREDITS_POSITIVE", external_id_namespace="santander:account",
     )),
-    "santander_card_csv": CSVReader("santander_card_csv", "1", CSVOptions(
+    "santander_card_csv": CSVReader("santander_card_csv", "3", CSVOptions(
         columns={"transaction_date": "Data", "description": "Descricao", "amount": "Valor"},
         delimiter=";", date_format="DD/MM/YYYY", decimal_separator=",", thousands_separator=".",
         amount_convention="CHARGES_POSITIVE", date_kind="PURCHASE",
     )),
-    "inter_account_csv": CSVReader("inter_account_csv", "1", CSVOptions(
+    "inter_account_csv": CSVReader("inter_account_csv", "3", CSVOptions(
         columns={"transaction_date": "Data Lançamento", "description": "Histórico", "amount": "Valor"},
         delimiter=";", date_format="DD/MM/YYYY", decimal_separator=",", thousands_separator=".",
         amount_convention="CREDITS_POSITIVE",
     )),
-    "inter_card_csv": CSVReader("inter_card_csv", "1", CSVOptions(
+    "inter_card_csv": CSVReader("inter_card_csv", "3", CSVOptions(
         columns={"transaction_date": "Data", "description": "Descricao", "amount": "Valor"},
         delimiter=";", date_format="DD/MM/YYYY", decimal_separator=",", thousands_separator=".",
         amount_convention="CHARGES_POSITIVE", date_kind="PURCHASE",
     )),
-    "mercadopago_csv": CSVReader("mercadopago_csv", "1", CSVOptions(
+    "mercadopago_csv": CSVReader("mercadopago_csv", "3", CSVOptions(
         columns={"transaction_date": "Data", "description": "Descrição", "amount": "Valor"},
         delimiter=";", date_format="DD/MM/YYYY", decimal_separator=",", thousands_separator=".",
         amount_convention="CREDITS_POSITIVE",
     )),
-    "bb_account_csv": CSVReader("bb_account_csv", "1", CSVOptions(
+    "bb_account_csv": CSVReader("bb_account_csv", "3", CSVOptions(
         columns={"transaction_date": "Data", "description": "Historico", "amount": "Valor", "external_id": "Numero do Documento"},
         delimiter=";", date_format="DD/MM/YYYY", decimal_separator=",", thousands_separator=".",
         amount_convention="CREDITS_POSITIVE", external_id_namespace="bb:account",
     )),
-    "bradesco_account_csv": CSVReader("bradesco_account_csv", "1", CSVOptions(
+    "bradesco_account_csv": CSVReader("bradesco_account_csv", "3", CSVOptions(
         columns={"transaction_date": "Data", "description": "Histórico", "amount": "Valor", "external_id": "Docto."},
         delimiter=";", date_format="DD/MM/YYYY", decimal_separator=",", thousands_separator=".",
         amount_convention="CREDITS_POSITIVE", external_id_namespace="bradesco:account",
     )),
-    "caixa_account_csv": CSVReader("caixa_account_csv", "1", CSVOptions(
+    "caixa_account_csv": CSVReader("caixa_account_csv", "3", CSVOptions(
         columns={"transaction_date": "Data Mov.", "description": "Historico", "amount": "Valor", "external_id": "Nr. Doc."},
         delimiter=";", date_format="DD/MM/YYYY", decimal_separator=",", thousands_separator=".",
         amount_convention="CREDITS_POSITIVE", external_id_namespace="caixa:account",
@@ -178,6 +180,15 @@ def parse_csv(content: bytes, options: CSVOptions, *, exact_headers=False):
             error("CSV_LAYOUT_MISMATCH")
             return result
         indexes = {field: header.index(resolved[field]) for field, name in columns.items()}
+        if len(set(indexes.values())) != len(indexes):
+            error("CSV_AMBIGUOUS_COLUMNS")
+            return result
+        critical_unmapped = {'D/C', 'C/D', 'DC', 'CD', 'TIPO', 'TIPO DE LANCAMENTO',
+                            'CREDITO/DEBITO', 'DEBITO/CREDITO', 'CREDITO', 'DEBITO',
+                            'ENTRADAS', 'SAIDAS', 'MOEDA', 'CURRENCY'}
+        if any(normalized(h) in critical_unmapped for h in set(header) - set(resolved.values())):
+            error("CSV_DIRECTION_MAPPING_REQUIRED")
+            return result
         if set(header) - set(resolved.values()):
             result["warnings"].append({"code": "UNMAPPED_COLUMNS_PRESERVED_IN_ORIGINAL", "count": len(set(header) - set(resolved.values()))})
         previous_line = reader.line_num
@@ -200,6 +211,21 @@ def parse_csv(content: bytes, options: CSVOptions, *, exact_headers=False):
             data = {"date_kind": options.date_kind}
             field = None
             try:
+                kind = control_kind(values['description']) if options.amount_convention != 'CREDITS_POSITIVE' else None
+                if kind:
+                    value = money_cents(values['amount'], options)
+                    control_field = {'TOTAL': 'total_amount_cents', 'MINIMUM': 'minimum_payment_cents'}.get(kind, kind.lower())
+                    result.setdefault('controls', []).append({'field': control_field, 'value': value,
+                        'kind': kind, 'line_start': start, 'raw_text': raw})
+                    if kind in {'TOTAL', 'MINIMUM'}:
+                        candidates = result.setdefault('header_candidates', {}).setdefault(control_field, [])
+                        candidates.append({'value': value, 'line_start': start, 'raw_text': raw})
+                        if len({c['value'] for c in candidates}) == 1:
+                            result.setdefault('extracted_header', {})[control_field] = value
+                        else:
+                            result.setdefault('extracted_header', {}).pop(control_field, None)
+                            error('CSV_CONFLICTING_HEADER', start, [control_field])
+                    continue
                 for field, value in values.items():
                     if field not in {"transaction_date", "amount", "description"} and not value:
                         continue
@@ -218,6 +244,9 @@ def parse_csv(content: bytes, options: CSVOptions, *, exact_headers=False):
                 elif exact_headers:
                     field = "external_id"
                     raise ValueError(field)
+                role = None
+                if options.amount_convention != 'CREDITS_POSITIVE':
+                    role = normalize_card_data(data)
                 data = FinancialTransactionData.model_validate(data).model_dump(mode="json")
             except ValidationError as exc:
                 error("CSV_INVALID_ROW", start, sorted({str(e["loc"][0]) if e["loc"] else "row" for e in exc.errors()}))
@@ -226,7 +255,8 @@ def parse_csv(content: bytes, options: CSVOptions, *, exact_headers=False):
                 error("CSV_INVALID_ROW", start, [field])
                 continue
             result["items"].append({"position": result["rows_read"], "line_start": start, "line_end": end,
-                                    "raw_text": raw, "data": data})
+                                    "raw_text": raw, "data": data,
+                                    "role": role or 'UNKNOWN', "purpose": 'UNSPECIFIED'})
     except csv.Error:
         error("CSV_SYNTAX", reader.line_num)
         result["complete"] = False
@@ -248,4 +278,72 @@ def parse_csv(content: bytes, options: CSVOptions, *, exact_headers=False):
             if identity in identities:
                 error("CSV_REPEATED_EXTERNAL_ID", item["line_start"], ["external_id"])
             identities[identity] = item["position"]
+    return result
+
+
+def detect_csv(content, source_type=None, *, institution=None, holder_type=None):
+    """Inspect bounded headers, never filenames or bank names in counterparties.
+
+    Institution is deliberately not proven by a shared column layout.
+    Unsupported/ambiguous results remain consultable evidence.
+    """
+    empty = {'items': [], 'errors': [], 'warnings': [], 'blank_records': 0,
+             'rows_read': 0, 'complete': True, 'totals': {'positive_cents': 0,
+             'negative_cents': 0, 'net_cents': 0}, 'observed_dates': None}
+    try:
+        text = content.decode('utf-8-sig', errors='strict')
+    except UnicodeError:
+        empty['errors'].append({'code': 'CSV_ENCODING', 'fields': []})
+        return empty
+    header_line = text.split('\n', 1)[0]
+    if len(header_line) > MAX_RECORD_CHARS:
+        empty['errors'].append({'code': 'CSV_LIMIT', 'fields': []})
+        return empty
+    candidates = []
+    for delimiter in (',', ';', '\t'):
+        try:
+            header = next(csv.reader([header_line], delimiter=delimiter, strict=True))
+        except csv.Error:
+            continue
+        columns = {normalized(h) for h in header}
+        if {'INSTITUICAO', 'TIPO_DOCUMENTO', 'REFERENCIA_MES_ANO'} <= columns:
+            from app.services.financial_compilations import csv_compilation
+            return csv_compilation(text, delimiter)
+        if {'FATURA_REFERENCIA', 'DATA_LANCAMENTO', 'DESCRICAO', 'VALOR_RS'} <= columns:
+            from app.services.financial_compilations import csv_compilation
+            return csv_compilation(text, delimiter)
+        for reader in READERS.values():
+            if reader.options is None or reader.options.delimiter != delimiter:
+                continue
+            required = {normalized(h) for h in reader.options.columns.model_dump().values() if h}
+            if required <= columns:
+                candidates.append(reader.id)
+    # Select the compatible interpretation, without claiming institution identity.
+    compatible = [rid for rid in candidates if source_type is None or
+                  (source_type == 'BANK_ACCOUNT') == (READERS[rid].options.amount_convention == 'CREDITS_POSITIVE')]
+    if len(compatible) > 1 and institution:
+        # Source selection may disambiguate compatible layouts. It never makes
+        # an incompatible header compatible, nor proves who issued the file.
+        bank = normalized(institution)
+        preferred = None
+        if 'NUBANK' in bank and holder_type in {'PF', 'PJ'}:
+            preferred = 'nubank_account_csv' if holder_type == 'PF' else 'nu_empresas_account_csv'
+        elif 'SANTANDER' in bank:
+            preferred = 'santander_card_csv' if source_type == 'CREDIT_CARD' else 'santander_account_csv'
+        elif re.search(r'\bINTER\b', bank):
+            preferred = 'inter_card_csv' if source_type == 'CREDIT_CARD' else 'inter_account_csv'
+        elif 'ITAU' in bank:
+            preferred = 'itau_card_csv' if source_type == 'CREDIT_CARD' else 'itau_account_csv'
+        if preferred in compatible:
+            compatible = [preferred]
+    if len(compatible) != 1:
+        empty.update(content_type='UNKNOWN', reader_candidates=candidates, detected_reader=None)
+        empty['errors'].append({'code': 'FINANCIAL_READER_AMBIGUOUS' if candidates else 'CSV_LAYOUT_MISMATCH', 'fields': []})
+        return empty
+    selected = READERS[compatible[0]]
+    result = parse_csv(content, selected.options)
+    result.update(detected_reader=selected.id, detected_reader_version=selected.version,
+                  detected_source_type='BANK_ACCOUNT' if selected.options.amount_convention == 'CREDITS_POSITIVE' else 'CREDIT_CARD',
+                  content_type='BANK_STATEMENT' if selected.options.amount_convention == 'CREDITS_POSITIVE' else 'DETAILED_CARD_BILL',
+                  reader_candidates=candidates)
     return result

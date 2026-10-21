@@ -11,6 +11,11 @@ import '../widgets/shared/approved_app_style.dart';
 import '../widgets/shared/app_operation_scope.dart';
 import 'financial_bill_review_view.dart';
 import 'payables_view.dart';
+import 'financial_bank_review_view.dart';
+import 'financial_header_review_view.dart';
+import 'financial_bill_integration_view.dart';
+import 'financial_segments_view.dart';
+import 'financial_import_removal_view.dart';
 
 /// Keeps page and area navigation stable while an import request is in flight.
 mixin _ImportOperation<T extends StatefulWidget> on State<T> {
@@ -24,7 +29,10 @@ mixin _ImportOperation<T extends StatefulWidget> on State<T> {
     _lock = AppOperationScope.maybeOf(context);
   }
 
-  Future<void> run(Future<void> Function() action, {bool mutation = false}) async {
+  Future<void> run(
+    Future<void> Function() action, {
+    bool mutation = false,
+  }) async {
     if (busy) return;
     setState(() {
       busy = true;
@@ -85,12 +93,16 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
     with _ImportOperation<FinancialImportsView> {
   late final service =
       widget.service ?? FinancialImportService(apiClient: widget.apiClient);
-  List<FinancialJson> sources = [], previews = [], readers = [], statements = [];
+  List<FinancialJson> sources = [],
+      previews = [],
+      readers = [],
+      statements = [];
   Map<String, List<FinancialJson>> obligationsByStatement = {};
   String? sourceId, readerId;
   FinancialImportFile? file;
   bool loaded = false, more = false;
   int offset = 0;
+  List<String> queryFailures = [];
 
   @override
   void initState() {
@@ -106,231 +118,210 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
 
   Future<void> _load({bool append = false}) => run(() async {
     final newSources = await service.sources();
-    List<FinancialJson> newReaders = [];
+    await service.requireLifecycle();
+    final failures = <String>[];
+    var newReaders = readers;
     try {
       newReaders = await service.readers();
     } catch (_) {
-      newReaders = [];
+      failures.add(context.l10n.financialImportReadersQueryFailed);
     }
-    List<FinancialJson> newStatements = [];
+    var newStatements = statements;
     try {
       newStatements = await service.getStatements();
     } catch (_) {
-      newStatements = [];
+      failures.add(context.l10n.financialImportStatementsQueryFailed);
     }
-    final Map<String, List<FinancialJson>> newObligations = {};
+    final newObligations = Map<String, List<FinancialJson>>.from(
+      obligationsByStatement,
+    );
     for (final st in newStatements) {
       if (st['statement_type'] == 'CARD_BILL') {
         try {
-          final obs = await service.getObligations(st['id'] as String);
-          newObligations[st['id'] as String] = obs;
-        } catch (_) {}
+          newObligations[st['id'] as String] = await service.getObligations(
+            st['id'] as String,
+          );
+        } catch (_) {
+          failures.add(context.l10n.financialImportObligationsQueryFailed);
+        }
       }
     }
     final pageOffset = append ? offset : 0;
     final page = await service.rows(
       '${FinancialImportService.root}/previews?limit=50&offset=$pageOffset',
     );
+    if (page.any(
+      (entry) =>
+          entry['import_id'] == null ||
+          entry['generation'] == null ||
+          entry['filename'] == null,
+    )) {
+      throw ApiException(
+        statusCode: 503,
+        message: 'A lista de importações precisa ser atualizada no serviço.',
+        errorCode: 'FINANCIAL_SCHEMA_NOT_READY',
+      );
+    }
     if (!mounted) return;
     setState(() {
+      queryFailures = failures.toSet().toList();
       sources = newSources.where((s) => s['currency'] == 'BRL').toList();
       readers = newReaders;
       statements = newStatements;
       obligationsByStatement = newObligations;
       if (!sources.any((s) => s['id'] == sourceId)) sourceId = null;
-      previews = [
-        if (append) ...previews,
-        ...page,
-      ];
+      previews = {
+        for (final entry in [if (append) ...previews, ...page])
+          entry['import_id']: entry,
+      }.values.toList();
       offset = pageOffset + page.length;
       more = page.length == 50;
       loaded = true;
     });
   });
 
-  Future<void> _preview(FinancialJson preview) async {
+  bool _currentCard(FinancialJson p) =>
+      p['bill_cycle_version'] == 1 &&
+      sources.any(
+        (s) => s['id'] == p['source_id'] && s['source_type'] == 'CREDIT_CARD',
+      ) &&
+      p['segments'] == null &&
+      ['DETAILED_CARD_BILL', 'SUMMARY_ONLY'].contains(p['content_type']);
+
+  Future<void> _preview(
+    FinancialJson preview, {
+    bool readingOnly = false,
+  }) async {
+    if (sourceId == null &&
+        sources.any((s) => s['id'] == preview['source_id'])) {
+      setState(() => sourceId = preview['source_id'] as String);
+    }
+    // Opening only reads the persisted root. Reprocessing is an explicit action.
+    final current = preview;
+    if (!mounted) return;
     await Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (_) => FinancialPdfPreviewView(
+        builder: (_) => !readingOnly && _currentCard(current)
+            ? FinancialBillIntegrationView(service: service, preview: current)
+            : FinancialPdfPreviewView(
+                service: service,
+                previewId: current['id'] as String,
+                importContext: FinancialImportService.lifecycleContext(current),
+              ),
+      ),
+    );
+    if (mounted) await _load();
+  }
+
+  Future<void> _removeDocument(FinancialJson p) async {
+    final removed = await Navigator.of(context).push<bool>(
+      MaterialPageRoute(
+        builder: (_) => FinancialImportRemovalView(
           service: service,
-          previewId: preview['id'] as String,
+          documentId: p['document_id'] as String,
+          importContext: FinancialImportService.lifecycleContext(p),
+        ),
+      ),
+    );
+    if (mounted && removed == true) await _load();
+  }
+
+  Future<void> _postToTreasuryDirect(String statementId) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) =>
+            FinancialBankReviewView(service: service, statementId: statementId),
+      ),
+    );
+    if (mounted) await _load();
+  }
+
+  Future<void> _launchStatementDirect(FinancialJson p) => _preview(p);
+
+  Future<void> _reprocess(FinancialJson p, {String? password}) async {
+    FinancialJson? updated;
+    await run(() async {
+      updated = await service.createPreview(
+        p['document_id'] as String,
+        sourceId: p['source_id'] as String,
+        readerId: (p['filename'] as String).toLowerCase().endsWith('.csv')
+            ? 'csv_auto'
+            : 'pdf_auto',
+        password: password,
+        context: FinancialImportService.lifecycleContext(p),
+        expectedRootPreviewId: p['id'] as String,
+      );
+    }, mutation: true);
+    if (!mounted) return;
+    if (error is ApiException &&
+        (error as ApiException).errorCode == 'PDF_PASSWORD_REQUIRED') {
+      final entered = await _promptPassword();
+      if (entered != null && entered.isNotEmpty && mounted) {
+        await _reprocess(p, password: entered);
+      }
+      return;
+    }
+    if (updated != null) await _preview(updated!);
+  }
+
+  Future<void> _launchCardBillDirect(FinancialJson p) async {
+    if (_currentCard(p)) return _preview(p);
+    final statement = statements
+        .where(
+          (s) =>
+              s['id'] == p['statement_id'] && s['import_id'] == p['import_id'],
+        )
+        .firstOrNull;
+    if (statement == null) return _preview(p);
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => FinancialBillReviewView(
+          service: service,
+          statementId: statement['id'] as String,
+          initialStatement: statement,
         ),
       ),
     );
     if (mounted) await _load();
   }
 
-  Future<void> _postToTreasuryDirect(String statementId) => run(() async {
-    final res = await service.postStatementToTreasury(statementId);
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '${res['entries_posted']} lançamentos lançados na Tesouraria! Novo saldo: ${AppFormatters.formatCurrency(res['new_balance_cents'] as int)}',
-          ),
-          backgroundColor: Colors.teal.shade800,
-        ),
-      );
-      await _load();
-    }
-  }, mutation: true);
-
-  Future<void> _launchStatementDirect(FinancialJson p) => run(() async {
-    FinancialJson? stmt = statements.where((s) => s['preview_id'] == p['id']).firstOrNull;
-    if (stmt == null) {
-      final header = Map<String, dynamic>.from(p['extracted_header'] as Map? ?? {});
-      final confHeader = <String, dynamic>{
-        'statement_type': 'BANK_STATEMENT',
-        if (header['period_start'] != null) 'period_start': header['period_start'],
-        if (header['period_end'] != null) 'period_end': header['period_end'],
-        if (header['opening_balance_cents'] != null) 'opening_balance_cents': header['opening_balance_cents'],
-        if (header['closing_balance_cents'] != null) 'closing_balance_cents': header['closing_balance_cents'],
-        if (header['total_inflows_cents'] != null) 'total_inflows_cents': header['total_inflows_cents'],
-        if (header['total_outflows_cents'] != null) 'total_outflows_cents': header['total_outflows_cents'],
-      };
-      stmt = await service.confirm(p, confirmationHeader: confHeader);
-    }
-    final stmtId = stmt['id'] as String;
-    final res = await service.postStatementToTreasury(stmtId);
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '${res['entries_posted']} movimentações lançadas na Tesouraria! Saldo atualizado: ${AppFormatters.formatCurrency(res['new_balance_cents'] as int)}',
-          ),
-          backgroundColor: Colors.teal.shade800,
-        ),
-      );
-      await _load();
-    }
-  }, mutation: true);
-
-  Future<void> _launchCardBillDirect(FinancialJson p) => run(() async {
-    FinancialJson? stmt = statements.where((s) => s['preview_id'] == p['id']).firstOrNull;
-    if (stmt == null) {
-      final header = Map<String, dynamic>.from(p['extracted_header'] as Map? ?? {});
-      final confHeader = <String, dynamic>{
-        'statement_type': 'CARD_BILL',
-        if (header['total_amount_cents'] != null) 'total_amount_cents': header['total_amount_cents'],
-        if (header['due_on'] != null) 'due_on': header['due_on'],
-        if (header['minimum_payment_cents'] != null) 'minimum_payment_cents': header['minimum_payment_cents'],
-        if (header['period_start'] != null) 'period_start': header['period_start'],
-        if (header['period_end'] != null) 'period_end': header['period_end'],
-      };
-      stmt = await service.confirm(p, confirmationHeader: confHeader);
-    }
-    final stmtId = stmt['id'] as String;
-
-    FinancialJson? review = await service.getSemanticReview(stmtId);
-    if (review == null || review['is_balanced'] != true) {
-      final rawItems = await service.rows('${FinancialImportService.root}/statements/$stmtId/items?limit=500');
-      int reportedPrevious = 0;
-      final previewId = stmt['preview_id'] as String?;
-      if (previewId != null) {
-        try {
-          final prev = await service.get('${FinancialImportService.root}/previews/$previewId');
-          final summary = prev['reported_summary'] as Map? ?? prev['result']?['reported_summary'] as Map?;
-          if (summary != null && summary['previous'] != null) {
-            reportedPrevious = (summary['previous'] as num).abs().toInt();
-          }
-        } catch (_) {}
-      }
-
-      final reviewItems = rawItems.map((it) {
-        final id = it['id'] as String;
-        final d = Map<String, dynamic>.from(it['normalized_data'] as Map? ?? {});
-        final desc = (d['description'] ?? '').toString().toLowerCase();
-        final amt = (d['amount_cents'] ?? 0) as int;
-        String cat;
-        if (desc.contains('pagamento') || desc.contains('pgto')) {
-          cat = 'BILL_PAYMENT';
-        } else if (amt < 0 || desc.contains('estorno') || desc.contains('crédito') || desc.contains('credito')) {
-          cat = 'REFUND_CREDIT';
-        } else if (desc.contains('juros') || desc.contains('multa') || desc.contains('iof') || desc.contains('anuidade') || desc.contains('tarifa') || desc.contains('saldo em atraso') || desc.contains('encerramento')) {
-          cat = 'FINANCIAL_CHARGES';
-        } else if (desc.contains('saldo anterior') && reportedPrevious == 0) {
-          cat = 'PREVIOUS_BALANCE';
-        } else if (desc.contains('retirada') || desc.contains('particular') || desc.contains('socio')) {
-          cat = 'PURCHASE_PERSONAL';
-        } else {
-          cat = 'PURCHASE_BUSINESS';
-        }
-        return {'item_id': id, 'semantic_category': cat};
-      }).toList();
-
-      final res = await service.saveSemanticReview(
-        stmtId,
-        expectedRevision: (review?['revision'] as int?) ?? 0,
-        items: reviewItems,
-        notes: 'Lançamento automático de obrigações em Contas a Pagar',
-      );
-      review = res.containsKey('review') ? res['review'] as Map<String, dynamic> : res;
-    }
-
-    if (review['is_balanced'] == true) {
-      final obs = await service.generateObligations(stmtId, reviewId: review['id'] as String?);
-      if (mounted) {
-        final pal = AppPalette.of(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('${obs.length} obrigações lançadas com sucesso em Contas a Pagar!'),
-            backgroundColor: pal.accent,
-            action: SnackBarAction(
-              label: 'Abrir Contas a Pagar',
-              textColor: pal.accentInk,
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const PayablesView()),
-                );
-              },
-            ),
-          ),
-        );
-        await _load();
-      }
-    } else {
-      if (mounted) {
-        await Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) => FinancialBillReviewView(
-              service: service,
-              statementId: stmtId,
-              initialStatement: stmt,
-            ),
-          ),
-        );
-        await _load();
-      }
-    }
-  }, mutation: true);
-
   Future<void> _reassignSource(FinancialJson p) async {
     final docId = p['document_id'] as String;
     final currentSourceId = p['source_id'] as String;
-    final currentSource = sources.where((s) => s['id'] == currentSourceId).firstOrNull;
-    final isDetectedCard = (p['reader_id'] as String? ?? '').contains('card') ||
+    final currentSource = sources
+        .where((s) => s['id'] == currentSourceId)
+        .firstOrNull;
+    final isDetectedCard =
+        (p['reader_id'] as String? ?? '').contains('card') ||
         (p['extracted_header']?['statement_type'] == 'CARD_BILL') ||
-        ((p['result'] as Map?)?['extracted_header']?['statement_type'] == 'CARD_BILL') ||
+        ((p['result'] as Map?)?['extracted_header']?['statement_type'] ==
+            'CARD_BILL') ||
         ((p['result'] as Map?)?['detected_source_type'] == 'CREDIT_CARD') ||
         (currentSource?['source_type'] == 'BANK_ACCOUNT');
 
     final targetType = isDetectedCard ? 'CREDIT_CARD' : 'BANK_ACCOUNT';
-    final matchingSources = sources.where((s) => s['source_type'] == targetType).toList();
+    final matchingSources = sources
+        .where((s) => s['source_type'] == targetType)
+        .toList();
 
     String? selectedSourceId = matchingSources.firstOrNull?['id'] as String?;
     final chosen = await showDialog<String>(
       context: context,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setDialogState) => AlertDialog(
-          title: Text(isDetectedCard ? 'Corrigir para Cartão de Crédito' : 'Corrigir para Conta Bancária'),
+          title: Text(
+            isDetectedCard
+                ? 'Corrigir para Cartão de Crédito'
+                : 'Corrigir para Conta Bancária',
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
                 isDetectedCard
-                    ? 'Este documento é uma fatura de cartão de crédito. Selecione o cartão correspondente para liberar a leitura e o lançamento em Contas a Pagar:'
-                    : 'Este documento é um extrato de conta bancária. Selecione a conta bancária correspondente para liberar a leitura e o lançamento na Tesouraria:',
+                    ? context.l10n.importReassignCard
+                    : context.l10n.importReassignBank,
               ),
               const SizedBox(height: 16),
               if (matchingSources.isEmpty) ...[
@@ -351,14 +342,22 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
                 DropdownButtonFormField<String>(
                   initialValue: selectedSourceId,
                   isExpanded: true,
-                  decoration: const InputDecoration(labelText: 'Origem Correta'),
+                  decoration: const InputDecoration(
+                    labelText: 'Origem Correta',
+                  ),
                   items: matchingSources
-                      .map((s) => DropdownMenuItem(
-                            value: s['id'] as String,
-                            child: Text(_sourceLabel(s), overflow: TextOverflow.ellipsis),
-                          ))
+                      .map(
+                        (s) => DropdownMenuItem(
+                          value: s['id'] as String,
+                          child: Text(
+                            _sourceLabel(s),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      )
                       .toList(),
-                  onChanged: (val) => setDialogState(() => selectedSourceId = val),
+                  onChanged: (val) =>
+                      setDialogState(() => selectedSourceId = val),
                 ),
               ],
             ],
@@ -380,13 +379,23 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
 
     if (chosen != null && chosen.isNotEmpty) {
       await run(() async {
-        await service.createPreview(docId, sourceId: chosen);
+        await service.createPreview(
+          docId,
+          sourceId: chosen,
+          readerId: (p['filename'] as String).toLowerCase().endsWith('.csv')
+              ? 'csv_auto'
+              : 'pdf_auto',
+          context: FinancialImportService.lifecycleContext(p),
+          expectedRootPreviewId: p['id'] as String,
+        );
       }, mutation: true);
-      if (mounted) {
+      if (mounted && error == null) {
         final pal = AppPalette.of(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: const Text('Documento reavaliado com sucesso com a nova origem!'),
+            content: const Text(
+              'Documento reavaliado com sucesso com a nova origem!',
+            ),
             backgroundColor: pal.accent,
           ),
         );
@@ -400,7 +409,7 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
     await run(() async {
       final effectiveReader = file!.isPdf
           ? (readerId ?? 'pdf_auto')
-          : (readerId ?? _suggestReader(file!, sourceId) ?? 'generic_csv');
+          : (readerId ?? _suggestReader(file!, sourceId));
       preview = await service.importDocument(
         file!,
         sourceId!,
@@ -409,112 +418,71 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
       );
     }, mutation: true);
     if (!mounted) return;
-    if (preview != null) {
-      final hasPasswordError = (preview!['errors'] as List? ?? [])
-          .any((e) => e['code'] == 'PDF_PASSWORD_REQUIRED');
-      if (hasPasswordError) {
-        final enteredPassword = await _promptPassword();
-        if (enteredPassword != null && enteredPassword.isNotEmpty && mounted) {
-          await _import(password: enteredPassword);
-          return;
-        }
+    var passwordRequired =
+        error is ApiException &&
+        (error as ApiException).errorCode == 'PDF_PASSWORD_REQUIRED';
+    if (preview != null && (preview!['errors_count'] as int? ?? 0) > 0) {
+      try {
+        final issues = await service.rows(
+          '${FinancialImportService.root}/previews/${preview!['id']}/errors',
+        );
+        passwordRequired = issues.any(
+          (e) => e['code'] == 'PDF_PASSWORD_REQUIRED',
+        );
+      } catch (_) {
+        /* The preview remains consultable if the detail query fails. */
       }
-      await _preview(preview!);
     }
+    if (!mounted) return;
+    if (passwordRequired) {
+      final entered = await _promptPassword();
+      if (entered != null && entered.isNotEmpty && mounted) {
+        await _import(password: entered);
+      }
+      return;
+    }
+    if (preview != null) await _preview(preview!);
   }
 
   Future<String?> _promptPassword() async {
     final controller = TextEditingController();
-    return showDialog<String>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Arquivo Protegido por Senha'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Text(
-              'Este PDF está protegido por senha. Digite a senha para efetuar a leitura:',
+    try {
+      return await showDialog<String>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(context.l10n.importPasswordTitle),
+          content: TextField(
+            controller: controller,
+            obscureText: true,
+            autofocus: true,
+            maxLength: 100,
+            decoration: InputDecoration(
+              labelText: context.l10n.importPasswordLabel,
             ),
-            const SizedBox(height: 16),
-            TextField(
-              controller: controller,
-              obscureText: true,
-              autofocus: true,
-              decoration: const InputDecoration(
-                labelText: 'Senha do documento',
-                prefixIcon: Icon(Icons.lock_outline),
-              ),
-              onSubmitted: (val) => Navigator.of(ctx).pop(val),
+            onSubmitted: (v) => Navigator.pop(ctx, v),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text(context.l10n.commonCancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(ctx, controller.text),
+              child: Text(context.l10n.commonConfirm),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(null),
-            child: const Text('Cancelar'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(ctx).pop(controller.text),
-            child: const Text('Confirmar'),
-          ),
-        ],
-      ),
-    );
+      );
+    } finally {
+      // Wait for the dialog's exit transition before disposing its controller.
+      await Future<void>.delayed(const Duration(milliseconds: 250));
+      controller.clear();
+      controller.dispose();
+    }
   }
 
-  String? _suggestReader(FinancialImportFile f, String? currentSourceId) {
-    if (f.isPdf) return 'pdf_auto';
-    final s = sources.where((item) => item['id'] == currentSourceId).firstOrNull;
-    final inst = (s?['institution'] as String? ?? '').toUpperCase();
-    final type = s?['source_type'] as String? ?? '';
-    if (inst.contains('NUBANK')) {
-      return type == 'CREDIT_CARD' ? 'nubank_card_csv' : 'nu_empresas_account_csv';
-    }
-    if (inst.contains('ITAU') || inst.contains('ITAÚ')) {
-      return type == 'CREDIT_CARD' ? 'itau_card_csv' : 'itau_account_csv';
-    }
-    if (inst.contains('SANTANDER')) {
-      return type == 'CREDIT_CARD' ? 'santander_card_csv' : 'santander_account_csv';
-    }
-    if (inst.contains('INTER')) {
-      return type == 'CREDIT_CARD' ? 'inter_card_csv' : 'inter_account_csv';
-    }
-    if (inst.contains('MERCADO PAGO') || inst.contains('MERCADOPAGO')) {
-      return 'mercadopago_csv';
-    }
-    if (inst.contains('BRASIL') || inst == 'BB') {
-      return 'bb_account_csv';
-    }
-    if (inst.contains('BRADESCO')) {
-      return 'bradesco_account_csv';
-    }
-    if (inst.contains('CAIXA')) {
-      return 'caixa_account_csv';
-    }
-    return type == 'CREDIT_CARD' ? 'nubank_card_csv' : 'generic_csv';
-  }
-
-  String _readerLabel(String id) {
-    return switch (id) {
-      'pdf_auto' => 'Detecção Automática (PDF)',
-      'nubank_card_csv' => 'Nubank · Fatura do Cartão (CSV)',
-      'nubank_account_csv' => 'Nubank · Extrato da Conta (CSV)',
-      'nu_empresas_account_csv' => 'Nu Empresas · Extrato PJ (CSV)',
-      'itau_account_csv' => 'Itaú · Extrato Conta Corrente (CSV)',
-      'itau_card_csv' => 'Itaú · Fatura do Cartão (CSV)',
-      'santander_account_csv' => 'Santander · Extrato Conta (CSV)',
-      'santander_card_csv' => 'Santander · Fatura do Cartão (CSV)',
-      'inter_account_csv' => 'Banco Inter · Extrato Conta (CSV)',
-      'inter_card_csv' => 'Banco Inter · Fatura do Cartão (CSV)',
-      'mercadopago_csv' => 'Mercado Pago · Extrato (CSV)',
-      'bb_account_csv' => 'Banco do Brasil · Extrato Conta (CSV)',
-      'bradesco_account_csv' => 'Bradesco · Extrato Conta (CSV)',
-      'caixa_account_csv' => 'Caixa Econômica · Extrato Conta (CSV)',
-      'generic_csv' => 'CSV Genérico',
-      _ => id,
-    };
-  }
+  String _suggestReader(FinancialImportFile f, String? currentSourceId) =>
+      f.isPdf ? 'pdf_auto' : 'csv_auto';
 
   Future<void> _newSource() async {
     final source = await Navigator.of(context).push<FinancialJson>(
@@ -531,10 +499,13 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
 
   String _sourceLabel(FinancialJson s) {
     final base = '${s['name']} · ${s['institution']} · ${s['holder_type']}';
-    final hasDuplicate = sources.any((other) =>
-        other['id'] != s['id'] &&
-        '${other['name']} · ${other['institution']} · ${other['holder_type']}' == base &&
-        other['source_type'] != s['source_type']);
+    final hasDuplicate = sources.any(
+      (other) =>
+          other['id'] != s['id'] &&
+          '${other['name']} · ${other['institution']} · ${other['holder_type']}' ==
+              base &&
+          other['source_type'] != s['source_type'],
+    );
     if (hasDuplicate) {
       final typeLabel = s['source_type'] == 'CREDIT_CARD' ? 'Cartão' : 'Conta';
       return '$base ($typeLabel)';
@@ -543,35 +514,13 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
   }
 
   Future<void> _pickDocument() => run(() async {
-    final selected =
-        await (widget.pickFile ?? FinancialImportFile.pick)();
+    final selected = await (widget.pickFile ?? FinancialImportFile.pick)();
     if (selected != null) {
       selected.validate();
       if (mounted) {
-        final lower = selected.name.toLowerCase();
-        final prefersCard = lower.contains('fatura') ||
-            lower.contains('card') ||
-            (lower.contains('nubank_20') && !lower.contains('extrato'));
-        final prefersBank = lower.contains('extrato') ||
-            lower.contains('statement') ||
-            lower.contains('nuempresas') ||
-            lower.contains('conta');
-        String? smartSourceId = sourceId;
-        if (prefersCard) {
-          final cardSource = sources
-              .where((s) => s['source_type'] == 'CREDIT_CARD')
-              .firstOrNull;
-          if (cardSource != null) smartSourceId = cardSource['id'] as String;
-        } else if (prefersBank) {
-          final bankSource = sources
-              .where((s) => s['source_type'] == 'BANK_ACCOUNT')
-              .firstOrNull;
-          if (bankSource != null) smartSourceId = bankSource['id'] as String;
-        }
         setState(() {
           file = selected;
-          sourceId = smartSourceId;
-          readerId = _suggestReader(selected, smartSourceId);
+          readerId = _suggestReader(selected, sourceId);
         });
       }
     }
@@ -611,6 +560,7 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
         title: l.pdfImportTitle,
         actions: [
           IconButton(
+            key: const ValueKey('refresh-imports'),
             tooltip: l.commonRefresh,
             onPressed: busy ? null : _load,
             icon: const Icon(Icons.refresh),
@@ -618,25 +568,25 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
         ],
         floatingActionButton: loaded
             ? (file == null
-                ? FloatingActionButton.extended(
-                    key: const ValueKey('pick-document-fab'),
-                    backgroundColor: pColors.accent,
-                    foregroundColor: pColors.accentInk,
-                    onPressed: busy ? null : _pickDocument,
-                    icon: const Icon(Icons.upload_file_outlined),
-                    label: const Text('Selecionar documento'),
-                  )
-                : FloatingActionButton.extended(
-                    key: const ValueKey('read-document-fab'),
-                    backgroundColor: pColors.accent,
-                    foregroundColor: pColors.accentInk,
-                    tooltip: sourceId == null
-                        ? 'Selecione a conta ou cartão para ler o documento'
-                        : l.pdfImportRead,
-                    onPressed: busy || sourceId == null ? null : _import,
-                    icon: const Icon(Icons.document_scanner_outlined),
-                    label: Text(l.pdfImportRead),
-                  ))
+                  ? FloatingActionButton.extended(
+                      key: const ValueKey('pick-document-fab'),
+                      backgroundColor: pColors.accent,
+                      foregroundColor: pColors.accentInk,
+                      onPressed: busy ? null : _pickDocument,
+                      icon: const Icon(Icons.upload_file_outlined),
+                      label: const Text('Selecionar documento'),
+                    )
+                  : FloatingActionButton.extended(
+                      key: const ValueKey('read-document-fab'),
+                      backgroundColor: pColors.accent,
+                      foregroundColor: pColors.accentInk,
+                      tooltip: sourceId == null
+                          ? 'Selecione a conta ou cartão para ler o documento'
+                          : l.pdfImportRead,
+                      onPressed: busy || sourceId == null ? null : _import,
+                      icon: const Icon(Icons.document_scanner_outlined),
+                      label: Text(l.pdfImportRead),
+                    ))
             : null,
         body: ListView(
           padding: fabScrollPadding(context, horizontal: 20),
@@ -655,9 +605,14 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
                         margin: const EdgeInsets.only(bottom: 8),
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .surfaceContainerHighest
+                              .withValues(alpha: 0.5),
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Theme.of(context).colorScheme.outlineVariant),
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.outlineVariant,
+                          ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -697,11 +652,11 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
                         onChanged: busy
                             ? null
                             : (v) => setState(() {
-                                  sourceId = v;
-                                  if (file != null && file!.isCsv) {
-                                    readerId = _suggestReader(file!, v);
-                                  }
-                                }),
+                                sourceId = v;
+                                if (file != null && file!.isCsv) {
+                                  readerId = _suggestReader(file!, v);
+                                }
+                              }),
                       ),
                       const SizedBox(height: 8),
                       TextButton.icon(
@@ -735,8 +690,8 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
                           padding: const EdgeInsets.only(top: 8),
                           child: Text(
                             sources.isEmpty
-                                ? '👉 Passo obrigatório: Clique em "Cadastrar conta ou cartão" acima para vincular a esta fatura/extrato.'
-                                : '👉 Selecione no campo acima a qual conta ou cartão este documento pertence para liberar a leitura.',
+                                ? l.financialImportSourceRequiredEmpty
+                                : l.financialImportSourceRequired,
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.primary,
                               fontWeight: FontWeight.bold,
@@ -746,45 +701,7 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
                     ],
                     if (file != null && file!.isCsv) ...[
                       const SizedBox(height: 16),
-                      DropdownButtonFormField<String>(
-                        key: ValueKey('csv-reader-$readerId-${readers.length}'),
-                        initialValue: readerId ?? _suggestReader(file!, sourceId),
-                        isExpanded: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Leitor bancário para CSV',
-                        ),
-                        items: (readers.isNotEmpty
-                                ? readers
-                                    .where((r) => r['media_type'] == 'text/csv')
-                                    .map((r) => r['id'] as String)
-                                    .toList()
-                                : [
-                                    'nubank_card_csv',
-                                    'nu_empresas_account_csv',
-                                    'itau_account_csv',
-                                    'itau_card_csv',
-                                    'santander_account_csv',
-                                    'santander_card_csv',
-                                    'inter_account_csv',
-                                    'inter_card_csv',
-                                    'mercadopago_csv',
-                                    'bb_account_csv',
-                                    'bradesco_account_csv',
-                                    'caixa_account_csv',
-                                    'generic_csv',
-                                  ])
-                            .map(
-                              (id) => DropdownMenuItem(
-                                value: id,
-                                child: Text(
-                                  _readerLabel(id),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: busy ? null : (v) => setState(() => readerId = v),
-                      ),
+                      Text(l.financialImportAutoReaderHelp),
                     ],
                   ],
                   if (busy) ...[
@@ -799,70 +716,157 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
             ),
             const SizedBox(height: 20),
             ApprovedSectionHeader(l.pdfImportHistory),
+            if (queryFailures.isNotEmpty)
+              ApprovedSurface(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final failure in queryFailures)
+                      Text(
+                        failure,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
+                    TextButton.icon(
+                      onPressed: busy ? null : _load,
+                      icon: const Icon(Icons.refresh),
+                      label: Text(l.financialImportRefreshQuery),
+                    ),
+                  ],
+                ),
+              ),
             if (loaded && previews.isEmpty)
               ApprovedSurface(child: Text(l.pdfImportEmpty)),
             for (final p in previews) ...[
               () {
-                final stmt = statements.where((s) => s['preview_id'] == p['id']).firstOrNull;
+                final stmt = statements
+                    .where(
+                      (s) =>
+                          s['id'] == p['statement_id'] &&
+                          s['import_id'] == p['import_id'],
+                    )
+                    .firstOrNull;
                 final isCard = stmt != null
                     ? stmt['statement_type'] == 'CARD_BILL'
-                    : (sources.where((s) => s['id'] == p['source_id']).firstOrNull?['source_type'] == 'CREDIT_CARD' ||
-                       (p['reader_id'] as String? ?? '').contains('card'));
-                final linked = stmt != null ? (stmt['linked_count'] as int? ?? 0) : 0;
-                final ready = p['status'] == 'READY';
+                    : (sources
+                                  .where((s) => s['id'] == p['source_id'])
+                                  .firstOrNull?['source_type'] ==
+                              'CREDIT_CARD' ||
+                          (p['reader_id'] as String? ?? '').contains('card'));
+                final linked = stmt != null
+                    ? (stmt['linked_count'] as int? ?? 0)
+                    : 0;
+                final ready =
+                    p['status'] == 'READY' &&
+                    p['segments'] == null &&
+                    ![
+                      'BANK_STATEMENT_INDEX',
+                      'RENEGOTIATION',
+                      'UNKNOWN_INDEX',
+                    ].contains(p['content_type']);
                 final errors = (p['errors'] as List? ?? []);
-                final hasMismatch = errors.any((e) => e['code'] == 'PDF_SOURCE_TYPE_MISMATCH');
-                final currentSource = sources.where((s) => s['id'] == p['source_id']).firstOrNull;
-                final isSourceBank = currentSource?['source_type'] == 'BANK_ACCOUNT';
+                final hasMismatch = errors.any(
+                  (e) => e['code'] == 'PDF_SOURCE_TYPE_MISMATCH',
+                );
+                final currentSource = sources
+                    .where((s) => s['id'] == p['source_id'])
+                    .firstOrNull;
+                final isSourceBank =
+                    currentSource?['source_type'] == 'BANK_ACCOUNT';
 
-                final obligations = stmt != null ? (obligationsByStatement[stmt['id']] ?? []) : <FinancialJson>[];
+                final obligations = stmt != null
+                    ? (obligationsByStatement[stmt['id']] ?? [])
+                    : <FinancialJson>[];
+                final activeObligations = obligations
+                    .where(
+                      (o) => const {'OPEN', 'PARTIAL'}.contains(o['status']),
+                    )
+                    .length;
 
                 Color badgeBg;
                 Color badgeFg;
                 String statusBadge;
                 if (stmt != null) {
                   if (isCard) {
-                    if (obligations.isNotEmpty) {
-                      statusBadge = '✅ Lançado em Contas a Pagar (${obligations.length} obrigações)';
+                    if (activeObligations > 0) {
+                      statusBadge =
+                          '${l.financialRegisteredBill} · '
+                          '${l.financialBillOpenObligations(activeObligations)}';
+                      badgeBg = pColors.soft;
+                      badgeFg = pColors.accent;
+                    } else if (obligations.isNotEmpty &&
+                        obligations.every((o) => o['status'] == 'CANCELED')) {
+                      statusBadge = l.financialSavedOnly;
                       badgeBg = pColors.soft;
                       badgeFg = pColors.accent;
                     } else {
-                      statusBadge = '⚠️ Confirmado (Pronto para gerar obrigações)';
+                      statusBadge = l.importBillConfirmedReview;
                       badgeBg = pColors.warnFill;
                       badgeFg = pColors.warn;
                     }
                   } else {
                     if (linked > 0) {
-                      statusBadge = '✅ Lançado na Tesouraria ($linked itens)';
+                      statusBadge = l.importBankIdentitiesReviewed;
                       badgeBg = pColors.soft;
                       badgeFg = pColors.accent;
                     } else {
-                      statusBadge = '⚠️ Confirmado (Pronto para lançar no Caixa)';
+                      statusBadge = l.importBankConfirmedReview;
                       badgeBg = pColors.soft;
                       badgeFg = pColors.accent;
                     }
                   }
                 } else {
                   if (ready) {
-                    statusBadge = isCard
-                        ? 'Pronto para Lançar em Contas a Pagar'
-                        : 'Pronto para Lançar na Tesouraria';
+                    statusBadge = l.importReadyReview;
                     badgeBg = pColors.soft;
                     badgeFg = pColors.accent;
                   } else if (hasMismatch) {
-                    statusBadge = '⚠️ Origem Incompatível (${isSourceBank ? "Cartão vs Banco" : "Banco vs Cartão"})';
+                    statusBadge = l.financialImportSourceMismatch(
+                      isSourceBank ? l.pdfImportCard : l.pdfImportBank,
+                      isSourceBank ? l.pdfImportBank : l.pdfImportCard,
+                    );
                     badgeBg = pColors.warnFill;
                     badgeFg = pColors.warn;
                   } else {
-                    statusBadge = l.pdfImportBlocked;
+                    final dates =
+                        ((p['header_candidates'] as Map?)?['due_on'] as List? ??
+                                [])
+                            .map((c) => (c as Map)['value'])
+                            .toSet();
+                    statusBadge = dates.length > 1
+                        ? l.financialDocumentDueReview
+                        : p['content_type'] == 'UNKNOWN' ||
+                              p['complete'] == false ||
+                              p['content_type'] == null
+                        ? l.pdfImportBlocked
+                        : l.financialDocumentPending;
                     badgeBg = pColors.warnFill;
                     badgeFg = pColors.warn;
                   }
                 }
 
-                final sourceTitle = currentSource != null ? _sourceLabel(currentSource) : l.pdfImportDocument;
+                final sourceTitle = currentSource != null
+                    ? _sourceLabel(currentSource)
+                    : l.pdfImportDocument;
 
+                if (obligations.isNotEmpty &&
+                    activeObligations == 0 &&
+                    obligations.every((o) => o['status'] == 'CANCELED')) {
+                  statusBadge = l.financialSavedOnly;
+                } else if (p['recorded_payable_id'] != null ||
+                    (p['recorded_payables_count'] as int? ?? 0) > 0) {
+                  statusBadge = activeObligations > 0
+                      ? '${l.financialRegisteredBill} · '
+                            '${l.financialBillOpenObligations(activeObligations)}'
+                      : l.financialRegisteredBill;
+                } else if (p['recorded_destination'] != null) {
+                  statusBadge = l.financialSavedOnly;
+                } else if (stmt != null && !isCard) {
+                  statusBadge = l.financialStatementSaved;
+                }
                 return Padding(
+                  key: ValueKey('import-${p['import_id']}'),
                   padding: const EdgeInsets.only(bottom: 12),
                   child: ApprovedSurface(
                     child: Column(
@@ -878,28 +882,41 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Icon(
-                                  (p['reader_id'] as String? ?? '').contains('csv')
+                                  (p['reader_id'] as String? ?? '').contains(
+                                        'csv',
+                                      )
                                       ? Icons.table_chart_outlined
                                       : Icons.description_outlined,
                                   size: 20,
                                 ),
                                 const SizedBox(width: 8),
-                                ConstrainedBox(
-                                  constraints: const BoxConstraints(maxWidth: 160),
-                                  child: Text(
-                                    sourceTitle,
-                                    style: Theme.of(context).textTheme.titleSmall,
-                                    overflow: TextOverflow.ellipsis,
+                                Flexible(
+                                  child: Tooltip(
+                                    message:
+                                        p['filename'] as String? ??
+                                        l.pdfImportDocument,
+                                    child: Text(
+                                      p['filename'] as String? ??
+                                          l.pdfImportDocument,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleSmall,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
                                 color: badgeBg,
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: badgeFg.withValues(alpha: 0.3)),
+                                border: Border.all(
+                                  color: badgeFg.withValues(alpha: 0.3),
+                                ),
                               ),
                               child: Text(
                                 statusBadge,
@@ -913,160 +930,317 @@ class _FinancialImportsViewState extends State<FinancialImportsView>
                           ],
                         ),
                         const SizedBox(height: 8),
+                        Text(sourceTitle),
+                        if (isCard &&
+                            p['bill_cycle_version'] != 1 &&
+                            p['segments'] == null) ...[
+                          Text(l.financialImportLegacyReadHelp),
+                          TextButton.icon(
+                            key: ValueKey('reprocess-import-${p['import_id']}'),
+                            onPressed: busy ? null : () => _reprocess(p),
+                            icon: const Icon(Icons.refresh),
+                            label: Text(l.financialImportUpdateRead),
+                          ),
+                        ],
+                        if (p['financial_status'] == 'PENDING')
+                          Text(l.financialImportPendingNoAccount),
+                        if (queryFailures.isNotEmpty &&
+                            p['financial_status'] != 'PENDING')
+                          Text(l.financialImportPartialStatus),
                         Text(
-                          l.pdfImportCounts(p['items_count'] as int, p['pages_count'] as int? ?? 0),
+                          l.pdfImportCounts(
+                            p['items_count'] as int,
+                            p['pages_count'] as int? ?? 0,
+                          ),
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                         const SizedBox(height: 12),
                         Wrap(
                           spacing: 8,
                           runSpacing: 8,
-                          alignment: WrapAlignment.end,
                           children: [
-                            if (stmt != null && isCard) ...[
-                              if (obligations.isNotEmpty) ...[
-                                FilledButton.icon(
-                                  key: ValueKey('open-payables-btn-${stmt['id']}'),
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(builder: (_) => const PayablesView()),
-                                    );
-                                  },
-                                  icon: const Icon(Icons.arrow_forward, size: 16),
-                                  label: const Text('Abrir Contas a Pagar'),
-                                  style: navCardBtnStyle,
-                                ),
-                                OutlinedButton.icon(
-                                  key: ValueKey('bill-review-btn-${stmt['id']}'),
-                                  onPressed: busy
-                                      ? null
-                                      : () async {
-                                          await Navigator.of(context).push(
-                                            MaterialPageRoute<void>(
-                                              builder: (_) => FinancialBillReviewView(
-                                                service: service,
-                                                statementId: stmt['id'] as String,
-                                                initialStatement: stmt,
-                                              ),
-                                            ),
-                                          );
-                                          if (mounted) await _load();
-                                        },
-                                  icon: const Icon(Icons.assignment_turned_in_outlined, size: 16),
-                                  label: const Text('Ver Classificação'),
-                                  style: outlinedCardBtnStyle,
-                                ),
-                                OutlinedButton(
-                                  onPressed: busy ? null : () => _preview(p),
-                                  style: outlinedCardBtnStyle,
-                                  child: const Text('Ver Documento'),
-                                ),
-                              ] else ...[
-                                FilledButton.icon(
-                                  key: ValueKey('launch-card-btn-${p['id']}'),
-                                  onPressed: busy ? null : () => _launchCardBillDirect(p),
-                                  icon: const Icon(Icons.bolt, size: 16),
-                                  label: const Text('Lançar em Contas a Pagar'),
-                                  style: primaryCardBtnStyle,
-                                ),
-                                OutlinedButton.icon(
-                                  key: ValueKey('bill-review-btn-${stmt['id']}'),
-                                  onPressed: busy
-                                      ? null
-                                      : () async {
-                                          await Navigator.of(context).push(
-                                            MaterialPageRoute<void>(
-                                              builder: (_) => FinancialBillReviewView(
-                                                service: service,
-                                                statementId: stmt['id'] as String,
-                                                initialStatement: stmt,
-                                              ),
-                                            ),
-                                          );
-                                          if (mounted) await _load();
-                                        },
-                                  icon: const Icon(Icons.assignment_turned_in_outlined, size: 16),
-                                  label: const Text('Revisar e Classificar'),
-                                  style: outlinedCardBtnStyle,
-                                ),
-                                OutlinedButton(
-                                  onPressed: busy ? null : () => _preview(p),
-                                  style: outlinedCardBtnStyle,
-                                  child: const Text('Ver Detalhes'),
-                                ),
-                              ],
-                            ] else if (stmt != null && !isCard) ...[
-                              FilledButton.icon(
-                                key: ValueKey('post-treasury-btn-${stmt['id']}'),
-                                onPressed: busy ? null : () => _postToTreasuryDirect(stmt['id'] as String),
-                                icon: const Icon(Icons.account_balance_wallet_outlined, size: 16),
-                                label: Text(
-                                  linked > 0
-                                      ? 'Atualizar no Caixa / Tesouraria'
-                                      : 'Lançar no Caixa / Tesouraria',
-                                ),
-                                style: primaryCardBtnStyle,
+                            FilledButton.icon(
+                              key: ValueKey(
+                                _currentCard(p)
+                                    ? 'launch-card-btn-${p['import_id']}'
+                                    : 'open-document-${p['import_id']}',
                               ),
-                              OutlinedButton(
-                                onPressed: busy ? null : () => _preview(p),
-                                style: outlinedCardBtnStyle,
-                                child: const Text('Ver Lançamentos'),
+                              onPressed: busy ? null : () => _preview(p),
+                              icon: const Icon(Icons.description_outlined),
+                              label: Text(l.financialOpenDocument),
+                            ),
+                            OutlinedButton.icon(
+                              key: ValueKey('remove-import-${p['import_id']}'),
+                              onPressed: busy ? null : () => _removeDocument(p),
+                              icon: const Icon(Icons.delete_outline),
+                              label: Text(l.importRemovalTitle),
+                            ),
+                          ],
+                        ),
+                        ExpansionTile(
+                          tilePadding: EdgeInsets.zero,
+                          title: Text(l.financialOtherDocumentOptions),
+                          children: [
+                            if (_currentCard(p))
+                              TextButton(
+                                onPressed: busy
+                                    ? null
+                                    : () => _preview(p, readingOnly: true),
+                                child: Text(l.financialReadingDetails),
+                              )
+                            else ...[
+                              Text(l.financialLegacyOptionsHelp),
+                              Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                alignment: WrapAlignment.end,
+                                children: [
+                                  if (stmt != null && isCard) ...[
+                                    if (obligations.isNotEmpty) ...[
+                                      FilledButton.icon(
+                                        key: ValueKey(
+                                          'open-payables-btn-${stmt['id']}',
+                                        ),
+                                        onPressed: busy
+                                            ? null
+                                            : () {
+                                                Navigator.of(context).push(
+                                                  MaterialPageRoute(
+                                                    builder: (_) =>
+                                                        const PayablesView(),
+                                                  ),
+                                                );
+                                              },
+                                        icon: const Icon(
+                                          Icons.arrow_forward,
+                                          size: 16,
+                                        ),
+                                        label: Text(
+                                          l.financialImportOpenPayables,
+                                        ),
+                                        style: navCardBtnStyle,
+                                      ),
+                                      OutlinedButton.icon(
+                                        key: ValueKey(
+                                          'bill-review-btn-${stmt['id']}',
+                                        ),
+                                        onPressed: busy
+                                            ? null
+                                            : () async {
+                                                await Navigator.of(
+                                                  context,
+                                                ).push(
+                                                  MaterialPageRoute<void>(
+                                                    builder: (_) =>
+                                                        FinancialBillReviewView(
+                                                          service: service,
+                                                          statementId:
+                                                              stmt['id']
+                                                                  as String,
+                                                          initialStatement:
+                                                              stmt,
+                                                        ),
+                                                  ),
+                                                );
+                                                if (mounted) await _load();
+                                              },
+                                        icon: const Icon(
+                                          Icons.assignment_turned_in_outlined,
+                                          size: 16,
+                                        ),
+                                        label: const Text('Ver Classificação'),
+                                        style: outlinedCardBtnStyle,
+                                      ),
+                                      OutlinedButton(
+                                        onPressed: busy
+                                            ? null
+                                            : () => _preview(p),
+                                        style: outlinedCardBtnStyle,
+                                        child: const Text('Ver Documento'),
+                                      ),
+                                    ] else ...[
+                                      FilledButton.icon(
+                                        key: ValueKey(
+                                          'launch-card-btn-${p['import_id']}',
+                                        ),
+                                        onPressed: busy
+                                            ? null
+                                            : () => _launchCardBillDirect(p),
+                                        icon: const Icon(Icons.bolt, size: 16),
+                                        label: Text(
+                                          context.l10n.importReviewBill,
+                                        ),
+                                        style: primaryCardBtnStyle,
+                                      ),
+                                      OutlinedButton.icon(
+                                        key: ValueKey(
+                                          'bill-review-btn-${stmt['id']}',
+                                        ),
+                                        onPressed: busy
+                                            ? null
+                                            : () async {
+                                                await Navigator.of(
+                                                  context,
+                                                ).push(
+                                                  MaterialPageRoute<void>(
+                                                    builder: (_) =>
+                                                        FinancialBillReviewView(
+                                                          service: service,
+                                                          statementId:
+                                                              stmt['id']
+                                                                  as String,
+                                                          initialStatement:
+                                                              stmt,
+                                                        ),
+                                                  ),
+                                                );
+                                                if (mounted) await _load();
+                                              },
+                                        icon: const Icon(
+                                          Icons.assignment_turned_in_outlined,
+                                          size: 16,
+                                        ),
+                                        label: const Text(
+                                          'Revisar e Classificar',
+                                        ),
+                                        style: outlinedCardBtnStyle,
+                                      ),
+                                      OutlinedButton(
+                                        onPressed: busy
+                                            ? null
+                                            : () => _preview(p),
+                                        style: outlinedCardBtnStyle,
+                                        child: const Text('Ver Detalhes'),
+                                      ),
+                                    ],
+                                  ] else if (stmt != null && !isCard) ...[
+                                    FilledButton.icon(
+                                      key: ValueKey(
+                                        'post-treasury-btn-${stmt['id']}',
+                                      ),
+                                      onPressed: busy
+                                          ? null
+                                          : () => _postToTreasuryDirect(
+                                              stmt['id'] as String,
+                                            ),
+                                      icon: const Icon(
+                                        Icons.account_balance_wallet_outlined,
+                                        size: 16,
+                                      ),
+                                      label: Text(
+                                        linked > 0
+                                            ? context.l10n.importReviewBank
+                                            : context.l10n.importReviewBank,
+                                      ),
+                                      style: primaryCardBtnStyle,
+                                    ),
+                                    OutlinedButton(
+                                      onPressed: busy
+                                          ? null
+                                          : () => _preview(p),
+                                      style: outlinedCardBtnStyle,
+                                      child: const Text('Ver Lançamentos'),
+                                    ),
+                                  ] else if (stmt == null) ...[
+                                    if (ready && isCard) ...[
+                                      FilledButton.icon(
+                                        key: ValueKey(
+                                          'launch-card-direct-btn-${p['import_id']}',
+                                        ),
+                                        onPressed: busy
+                                            ? null
+                                            : () => _launchCardBillDirect(p),
+                                        icon: const Icon(Icons.bolt, size: 16),
+                                        label: Text(
+                                          context.l10n.importReviewBill,
+                                        ),
+                                        style: primaryCardBtnStyle,
+                                      ),
+                                      OutlinedButton(
+                                        key: ValueKey(
+                                          'preview-confirm-btn-${p['import_id']}',
+                                        ),
+                                        onPressed: busy
+                                            ? null
+                                            : () => _preview(p),
+                                        style: outlinedCardBtnStyle,
+                                        child: const Text('Ver Prévia'),
+                                      ),
+                                    ] else if (ready && !isCard) ...[
+                                      FilledButton.icon(
+                                        key: ValueKey(
+                                          'launch-statement-btn-${p['import_id']}',
+                                        ),
+                                        onPressed: busy
+                                            ? null
+                                            : () => _launchStatementDirect(p),
+                                        icon: const Icon(
+                                          Icons.account_balance_wallet_outlined,
+                                          size: 16,
+                                        ),
+                                        label: Text(
+                                          context.l10n.importReviewBank,
+                                        ),
+                                        style: primaryCardBtnStyle,
+                                      ),
+                                      OutlinedButton(
+                                        key: ValueKey(
+                                          'preview-confirm-btn-${p['import_id']}',
+                                        ),
+                                        onPressed: busy
+                                            ? null
+                                            : () => _preview(p),
+                                        style: outlinedCardBtnStyle,
+                                        child: const Text('Ver Prévia'),
+                                      ),
+                                    ] else if (hasMismatch) ...[
+                                      FilledButton.icon(
+                                        key: ValueKey(
+                                          'reassign-source-btn-${p['import_id']}',
+                                        ),
+                                        onPressed: busy
+                                            ? null
+                                            : () => _reassignSource(p),
+                                        icon: const Icon(
+                                          Icons.swap_horiz,
+                                          size: 16,
+                                        ),
+                                        label: Text(
+                                          isSourceBank
+                                              ? 'Trocar para Cartão de Crédito'
+                                              : 'Trocar para Conta Bancária',
+                                        ),
+                                        style: primaryCardBtnStyle,
+                                      ),
+                                      OutlinedButton(
+                                        key: ValueKey(
+                                          'preview-confirm-btn-${p['import_id']}',
+                                        ),
+                                        onPressed: busy
+                                            ? null
+                                            : () => _preview(p),
+                                        style: outlinedCardBtnStyle,
+                                        child: Text(
+                                          l.financialDocumentReviewAction,
+                                        ),
+                                      ),
+                                    ] else ...[
+                                      OutlinedButton(
+                                        key: ValueKey(
+                                          'preview-confirm-btn-${p['import_id']}',
+                                        ),
+                                        onPressed: busy
+                                            ? null
+                                            : () => _preview(p),
+                                        style: outlinedCardBtnStyle,
+                                        child: Text(
+                                          l.financialDocumentReviewAction,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ],
                               ),
-                            ] else if (stmt == null) ...[
-                              if (ready && isCard) ...[
-                                FilledButton.icon(
-                                  key: ValueKey('launch-card-direct-btn-${p['id']}'),
-                                  onPressed: busy ? null : () => _launchCardBillDirect(p),
-                                  icon: const Icon(Icons.bolt, size: 16),
-                                  label: const Text('Lançar em Contas a Pagar'),
-                                  style: primaryCardBtnStyle,
-                                ),
-                                OutlinedButton(
-                                  key: ValueKey('preview-confirm-btn-${p['id']}'),
-                                  onPressed: busy ? null : () => _preview(p),
-                                  style: outlinedCardBtnStyle,
-                                  child: const Text('Ver Prévia'),
-                                ),
-                              ] else if (ready && !isCard) ...[
-                                FilledButton.icon(
-                                  key: ValueKey('launch-statement-btn-${p['id']}'),
-                                  onPressed: busy ? null : () => _launchStatementDirect(p),
-                                  icon: const Icon(Icons.account_balance_wallet_outlined, size: 16),
-                                  label: const Text('Lançar no Caixa / Tesouraria'),
-                                  style: primaryCardBtnStyle,
-                                ),
-                                OutlinedButton(
-                                  key: ValueKey('preview-confirm-btn-${p['id']}'),
-                                  onPressed: busy ? null : () => _preview(p),
-                                  style: outlinedCardBtnStyle,
-                                  child: const Text('Ver Prévia'),
-                                ),
-                              ] else if (hasMismatch) ...[
-                                FilledButton.icon(
-                                  key: ValueKey('reassign-source-btn-${p['id']}'),
-                                  onPressed: busy ? null : () => _reassignSource(p),
-                                  icon: const Icon(Icons.swap_horiz, size: 16),
-                                  label: Text(
-                                    isSourceBank
-                                        ? 'Trocar para Cartão de Crédito'
-                                        : 'Trocar para Conta Bancária',
-                                  ),
-                                  style: primaryCardBtnStyle,
-                                ),
-                                OutlinedButton(
-                                  key: ValueKey('preview-confirm-btn-${p['id']}'),
-                                  onPressed: busy ? null : () => _preview(p),
-                                  style: outlinedCardBtnStyle,
-                                  child: const Text('Ver Impedimentos'),
-                                ),
-                              ] else ...[
-                                OutlinedButton(
-                                  key: ValueKey('preview-confirm-btn-${p['id']}'),
-                                  onPressed: busy ? null : () => _preview(p),
-                                  style: outlinedCardBtnStyle,
-                                  child: const Text('Ver Impedimentos'),
-                                ),
-                              ],
                             ],
                           ],
                         ),
@@ -1289,10 +1463,12 @@ class _FinancialSourceViewState extends State<_FinancialSourceView>
 class FinancialPdfPreviewView extends StatefulWidget {
   final FinancialImportService service;
   final String previewId;
+  final FinancialJson? importContext;
   const FinancialPdfPreviewView({
     super.key,
     required this.service,
     required this.previewId,
+    this.importContext,
   });
   @override
   State<FinancialPdfPreviewView> createState() =>
@@ -1302,6 +1478,7 @@ class FinancialPdfPreviewView extends StatefulWidget {
 class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
     with _ImportOperation<FinancialPdfPreviewView> {
   FinancialJson? preview, source, document, statement;
+  FinancialJson? frozenContext;
   List<FinancialJson> items = [], issues = [], pages = [];
   bool acknowledged = false;
   String get base =>
@@ -1316,6 +1493,18 @@ class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
 
   Future<void> _loadData() async {
     final p = await widget.service.get(base);
+    final expected = widget.importContext ?? frozenContext;
+    if (expected != null &&
+        (expected['import_id'] != p['import_id'] ||
+            expected['expected_generation'] != p['generation'])) {
+      throw ApiException(
+        statusCode: 409,
+        message:
+            'Esta importação mudou. Volte à lista e atualize os documentos antes de continuar a conferência.',
+        errorCode: 'FINANCIAL_IMPORT_GENERATION_CONFLICT',
+      );
+    }
+    frozenContext ??= FinancialImportService.lifecycleContext(p);
     final s = await widget.service.sources();
     final d = await widget.service.get(
       '${FinancialImportService.root}/documents/${p['document_id']}',
@@ -1330,11 +1519,18 @@ class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
         '${FinancialImportService.root}/statements?source_id=${p['source_id']}&offset=$offset&limit=100',
       );
       confirmed = statements
-          .where((v) => v['preview_id'] == widget.previewId)
+          .where(
+            (v) =>
+                v['preview_id'] == widget.previewId &&
+                v['import_id'] == p['import_id'] &&
+                v['generation'] == p['generation'],
+          )
           .firstOrNull;
       if (confirmed != null) {
         try {
-          confirmed = await widget.service.getStatement(confirmed['id'] as String);
+          confirmed = await widget.service.getStatement(
+            confirmed['id'] as String,
+          );
         } catch (_) {}
         break;
       }
@@ -1354,72 +1550,58 @@ class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
     }
   }
 
-  Future<void> _postToTreasury() => run(() async {
-    final s = statement;
-    if (s == null) return;
-    final res = await widget.service.postStatementToTreasury(s['id'] as String);
-    if (mounted) {
-      final pal = AppPalette.of(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '${res['entries_posted']} lançamentos lançados na Tesouraria! Novo saldo: ${AppFormatters.formatCurrency(res['new_balance_cents'] as int)}',
-          ),
-          backgroundColor: pal.accent,
+  Future<void> _postToTreasury() async {
+    if (statement == null) return;
+    await Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => FinancialBankReviewView(
+          service: widget.service,
+          statementId: statement!['id'] as String,
         ),
-      );
-      await _loadData();
-    }
-  }, mutation: true);
+      ),
+    );
+    if (mounted) await _loadData();
+  }
 
-  Future<void> _confirm() => run(() async {
+  Future<void> _confirm() async {
     final p = preview!;
     Map<String, dynamic>? extraHeader;
     if (p['reader_id'] != 'pdf_auto') {
-      final totals = Map<String, dynamic>.from(p['totals'] as Map? ?? {});
-      final dates = Map<String, dynamic>.from(p['observed_dates'] as Map? ?? {});
-      final isCard = source?['source_type'] == 'CREDIT_CARD' ||
-          p['reader_id'].toString().contains('card');
-      if (isCard) {
-        extraHeader = {
-          'statement_type': 'CARD_BILL',
-          'total_amount_cents': totals['net_cents'] ?? totals['positive_cents'] ?? 0,
-          'due_on': dates['last'] ?? dates['first'] ?? DateTime.now().toIso8601String().substring(0, 10),
-        };
-      } else {
-        extraHeader = {
-          'statement_type': 'BANK_STATEMENT',
-          'period_start': dates['first'] ?? DateTime.now().toIso8601String().substring(0, 10),
-          'period_end': dates['last'] ?? DateTime.now().toIso8601String().substring(0, 10),
-          'opening_balance_cents': 0,
-          'closing_balance_cents': totals['net_cents'] ?? 0,
-          'total_inflows_cents': totals['positive_cents'] ?? 0,
-          'total_outflows_cents': totals['negative_cents'] ?? 0,
-        };
-      }
-    }
-    final result = await widget.service.confirm(p, confirmationHeader: extraHeader);
-    FinancialJson full = result;
-    try {
-      full = await widget.service.getStatement(result['id'] as String);
-    } catch (_) {}
-    if (mounted) {
-      setState(() => statement = full);
-      final isCard = full['statement_type'] == 'CARD_BILL';
-      if (isCard) {
-        await Navigator.of(context).push(
-          MaterialPageRoute<void>(
-            builder: (_) => FinancialBillReviewView(
-              service: widget.service,
-              statementId: full['id'] as String,
-              initialStatement: full,
+      extraHeader = await Navigator.of(context).push<Map<String, dynamic>>(
+        MaterialPageRoute(
+          builder: (_) => FinancialHeaderReviewView(
+            isCard: source?['source_type'] == 'CREDIT_CARD',
+            extractedHeader: Map<String, dynamic>.from(
+              p['extracted_header'] as Map? ?? {},
             ),
           ),
-        );
-        if (mounted) await _loadData();
-      }
+        ),
+      );
+      if (extraHeader == null || !mounted) return;
     }
-  }, mutation: true);
+    await run(() async {
+      final result = await widget.service.confirm(
+        p,
+        confirmationHeader: extraHeader,
+      );
+      if (!mounted) return;
+      setState(() => statement = result);
+      final full = await widget.service.getStatement(result['id'] as String);
+      if (mounted) setState(() => statement = full);
+    }, mutation: true);
+  }
+
+  Future<void> _integrateBill() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => FinancialBillIntegrationView(
+          service: widget.service,
+          preview: preview!,
+        ),
+      ),
+    );
+    if (mounted) await _loadData();
+  }
 
   Future<void> _original() async {
     Widget? viewer;
@@ -1429,7 +1611,8 @@ class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
       );
       if (mounted) {
         final filename = (document?['filename'] as String? ?? '').toLowerCase();
-        final isPdf = filename.endsWith('.pdf') || (preview?['reader_id'] == 'pdf_auto');
+        final isPdf =
+            filename.endsWith('.pdf') || (preview?['reader_id'] == 'pdf_auto');
         viewer = ApprovedPage(
           title: context.l10n.pdfImportOriginalTitle,
           body: isPdf
@@ -1480,13 +1663,47 @@ class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
   Widget build(BuildContext context) {
     final l = context.l10n, p = preview;
     final pal = AppPalette.of(context);
-    final ready = p?['status'] == 'READY';
+    final ready =
+        p?['status'] == 'READY' &&
+        p?['segments'] == null &&
+        ![
+          'BANK_STATEMENT_INDEX',
+          'RENEGOTIATION',
+          'UNKNOWN_INDEX',
+        ].contains(p?['content_type']);
+    final cycleFlow =
+        p?['bill_cycle_version'] == 1 &&
+        source?['source_type'] == 'CREDIT_CARD';
+    final canIntegrate =
+        cycleFlow &&
+        p?['segments'] == null &&
+        ![
+          'UNKNOWN',
+          'SUMMARY_INDEX',
+          'MULTI_CYCLE_COMPILATION',
+          'BANK_STATEMENT_INDEX',
+          'RENEGOTIATION',
+          'UNKNOWN_INDEX',
+        ].contains(p?['content_type']);
     final header = Map<String, dynamic>.from(
       p?['extracted_header'] as Map? ?? {},
     );
     final fieldSources = Map<String, dynamic>.from(
       p?['field_sources'] as Map? ?? {},
     );
+    final dueCandidates =
+        ((p?['header_candidates'] as Map?)?['due_on'] as List? ?? [])
+            .cast<Map>();
+    final dueConflict = dueCandidates.map((c) => c['value']).toSet().length > 1;
+    final candidateDates = <String, Set<int>>{};
+    for (final c in dueCandidates) {
+      final values = candidateDates.putIfAbsent(
+        c['value'] as String,
+        () => <int>{},
+      );
+      if (c['page_number'] is int) values.add(c['page_number'] as int);
+    }
+
     final dates = {
       'period_start': l.pdfImportPeriodStart,
       'period_end': l.pdfImportPeriodEnd,
@@ -1521,7 +1738,8 @@ class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
             icon: const Icon(Icons.refresh),
           ),
         ],
-        floatingActionButton: p != null && ready && statement == null
+        floatingActionButton:
+            p != null && ready && statement == null && !cycleFlow
             ? FloatingActionButton.extended(
                 key: const ValueKey('pdf-confirm'),
                 onPressed: busy || !acknowledged ? null : _confirm,
@@ -1549,7 +1767,13 @@ class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
                           ? l.pdfImportConfirmed
                           : ready
                           ? l.pdfImportReady
-                          : l.pdfImportBlocked,
+                          : dueConflict
+                          ? l.financialDocumentDueReview
+                          : p['content_type'] == 'UNKNOWN' ||
+                                p['complete'] == false ||
+                                p['content_type'] == null
+                          ? l.pdfImportBlocked
+                          : l.financialDocumentPending,
                     ),
                     Text(
                       l.pdfImportCounts(
@@ -1562,6 +1786,8 @@ class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
                         l.pdfImportSource,
                         '${source!['name']} · ${source!['institution']} · ${source!['holder_type']}',
                       ),
+                    if (source?['source_type'] == 'BANK_ACCOUNT')
+                      Text(l.financialBankDocumentHelp),
                     if (p['detected_institution'] != null)
                       _field(
                         l.pdfImportInstitution,
@@ -1587,12 +1813,47 @@ class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
                               (fieldSources[field.key] as Map?)?['page_number']
                                   as int?,
                         ),
+                    if (dueConflict) ...[
+                      Text(l.financialImportDueConflict),
+                      for (final entry in candidateDates.entries)
+                        _field(
+                          l.pdfImportDue,
+                          '${_date(entry.key)}${entry.value.isEmpty ? '' : ' · ${l.financialPages}: ${(entry.value.toList()..sort()).join(', ')}'}',
+                        ),
+                    ],
                     OutlinedButton.icon(
                       onPressed: busy ? null : _original,
                       icon: const Icon(Icons.picture_as_pdf_outlined),
                       label: Text(l.pdfImportOriginal),
                     ),
-                    if (ready && statement == null) ...[
+                    if (p['segments'] != null) ...[
+                      Text(l.financialSegmentsHelp),
+                      FilledButton.icon(
+                        key: const ValueKey('review-segments'),
+                        onPressed: busy
+                            ? null
+                            : () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => FinancialSegmentsView(
+                                    service: widget.service,
+                                    preview: p,
+                                  ),
+                                ),
+                              ),
+                        icon: const Icon(Icons.view_list_outlined),
+                        label: Text(l.financialSegmentsTitle),
+                      ),
+                    ],
+                    if (canIntegrate) ...[
+                      const SizedBox(height: 12),
+                      FilledButton.icon(
+                        key: const ValueKey('bill-cycle-open'),
+                        onPressed: busy ? null : _integrateBill,
+                        icon: const Icon(Icons.receipt_long_outlined),
+                        label: Text(l.billIntegrationTitle),
+                      ),
+                    ],
+                    if (ready && statement == null && !cycleFlow) ...[
                       const SizedBox(height: 12),
                       FilledButton.icon(
                         key: const ValueKey('top-confirm-launch-btn'),
@@ -1602,16 +1863,14 @@ class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
                               ? Icons.assignment_turned_in_outlined
                               : Icons.account_balance_wallet_outlined,
                         ),
-                        label: Text(
-                          header['statement_type'] == 'CARD_BILL'
-                              ? 'Confirmar e Ir para Revisão Semântica'
-                              : 'Confirmar e Liberar para Tesouraria',
-                        ),
+                        label: Text(l.importConfirmReview),
                         style: FilledButton.styleFrom(
                           backgroundColor: pal.accent,
                           foregroundColor: pal.accentInk,
                           minimumSize: const Size(0, 40),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
                         ),
                       ),
                     ],
@@ -1619,24 +1878,31 @@ class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
                 ),
               ),
               const SizedBox(height: 20),
-              if (statement != null) ...[
+              if (statement != null && !cycleFlow) ...[
                 ApprovedSurface(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.check_circle_outline, color: pal.accent, size: 22),
+                          Icon(
+                            Icons.check_circle_outline,
+                            color: pal.accent,
+                            size: 22,
+                          ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               l.pdfImportSuccess,
-                              style: const TextStyle(fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      if (header['statement_type'] == 'CARD_BILL' || statement!['statement_type'] == 'CARD_BILL') ...[
+                      if (header['statement_type'] == 'CARD_BILL' ||
+                          statement!['statement_type'] == 'CARD_BILL') ...[
                         const SizedBox(height: 12),
                         FilledButton.icon(
                           key: const ValueKey('open-bill-review-button'),
@@ -1657,7 +1923,9 @@ class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
                             backgroundColor: pal.soft,
                             foregroundColor: pal.accent,
                             minimumSize: const Size(0, 40),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                       ] else ...[
@@ -1665,23 +1933,23 @@ class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
                         FilledButton.icon(
                           key: const ValueKey('post-to-treasury-button'),
                           onPressed: busy ? null : _postToTreasury,
-                          icon: const Icon(Icons.account_balance_wallet_outlined),
-                          label: Text(
-                            (statement!['linked_count'] ?? 0) > 0
-                                ? 'Atualizar Lançamentos no Caixa / Tesouraria'
-                                : 'Lançar no Caixa / Tesouraria',
+                          icon: const Icon(
+                            Icons.account_balance_wallet_outlined,
                           ),
+                          label: Text(l.importReviewBank),
                           style: FilledButton.styleFrom(
                             backgroundColor: pal.accent,
                             foregroundColor: pal.accentInk,
                             minimumSize: const Size(0, 40),
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                         if ((statement!['linked_count'] ?? 0) > 0) ...[
                           const SizedBox(height: 8),
                           Text(
-                            '✅ ${statement!['linked_count']} de ${statement!['items_count'] ?? statement!['item_count'] ?? items.length} movimentações já registradas e conciliadas no saldo da conta.',
+                            l.importBankIdentityNote,
                             style: TextStyle(
                               color: pal.accent,
                               fontWeight: FontWeight.w600,
@@ -1718,8 +1986,12 @@ class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(l.pdfImportEffect),
-                    if (!ready)
+                    Text(
+                      canIntegrate
+                          ? l.financialReadSnapshotHelp
+                          : l.pdfImportEffect,
+                    ),
+                    if (!ready && !canIntegrate)
                       Padding(
                         padding: const EdgeInsets.only(top: 12),
                         child: Text(l.pdfImportBlockedHelp),
@@ -1731,7 +2003,15 @@ class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
                           padding: const EdgeInsets.only(top: 12),
                           child: Text(l.pdfImportPartialYear),
                         ),
-                    for (final issue in issues)
+                    for (final issue in {
+                      for (final issue in issues)
+                        if (!canIntegrate ||
+                            ![
+                              'PDF_CONFLICTING_HEADER',
+                              'FINANCIAL_DUE_DATE_CONFLICT',
+                            ].contains(issue['code']))
+                          '${issue['code']}': issue,
+                    }.values)
                       _field(
                         issue['page_number'] == null
                             ? l.pdfImportBlocked
@@ -1764,7 +2044,12 @@ class _FinancialPdfPreviewViewState extends State<FinancialPdfPreviewView>
               ),
               const SizedBox(height: 20),
               ApprovedSectionHeader(l.pdfImportItems),
-              Text(l.pdfImportCoverage(items.length, p['items_count'] as int? ?? items.length)),
+              Text(
+                l.pdfImportCoverage(
+                  items.length,
+                  p['items_count'] as int? ?? items.length,
+                ),
+              ),
               const SizedBox(height: 12),
               for (final item in items) ...[
                 ApprovedSurface(

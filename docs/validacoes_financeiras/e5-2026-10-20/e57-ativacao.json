@@ -1,0 +1,21 @@
+{
+  "status": "ACTIVATED_E57_NATIVE_UI_NOT_OBSERVED",
+  "client_version": "1.0.4+5",
+  "schema": "f17e8f901037",
+  "migrations_applied": [
+    "f17e8f901037"
+  ],
+  "database_tables_verified": 56,
+  "existing_data_preserved": true,
+  "auth_last_seen_may_change": true,
+  "backup_filename": "estoque_backup_pre_e57_20261020_135138_20261020_135138_314177.db",
+  "backup_sha256": "8adc3e97d93a57e506251d18b600b0367111a1ef9e9e5283c3993cab3e3644ad",
+  "https_health": true,
+  "auth_required": true,
+  "saved_conflicting_due_recovered_without_writes": true,
+  "client_exe_sha256": "cb7488ce78b4158992b7ae5b1b966ad8235464834f67b42dc5c35da6f801ea15",
+  "server_launcher_pid": 24928,
+  "native_ui_verified": false,
+  "import_removal_capability_live": true,
+  "principal_imports_not_removed": true
+}

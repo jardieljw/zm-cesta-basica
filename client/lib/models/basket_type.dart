@@ -46,6 +46,7 @@ class RecipeItem {
 }
 
 class RecipeVersion {
+  final int? suggestedPriceCents;
   final String id;
   final String basketTypeId;
   final int versionNumber;
@@ -55,6 +56,7 @@ class RecipeVersion {
   final List<RecipeItem> items;
 
   RecipeVersion({
+    this.suggestedPriceCents,
     required this.id,
     required this.basketTypeId,
     required this.versionNumber,
@@ -71,6 +73,7 @@ class RecipeVersion {
         .toList();
 
     return RecipeVersion(
+      suggestedPriceCents: json['suggested_price_cents'] as int?,
       id: json['id'] as String,
       basketTypeId: json['basket_type_id'] as String,
       versionNumber: json['version_number'] as int,
@@ -109,8 +112,11 @@ class BasketType {
 
   factory BasketType.fromJson(Map<String, dynamic> json) {
     RecipeVersion? recipe;
-    if (json['active_recipe'] != null && json['active_recipe'] is Map<String, dynamic>) {
-      recipe = RecipeVersion.fromJson(json['active_recipe'] as Map<String, dynamic>);
+    if (json['active_recipe'] != null &&
+        json['active_recipe'] is Map<String, dynamic>) {
+      recipe = RecipeVersion.fromJson(
+        json['active_recipe'] as Map<String, dynamic>,
+      );
     }
 
     return BasketType(

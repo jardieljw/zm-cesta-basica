@@ -1,5 +1,15 @@
 # Memória, decisões e pesquisas do projeto de front-end
 
+**E1 da importação — 19/10/2026:** implementada a preservação da origem ao
+selecionar arquivo e a leitura automática CSV pelo conteúdo; retirado o seletor
+técnico do percurso comum. Vencimentos conflitantes mostram data/página e
+controles confiáveis preenchem a revisão, sem completar dados ausentes com soma
+ou data atual. [Guia E1](IMPORTACAO_FATURAS_E1.md) e [retomada](RETOMADA_IMPORTACAO_FATURAS.md).
+Ajustes agrupados sobre tema/navegação existentes, sem novo estudo visual ou IA.
+Papéis normalizados não escolhem finalidade. Integração de dívida e revisão
+semântica da próxima etapa continua pendente; sem ativação.
+
+
 Consolidação inicial: **15/10/2026**. Atualização: **17/10/2026**. Escopo: planejamento
 realizado nesta conversa, com pesquisas, prévias e incrementos de 14–17/10/2026. Este registro permite retomar o trabalho
 depois de uma compactação ou em outra sessão. É uma síntese de trabalho, não uma
@@ -31,6 +41,118 @@ código. Revalidar o código e os guias atuais para afirmar uma capacidade técn
 O histórico abaixo explica as escolhas; o manual conserva sua situação vigente.
 
 ## 2. Estado para a próxima sessão
+
+### Prioridade registrada pelo usuário — 20/10/2026: padronização geral adiada
+
+**Situação:** críticas registradas para outra conversa; nenhuma alteração visual
+solicitada nesta rodada. O usuário rejeita o visual atual de Contas a Pagar e
+Registrar pagamento/Pagar e amortizar: percebe mistura do design antigo com o
+novo, em vez da renovação planejada. Também rejeitou a aparência e a orientação
+de Conferir documento/Conferir fatura e das revisões de extrato. Isto registra
+seu relato; não é auditoria de equivalência visual de todas as telas.
+
+Achados a tratar juntos no planejamento: alturas/larguras desproporcionais de
+botões; uso inconsistente de ícones e cores; etiquetas amarelas/azuis rejeitadas;
+controles e composição diferentes entre páginas; excesso de texto técnico e
+ações dispersas. A captura estreita de 320 px com texto 170% também preocupou o
+usuário; redução localizada de texto não constitui aprovação do design.
+
+**Objetivo explícito:** um padrão de design/composição reutilizável em todo o
+aplicativo e em qualquer página nova, reconhecível ao mudar de tela. Spotify,
+Facebook e Instagram foram exemplos de consistência, não pedidos para copiar
+sua aparência. Planejar o conjunto antes de remendar páginas individualmente,
+para reduzir retrabalho e custo. Não presumir que aplicar o tema a uma tela
+antiga a torna fiel à referência aprovada.
+
+Na próxima conversa dedicada ao front-end, confrontar as referências aceitas
+apontadas em [REFERENCIA_ATUAL_FRONTEND.json](REFERENCIA_ATUAL_FRONTEND.json),
+o manual e o catálogo com as telas efetivamente entregues; levantar lacunas e
+propor padrão/componentes/adoção gradual. Preservar as referências e suas
+aprovações históricas; este retorno não aprova a aparência atual nem autoriza
+redesenho imediato. Não misturar esse trabalho com a conclusão funcional da
+importação. Fonte: relato direto do usuário em 20/10/2026.
+
+
+- **Plano da importação após a auditoria — 19/10/2026:** usuário pediu organizar
+  a implementação antes de alterar o código. [Plano único](PLANO_IMPLEMENTACAO_IMPORTACAO_FATURAS.md)
+  e [retomada curta](RETOMADA_IMPORTACAO_FATURAS.md) registram etapas E1–E5,
+  contratos e critérios. Proposta: cobrança líquida por fatura com itens visíveis,
+  conferência preenchida sem finalidade obrigatória por linha, exceções pontuais,
+  filtros por origem/período e agenda prevista separada da cobrança confirmada.
+  Reutilizar as telas/componentes atuais e agrupar sua revisão; não gerar nova
+  prévia de tema/navegação para este planejamento. Primeiro incremento futuro:
+  preservar origem e normalizar parcelas. Nenhuma implementação nesta rodada;
+  fontes primárias e limites de completude estão no plano.
+
+- **Auditoria do fluxo antes de correções — 19/10/2026:** usuário reenviou 19
+  arquivos e pediu testar o estado atual. [Relatório](AUDITORIA_FATURAS_FORNECIDAS_2026-10-19.md):
+  5 percursos com as telas reais Flutter/API HTTPS isolada, sem mudar fontes.
+  Selecionar CSV Santander trocou origem para primeiro cartão Nubank; CSV exige
+  controles manuais e classificação por linha; Contas a Pagar terminou vazia.
+  Capturas privadas em `tmp/audit-user-files-20261019/`. Arquivo injetado pelo
+  ponto de teste existente: seletor nativo/janela principal não pilotados. Não
+  refazer tema/navegação nem tomar caracterização como aceitação. Depois dessa
+  rodada o usuário solicitou o plano registrado acima, ainda sem implementação.
+
+- **Prioridade corrigida pelo usuário — 19/10/2026:** a entrega é [importar suas
+  faturas para Contas a Pagar](ESCOPO_IMPORTACAO_DE_FATURAS.md), com banco/cartão,
+  estabelecimento, valores, vencimentos e parcelas, inclusive próximas cobranças.
+  Automatizar preenchimento e pedir conferência pontual, sem criar novas telas
+  ou classificação contábil detalhada por completude. O plano técnico anterior
+  de alocações não é uma decisão visual/funcional confirmada. Preservar a base
+  aprovada e concluir o percurso com os documentos reais de teste. Abertura a IA
+  é condicional à utilidade demonstrada; nenhuma integração escolhida nesta rodada.
+
+- **Ativação financeira e próximo recorte — 19/10/2026:** servidor Python e
+  cliente Windows correspondentes ativados após backup e conferência dos 136
+  arquivos de fonte/16 arquivos de Release. Flutter/tema/navegação permaneceram
+  iguais; 367 testes/análise/build reaproveitados. Fluxo HTTP/PDF conferido por
+  HTTPS isolado; interação visual nativa não certificada. O [diagnóstico de
+  alocações](ALOCACOES_DE_FATURA.md) existe só no backend, com oito casos novos/
+  488 backend aprovados. Próxima interface deve integrar plano persistido de
+  crédito/alvo/valor, conservando revisão, rascunho e confirmação; diagnóstico
+  não autoriza geração. Não refazer descoberta visual nem tratar servidor/app
+  como ainda não atualizados. Ver [evidência](validacoes_financeiras/correcao-2026-10-19/README.md).
+
+- **Dados financeiros são testes — esclarecimento de 19/10/2026:** o usuário
+  informou que os PDFs e os lançamentos bancários enviados são apenas material
+  de teste, sem necessidade de recuperação/preservação como histórico real.
+  Priorizar testar o fluxo corrigido com essas amostras e concluir a integração;
+  não repetir as suítes já aprovadas sem mudança ou motivo concreto. Importações
+  de teste são descartáveis; isso não autoriza limpar dados de outros módulos.
+
+- **Correção financeira implementada — 19/10/2026:** após autorização para fazer
+  as etapas, o [incremento](CORRECAO_IMPORTACAO_FINANCEIRA_2026-10-19.md) remove
+  cabeçalhos inventados e classificação por descrição. CSV abre formulário com
+  controles declarados; fatura exige classificação e revisão vigente; extrato
+  abre revisão de identidade e vínculo a movimento existente, sem caixa novo.
+  Rótulos não equiparam revisão a pagamento. Sem troca de tema/navegação FE-052.
+  Validação: 367 Flutter, análise sem pendências e Release Windows em cópia
+  isolada; capturas sintéticas com fontes reais, 320 px/texto 1,7× e 390 px.
+  Ajustados botões e rótulos ampliados, sem certificar todos os pixels/dispositivos.
+  App/servidor abertos e dados da empresa preservados. Evidência e pendências de
+  instalação/alocação/recuperação no guia; não retomar pelo alerta anterior como
+  se essa correção ainda não tivesse sido implementada.
+
+- **Auditoria da importação — 19/10/2026:** usuário pediu pesquisa e verificação
+  rigorosa de PDFs/CSVs. A [auditoria](AUDITORIA_IMPORTACAO_FINANCEIRA_2026-10-19.md)
+  reproduziu 14 falhas; inclui cabeçalhos inventados no Flutter, classificação
+  automática e geração sem revisão vigente, além de divergência entre o texto
+  da tela e os efeitos reais. Suíte existente 449 backend/356 Flutter aprovada
+  não cobre esses defeitos. Não houve alteração visual/funcional nesta rodada;
+  preservar a referência e corrigir contratos antes de ampliar leitores.
+
+- **Conexão HTTPS local — 19/10/2026:** imagem do usuário mostrou falha de
+  certificado na home. Diagnóstico confirmou duas cópias do servidor na porta
+  8000; a cópia de outro workspace, vinculada a `127.0.0.1`, apresentava outro
+  certificado. Encerrada somente essa árvore de processo, mantendo o servidor
+  deste projeto em `0.0.0.0`. Certificado salvo correspondia ao arquivo local;
+  nenhuma troca de pin, banco ou pareamento. `/api/v1/health` voltou a responder
+  200 com TLS validado e banco `ok`. Usar Atualizar no app; não houve inspeção
+  visual posterior. Detalhes no [guia de conexão](CONFIGURACAO_E_AUTENTICACAO.md).
+  As fontes da importação evoluíram em outro trabalho entre 17 e 19/10;
+  preservar essas alterações e reavaliar o estado atual antes de retomar testes
+  ou planos antigos deste chat.
 
 - **Conclusão Integral do Front-End FE-052 / FE-055 — 17/10/2026:**
   Execução completa das 5 fases do plano de implementação conforme [ARQUITETURA_FRONTEND.md](ARQUITETURA_FRONTEND.md) e [INTEGRACAO_INTERFACE_APROVADA.md](INTEGRACAO_INTERFACE_APROVADA.md):
@@ -1022,7 +1144,7 @@ trajeto. Nenhuma alteração no Flutter/API ou em dados reais.
 | Base visual | FE-028 confirma espaço 20 e destaque configurável com azul original por padrão. FE-029 corrige a prévia; FE-030 confirma campos 24 e painéis 32. Fundo continua por fechar. Acessibilidade e políticas nativas seguem próprias do piloto. |
 | Hierarquia e tipografia | FE-033 registra proposta por família e escala inicial, com pesquisa e limites. FE-041 apresenta a proposta no conjunto conectado; aguardar avaliação sem tratar tamanhos e composição como aprovados. |
 | Composição e continuidade | FE-034 detalha blocos e retorno, com pesquisa e alternativas. Roteiro do conjunto conectado preparado; novos arranjos, persistência de rascunho e contratos de concorrência/recuperação ainda por avaliar. Sem prévia nesta rodada. |
-| Compras em rascunho | Relatos sobre ausência de editar/excluir e aparência de pago/liquidado estão adiados. Não provar débito apenas pelo texto da interface. |
+| Compras em rascunho | Editar e excluir rascunhos sem efeitos de estoque/financeiros foram implementados em 20/10/2026; ver [guia de Compras](COMPRAS.md). A aparência de pago/liquidado e as dúvidas sobre datas/pagamento continuam fora deste recorte; o texto da interface não prova débito. |
 | Datas e pagamento de compras | Distinguir compra, vencimento e pagamento efetivo. A transcrição do briefing alterna sentidos da data do boleto; perguntar ao retomar esse fluxo. |
 | Histórico e preservação | Uma adaptação de interface não pode apagar dados, romper vínculos ou restaurar funções arquivadas automaticamente. |
 | iOS | Integração nativa, permissões, plugins, arquivos, câmera, impressão e validação no ambiente Apple ainda serão uma entrega própria. |

@@ -11,6 +11,8 @@ class PayablePayment {
   final String? reversalOfId;
   final String? notes;
   final DateTime createdAt;
+  final Map<String, int>? composition;
+  final String? billRevisionId;
 
   PayablePayment({
     required this.id,
@@ -25,10 +27,24 @@ class PayablePayment {
     this.reversalOfId,
     this.notes,
     required this.createdAt,
+    this.composition,
+    this.billRevisionId,
   });
 
   factory PayablePayment.fromJson(Map<String, dynamic> json) {
     return PayablePayment(
+      billRevisionId: json['bill_revision_id'] as String?,
+      composition: json['bill_revision_id'] == null
+          ? null
+          : {
+              for (final key in [
+                'stock_cents',
+                'business_cents',
+                'personal_cents',
+                'unclassified_cents',
+              ])
+                key: (json[key] as num).toInt(),
+            },
       id: json['id'] as String,
       payableId: json['payable_id'] as String,
       accountId: json['account_id'] as String,
@@ -49,6 +65,8 @@ class PayablePayment {
   ).toUtc();
 
   Map<String, dynamic> toJson() => {
+    if (billRevisionId != null) 'bill_revision_id': billRevisionId,
+    if (composition != null) ...composition!,
     'id': id,
     'payable_id': payableId,
     'account_id': accountId,
@@ -90,8 +108,12 @@ class AccountPayable {
   final int paymentsCount;
   final List<PayablePayment> payments;
   final int paymentReviewVersion;
+  final Map<String, dynamic>? financialBill;
+  final String? supersededById;
 
   AccountPayable({
+    this.financialBill,
+    this.supersededById,
     required this.id,
     required this.payableNumber,
     required this.description,
@@ -121,6 +143,10 @@ class AccountPayable {
 
   factory AccountPayable.fromJson(Map<String, dynamic> json) {
     return AccountPayable(
+      financialBill: json['financial_bill'] == null
+          ? null
+          : Map<String, dynamic>.from(json['financial_bill'] as Map),
+      supersededById: json['superseded_by_id'] as String?,
       id: json['id'] as String,
       payableNumber: (json['payable_number'] as num?)?.toInt() ?? 0,
       description: json['description'] as String,
@@ -214,6 +240,7 @@ class PayablePaymentCreate {
   final String? notes;
   final int? expectedBalanceCents;
   final String? paymentBusinessDate;
+  final int? expectedBillRevision;
 
   PayablePaymentCreate({
     required this.amountCents,
@@ -223,6 +250,7 @@ class PayablePaymentCreate {
     this.notes,
     this.expectedBalanceCents,
     this.paymentBusinessDate,
+    this.expectedBillRevision,
   });
 
   Map<String, dynamic> toJson() => {
@@ -235,5 +263,7 @@ class PayablePaymentCreate {
       'expected_balance_cents': expectedBalanceCents,
     if (paymentBusinessDate != null)
       'payment_business_date': paymentBusinessDate,
+    if (expectedBillRevision != null)
+      'expected_bill_revision': expectedBillRevision,
   };
 }

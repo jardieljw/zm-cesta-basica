@@ -79,7 +79,8 @@ def evaluate(preview, data):
 
 
 def create(db, preview_id, data, actor_id):
-    preview = base.require(db, FinancialImportPreview, preview_id)
+    from app.services import financial_import_lifecycle as lifecycle
+    entry, preview = lifecycle.require_preview(db, preview_id, data.import_id, data.expected_generation)
     source = base.require(db, FinancialSource, preview.source_id)
     if source.source_type != "CREDIT_CARD":
         base.fail("FINANCIAL_BILL_SOURCE_REQUIRED", "A conferencia exige uma origem de cartao.")
@@ -120,6 +121,7 @@ def create(db, preview_id, data, actor_id):
     db.flush()
     base.audit(db, actor_id, "BILL_ASSESSMENT_CREATED", assessment,
                {"revision": assessment.revision, "status": assessment.status, "findings_count": len(report["findings"])})
+    lifecycle.record_ids(db, entry, 'assessment_ids', [assessment.id])
     return {"assessment": summary(assessment)}
 
 

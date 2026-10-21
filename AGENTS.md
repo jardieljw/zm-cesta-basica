@@ -3,6 +3,13 @@
 Consultar e seguir [AGENT_INSTRUCTIONS.md](AGENT_INSTRUCTIONS.md), que contém
 as regras do projeto e a ordem de leitura dos documentos canônicos.
 
+Aplicar a seção **Registro enxuto e economia de contexto** dessas instruções:
+um andamento curto por trabalho, sem duplicar históricos em várias memórias.
+
+Ao propor um plano ou nova etapa relevante, seguir também **Escolha de esforço e
+referências locais** em [AGENT_INSTRUCTIONS.md](AGENT_INSTRUCTIONS.md): recomendar
+o esforço com uma justificativa breve e priorizar o guia local enxuto.
+
 Para planejamento e evolução do front-end, seguir também o **método de
 planejamento da seção 8.1** do [manual](docs/ARQUITETURA_FRONTEND.md): prudência,
 pesquisa direcionada, comparação de opções, confirmação de dúvidas relevantes e

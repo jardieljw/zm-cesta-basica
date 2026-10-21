@@ -1,6 +1,6 @@
 # Produtos e formas de compra
 
-Revisão: **14/10/2026**. [Índice das mecânicas](README.md).
+Revisão: **20/10/2026**. [Índice das mecânicas](README.md).
 
 ## Cadastro na interface e no servidor
 
@@ -33,19 +33,33 @@ O catálogo oferece duas ações diferentes:
 - **Inativar:** mantém o cadastro e seu histórico, retirando o produto de novas
   compras e composições. Se ele estiver em uma receita ativa, retirar dessa
   composição antes de inativar.
-- **Excluir definitivamente:** apaga um cadastro nunca utilizado, depois de
-  conferir os vínculos e pedir confirmação. Embalagens nunca utilizadas são
-  removidas junto com ele. A ação não tem desfazer.
+- **Excluir produto:** verifica os vínculos atuais e pede confirmação. Cadastro
+  nunca utilizado e suas embalagens são apagados. Com operações anteriores já
+  resolvidas, o produto sai do catálogo, inclusive da lista de inativos, e fica
+  disponível somente por seus registros históricos. Isso é diferente de inativar.
 
-Receitas de qualquer versão, compras em qualquer status, itens de montagem e
-movimentações impedem a exclusão definitiva. Uma compra em rascunho já é um
-vínculo. Estoque zerado não significa ausência de histórico: compras canceladas
-e movimentos estornados também são preservados.
+Receitas ainda disponíveis, compras não canceladas (inclusive rascunhos), vendas
+não canceladas, montagens não desfeitas e saldo de estoque restante impedem a
+exclusão. O diálogo identifica as receitas/versões, compras, vendas/clientes,
+montagens e saldos efetivos, com acesso aos registros correspondentes.
+Montagem desfeita, venda cancelada, compra cancelada e movimentos com saldo
+resolvido não tornam o bloqueio permanente. Para liberar o arroz de uma receita,
+editar/excluir a receita elegível ou excluir o tipo de cesta elegível; uma receita
+protegida por venda não cancelada exige resolver essa venda antes.
+
+Excluir não descarta estoque silenciosamente. Produtos devolvidos pela
+desmontagem continuam no saldo: se ainda houver quantidade ou compra válida,
+o aplicativo informa esse impedimento separado. Não registrar perdas ou ajustes
+fictícios apenas para liberar uma exclusão.
 
 A API verifica esses vínculos novamente no momento da exclusão, na mesma
 transação. A consulta prévia na interface não permite apagar um produto que
 passou a ser usado depois da consulta. A rota de inativação existente continua
 compatível; a exclusão explícita usa `DELETE /api/v1/products/{id}/permanent`.
+O nome histórico dessa rota permanece compatível; a resposta informa
+`deletion_mode=PERMANENT` ou `CATALOG_ONLY`. Neste último caso, `removed_at` e a
+inativação retiram o cadastro do uso, sem romper referências de receitas,
+compras e montagens preservadas. Edição/reativação do cadastro excluído é bloqueada.
 
 ## O que é embalagem comercial
 
