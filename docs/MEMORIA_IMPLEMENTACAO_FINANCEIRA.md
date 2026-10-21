@@ -372,7 +372,13 @@ Concluída a ampliação para novos bancos brasileiros com amostras reais do usu
 2. **Leitores PDF Multibanco e Descriptografia em Memória:**
    - Nu Empresas Extrato PJ (`nu_empresas_account_pdf_v1`): leitura de 5 páginas reais com 28 itens, conferência de entradas/saídas e equação de fechamento equilibrada.
    - Faturas de Cartão Itaú, Santander e Banco Inter (`itau_card_pdf_v1`, `santander_card_pdf_v1`, `inter_card_pdf_v1`).
-   - Descriptografia efêmera de PDFs protegidos por senha: senha enviada em memória no processo de extração isolado, nunca armazenada em banco e nunca impressa em logs (em conformidade com OWASP).
+   - **Alegação histórica de segurança:** a descriptografia foi descrita como
+     efêmera e sem armazenamento em banco ou impressão em logs, com referência
+     à OWASP. O código atual encaminha a senha ao worker por variável de ambiente;
+     o hash da prévia registra apenas se havia senha, e o teste existente verifica
+     que um erro simulado não a reproduz no relatório. Essas evidências não
+     equivalem a uma auditoria abrangente de armazenamento ou logs em todos os
+     componentes e não estabelecem uma garantia geral de ausência de registro.
    - Prevenção de colisão de cache de prévias via inclusão de `has_password` no hash da requisição.
 3. **Integração Front-end (Flutter):**
    - `FinancialImportFile`: abstração unificada para arquivos PDF e CSV com validação de assinatura e tamanho.

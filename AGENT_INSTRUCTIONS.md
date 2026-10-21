@@ -212,7 +212,13 @@ já foi implementada no backend, com migração fd3 validada somente em cópia.
 O usuário priorizou depois a importação automática de PDF, implementada para
 layouts Nubank/PicPay conforme o [guia PDF](docs/IMPORTACAO_PDF_FINANCEIRO.md).
 Retomar por esse guia e pela memória, ampliando a cobertura por amostras reais;
-OCR, senha e Santander continuam pendentes. Revisão semântica continua futura;
+OCR continua pendente. Há parser de fatura Santander no código, mas os testes
+existentes usam layouts sintéticos; a homologação com PDFs Santander reais
+permanece pendente. O fluxo de solicitação de senha e nova tentativa já está
+implementado no cliente e no backend; os testes existentes cobrem cenários
+simulados e não comprovam homologação de PDFs bancários realmente criptografados
+nem suporte universal. Consultar as evidências e os limites no guia PDF. Revisão
+semântica continua futura;
 não confundir VERIFIED das transcrições com
 autorização para gerar obrigações. Preservar os documentos detalhados; memória
 e instruções são índices.

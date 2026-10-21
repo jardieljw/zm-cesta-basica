@@ -508,7 +508,7 @@ Nenhum código de IA adicionado neste momento. Arquitetura desacoplada via Provi
 [FASE 9: Auditoria Final, Backup, Instalação & Entrega] -------> [CONCLUÍDA & HOMOLOGADA]
   ├── Instalador local do Windows, firewall e tarefas agendadas automáticas (Task Scheduler)
   ├── CLI e rotinas de backup quente online com integridade SQLite verificada e retenção
-  ├── Teste E2E de ciclo de vida operacional ponta a ponta (180 testes backend e 93 testes Flutter)
+  ├── Teste E2E de ciclo de vida operacional ponta a ponta (registro histórico da entrega original: 180 testes backend e 93 testes Flutter; não representa contagem atual)
   ├── Compilações nativas de produção (Windows x64 Release .exe e Android Release APK 74.1MB)
   └── Manuais operacionais, de instalação, backup/DRP e impressão Epson Wi-Fi
 ```
