@@ -129,24 +129,98 @@ Este documento estabelece as **diretrizes e o protocolo operacional obrigatório
 
 ## 1. Regra de Entrada e Ordem de Consulta de Documentos
 
+### 1.1. Núcleo obrigatório
+
+- Ler e cumprir sempre a seção 2 inteira, incluindo a política vigente de testes
+  proporcionais ao risco e o [contrato de integridade](docs/REGRAS_DE_INTEGRIDADE_E_EVOLUCAO.md).
+  Aplicar também **Registro enxuto e economia de contexto**. A leitura seletiva
+  não dispensa segurança, integridade, isolamento, backups ou preservação do histórico.
+- Respeitar o escopo e as autorizações vigentes do usuário; preservar alterações
+  preexistentes. Não modificar, atualizar, fazer merge, rebase ou push em
+  `master`/`main`, locais ou remotas. Não executar `push --force`, `reset --hard`
+  nem operações que descartem trabalho. Commit, push e aplicação de migrações em
+  banco real exigem autorização correspondente; um plano ou registro
+  histórico não concede autorização para executar suas etapas.
+- Nunca usar o banco da empresa em testes, nem presumir dados locais descartáveis.
+  Migrações exigem cópia preenchida isolada, backup verificado e recuperação
+  planejada antes de aplicação real. Preservar livros append-only, vínculos,
+  valores congelados, `BEGIN IMMEDIATE`, idempotência, chaves estrangeiras,
+  centavos/microcentavos inteiros, carimbos de data/hora em UTC e a comunicação
+  autenticada com TLS.
+  A interface e os testes não podem contornar essas garantias.
+- Ler as diretrizes das seções 3–7 sempre que a tarefa afetar os respectivos
+  contratos, inclusive por uma alteração de interface ou de testes. Distinguir
+  código implementado, testes executados, ativação local, homologação e produção;
+  registrar falhas e limites sem declarar validação completa indevidamente.
+
+### 1.2. Hierarquia e roteamento por tarefa
+
+A leitura externa e os blocos específicos deste arquivo são selecionados pelo
+impacto da tarefa. Começar por títulos, índice, estado curto e seções pertinentes;
+não carregar integralmente documentos extensos de módulos alheios. Os registros
+iniciais de catálogo e finanças, **Direção financeira e continuidade** e os blocos
+1.3/1.4 são consultados quando o trabalho envolver seus assuntos. **Escolha de
+esforço e referências locais** aplica-se a planos e novas etapas relevantes.
+
 **Exceção de escopo autorizada em 14/10/2026:** registro de montagem padrão/personalizada e
 histórico estão integrados em Tipos de Cesta → Montagens. As páginas novas
 reutilizam o backend existente; não restaurar por esse motivo as telas antigas
 de produção, desmontagem ou outros módulos arquivados. Consultar
 [docs/MONTAGENS_E_HISTORICO.md](docs/MONTAGENS_E_HISTORICO.md).
 
-**Documentação das mecânicas:** consultar também [docs/README.md](docs/README.md),
+**Documentação das mecânicas:** para localizar ou alterar uma mecânica, consultar [docs/README.md](docs/README.md),
 o índice dos fluxos atuais. Ao alterar uma mecânica, atualizar seu guia na mesma
 entrega com localização na interface, regras de backend, efeitos nas tabelas,
 exemplos, limites e referências de implementação. Incluir fluxos novos no índice
 e distinguir telas ativas, capacidades apenas do backend e funções arquivadas.
 Não documentar comportamento planejado como se já estivesse implementado.
 
-No início de qualquer sessão de trabalho, o agente DEVE consultar as seguintes fontes na seguinte ordem de prioridade:
+**Papéis das fontes canônicas — consulta conforme a tarefa:**
 
-1. **[ARCHITECTURE.md](./ARCHITECTURE.md):** Fonte canônica da verdade sobre decisões arquiteturais, governança modular, princípios de engenharia permanentes, preparação de IA futura, simplificação da Fase 6, consistência de vendas/custódia e especificações de relatórios/impressão da Fase 8.
-2. **[Especificacao_Sistema_Estoque_Cestas.md](./Especificacao_Sistema_Estoque_Cestas.md):** Especificação original aprovada do produto e regras de domínio da empresa.
-3. **[backend/README.md](./backend/README.md) e [client/README.md](./client/README.md):** Estrutura física de diretórios, convenções de código e comandos de execução.
+- **[ARCHITECTURE.md](./ARCHITECTURE.md):** Fonte canônica da verdade sobre decisões arquiteturais, governança modular, princípios de engenharia permanentes, preparação de IA futura, simplificação da Fase 6, consistência de vendas/custódia e especificações de relatórios/impressão da Fase 8.
+- **[Especificacao_Sistema_Estoque_Cestas.md](./Especificacao_Sistema_Estoque_Cestas.md):** Especificação original aprovada do produto e regras de domínio da empresa.
+- **[backend/README.md](./backend/README.md) e [client/README.md](./client/README.md):** Estrutura física de diretórios, convenções de código e comandos de execução.
+
+**Hierarquia para resolver divergências:** autorizações atuais do usuário e
+proteções obrigatórias governam o trabalho. A especificação original define o
+domínio, complementada pelas evoluções explicitamente aprovadas e pelas decisões
+arquiteturais vigentes. Código e testes pertinentes mostram a implementação e
+oferecem evidência verificável; código existente pode conter defeitos e testes
+podem estar desatualizados. Guias atuais descrevem o funcionamento e devem ser
+conferidos nessas evidências. Memórias, auditorias e planos datados preservam
+motivos e estados anteriores; não comprovam capacidade ou autorização atual.
+Diante de conflito, investigar o contrato e a decisão vigente; não usar código,
+teste, documento ou data isolados para autorizar mudança incompatível. Escalar ao
+usuário dúvidas que dependam de decisão de negócio ou ampliação de autorização.
+
+| Tipo de tarefa | Leitura específica obrigatória, além do núcleo |
+| --- | --- |
+| Texto, documentação ou ajuste simples | Trecho e referências afetados; guia da funcionalidade se seu significado estiver envolvido. Conferir consistência e diff conforme a seção 2, sem exigir suítes completas automaticamente. |
+| Backend, API, serviço ou testes backend | Seção 3; [backend/README.md](backend/README.md); invariantes e módulo pertinente de [ARQUITETURA_BACKEND.md](docs/ARQUITETURA_BACKEND.md); código, schemas e testes relacionados. Consultar ARCHITECTURE e a especificação nas decisões e regras de domínio afetadas. |
+| Flutter, interface ou testes frontend | Seção 4, bloco 1.3 e as direções didáticas de **Direção financeira e continuidade** quando envolverem apresentação/erros; [client/README.md](client/README.md), [manual frontend](docs/ARQUITETURA_FRONTEND.md), [referência atual](docs/REFERENCIA_ATUAL_FRONTEND.json), componentes e tema. Para planejamento, seção 8.1 do manual e memória pertinente; para conteúdo/indicadores, [design inteligente](docs/DESIGN_INTELIGENTE_E_ORIENTACAO_AO_USUARIO.md). |
+| Importação, conciliação ou faturas | Seção 3, bloco 1.4 e **Direção financeira e continuidade**; primeiro [escopo](docs/ESCOPO_IMPORTACAO_DE_FATURAS.md) e [retomada curta](docs/RETOMADA_IMPORTACAO_FATURAS.md), depois trechos pertinentes da [memória financeira](docs/MEMORIA_IMPLEMENTACAO_FINANCEIRA.md) e [homologação](docs/HOMOLOGACAO_IMPORTACAO_FINANCEIRA.md). Para faturas, consultar as decisões semânticas/procedência indicadas em 1.4; combinar com a rota Flutter se houver interface. |
+| Leitores PDF ou CSV | Rota financeira mais o guia do formato afetado: [PDF](docs/IMPORTACAO_PDF_FINANCEIRO.md) ou [CSV multibanco](docs/IMPORTACAO_CSV_MULTIBANCO.md), leitor, schemas e testes correspondentes. Alterações compartilhadas combinam ambos. |
+| Persistência, migrações, backup ou segurança | Seções 2 e 3; contrato de integridade completo, invariantes pertinentes de ARCHITECTURE e ARQUITETURA_BACKEND, cadeia Alembic, implementação e testes de isolamento/backup envolvidos. A documentação orienta; não autoriza acessar ou migrar o banco real. |
+| Estoque, produtos, receitas, compras, montagens, vendas, contas a pagar ou a receber | Guia funcional localizado pelo [índice](docs/README.md), regras pertinentes da especificação e de ARCHITECTURE; seção 3 e/ou 4 conforme a camada. Para catálogo/receitas/desmontagem, consultar também o registro inicial deste arquivo; preservar a exceção de produto nunca utilizado ao final. |
+| Custódia, expedição, conferência ou acerto | Seção 5 e guias pertinentes, além das rotas técnicas. Preservar os contratos históricos sem restaurar funções arquivadas; consultar [funções arquivadas](docs/FUNCOES_ARQUIVADAS.md) e [arquivo do cliente](client/_archive/README.md) antes de qualquer restauração autorizada. |
+| Relatórios, planilhas ou impressão | Seção 6 e regras pertinentes da Fase 8 em ARCHITECTURE, guia funcional e rotas backend/Flutter envolvidos. |
+| Preparação ou integração futura com IA | Seção 7 e decisões pertinentes de ARCHITECTURE; a leitura não autoriza implementar IA ou adicionar dependências. |
+
+**Tarefas com vários módulos:** combinar todas as rotas afetadas, incluindo as
+camadas e os contratos compartilhados (API, payloads, persistência, dinheiro,
+identidade/geração e tentativas repetidas). Reavaliar as leituras se o escopo ou
+os riscos crescerem. Uma tarefa pequena que afeta dinheiro, autenticação ou dados
+não se torna de baixo risco pelo tamanho do diff.
+
+**Histórico e carregamento progressivo:** preservar todos os registros e suas
+referências. Consultar primeiro o estado vigente e ampliar para decisões,
+auditorias e planos anteriores quando necessário para entender motivos,
+compatibilidade, evidências, falhas ou conflitos. As decisões e restrições ainda
+vigentes continuam obrigatórias; não reler toda a cronologia por rotina nem
+converter uma instrução histórica superada em bloqueio atual. A seção 8 é o
+registro da entrega original, não comprovação atual de testes ou produção.
+
+### 1.3. Front-end — diretrizes e continuidade
 
 **Front-end — direção atualizada em 15/10/2026:** consultar também o
 [manual de arquitetura do front-end](docs/ARQUITETURA_FRONTEND.md) e o
@@ -298,6 +372,8 @@ inferência do agente e registrar acesso incompleto. Um resumo, nome de site ou
 link apenas para outro documento interno não substitui os links das fontes.
 Preservar essas referências ao reorganizar ou ampliar a documentação.
 
+### 1.4. Importação financeira — diretrizes e continuidade
+
 **Continuidade da implementação financeira — 16/10/2026:** para importação,
 duplicidade e conciliação, ler a
 [memória de decisões e aprendizados](docs/MEMORIA_IMPLEMENTACAO_FINANCEIRA.md)
@@ -344,10 +420,25 @@ da aplicação em produção. Documentação não substitui validações no cód
 
 Antes de produzir código ou aplicar qualquer alteração em arquivos existentes:
 
-1. **Checagem de Saúde do Projeto:**
-   - Execute a suíte de testes do backend com `& ".\backend\.venv\Scripts\python.exe" -m pytest backend/tests -q`. O projeto deve estar com **100% dos testes aprovados**.
-   - Execute a suíte de testes do Flutter com `flutter test` (ou `& "C:\dev\flutter\bin\flutter.bat" test` caso o Flutter não esteja no PATH global).
-   - Verifique o status do Git com `git status` para garantir que o ambiente está consistente.
+1. **Validação proporcional ao risco:**
+   - **Documentação:** verificar consistência, referências e diff. Não exigir a
+     execução automática das suítes completas para alterações exclusivamente
+     documentais.
+   - **Correção de testes:** registrar o estado anterior da suíte e as falhas já
+     existentes; permitir corrigir os próprios testes apesar dessas falhas e
+     executar os testes afetados. Não apresentar o resultado anterior como
+     validação do código atual.
+   - **Código:** executar primeiro os testes relacionados à alteração e ampliar
+     a validação conforme o impacto, os módulos afetados e os riscos de regressão.
+   - **Dados financeiros e migrações:** manter validações rigorosas em ambientes
+     isolados, com cópias de bancos para testes e validação de migrações; planejar
+     backup e recuperação antes de qualquer aplicação em produção. Nunca usar ou
+     modificar o banco da empresa durante testes.
+   - **Entrega final:** informar testes executados, resultados, falhas relevantes
+     pendentes e limites da validação. Não declarar a validação completa enquanto
+     houver falhas relevantes sem resolução.
+   - Verificar o status do Git antes e depois do trabalho para preservar alterações
+     preexistentes e identificar precisamente o diff produzido.
    - **Isolamento obrigatório:** testes não podem usar o banco da empresa. A fixture
      deve redirecionar dependências HTTP, engine do startup e SessionLocal para
      o banco temporário e restaurar settings ao terminar. Não importar a fábrica
@@ -367,7 +458,10 @@ Antes de produzir código ou aplicar qualquer alteração em arquivos existentes
    - Toda alteração estrutural no SQLite deve ser implementada via migração versionada do Alembic (`alembic revision -m "..."`).
    - Respeitar a cadeia sequencial de dependências das tabelas, preservando `PRAGMA foreign_keys = ON` sem dependências circulares.
 6. **Validação Contínua (Não-Regressão):**
-   - Ao concluir uma alteração, execute as suítes completas de testes. Todos os testes anteriores devem continuar passando, além dos novos testes criados para cobrir a funcionalidade adicionada.
+   - Ao concluir uma alteração de código, execute os testes relacionados e amplie
+     a validação conforme o impacto descrito acima. Registre falhas preexistentes
+     e novas separadamente; testes novos devem cobrir a funcionalidade adicionada
+     sem enfraquecer as garantias de segurança, integridade ou isolamento.
 
 ---
 
